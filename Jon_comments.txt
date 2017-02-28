@@ -1,0 +1,255 @@
+Hi Jon, 
+
+Thanks for this. I have attached updated working copy. 
+
+> -----Original Message-----
+> From: Jonathan Hardwick [mailto:Jonathan.Hardwick@metaswitch.com]
+> Sent: 28 February 2017 00:07
+> To: Dhruv Dhody <dhruv.dhody@huawei.com>; draft-ietf-pce-stateful-sync-
+> optimizations@ietf.org
+> Cc: 'pce-chairs@ietf.org' <pce-chairs@ietf.org>; BRUNGARD, DEBORAH A
+> <db3546@att.com>
+> Subject: My comments on draft-ietf-pce-stateful-sync-optimizations-09
+> 
+> My email with these comments in apparently keeps truncating - I have no
+> idea why.
+> I'm trying again with a completely fresh email!  Sorry for the spam.
+> Jon
+> 
+> =====
+> 
+> Hi Dhruv
+> 
+> Many thanks for processing these changes rapidly.
+> 
+> I have a few comments, mostly editorial.  To make this quick, I have
+> suggested text changes where the resolutions seemed clear to me.
+> 
+> As Deborah said, please wait for the last call to end, then upload a new
+> version.
+> 
+> Best regards
+> Jon
+> 
+> 
+> Section 1
+> OLD
+> The handling of each of the flag is described in the each section NEW The
+> handling of each flag is described in the relevant section
+> 
+> 
+
+[[Dhruv Dhody]] Ack
+
+> Section 3.2
+> OLD
+> (see [I-D.ietf-pce-stateful-pce]) for the use of the Redelegation Timeout
+> Interval).
+> NEW
+> (see [I-D.ietf-pce-stateful-pce] for the use of the Redelegation Timeout
+> Interval).
+> 
+
+[[Dhruv Dhody]] Ack
+
+> OLD
+> and PCE does not wait for the end of syncronization marker NEW and the PCE
+> does not wait for the end of synchronization marker.
+> 
+> 
+
+[[Dhruv Dhody]] Ack
+
+> Section 3.2.1
+> I agree with the specification but the text needs a few editorial changes
+> for clarity and to improve the English, as follows.
+> 
+> NEW
+>    There could be a case during PCEP session re-establishment when the
+>    PCC's or PCE's IP address can change.  This includes, but is not
+> limited to, the following
+>    cases:
+> 
+>    o  A PCC could use a physical interface IP address to connect to the
+> PCE.
+>       In this case, if the line card that the PCC connects from changes,
+>       then the PCEP session goes down
+>       and comes back up again, with a different IP address associated with
+> a new line card.
+> 
+>    o  The PCC or PCE may move in the network, either physically or
+> logically,
+>       which may cause its IP address to change.
+> 
+>    o  The PCE may be deployed as a virtual network function (VNF).
+>       Another virtualized instance of the PCE may be populated with the
+>       original PCE instance's state, but be given a different IP address.
+> 
+>    To ensure that a PCEP peer can recognize a previously connected peer,
+>    each PCEP peer includes the SPEAKER-ENTITY-ID TLV described in
+>    Section 3.3.2 in the OPEN message.
+> 
+>    This TLV is used during the state synchronization procedure to
+>    identify the PCEP session as a re-establishment of a previous session
+>    that went down.  Then state synchronization optimizations such as state
+>    sync avoidance can be applied to this session.  Note that this usage is
+> only
+>    applicable within the State Timeout Interval
+>    [I-D.ietf-pce-stateful-pce].  After the State Timeout Interval expires,
+> all state
+>    associated with the PCEP session is removed, which includes the
+>    SPEAKER-ENTITY-ID received.  Note that the PCEP session
+>    initialization [RFC5440] procedure remains unchanged.
+> END NEW
+> 
+> Note that I am not sure I interpreted your third example of the IP address
+> changing correctly.  It sounds like a sub-case of the second example "The
+> PCE may move [...] logically".  Is that right?
+> 
+
+[[Dhruv Dhody]] Ack, and you are right and thus I combined the third point with the second. 
+
+> 
+> Section 4.2
+> OLD
+> so that when a session is re-established and incremental synchronization
+> could be attempted NEW so that when a session is re-established an
+> incremental synchronization can be attempted
+> 
+
+[[Dhruv Dhody]] Ack
+
+> OLD
+> For LSP that is deleted at
+> NEW
+> For an LSP that is deleted at
+> 
+
+[[Dhruv Dhody]] Ack
+
+> 
+> Section 5.2
+> OLD
+> is included by both PCEP speaker
+> NEW
+> is included by both PCEP speakers
+> 
+
+[[Dhruv Dhody]] Ack
+
+> OLD
+> The PCUpd message SHOULD include an empty ERO (with no ERO sub-object and
+> object length of 4) as its intended path and SHOULD NOT include the
+> optional objects for its attributes for any parameter update and the PCC
+> MUST ignore such an update when the SYNC flag is set.
+> NEW
+> The PCUpd message SHOULD include an empty ERO (with no ERO sub-object and
+> object length of 4) as its intended path and SHOULD NOT include the
+> optional objects for its attributes for any parameter update.  The PCC
+> MUST ignore such an update when the SYNC flag is set.
+> END NEW
+> 
+
+[[Dhruv Dhody]] Ack
+
+> In section 5.2, when the PCE detects that the PCC has attempted to start a
+> sync without waiting for a trigger, should it not also close the session
+> after sending the PCErr?
+
+[[Dhruv Dhody]] Since there is chance of recovery when PCE triggers synchronization, we didn’t close the session. Should I make it "..MAY close the session"? 
+That should work for both. 
+
+> 
+> OLD
+> If applied to the later
+> NEW
+> If applied to the latter
+> END NEW
+> 
+
+[[Dhruv Dhody]] Ack
+
+> Why is it necessary to say the following?
+> 
+>    If a PCC implementation that does not implement this extension should
+> 
+>    not receive a PCUpd message to trigger state synchronization as per
+>    the capability advertisement, but if it were to receive it, it will
+>    behave as per [I-D.ietf-pce-stateful-pce].
+> 
+> I think you are saying that PCC's that do not support this document will
+> instead behave according to the base draft - which is obvious.  Same
+> comment also applies to the text at the end of section 6.2.
+> 
+> 
+
+[[Dhruv Dhody]] I also do not find this useful, but Adrian specifically asked for it with this comment -  
+
+             This is all very well for PCCs that support this I-D but don't
+             want to do triggered resynch. What about a PCC that doesn't 
+             even support this I-D? How will it process this PCUpd (which, 
+             obviously, it should not receive)? I'm sure you can just find 
+             a relevant paragraph of draft-ietf-pce-stateful-pce to point 
+             to.
+
+I thought no harm done in including it. 
+
+> Section 6.2
+> OLD
+> the PCC MUST ignore such an updates
+> NEW
+> the PCC MUST ignore such an update
+> 
+
+[[Dhruv Dhody]] Ack
+
+> OLD
+> The PCUpd message MUST include an empty ERO (with no ERO sub-object and
+> object length of 4) as its intended path and SHOULD NOT include the
+> optional objects for its attributes for any parameter update and the PCC
+> MUST ignore such update if the SYNC flag is set.
+> NEW
+> The PCUpd message MUST include an empty ERO (with no ERO sub-object and
+> object length of 4) as its intended path and SHOULD NOT include the
+> optional objects for its attributes for any parameter update.  The PCC
+> MUST ignore such an update if the SYNC flag is set.
+> 
+> 
+
+[[Dhruv Dhody]] Ack
+
+> Section 7
+> OLD
+> This document request following new flags NEW This document defines the
+> following new flags
+> 
+> 
+
+[[Dhruv Dhody]] Ack
+
+> Section 9.6
+> OLD
+> can result in savings the load on the data exchanges and time it takes for
+> stateful PCE to be fully operational in case of re-establishment of PCEP
+> session.
+> NEW
+> can result in a reduction of the amount of data exchanged and the time
+> taken for a stateful PCE to be fully operational when a PCEP session is
+> re-established.
+> 
+
+[[Dhruv Dhody]] Ack
+
+> 
+> Section 10
+> Suggest simplifying this bit of text:
+> OLD
+> However, because the protocol modifications outlined in this document such
+> as use of SPEAKER-ENTITY-ID and the ability for the PCE to control state
+> (re)-synchronization timing and sequence, it also introduces new attack
+> vectors.
+> NEW
+> However, this document also introduces some new attack vectors.
+> 
+[[Dhruv Dhody]] Ack
+
