@@ -172,8 +172,8 @@ Internet-Draft   Optimizations of state synchronization    February 2017
 
    Support for each of the synchronization optimization capabilities is
    advertised during the PCEP initialization phase.  See Section 7 for
-   the new flags defined in this document.  The handling of each of the
-   flag is described in the each section.
+   the new flags defined in this document.  The handling of each flag is
+   described in the relevant section.
 
 2.  Terminology
 
@@ -246,7 +246,7 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    If the include LSP DB version capability is enabled, a PCC MUST
    increment its LSP State Database Version Number when the
    'Redelegation Timeout Interval' timer expires (see
-   [I-D.ietf-pce-stateful-pce]) for the use of the Redelegation Timeout
+   [I-D.ietf-pce-stateful-pce] for the use of the Redelegation Timeout
    Interval).
 
    If both PCEP speakers set the S flag in the OPEN object's STATEFUL-
@@ -282,17 +282,17 @@ Crabbe, et al.           Expires August 31, 2017                [Page 5]
 Internet-Draft   Optimizations of state synchronization    February 2017
 
 
-   synchronization and PCE does not wait for the end of syncronization
-   marker [I-D.ietf-pce-stateful-pce].  Otherwise, the PCC MUST perform
-   full state synchronization (see [I-D.ietf-pce-stateful-pce]) or
-   incremental state synchronization (see Section 4 if this capability
-   is advertised) to the stateful PCE.  In other words, if the
-   incremental state synchronization capability is not advertised by the
-   peers, based on the LSP database version number match either the
-   state synchronization is skipped or a full state synchronization is
-   performed.  If the PCC attempts to skip state synchronization, by
-   setting the SYNC Flag to 0 and PLSP-ID to a non-zero value on the
-   first LSP State Report from the PCC as per
+   synchronization and the PCE does not wait for the end of
+   synchronization marker [I-D.ietf-pce-stateful-pce].  Otherwise, the
+   PCC MUST perform full state synchronization (see
+   [I-D.ietf-pce-stateful-pce]) or incremental state synchronization
+   (see Section 4 if this capability is advertised) to the stateful PCE.
+   In other words, if the incremental state synchronization capability
+   is not advertised by the peers, based on the LSP database version
+   number match either the state synchronization is skipped or a full
+   state synchronization is performed.  If the PCC attempts to skip
+   state synchronization, by setting the SYNC Flag to 0 and PLSP-ID to a
+   non-zero value on the first LSP State Report from the PCC as per
    [I-D.ietf-pce-stateful-pce], the PCE MUST send back a PCErr with
    Error-Type 20 Error-Value TBD2 (suggested value - 2) 'LSP Database
    version mismatch', and close the PCEP session.
@@ -480,24 +480,24 @@ Internet-Draft   Optimizations of state synchronization    February 2017
 3.2.1.  IP Address change during session re-establishment
 
    There could be a case during PCEP session re-establishment when the
-   IP-address can change.  This includes but not limited to following
-   cases -
+   PCC's or PCE's IP address can change.  This includes, but is not
+   limited to, the following cases:
 
-   o  A PCC's implementation could choose any IP address to connect to
-      the PCE.  And if a physical interface IP address is used and for
-      example because of line card change, the PCEP session goes down
-      and comes back up again but with a different IP address used by
-      the TCP client.
+   o  A PCC could use a physical interface IP address to connect to the
+      PCE.  In this case, if the line card that the PCC connects from
+      changes, then the PCEP session goes down and comes back up again,
+      with a different IP address associated with a new line card.
 
-   o  The peer may move in the network, either physically or logically,
-      which may cause its IP address to change.
+   o  The PCC or PCE may move in the network, either physically or
+      logically, which may cause its IP address to change.  For example,
+      the PCE may be deployed as a virtual network function (VNF) and
+      another virtualized instance of the PCE may be populated with the
+      original PCE instance's state, but be given a different IP
+      address.
 
-   o  In case PCE is deployed as virtual network function (VNF), and
-      another instance of PCE is instantiated and populated with the
-      state but with a different IP address.
-
-
-
+   To ensure that a PCEP peer can recognize a previously connected peer,
+   each PCEP peer includes the SPEAKER-ENTITY-ID TLV described in
+   Section 3.3.2, in the OPEN message.
 
 
 
@@ -506,18 +506,14 @@ Crabbe, et al.           Expires August 31, 2017                [Page 9]
 Internet-Draft   Optimizations of state synchronization    February 2017
 
 
-   To ensure that a PCEP peer can recognize a previously connected peer,
-   each PCEP peer includes the SPEAKER-ENTITY-ID TLV described in
-   Section 3.3.2 in the OPEN message.
-
    This TLV is used during the state synchronization procedure to
    identify the PCEP session as a re-establishment of a previous session
-   that went down.  The state synchronization optimization such as state
-   sync avoidance can be applied to this session.  This usage is thus
-   applicable within the State Timeout Interval
-   [I-D.ietf-pce-stateful-pce], after the expiry of this time all state
-   associated with the PCEP session is removed.  This includes the
-   SPEAKER-ENTITY-ID received.  Note that the PCEP session
+   that went down.  Then state synchronization optimizations such as
+   state sync avoidance can be applied to this session.  Note that this
+   usage is only applicable within the State Timeout Interval
+   [I-D.ietf-pce-stateful-pce].  After the State Timeout Interval
+   expires, all state associated with the PCEP session is removed, which
+   includes the SPEAKER-ENTITY-ID received.  Note that the PCEP session
    initialization [RFC5440] procedure remains unchanged.
 
 3.3.  PCEP Extensions
@@ -554,6 +550,10 @@ Internet-Draft   Optimizations of state synchronization    February 2017
 
                     Figure 4: LSP-DB-VERSION TLV format
 
+   The type of the TLV is TBD5 and it has a fixed length of 8 octets.
+   The value contains a 64-bit unsigned integer, carried in network byte
+   order, representing the LSP State DB Version Number.
+
 
 
 
@@ -561,10 +561,6 @@ Crabbe, et al.           Expires August 31, 2017               [Page 10]
 
 Internet-Draft   Optimizations of state synchronization    February 2017
 
-
-   The type of the TLV is TBD5 and it has a fixed length of 8 octets.
-   The value contains a 64-bit unsigned integer, carried in network byte
-   order, representing the LSP State DB Version Number.
 
 3.3.2.  Speaker Entity Identifier TLV
 
@@ -610,6 +606,10 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    padding is not included in the Length field.  The value contains the
    entity identifier of the speaker transmitting this TLV.  This
    identifier is required to be unique within its scope of visibility,
+   which is usually limited to a single domain.  It MAY be configured by
+   the operator.  Alternatively, it can be derived automatically from a
+   suitably-stable unique identifier, such as a MAC address, serial
+   number, Traffic Engineering Router ID, or similar.  In the case of
 
 
 
@@ -618,10 +618,6 @@ Crabbe, et al.           Expires August 31, 2017               [Page 11]
 Internet-Draft   Optimizations of state synchronization    February 2017
 
 
-   which is usually limited to a single domain.  It MAY be configured by
-   the operator.  Alternatively, it can be derived automatically from a
-   suitably-stable unique identifier, such as a MAC address, serial
-   number, Traffic Engineering Router ID, or similar.  In the case of
    inter-domain connections, the speaker SHOULD prefix its usual
    identifier with the domain identifier of its residence, such as
    Autonomous System number, IGP area identifier, or similar to make
@@ -661,6 +657,10 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    channel bandwidth.
 
    Figure 6 shows an example of LSP state synchronization.
+
+
+
+
 
 
 
@@ -848,17 +848,17 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    that a particular LSP report has been processed by the PCE before the
    session to PCE went down.  So a PCC implementation MAY choose to
    store the LSP State Database Version Number with each LSP at the time
-   its status changed, so that when a session is re-established and
-   incremental synchronization could be attempted based on the PCE's
-   last LSP State Database Version Number.  For LSP that is deleted at
-   the PCC, the PCC implementation would need to remember the deleted
-   LSP in some way to make sure this could be reported as part of
-   incremental synchronization later.  The PCC would discard this
-   information based on a local policy, or when it determines that this
-   information is no longer needed with sufficient confidence.  In the
-   example shown in Figure 7, the PCC needs to store the LSP state
-   changes that happened between DB Version 43 to 46 and synchronizes
-   these changes, when performing incremental LSP state update.
+   its status changed, so that when a session is re-established an
+   incremental synchronization can be attempted based on the PCE's last
+   LSP State Database Version Number.  For an LSP that is deleted at the
+   PCC, the PCC implementation would need to remember the deleted LSP in
+   some way to make sure this could be reported as part of incremental
+   synchronization later.  The PCC would discard this information based
+   on a local policy, or when it determines that this information is no
+   longer needed with sufficient confidence.  In the example shown in
+   Figure 7, the PCC needs to store the LSP state changes that happened
+   between DB Version 43 to 46 and synchronizes these changes, when
+   performing incremental LSP state update.
 
    If a PCC finds out it does not have sufficient information to
    complete incremental synchronization after advertising incremental
@@ -907,14 +907,14 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    In order to allow a stateful PCE to control the LSP-DB
    synchronization after establishing a PCEP session, both PCEP speakers
    MUST set F bit to 1 in the OPEN message.  If the LSP-DB-VERSION TLV
-   is included by both PCEP speaker and the TLV value matches, the state
-   synchronization can be skipped as described in Section 3.2.  If the
-   TLV is not included or the LSP-DB Version is mis-matched, the PCE can
-   trigger the state synchronization process by sending a PCUpd message
-   with PLSP-ID = 0 and SYNC = 1.  The PCUpd message SHOULD include an
-   empty ERO (with no ERO sub-object and object length of 4) as its
-   intended path and SHOULD NOT include the optional objects for its
-   attributes for any parameter update and the PCC MUST ignore such an
+   is included by both PCEP speakers and the TLV value matches, the
+   state synchronization can be skipped as described in Section 3.2.  If
+   the TLV is not included or the LSP-DB Version is mis-matched, the PCE
+   can trigger the state synchronization process by sending a PCUpd
+   message with PLSP-ID = 0 and SYNC = 1.  The PCUpd message SHOULD
+   include an empty ERO (with no ERO sub-object and object length of 4)
+   as its intended path and SHOULD NOT include the optional objects for
+   its attributes for any parameter update.  The PCC MUST ignore such an
    update when the SYNC flag is set.  If the TRIGGERED-INITIAL-SYNC
    capability is not advertised by a PCE and the PCC receives a PCUpd
    with the SYNC flag set to 1, the PCC MUST send a PCErr with the SRP-
@@ -933,10 +933,10 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    When the capability of PCE control is enabled, only after a PCC
    receives this message, it will start sending information to the PCE.
    This PCE-triggering capability can be applied to both full and
-   incremental state synchronization.  If applied to the later, the PCCs
-   only send information that PCE does not possess, which is inferred
-   from the LSP-DB version information exchanged in the OPEN message
-   (see Section 4.2 for detailed procedure).
+   incremental state synchronization.  If applied to the latter, the
+   PCCs only send information that PCE does not possess, which is
+   inferred from the LSP-DB version information exchanged in the OPEN
+   message (see Section 4.2 for detailed procedure).
 
    Once the initial state synchronization is triggered by the PCE, the
    procedures and error checks remain unchanged
@@ -976,7 +976,7 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    To trigger re-synchronization for an LSP, the PCE sends a Path
    Computation State Update (PCUpd) for the LSP, with the SYNC flag in
    the LSP object set to 1.  The PCE SHOULD NOT include any parameter
-   updates for the LSP, and the PCC MUST ignore such an updates when the
+   updates for the LSP, and the PCC MUST ignore such an update when the
    SYNC flag is set.  The PCC MUST respond with a PCRpt message with the
    LSP state, SYNC Flag set to 0 and MUST include the SRP-ID-number of
    the PCUpd message that triggered the resynchronization.  If the PCC
@@ -991,7 +991,7 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    set to 1.  The PCUpd message MUST include an empty ERO (with no ERO
    sub-object and object length of 4) as its intended path and SHOULD
    NOT include the optional objects for its attributes for any parameter
-   update and the PCC MUST ignore such update if the SYNC flag is set.
+   update.  The PCC MUST ignore such update if the SYNC flag is set.
    This PCUpd message is the trigger for the PCC to enter the
    synchronization phase as described in [I-D.ietf-pce-stateful-pce] and
    start sending PCRpt messages.  After the receipt of the end-of-
@@ -1038,7 +1038,7 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    establishment time.
 
    The STATEFUL-PCE-CAPABILITY TLV is defined in
-   [I-D.ietf-pce-stateful-pce].  This document request following new
+   [I-D.ietf-pce-stateful-pce].  This document defines following new
    flags in the STATEFUL-PCE-CAPABILITY TLV:
 
        Bit                        Description
@@ -1201,29 +1201,29 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    apply to PCEP extensions defined in this document.
 
    The state synchronization optimizations described in this document
-   can result in savings the load on the data exchanges and time it
-   takes for stateful PCE to be fully operational in case of re-
-   establishment of PCEP session.  The ability to trigger re-
-   synchronization by the PCE can be utilized by the operator to sanity
-   check its state and recover from any mismatch in state without
-   tearing down the session.
+   can result in a reduction of the amount of data exchanged and the
+   time taken for a stateful PCE to be fully operational when a PCEP
+   session is re-established.  The ability to trigger re-synchronization
+   by the PCE can be utilized by the operator to sanity check its state
+   and recover from any mismatch in state without tearing down the
+   session.
 
 10.  Security Considerations
 
    The security considerations listed in [I-D.ietf-pce-stateful-pce]
-   apply to this document as well.  However, because the protocol
-   modifications outlined in this document such as use of SPEAKER-
-   ENTITY-ID and the ability for the PCE to control state (re)-
-   synchronization timing and sequence, it also introduces new attack
-   vectors.  An attacker could spoof the SPEAKER-ENTITY-ID and pretend
-   to be another PCEP speaker.  An attacker may flood the PCC with
-   triggered re-synchronization request at a rate which exceeds the
-   PCC's ability to process them, either by spoofing messages or by
-   compromising the PCE itself.  The PCC can respond with PCErr message
-   as described in Section 6.2 and terminate the session.  Thus securing
-   the PCEP session using mechanism like TCP Authentication Option (TCP-
-   AO) [RFC5925] or Transport Layer Security (TLS) [I-D.ietf-pce-pceps]
-   is RECOMMENDED.
+   apply to this document as well.  However, this document also
+   introduces some new attack vectors.  An attacker could spoof the
+   SPEAKER-ENTITY-ID and pretend to be another PCEP speaker.  An
+   attacker may flood the PCC with triggered re-synchronization request
+   at a rate which exceeds the PCC's ability to process them, either by
+   spoofing messages or by compromising the PCE itself.  The PCC can
+   respond with PCErr message as described in Section 6.2 and terminate
+   the session.  Thus securing the PCEP session using mechanism like TCP
+   Authentication Option (TCP-AO) [RFC5925] or Transport Layer Security
+   (TLS) [I-D.ietf-pce-pceps] is RECOMMENDED.
+
+
+
 
 
 
@@ -1236,8 +1236,11 @@ Internet-Draft   Optimizations of state synchronization    February 2017
 
 11.  Acknowledgments
 
-   We would like to thank Young Lee, Jonathan Hardwick, Sergio Belotti
-   and Cyril Margaria for their comments and discussions.
+   We would like to thank Young Lee, Sergio Belotti and Cyril Margaria
+   for their comments and discussions.
+
+   Thanks to Jonathan Hardwick for being the document shepherd and
+   provide comments and guidance.
 
    Thanks to Tomonori Takeda for Routing Area Directorate review.
 
@@ -1278,10 +1281,7 @@ Internet-Draft   Optimizations of state synchronization    February 2017
               Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
               June 2010, <http://www.rfc-editor.org/info/rfc5925>.
 
-   [RFC8051]  Zhang, X., Ed. and I. Minei, Ed., "Applicability of a
-              Stateful Path Computation Element (PCE)", RFC 8051,
-              DOI 10.17487/RFC8051, January 2017,
-              <http://www.rfc-editor.org/info/rfc8051>.
+
 
 
 
@@ -1289,6 +1289,11 @@ Crabbe, et al.           Expires August 31, 2017               [Page 23]
 
 Internet-Draft   Optimizations of state synchronization    February 2017
 
+
+   [RFC8051]  Zhang, X., Ed. and I. Minei, Ed., "Applicability of a
+              Stateful Path Computation Element (PCE)", RFC 8051,
+              DOI 10.17487/RFC8051, January 2017,
+              <http://www.rfc-editor.org/info/rfc8051>.
 
    [I-D.ietf-pce-pcep-yang]
               Dhody, D., Hardwick, J., Beeram, V., and j.
@@ -1328,13 +1333,8 @@ Authors' Addresses
    EMail: jmedved@cisco.com
 
 
-   Robert Varga
-   Pantheon Technologies SRO
-   Mlynske Nivy 56
-   Bratislava  821 05
-   Slovakia
 
-   EMail: robert.varga@pantheon.sk
+
 
 
 
@@ -1344,6 +1344,15 @@ Authors' Addresses
 Crabbe, et al.           Expires August 31, 2017               [Page 24]
 
 Internet-Draft   Optimizations of state synchronization    February 2017
+
+
+   Robert Varga
+   Pantheon Technologies SRO
+   Mlynske Nivy 56
+   Bratislava  821 05
+   Slovakia
+
+   EMail: robert.varga@pantheon.sk
 
 
    Xian Zhang
@@ -1362,15 +1371,6 @@ Internet-Draft   Optimizations of state synchronization    February 2017
    India
 
    EMail: dhruv.ietf@gmail.com
-
-
-
-
-
-
-
-
-
 
 
 
