@@ -8,9 +8,9 @@ March 1, 2017.\" Auto generated Nroff by NroffEdit on September 4, 2014
 .ds LF Gandhi, et al.
 .ds RF FORMFEED[Page %]
 .ds LH Internet-Draft
-.ds RH March 11, 2017
+.ds RH March 12, 2017
 .ds CH PCEP for Performance Measurement
-.ds CF Expires September 12, 2017 
+.ds CF Expires September 13, 2017
 .hy 0
 .nh
 .ad l
@@ -18,14 +18,14 @@ March 1, 2017.\" Auto generated Nroff by NroffEdit on September 4, 2014
 
 .nf
 .tl 'PCE Working Group''R. Gandhi'
-.tl '\%Internet-Draft''Individual Contributor'
+.tl '\%Internet-Draft''Cisco Systems, Inc.'
 .tl 'Intended Status: Standards Track''B. Wen'
-.tl 'Expires: September 12, 2017''Comcast'
+.tl 'Expires: September 13, 2017''Comcast'
 .tl '''C. Barth'
 .tl '''Juniper Networks'
 .tl '''D. Dhody'
 .tl '''Huawei Technologies'
-.tl '''March 11, 2017'
+.tl '''March 12, 2017'
 .fi
 .in 3 
 
@@ -102,7 +102,7 @@ Table of Contents
        5.2.1.  Delay Measurement Enable . . . . . . . . . . . . . . . 14
        5.2.2.  Delay Measurement Interval . . . . . . . . . . . . . . 14
        5.2.3.  Delay Measurement Report Threshold . . . . . . . . . . 14
-       5.2.4.  Delay Measurement Report Threshold Percentage  . . . . 15
+       5.2.4.  Delay Measurement Report Threshold Percentage  . . . . 14
        5.2.5.  Delay Measurement Report Interval  . . . . . . . . . . 15
      5.3.  DELAY-MEASUREMENT Object . . . . . . . . . . . . . . . . . 15
    6.  PCEP Extensions for Reporting Loss Measurement . . . . . . . . 17
@@ -114,12 +114,12 @@ Table of Contents
        6.2.3.  Loss Measurement Report Threshold  . . . . . . . . . . 20
        6.2.4.  Loss Measurement Report Threshold Percentage . . . . . 20
        6.2.5.  Loss Measurement Report Interval . . . . . . . . . . . 20
-     6.3.  LOSS-MEASUREMENT Object  . . . . . . . . . . . . . . . . . 20
+     6.3.  LOSS-MEASUREMENT Object  . . . . . . . . . . . . . . . . . 21
    7.  PCEP Extensions for Reporting Bandwidth Utilization  . . . . . 22
      7.1.  Bandwidth Utilization Capability Advertisement . . . . . . 22
        7.1.1.  BANDWIDTH-UTILIZATION-CAPABILITY TLV . . . . . . . . . 22
      7.2.  BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV  . . . . . . . . 23
-       7.2.1.  Bandwidth Utilization Measurement Enable . . . . . . . 23
+       7.2.1.  Bandwidth Utilization Measurement Enable . . . . . . . 24
        7.2.2.  Bandwidth Utilization Measurement Interval . . . . . . 24
        7.2.3.  Bandwidth Utilization Report Threshold . . . . . . . . 24
        7.2.4.  Bandwidth Utilization Report Threshold Percentage  . . 24
@@ -127,23 +127,23 @@ Table of Contents
      7.3.  BANDWIDTH Object . . . . . . . . . . . . . . . . . . . . . 24
    8.  PCEP Procedure . . . . . . . . . . . . . . . . . . . . . . . . 25
      8.1.  Various MEASUREMENT-ATTRIBUTES TLVs  . . . . . . . . . . . 25
-     8.2.  The MEASUREMENT Object . . . . . . . . . . . . . . . . . . 25
+     8.2.  The MEASUREMENT Objects  . . . . . . . . . . . . . . . . . 26
    9.  Scaling Considerations . . . . . . . . . . . . . . . . . . . . 26
      9.1.  The PCNtf Message  . . . . . . . . . . . . . . . . . . . . 26
-   10.  Security Considerations . . . . . . . . . . . . . . . . . . . 26
+   10.  Security Considerations . . . . . . . . . . . . . . . . . . . 27
    11.  Manageability Considerations  . . . . . . . . . . . . . . . . 27
      11.1.  Control of Function and Policy  . . . . . . . . . . . . . 27
      11.2.  Information and Data Models . . . . . . . . . . . . . . . 27
      11.3.  Liveness Detection and Monitoring . . . . . . . . . . . . 27
      11.4.  Verify Correct Operations . . . . . . . . . . . . . . . . 27
-     11.5.  Requirements On Other Protocols . . . . . . . . . . . . . 27
+     11.5.  Requirements On Other Protocols . . . . . . . . . . . . . 28
      11.6.  Impact On Network Operations  . . . . . . . . . . . . . . 28
    12.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . 28
      12.1.  Measurement Capability TLV Types  . . . . . . . . . . . . 28
-       12.1.1  Flag fields for MEASUREMENT-CAPABILITY TLVs  . . . . . 28
+       12.1.1.  Flag Fields for MEASUREMENT-CAPABILITY TLVs . . . . . 28
      12.2.  MEASUREMENT-ATTRIBUTES TLVs . . . . . . . . . . . . . . . 29
-       12.2.1 The Sub-TLVs for MEASUREMENT-ATTRIBUTES TLVs  . . . . . 29
-         12.2.1.1 Flag field in Measurement-Enable sub-TLV  . . . . . 30
+       12.2.1.  The Sub-TLVs For MEASUREMENT-ATTRIBUTES TLVs  . . . . 29
+         12.2.1.1.  Flag Fields in Measurement-Enable sub-TLV . . . . 30
      12.3.  Measurement Object-Class  . . . . . . . . . . . . . . . . 30
        12.3.1.  DELAY-MEASUREMENT Object-Types  . . . . . . . . . . . 30
        12.3.2.  LOSS-MEASUREMENT Object-Types . . . . . . . . . . . . 31
@@ -261,7 +261,7 @@ o  The PCC reports the measured values of the feature to the Stateful PCE at the
 
 .in 6
 .ti 3
-o  The PCE and PCC notify of their entering and clearing the overwhelmed state when operating under high LSP scale.
+o  The PCE and PCC notify each other of their entering and clearing the overwhelmed state when operating under high LSP scale.
 
 .in 3
 .ti 0
@@ -302,7 +302,7 @@ The Measurement-Enable sub-TLV specifies that the given measurement feature is e
 \%+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |           Type=1              |           Length=4            |
 \%+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                             Flags                       |I|T|O|
+|                             Flags                             |
 \%+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 .ti 18
@@ -311,20 +311,8 @@ Measurement-Enable sub-TLV Format
 
 The Type is 1, Length is 4 bytes, and the value comprises of flags (32 bits) for enabling various measurement features. 
 
-Following bits are defined: 
-
-.in 6
-.ti 3
-O Flag (One Way - 1 bit): Indicates One-Way Measurement is enabled. 
-.in 6
-.ti 3
-T Flag (Two Way - 1 bit): Indicates Two-Way Measurement is enabled.
-.in 6
-.ti 3
-I Flag (Inferred - 1 bit): Indicates Inferred Mesurement is enabled. 
-
 .in 3
-Unassigned bits are considered reserved, they SHOULD be set to 0 on transmission and MUST be ignored on receipt. 
+Unassigned flags are considered reserved, they MUST be set to 0 when sent and MUST be ignored when received. 
 
 .ti 0
 4.2.  Measurement-Interval sub-TLV
@@ -508,15 +496,15 @@ The DELAY-MEASUREMENT-ATTRIBUTES TLV provides the configurable parameters of the
 The format of the DELAY-MEASUREMENT-ATTRIBUTES TLV is shown in the following figure:
 
 .nf
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |       PCEP TLV Type TBD4      |           Length              |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   //                           sub-TLVs                          //
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       PCEP TLV Type TBD4      |           Length              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+//                           sub-TLVs                          //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 .ti 18
 DELAY-MEASUREMENT-ATTRIBUTES TLV Format
@@ -525,15 +513,15 @@ DELAY-MEASUREMENT-ATTRIBUTES TLV Format
 PCEP TLV Type defined as following:
 
 .nf
-   Type      Name                               
-   ----------------------------------------------------------
-    TBD4     DELAY-MEASUREMENT-ATTRIBUTES
-
+ Type      Name                               
+ ----------------------------------------------------------
+  TBD4     DELAY-MEASUREMENT-ATTRIBUTES
 .fi
-.in 6
+
+.in 3
 Length: The Length field defines the length of the value portion in bytes as per [RFC5440].
 
-Value: Comprises of one or more sub-TLVs as descibed in section 4.
+Value: Comprises of one or more sub-TLVs as described in Section 4 of this document.
 
 .in 3
 The following sub-sections describe the parameters which are currently defined to be carried within this TLV.
@@ -541,8 +529,16 @@ The following sub-sections describe the parameters which are currently defined t
 .ti 0
 5.2.1.  Delay Measurement Enable
 
-The Measurement-Enable sub-TLV specifies the delay measurement mode. The O bit indicates the One-Way Delay Measurement, where as T bit indicates 
-Two-Way Delay Measurement. The I bit is of no meaning inside the DELAY-MEASUREMENT-ATTRIBUTES TLV. 
+The Measurement-Enable sub-TLV specifies the delay measurement mode enabled using following flags:
+
+.nf
+.ne 3
+Bit     Description
+\%------------------------------------------------------------------
+ 31     One-Way Delay Measurement Enabled
+ 30     Two-Way Delay Measurement Enabled
+.fi
+.in 3
 
 .ti 0
 5.2.2.  Delay Measurement Interval
@@ -714,12 +710,8 @@ o  Further, the PCEP speaker SHOULD generate error-value TBD11 (Inferred Mode Lo
 
 .ti 3
 .in 6
-o  If the PCEP speaker that supports the extensions of this document
-but did not advertise this capability, then upon receipt of LOSS-MEASUREMENT
-object, it SHOULD generate a
-PCErr with error-type 19 (Invalid Operation), error-value TBD8
-(Loss-Measurement capability was not advertised) and it will
-terminate the PCEP session. 
+o  If the PCEP speaker that supports the extensions of this document but did not advertise this capability, then upon receipt of LOSS-MEASUREMENT
+object, it SHOULD generate a PCErr with error-type 19 (Invalid Operation), error-value TBD8 (Loss-Measurement capability was not advertised) and it will terminate the PCEP session. 
 
 .in 3
 
@@ -737,7 +729,7 @@ The LOSS-MEASUREMENT-CAPABILITY TLV is an optional TLV for use in the OPEN Objec
 |                             Flags                     |N|I|B|U|
 \%+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-.ti 18
+.ti 16
 LOSS-MEASUREMENT-CAPABILITY TLV Format
 
 .fi
@@ -774,15 +766,15 @@ The LOSS-MEASUREMENT-ATTRIBUTES TLV provides the configurable parameters of the 
 The format of the LOSS-MEASUREMENT-ATTRIBUTES TLV is shown in the following figure:
 
 .nf
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |       PCEP TLV Type TBD16     |           Length              |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   //                           sub-TLVs                          //
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       PCEP TLV Type TBD16     |           Length              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+//                           sub-TLVs                          //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 .ti 18
 LOSS-MEASUREMENT-ATTRIBUTES TLV Format
@@ -791,15 +783,15 @@ LOSS-MEASUREMENT-ATTRIBUTES TLV Format
 PCEP TLV Type defined as following:
 
 .nf
-   Type      Name                               
-   ----------------------------------------------------------
-    TBD16    LOSS-MEASUREMENT-ATTRIBUTES
+ Type      Name                               
+ ----------------------------------------------------------
+  TBD16    LOSS-MEASUREMENT-ATTRIBUTES
 
 .fi
-.in 6
+.in 3
 Length: The Length field defines the length of the value portion in bytes as per [RFC5440].
 
-Value: Comprises of one or more sub-TLVs as descibed in section 4.
+Value: Comprises of one or more sub-TLVs as described in Section 4 of this document.
 
 .in 3
 The following sub-sections describe the parameters which are currently defined to be carried within this TLV.
@@ -807,9 +799,17 @@ The following sub-sections describe the parameters which are currently defined t
 .ti 0
 6.2.1.  Loss Measurement Enable
 
-The Measurement-Enable sub-TLV specifies the loss measurement mode
-The O bit indicates the One-Way Loss Measurement, where as T bit indicates 
-Two-Way Loss Measurement. The I bit indicate Inferred Loss Measurement is enabled.
+The Measurement-Enable sub-TLV specifies the loss measurement mode enabled using following flags:
+
+.nf
+.ne 3
+Bit      Description
+\%------------------------------------------------------------------
+ 29      Unidirectional Loss Measurement Enabled
+ 28      Bidirectional Loss Measurement Enabled
+ 27      Inferred Loss Measurement Enabled
+.fi
+.in 3
 
 .ti 0
 6.2.2.  Loss Measurement Interval
@@ -824,7 +824,7 @@ The Report-Threshold sub-TLV specifies the threshold value used to trigger an im
 
 .in 6
 .ti 3
-o  Report-Threshold: This 24-bit field identifying the packet loss as a percentage of the total packets sent or received. The encoding	is as per [RFC7471].
+o  Report-Threshold: This 24-bit field identifying the packet loss as a percentage of the total packets sent or received. The encoding is as per [RFC7471].
 .in 3
 
 Same report-threshold is used for all loss measurement values.
@@ -920,12 +920,8 @@ o  If the PCEP speaker that supports the extensions of this document but did not
 
 .in 6
 .ti 3
-o  If the PCEP speaker that supports the extensions of this document
-but did not advertise this capability, then upon receipt of
-BANDWIDTH object of type TBD14, it SHOULD
-generate a PCErr with error-type 19 (Invalid Operation), error-
-value TBD13 (Bandwidth utilization capability was not advertised)
-and it will terminate the PCEP session.
+o  If the PCEP speaker that supports the extensions of this document but did not advertise this capability, then upon receipt of
+BANDWIDTH object of type TBD14, it SHOULD generate a PCErr with error-type 19 (Invalid Operation), error-value TBD13 (Bandwidth utilization capability was not advertised) and it will terminate the PCEP session.
 .in 3
 
 .ti 0
@@ -958,42 +954,39 @@ Advertisement of the BANDWIDTH-UTILIZATION-CAPABILITY TLV implies support of ban
 .ti 0
 7.2.  BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV
 
-The BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV provides the configurable
-parameters of bandwidth utilization feature.  
+The BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV provides the configurable parameters of bandwidth utilization feature.  
 
-The format of the BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV is shown in the
-following figure:
+The format of the BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV is shown in the following figure:
 
 .nf
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |       PCEP TLV Type TBD17     |           Length              |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   //                           sub-TLVs                          //
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       PCEP TLV Type TBD17     |           Length              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+//                           sub-TLVs                          //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-.ti 18
+.ti 13
 BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV Format
 
 .fi 
    PCEP TLV Type defined as following:
 
 .nf
-   Type      Name                               
-   ----------------------------------------------------------
-    TBD17    BW-UTILIZATION-MEASUREMENT-ATTRIBUTES
+ Type      Name                               
+ ----------------------------------------------------------
+  TBD17    BW-UTILIZATION-MEASUREMENT-ATTRIBUTES
 .fi 
 
-.in 6   
+.in 3 
 Length: The Length field defines the length of the value portion 
 in bytes as per [RFC5440].
 
-.in 6 
-Value: Comprises of one or more sub-TLVs as descibed in section 4.
+Value: Comprises of one or more sub-TLVs as described in Section 4 of this document.
 
 .in 3
 The following sub-sections describe the parameters which are currently defined to be carried within this TLV.
@@ -1001,10 +994,15 @@ The following sub-sections describe the parameters which are currently defined t
 .ti 0
 7.2.1.  Bandwidth Utilization Measurement Enable
 
-The Measurement-Enable sub-TLV specifies that the bandwidth
-utilization reporting is enabled. The bits O, T and I have no meaning 
-inside the BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV. 
+The Measurement-Enable sub-TLV specifies that the bandwidth utilization reporting is enabled using following flag:
 
+.nf
+.ne 3
+Bit     Description
+\%------------------------------------------------------------------
+ 26     Bandwidth Utilization Reporting Enabled
+.fi
+.in 3
 
 .ti 0
 7.2.2.  Bandwidth Utilization Measurement Interval
@@ -1092,7 +1090,7 @@ o  The various MEASUREMENT-ATTRIBUTES TLVs are encoded in all PCEP messages for 
 
 .in 3
 .ti 0
-8.2.  The MEASUREMENT Object
+8.2.  The MEASUREMENT Objects
 
 When a TE LSP is enabled with a measurement reporting feature, the PCC SHOULD include the corresponding MEASUREMENT Object to report the measured values to the PCE in the PCRpt message [DRAFT-PCE-STATEFUL]. 
 
@@ -1138,7 +1136,7 @@ o  When the PCEP speaker is no longer in the overwhelm state and is available to
 .ti 0
 10.  Security Considerations
 
-This document defines new MEASUREMENT-ATTRIBUTES TLVs, CAPABILITY TLVs and MEASUREMENT Objects for reporting loss, delay measurements and bandwidth-utilization which do not add additional security concerns beyond those discussed in [RFC5440] and \%[DRAFT-PCE-STATEFUL].
+This document defines new MEASUREMENT-ATTRIBUTES TLVs, CAPABILITY TLVs and MEASUREMENT Objects for reporting loss, delay measurements and bandwidth utilization which do not add additional security concerns beyond those discussed in [RFC5440] and \%[DRAFT-PCE-STATEFUL].
 
 Some deployments may find the reporting of the performance measurement and bandwidth utilization information as extra sensitive as it could be used to influence LSP path computation and LSP setup with adverse effect.  Additionally, snooping of PCEP messages with such data or using PCEP messages for network reconnaissance, may give an attacker sensitive information about the operations of the network.  Thus, such deployment should employ suitable PCEP security mechanisms like TCP Authentication Option (TCP-AO) [RFC5925] or \%[DRAFT-PCE-PCEPS].
 
@@ -1195,7 +1193,7 @@ Type      Name                                 Reference
 .fi
 
 .ti 0
-12.1.1  Flag fields for MEASUREMENT-CAPABILITY TLVs
+12.1.1.  Flag Fields for MEASUREMENT-CAPABILITY TLVs
 
 IANA is requested to create a registry to manage the Flag field of the DELAY-MEASUREMENT-CAPABILITY TLV, LOSS-MEASUREMENT-CAPABILITY TLV and BANDWIDTH-UTILIZATION-CAPABILITY TLV.
 
@@ -1211,21 +1209,21 @@ New bit numbers are allocated only by an IETF Review action [RFC5226].  Each bit
 The following value are defined in this document for the Flag field for - 
 
 .nf
-   DELAY-MEASUREMENT-CAPABILITY TLV: 
+DELAY-MEASUREMENT-CAPABILITY TLV: 
 
-   Bit       Description                          Reference
-   ----------------------------------------------------------
-   31        Unidirectional Delay Measurement     [This I.D.]
-   30        Bidirectional Delay Measurement      [This I.D.]
+ Bit       Description                            Reference
+ ------------------------------------------------------------
+ 31        Unidirectional Delay Measurement       [This I.D.]
+ 30        Bidirectional Delay Measurement        [This I.D.]
 
-   LOSS-MEASUREMENT-CAPABILITY TLV: 
+LOSS-MEASUREMENT-CAPABILITY TLV: 
 
-   Bit       Description                          Reference
-   ----------------------------------------------------------
-   31        Unidirectional Loss Measurement      [This I.D.]
-   30        Bidirectional Loss Measurement       [This I.D.]
-   29        Inferred Mode                        [This I.D.]
-   28        Direct Mode                          [This I.D.] 
+ Bit       Description                            Reference
+ ------------------------------------------------------------
+ 31        Unidirectional Loss Measurement        [This I.D.]
+ 30        Bidirectional Loss Measurement         [This I.D.]
+ 29        Inferred Mode                          [This I.D.]
+ 28        Direct Mode                            [This I.D.] 
 .fi 
  
 .ti 0
@@ -1236,17 +1234,16 @@ This document defines the following new PCEP TLV Types; IANA is requested to mak
 
 .nf
 .ne 3
-Type      Name                                 Reference
-\%----------------------------------------------------------
- TBD4     DELAY-MEASUREMENT-ATTRIBUTES         [This I.D.]
- TBD16    LOSS-MEASUREMENT-ATTRIBUTES          [This I.D.]
- TBD17    BW-UTILIZATION-MEASUREMENT           [This I.D.]
-          -ATTRIBUTES
+Type      Name                                    Reference
+\%-------------------------------------------------------------
+ TBD4     DELAY-MEASUREMENT-ATTRIBUTES            [This I.D.]
+ TBD16    LOSS-MEASUREMENT-ATTRIBUTES             [This I.D.]
+ TBD17    BW-UTILIZATION-MEASUREMENT-ATTRIBUTES   [This I.D.]
 .fi
 
 .in 3
 .ti 0
-12.2.1 The Sub-TLVs for MEASUREMENT-ATTRIBUTES TLVs
+12.2.1.  The Sub-TLVs For MEASUREMENT-ATTRIBUTES TLVs
 
 IANA is requested to create an "MEASUREMENT-ATTRIBUTES Sub-TLV Types" \%sub-registry in the "PCEP TLV Type Indicators" registry.  New sub-TLV are allocated only by an IETF Review action [RFC5226].
 
@@ -1265,9 +1262,10 @@ Type      Name                                 Reference
  6-       Unassigned                           [This I.D.]
 65535
 .fi
+.in 3
 
 .ti 0
-12.2.1.1 Flag field in Measurement-Enable sub-TLV
+12.2.1.1.  Flag Fields in Measurement-Enable sub-TLV
 
 IANA is requested to create a registry to manage the Flag field of the Measurement-Enable sub-TLV.
 
@@ -1280,14 +1278,17 @@ New bit numbers are allocated only by an IETF Review action [RFC5226].  Each bit
    o  Defining RFC
 
 
-The following value are defined in this document for the Flag field 
+The following value are defined in this document for the Flag field.
 
 .nf
-   Bit       Description                          Reference
-   ----------------------------------------------------------
-   31        O (One-Way Measurement)              [This I.D.]
-   30        T (Two-Way Measurement)              [This I.D.]   
-   29        I (Inferred Mode)                    [This I.D.]
+Bit     Description                              Reference
+\%------------------------------------------------------------
+ 31     One-Way Delay Measurement Enabled        [This I.D.]
+ 30     Two-Way Delay Measurement Enabled        [This I.D.]
+ 29     Unidirectional Loss Measurement Enabled  [This I.D.]
+ 28     Bidirectional Loss Measurement Enabled   [This I.D.]
+ 27     Inferred Loss Measurement Enabled        [This I.D.]
+ 26     Bandwidth Utilization Reporting Enabled  [This I.D.]
 .fi 
 
 .ti 0
@@ -1478,9 +1479,9 @@ TBA.
 Authors' Addresses
 
 Rakesh Gandhi
-Individual Contributor
+Cisco Systems, Inc.
 
-EMail: rgandhi.ietf@gmail.com
+EMail: rgandhi@cisco.com
 
 
 Bin Wen

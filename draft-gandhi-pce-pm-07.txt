@@ -3,14 +3,14 @@
 
 
 PCE Working Group                                              R. Gandhi
-Internet-Draft                                    Individual Contributor
+Internet-Draft                                       Cisco Systems, Inc.
 Intended Status: Standards Track                                  B. Wen
-Expires: September 12, 2017                                      Comcast
+Expires: September 13, 2017                                      Comcast
                                                                 C. Barth
                                                         Juniper Networks
                                                                 D. Dhody
                                                      Huawei Technologies
-                                                          March 11, 2017
+                                                          March 12, 2017
 
 
     PCEP Extensions for Reporting MPLS-TE LSP Performance Measurements 
@@ -53,9 +53,9 @@ Status of this Memo
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 1]
+Gandhi, et al.         Expires September 13, 2017               [Page 1]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
    Internet-Drafts are draft documents valid for a maximum of six months
@@ -109,9 +109,9 @@ Table of Contents
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 2]
+Gandhi, et al.         Expires September 13, 2017               [Page 2]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
      4.5.  Report-Interval sub-TLV  . . . . . . . . . . . . . . . . . 11
@@ -122,7 +122,7 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
        5.2.1.  Delay Measurement Enable . . . . . . . . . . . . . . . 14
        5.2.2.  Delay Measurement Interval . . . . . . . . . . . . . . 14
        5.2.3.  Delay Measurement Report Threshold . . . . . . . . . . 14
-       5.2.4.  Delay Measurement Report Threshold Percentage  . . . . 15
+       5.2.4.  Delay Measurement Report Threshold Percentage  . . . . 14
        5.2.5.  Delay Measurement Report Interval  . . . . . . . . . . 15
      5.3.  DELAY-MEASUREMENT Object . . . . . . . . . . . . . . . . . 15
    6.  PCEP Extensions for Reporting Loss Measurement . . . . . . . . 17
@@ -134,12 +134,12 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
        6.2.3.  Loss Measurement Report Threshold  . . . . . . . . . . 20
        6.2.4.  Loss Measurement Report Threshold Percentage . . . . . 20
        6.2.5.  Loss Measurement Report Interval . . . . . . . . . . . 20
-     6.3.  LOSS-MEASUREMENT Object  . . . . . . . . . . . . . . . . . 20
+     6.3.  LOSS-MEASUREMENT Object  . . . . . . . . . . . . . . . . . 21
    7.  PCEP Extensions for Reporting Bandwidth Utilization  . . . . . 22
      7.1.  Bandwidth Utilization Capability Advertisement . . . . . . 22
        7.1.1.  BANDWIDTH-UTILIZATION-CAPABILITY TLV . . . . . . . . . 22
      7.2.  BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV  . . . . . . . . 23
-       7.2.1.  Bandwidth Utilization Measurement Enable . . . . . . . 23
+       7.2.1.  Bandwidth Utilization Measurement Enable . . . . . . . 24
        7.2.2.  Bandwidth Utilization Measurement Interval . . . . . . 24
        7.2.3.  Bandwidth Utilization Report Threshold . . . . . . . . 24
        7.2.4.  Bandwidth Utilization Report Threshold Percentage  . . 24
@@ -147,31 +147,31 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
      7.3.  BANDWIDTH Object . . . . . . . . . . . . . . . . . . . . . 24
    8.  PCEP Procedure . . . . . . . . . . . . . . . . . . . . . . . . 25
      8.1.  Various MEASUREMENT-ATTRIBUTES TLVs  . . . . . . . . . . . 25
-     8.2.  The MEASUREMENT Object . . . . . . . . . . . . . . . . . . 25
+     8.2.  The MEASUREMENT Objects  . . . . . . . . . . . . . . . . . 26
    9.  Scaling Considerations . . . . . . . . . . . . . . . . . . . . 26
      9.1.  The PCNtf Message  . . . . . . . . . . . . . . . . . . . . 26
-   10.  Security Considerations . . . . . . . . . . . . . . . . . . . 26
+   10.  Security Considerations . . . . . . . . . . . . . . . . . . . 27
    11.  Manageability Considerations  . . . . . . . . . . . . . . . . 27
      11.1.  Control of Function and Policy  . . . . . . . . . . . . . 27
      11.2.  Information and Data Models . . . . . . . . . . . . . . . 27
      11.3.  Liveness Detection and Monitoring . . . . . . . . . . . . 27
      11.4.  Verify Correct Operations . . . . . . . . . . . . . . . . 27
-     11.5.  Requirements On Other Protocols . . . . . . . . . . . . . 27
+     11.5.  Requirements On Other Protocols . . . . . . . . . . . . . 28
      11.6.  Impact On Network Operations  . . . . . . . . . . . . . . 28
    12.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . 28
      12.1.  Measurement Capability TLV Types  . . . . . . . . . . . . 28
-       12.1.1  Flag fields for MEASUREMENT-CAPABILITY TLVs  . . . . . 28
+       12.1.1.  Flag Fields for MEASUREMENT-CAPABILITY TLVs . . . . . 28
      12.2.  MEASUREMENT-ATTRIBUTES TLVs . . . . . . . . . . . . . . . 29
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 3]
+Gandhi, et al.         Expires September 13, 2017               [Page 3]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
-       12.2.1 The Sub-TLVs for MEASUREMENT-ATTRIBUTES TLVs  . . . . . 29
-         12.2.1.1 Flag field in Measurement-Enable sub-TLV  . . . . . 30
+       12.2.1.  The Sub-TLVs For MEASUREMENT-ATTRIBUTES TLVs  . . . . 29
+         12.2.1.1.  Flag Fields in Measurement-Enable sub-TLV . . . . 30
      12.3.  Measurement Object-Class  . . . . . . . . . . . . . . . . 30
        12.3.1.  DELAY-MEASUREMENT Object-Types  . . . . . . . . . . . 30
        12.3.2.  LOSS-MEASUREMENT Object-Types . . . . . . . . . . . . 31
@@ -221,9 +221,9 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 4]
+Gandhi, et al.         Expires September 13, 2017               [Page 4]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
 1.  Introduction
@@ -277,9 +277,9 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 5]
+Gandhi, et al.         Expires September 13, 2017               [Page 5]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
    operators.  Note that the specification of the use of the reported
@@ -333,9 +333,9 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 6]
+Gandhi, et al.         Expires September 13, 2017               [Page 6]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
    performing the path computations.
@@ -389,9 +389,9 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 7]
+Gandhi, et al.         Expires September 13, 2017               [Page 7]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
                              |    |  MEASUREMENT REPORTS
@@ -423,8 +423,8 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
       whereas report-threshold can be used to trigger an immediate
       action at the PCE on the TE LSP.
 
-   o  The PCE and PCC notify of their entering and clearing the
-      overwhelmed state when operating under high LSP scale.
+   o  The PCE and PCC notify each other of their entering and clearing
+      the overwhelmed state when operating under high LSP scale.
 
 3.1.  Report Thresholds
 
@@ -445,9 +445,9 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 8]
+Gandhi, et al.         Expires September 13, 2017               [Page 8]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
    crossing.  The delay and loss measurements are still reported at the
@@ -491,7 +491,7 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |           Type=1              |           Length=4            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                             Flags                       |I|T|O|
+   |                             Flags                             |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
                   Measurement-Enable sub-TLV Format
@@ -501,19 +501,13 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
  
 
 
-Gandhi, et al.         Expires September 12, 2017               [Page 9]
+Gandhi, et al.         Expires September 13, 2017               [Page 9]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
-   Following bits are defined: 
-
-   O Flag (One Way - 1 bit): Indicates One-Way Measurement is enabled. 
-   T Flag (Two Way - 1 bit): Indicates Two-Way Measurement is enabled.
-   I Flag (Inferred - 1 bit): Indicates Inferred Mesurement is enabled. 
-
-   Unassigned bits are considered reserved, they SHOULD be set to 0 on
-   transmission and MUST be ignored on receipt. 
+   Unassigned flags are considered reserved, they MUST be set to 0 when
+   sent and MUST be ignored when received. 
 
 4.2.  Measurement-Interval sub-TLV
 
@@ -554,19 +548,19 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
 
    The Type is 3, Length is 8 bytes, and the value comprises of -
 
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 10]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
-
    o  Report-Threshold:  32-bit absolute threshold value.  
 
    o  Count: 8-bit integer counter.  The number of consecutive
       measurement values MUST be above the threshold before reporting
       the measurement.  The value 0 is considered to be invalid.
+
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 10]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
 
    o  RESERVED: It MUST be set to zero when sent and MUST be ignored
       when received.
@@ -610,20 +604,20 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    |           Type=5              |           Length=4            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                      Report-Interval                          |
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 11]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
-
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
                   Report-Interval sub-TLV Format
 
    The Type is 5, Length is 4 bytes, and the value comprises of 4-byte
    time interval, the valid range is from 1 to 604800, in seconds.  The
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 11]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
    default value is 3600 seconds.
 
 
@@ -666,19 +660,20 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
       session.
 
 5.1.1.  DELAY-MEASUREMENT-CAPABILITY TLV
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 12]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
 
    The DELAY-MEASUREMENT-CAPABILITY TLV is an optional TLV for use in
    the OPEN Object for Delay Measurement via PCEP capability
    advertisement.  Its format is shown in the following figure:
 
     0                   1                   2                   3
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 12]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |               Type=TBD1       |           Length=4            |
@@ -721,46 +716,50 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    The format of the DELAY-MEASUREMENT-ATTRIBUTES TLV is shown in the
    following figure:
 
-       0                   1                   2                   3
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |       PCEP TLV Type TBD4      |           Length              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 13]
+Gandhi, et al.         Expires September 13, 2017              [Page 13]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |       PCEP TLV Type TBD4      |           Length              |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                                                               |
-      //                           sub-TLVs                          //
-      |                                                               |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   //                           sub-TLVs                          //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
                   DELAY-MEASUREMENT-ATTRIBUTES TLV Format
 
    PCEP TLV Type defined as following:
 
-      Type      Name                               
-      ----------------------------------------------------------
-       TBD4     DELAY-MEASUREMENT-ATTRIBUTES
+    Type      Name                               
+    ----------------------------------------------------------
+     TBD4     DELAY-MEASUREMENT-ATTRIBUTES
 
-      Length: The Length field defines the length of the value portion
-      in bytes as per [RFC5440].
+   Length: The Length field defines the length of the value portion in
+   bytes as per [RFC5440].
 
-      Value: Comprises of one or more sub-TLVs as descibed in section 4.
+   Value: Comprises of one or more sub-TLVs as described in Section 4 of
+   this document.
 
    The following sub-sections describe the parameters which are
    currently defined to be carried within this TLV.
 
 5.2.1.  Delay Measurement Enable
 
-   The Measurement-Enable sub-TLV specifies the delay measurement mode.
-   The O bit indicates the One-Way Delay Measurement, where as T bit
-   indicates Two-Way Delay Measurement. The I bit is of no meaning
-   inside the DELAY-MEASUREMENT-ATTRIBUTES TLV. 
+   The Measurement-Enable sub-TLV specifies the delay measurement mode
+   enabled using following flags:
+
+   Bit     Description
+   ------------------------------------------------------------------
+    31     One-Way Delay Measurement Enabled
+    30     Two-Way Delay Measurement Enabled
 
 5.2.2.  Delay Measurement Interval
 
@@ -778,15 +777,14 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
 
    Same report-threshold is used for all delay measurement values.
 
+5.2.4.  Delay Measurement Report Threshold Percentage
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 14]
+Gandhi, et al.         Expires September 13, 2017              [Page 14]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
-
-5.2.4.  Delay Measurement Report Threshold Percentage
 
    The Report-Threshold-Percentage sub-TLV specifies the threshold value
    used to trigger an immediate reporting of the measurements bypassing
@@ -834,16 +832,16 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
     1           8     One-Way Delay Measurement Value 
     2           12    One-Way Delay Measurement Min/Max Values 
     3           8     One-Way Delay Variation Measurement Value 
+    4           8     Two-Way Delay Measurement Value 
+    5           12    Two-Way Delay Measurement Min/Max Values 
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 15]
+Gandhi, et al.         Expires September 13, 2017              [Page 15]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
-    4           8     Two-Way Delay Measurement Value 
-    5           12    Two-Way Delay Measurement Min/Max Values 
     6           8     Two-Way Delay Variation Measurement Value 
 
 
@@ -890,15 +888,16 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
 
    o  One-way Delay Measurement Variation Value: Average Delay Variation
       of the LSP in one (forward) direction. 
+
+   o  One-Way Delay Measurement Value Minimum/Maximum: Minimum and
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 16]
+Gandhi, et al.         Expires September 13, 2017              [Page 16]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
-   o  One-Way Delay Measurement Value Minimum/Maximum: Minimum and
       Maximum values of the Delay of the LSP in one (forward) direction
       in the last measurement interval. 
 
@@ -946,15 +945,14 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
       TBD10 (Unidirectional Measurement capability was not advertised)
       upon receipt of LOSS-MEASUREMENT-ATTRIBUTES TLV in LSPA object
       with two-way measurement request and one-way measurement request,
+      respectively, when it did not advertise this capability.
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 17]
+Gandhi, et al.         Expires September 13, 2017              [Page 17]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
-
-      respectively, when it did not advertise this capability.
 
    o  Further, the PCEP speaker SHOULD generate error-value TBD11
       (Inferred Mode Loss Measurement capability was not advertised) and
@@ -985,7 +983,7 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    |                             Flags                     |N|I|B|U|
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                  LOSS-MEASUREMENT-CAPABILITY TLV Format
+                LOSS-MEASUREMENT-CAPABILITY TLV Format
 
    The Type of the TLV is TBD2 and it has a fixed length of 4 bytes.
 
@@ -1002,16 +1000,15 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
       measurement information; if set to 1 by a PCE, the B Flag
       indicates that the PCE is capable of receiving bidirectional loss
       measurement information from the PCC.  Bidirectional measurement
+      is only applicable to the bidirectional LSPs (e.g. MPLS-TP LSPs
+      [RFC5921]).
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 18]
+Gandhi, et al.         Expires September 13, 2017              [Page 18]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
-
-      is only applicable to the bidirectional LSPs (e.g. MPLS-TP LSPs
-      [RFC5921]).
 
    o  I (Inferred Mode - 1 bit): if set to 1 by a PCC, the I Flag
       indicates that the PCC allows reporting of inferred mode loss
@@ -1041,35 +1038,36 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    The format of the LOSS-MEASUREMENT-ATTRIBUTES TLV is shown in the
    following figure:
 
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |       PCEP TLV Type TBD16     |           Length              |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                                                               |
-      //                           sub-TLVs                          //
-      |                                                               |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |       PCEP TLV Type TBD16     |           Length              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   //                           sub-TLVs                          //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
                   LOSS-MEASUREMENT-ATTRIBUTES TLV Format
 
    PCEP TLV Type defined as following:
 
-      Type      Name                               
-      ----------------------------------------------------------
-       TBD16    LOSS-MEASUREMENT-ATTRIBUTES
+    Type      Name                               
+    ----------------------------------------------------------
+     TBD16    LOSS-MEASUREMENT-ATTRIBUTES
+
+   Length: The Length field defines the length of the value portion in
+   bytes as per [RFC5440].
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 19]
+Gandhi, et al.         Expires September 13, 2017              [Page 19]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
-      Length: The Length field defines the length of the value portion
-      in bytes as per [RFC5440].
-
-      Value: Comprises of one or more sub-TLVs as descibed in section 4.
+   Value: Comprises of one or more sub-TLVs as described in Section 4 of
+   this document.
 
    The following sub-sections describe the parameters which are
    currently defined to be carried within this TLV.
@@ -1077,9 +1075,13 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
 6.2.1.  Loss Measurement Enable
 
    The Measurement-Enable sub-TLV specifies the loss measurement mode
-   The O bit indicates the One-Way Loss Measurement, where as T bit
-   indicates Two-Way Loss Measurement. The I bit indicate Inferred Loss
-   Measurement is enabled.
+   enabled using following flags:
+
+   Bit      Description
+   ------------------------------------------------------------------
+    29      Unidirectional Loss Measurement Enabled
+    28      Bidirectional Loss Measurement Enabled
+    27      Inferred Loss Measurement Enabled
 
 6.2.2.  Loss Measurement Interval
 
@@ -1093,8 +1095,8 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    report-interval.
 
    o  Report-Threshold: This 24-bit field identifying the packet loss as
-      a percentage of the total packets sent or received. The
-      encoding	is as per [RFC7471].
+      a percentage of the total packets sent or received. The encoding
+      is as per [RFC7471].
 
    Same report-threshold is used for all loss measurement values.
 
@@ -1112,15 +1114,15 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    The Report-Interval sub-TLV specifies the time interval in seconds
    when measured loss values are to be reported.
 
-6.3.  LOSS-MEASUREMENT Object
-
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 20]
+Gandhi, et al.         Expires September 13, 2017              [Page 20]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
+
+6.3.  LOSS-MEASUREMENT Object
 
    The LOSS-MEASUREMENT Object with Object-Class (Value TBD6) is defined
    in this document to report the packet loss measurement of a TE LSP.
@@ -1168,14 +1170,16 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    o  RESERVED: This field is reserved for future use.  It MUST be set
       to 0 when sent and MUST be ignored when received.
 
-   The Packets-Lost in the Rx direction is reported when bidirectional
-   loss measurement is enabled.
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 21]
+Gandhi, et al.         Expires September 13, 2017              [Page 21]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
+   The Packets-Lost in the Rx direction is reported when bidirectional
+   loss measurement is enabled.
 
 
 7.  PCEP Extensions for Reporting Bandwidth Utilization
@@ -1206,7 +1210,7 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    o  If the PCEP speaker that supports the extensions of this document
       but did not advertise this capability, then upon receipt of
       BANDWIDTH object of type TBD14, it SHOULD generate a PCErr with
-      error-type 19 (Invalid Operation), error- value TBD13 (Bandwidth
+      error-type 19 (Invalid Operation), error-value TBD13 (Bandwidth
       utilization capability was not advertised) and it will terminate
       the PCEP session.
 
@@ -1222,17 +1226,18 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |               Type=TBD3       |            Length=4           |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 22]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
    |                             Flags                             |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
              BANDWIDTH-UTILIZATION-CAPABILITY TLV Format
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 22]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
 
    The Type of the TLV is TBD3 and it has a fixed length of 4 bytes.
 
@@ -1255,45 +1260,49 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    in the following figure:
 
 
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |       PCEP TLV Type TBD17     |           Length              |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                                                               |
-      //                           sub-TLVs                          //
-      |                                                               |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |       PCEP TLV Type TBD17     |           Length              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   //                           sub-TLVs                          //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                  BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV Format
+             BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV Format
 
       PCEP TLV Type defined as following:
 
-      Type      Name                               
-      ----------------------------------------------------------
-       TBD17    BW-UTILIZATION-MEASUREMENT-ATTRIBUTES
+    Type      Name                               
+    ----------------------------------------------------------
+     TBD17    BW-UTILIZATION-MEASUREMENT-ATTRIBUTES
 
-      Length: The Length field defines the length of the value portion
-      in bytes as per [RFC5440].
+   Length: The Length field defines the length of the value portion in
+   bytes as per [RFC5440].
 
-      Value: Comprises of one or more sub-TLVs as descibed in section 4.
+   Value: Comprises of one or more sub-TLVs as described in Section 4 of
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 23]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
+   this document.
 
    The following sub-sections describe the parameters which are
    currently defined to be carried within this TLV.
 
 7.2.1.  Bandwidth Utilization Measurement Enable
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 23]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
 
    The Measurement-Enable sub-TLV specifies that the bandwidth
-   utilization reporting is enabled. The bits O, T and I have no meaning
-   inside the BW-UTILIZATION-MEASUREMENT-ATTRIBUTES TLV. 
+   utilization reporting is enabled using following flag:
 
+   Bit     Description
+   ------------------------------------------------------------------
+    26     Bandwidth Utilization Reporting Enabled
 
 7.2.2.  Bandwidth Utilization Measurement Interval
 
@@ -1329,6 +1338,13 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    When the TE LSP is enabled with the bandwidth utilization reporting,
    the PCC SHOULD include the BANDWIDTH-UTILIZATION Object to report the
    bandwidth utilization of the TE LSP to the PCE in the PCRpt message.
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 24]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
 
    The object-type is TBD14, the object length is variable with
    multiples of 4 bytes.  
@@ -1338,14 +1354,6 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
      0                   1                   2                   3
      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 24]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
-
    |                        BwSample1                              |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                           ...                                 |
@@ -1386,21 +1394,20 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
       messages for the LSP with a feature enabled, the absence of the
       corresponding MEASUREMENT-ATTRIBUTES TLV indicates that the PCEP
       speaker wishes to disable the feature.
+ 
 
-8.2.  The MEASUREMENT Object
+
+Gandhi, et al.         Expires September 13, 2017              [Page 25]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
+8.2.  The MEASUREMENT Objects
 
    When a TE LSP is enabled with a measurement reporting feature, the
    PCC SHOULD include the corresponding MEASUREMENT Object to report the
    measured values to the PCE in the PCRpt message [DRAFT-PCE-
    STATEFUL].
-
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 25]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
 
    The format of the "actual_attribute-list" in the PCRpt message is
    modified as following:
@@ -1443,6 +1450,14 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
       available to process the PM reporting, it SHOULD notify its peer
       by sending a PCNtf message with Notification Type = TBD15 (PM
       Overwhelm State) and Notification Value = 2 (Clearing PM overwhelm
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 26]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
       state).
 
 
@@ -1450,15 +1465,7 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
 
    This document defines new MEASUREMENT-ATTRIBUTES TLVs, CAPABILITY
    TLVs and MEASUREMENT Objects for reporting loss, delay measurements
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 26]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
-
-   and bandwidth-utilization which do not add additional security
+   and bandwidth utilization which do not add additional security
    concerns beyond those discussed in [RFC5440] and
    [DRAFT-PCE-STATEFUL].
 
@@ -1499,20 +1506,19 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    listed in [RFC5440].
 
 11.4.  Verify Correct Operations
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 27]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
 
    Mechanisms defined in this document do not imply any new operation
    verification requirements in addition to those already listed in
    [RFC5440].
 
 11.5.  Requirements On Other Protocols
-
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 27]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
 
    Mechanisms defined in this document do not add any new requirements
    on other protocols.
@@ -1544,7 +1550,7 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
     TBD2     LOSS-MEASUREMENT-CAPABILITY          [This I.D.]
     TBD3     BANDWIDTH-UTILIZATION-CAPABILITY     [This I.D.]
 
-12.1.1  Flag fields for MEASUREMENT-CAPABILITY TLVs
+12.1.1.  Flag Fields for MEASUREMENT-CAPABILITY TLVs
 
    IANA is requested to create a registry to manage the Flag field of
    the DELAY-MEASUREMENT-CAPABILITY TLV, LOSS-MEASUREMENT-CAPABILITY TLV
@@ -1556,35 +1562,35 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
       o  Bit number (counting from bit 0 as the most significant bit)
 
       o  Capability description
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 28]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
 
       o  Defining RFC
 
 
    The following value are defined in this document for the Flag field
    for - 
- 
 
+   DELAY-MEASUREMENT-CAPABILITY TLV: 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 28]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+    Bit       Description                            Reference
+    ------------------------------------------------------------
+    31        Unidirectional Delay Measurement       [This I.D.]
+    30        Bidirectional Delay Measurement        [This I.D.]
 
+   LOSS-MEASUREMENT-CAPABILITY TLV: 
 
-      DELAY-MEASUREMENT-CAPABILITY TLV: 
-
-      Bit       Description                          Reference
-      ----------------------------------------------------------
-      31        Unidirectional Delay Measurement     [This I.D.]
-      30        Bidirectional Delay Measurement      [This I.D.]
-
-      LOSS-MEASUREMENT-CAPABILITY TLV: 
-
-      Bit       Description                          Reference
-      ----------------------------------------------------------
-      31        Unidirectional Loss Measurement      [This I.D.]
-      30        Bidirectional Loss Measurement       [This I.D.]
-      29        Inferred Mode                        [This I.D.]
-      28        Direct Mode                          [This I.D.] 
+    Bit       Description                            Reference
+    ------------------------------------------------------------
+    31        Unidirectional Loss Measurement        [This I.D.]
+    30        Bidirectional Loss Measurement         [This I.D.]
+    29        Inferred Mode                          [This I.D.]
+    28        Direct Mode                            [This I.D.] 
 
 12.2.  MEASUREMENT-ATTRIBUTES TLVs
 
@@ -1594,14 +1600,13 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    <http://www.iana.org/assignments/pcep/pcep.xhtml#pcep-tlv-type-
    indicators>
 
-   Type      Name                                 Reference
-   ----------------------------------------------------------
-    TBD4     DELAY-MEASUREMENT-ATTRIBUTES         [This I.D.]
-    TBD16    LOSS-MEASUREMENT-ATTRIBUTES          [This I.D.]
-    TBD17    BW-UTILIZATION-MEASUREMENT           [This I.D.]
-             -ATTRIBUTES
+   Type      Name                                    Reference
+   -------------------------------------------------------------
+    TBD4     DELAY-MEASUREMENT-ATTRIBUTES            [This I.D.]
+    TBD16    LOSS-MEASUREMENT-ATTRIBUTES             [This I.D.]
+    TBD17    BW-UTILIZATION-MEASUREMENT-ATTRIBUTES   [This I.D.]
 
-12.2.1 The Sub-TLVs for MEASUREMENT-ATTRIBUTES TLVs
+12.2.1.  The Sub-TLVs For MEASUREMENT-ATTRIBUTES TLVs
 
    IANA is requested to create an "MEASUREMENT-ATTRIBUTES Sub-TLV Types"
    sub-registry in the "PCEP TLV Type Indicators" registry.  New sub-TLV
@@ -1613,22 +1618,22 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    ----------------------------------------------------------
     0        Reserved                             [This I.D.]
     1        Measurement-Enable sub-TLV           [This I.D.]
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 29]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
     2        Measurement-Interval sub-TLV         [This I.D.]
     3        Report-Threshold sub-TLV             [This I.D.]
     4        Report-Threshold-Percentage sub-TLV  [This I.D.]
     5        Report-Interval sub-TLV              [This I.D.]
     6-       Unassigned                           [This I.D.]
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 29]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
-
    65535
 
-12.2.1.1 Flag field in Measurement-Enable sub-TLV
+12.2.1.1.  Flag Fields in Measurement-Enable sub-TLV
 
    IANA is requested to create a registry to manage the Flag field of
    the Measurement-Enable sub-TLV.
@@ -1643,13 +1648,16 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
       o  Defining RFC
 
 
-   The following value are defined in this document for the Flag field 
+   The following value are defined in this document for the Flag field.
 
-      Bit       Description                          Reference
-      ----------------------------------------------------------
-      31        O (One-Way Measurement)              [This I.D.]
-      30        T (Two-Way Measurement)              [This I.D.]   
-      29        I (Inferred Mode)                    [This I.D.]
+   Bit     Description                              Reference
+   ------------------------------------------------------------
+    31     One-Way Delay Measurement Enabled        [This I.D.]
+    30     Two-Way Delay Measurement Enabled        [This I.D.]
+    29     Unidirectional Loss Measurement Enabled  [This I.D.]
+    28     Bidirectional Loss Measurement Enabled   [This I.D.]
+    27     Inferred Loss Measurement Enabled        [This I.D.]
+    26     Bandwidth Utilization Reporting Enabled  [This I.D.]
 
 12.3.  Measurement Object-Class
 
@@ -1666,6 +1674,14 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
 12.3.1.  DELAY-MEASUREMENT Object-Types
 
    IANA is requested to create an "DELAY-MEASUREMENT Object-Types"
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 30]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
    sub-registry for DELAY-MEASUREMENT Object (Object-class TBD5).
 
    This document defines the following object-types:
@@ -1674,14 +1690,6 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    ------------------------------------------------------------------
     0          Reserved                                   [This I.D.]
     1          One-Way Delay Measurement Value            [This I.D.]
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 30]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
-
     2          One-Way Delay Measurement Min/Max Values   [This I.D.]
     3          One-Way Delay Variation Measurement Value  [This I.D.]
     4          Two-Way Delay Measurement Value            [This I.D.]
@@ -1722,6 +1730,14 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
    -------------------------------------------------------------------
     TBD7   Delay-Measurement capability 
                                        was not advertised  [This I.D.]
+ 
+
+
+Gandhi, et al.         Expires September 13, 2017              [Page 31]
+
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
+
+
     TBD8   Loss-Measurement capability 
                                        was not advertised  [This I.D.]
     TBD9   Bidirectional Measurement capability 
@@ -1730,14 +1746,6 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
                                        was not advertised  [This I.D.]
     TBD11  Inferred Mode Loss Measurement capability 
                                        was not advertised  [This I.D.]
- 
-
-
-Gandhi, et al.         Expires September 12, 2017              [Page 31]
-
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
-
-
     TBD12  Direct Mode Loss Measurement capability 
                                        was not advertised  [This I.D.]
     TBD13  Bandwidth Utilization capability 
@@ -1778,20 +1786,12 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
 
 
 
-
-
-
-
-
-
-
-
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 32]
+Gandhi, et al.         Expires September 13, 2017              [Page 32]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
 13.  References
@@ -1845,9 +1845,9 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 33]
+Gandhi, et al.         Expires September 13, 2017              [Page 33]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
    [RFC7471]  S. Giacalone, D. Ward, J. Drake, A. Atlas, and S. Previdi,
@@ -1901,9 +1901,9 @@ Internet-Draft      PCEP for Performance Measurement      March 11, 2017
  
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 34]
+Gandhi, et al.         Expires September 13, 2017              [Page 34]
 
-Internet-Draft      PCEP for Performance Measurement      March 11, 2017
+Internet-Draft      PCEP for Performance Measurement      March 12, 2017
 
 
 Acknowledgments
@@ -1914,9 +1914,9 @@ Acknowledgments
 Authors' Addresses
 
    Rakesh Gandhi
-   Individual Contributor
+   Cisco Systems, Inc.
 
-   EMail: rgandhi.ietf@gmail.com
+   EMail: rgandhi@cisco.com
 
 
    Bin Wen
@@ -1957,4 +1957,4 @@ Authors' Addresses
 
 
 
-Gandhi, et al.         Expires September 12, 2017              [Page 35]
+Gandhi, et al.         Expires September 13, 2017              [Page 35]
