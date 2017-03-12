@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902" category="info" docName="draft-dhody-pce-stateful-pce-interdomain-04" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+  <front>
+    <title abbrev="STATEFUL-INTERDOMAIN">Stateful Path Computation 
+    Element (PCE) Inter-domain Considerations</title>
+    <author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyasree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+	<author initials="X" surname="Zhang" fullname="Xian Zhang">
+	<organization>Huawei Technologies</organization>
+	<address>
+		<postal>
+			<street>Bantian, Longgang District</street>
+			<city>Shenzhen</city>
+			<region/>
+			<code>518129</code>
+			<country>P.R.China</country>
+		</postal>
+		<email>zhang.xian@huawei.com</email>
+	</address>
+	</author>
+    <date year="2017" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+   <t> 
+   A stateful Path Computation Element (PCE) maintains information about
+   Label Switched Path (LSP) characteristics and resource usage within a
+   network in order to provide traffic engineering path calculations for its
+   associated Path Computation Clients (PCCs).  Furthermore, PCEs are used to
+   compute shortest constrained Traffic Engineering Label
+   Switched Paths (TE LSPs) in Multiprotocol Label Switching (MPLS) and
+   Generalized MPLS (GMPLS) networks across multiple domains.</t>
+   
+   <t>This document describes general considerations for the deployment of stateful PCE(s) 
+     in inter-domain scenarios including inter-area and inter-AS. The inter-layer considerations
+     will be described in a separate document. This document does not specify any extentions to PCEP.</t>
+   </abstract>
+  </front>
+  <middle>
+    <section title="Introduction" toc="default">
+   <t>The Path Computation Element communication Protocol (PCEP) provides
+   mechanisms for Path Computation Elements (PCEs) to perform path
+   computations in response to Path Computation Clients' (PCCs) requests.</t>
+
+   <t><xref target='RFC8051'/> describes
+   general considerations for a stateful PCE deployment and examines its
+   applicability and benefits, as well as its challenges and limitations
+   through a number of use cases.
+   <xref target='I-D.ietf-pce-stateful-pce'/> describes a set of extensions to PCEP to
+   provide stateful control.  A stateful PCE has access to not only the
+   information carried by the network's Interior Gateway Protocol (IGP),
+   but also the set of active paths and their reserved resources for its
+   computations.  The additional state allows the PCE to compute
+   constrained paths while considering individual LSPs and their
+   interactions.</t>
+   
+   <t>The ability to compute shortest constrained TE LSPs in Multiprotocol
+   Label Switching (MPLS) and Generalized MPLS (GMPLS) networks across
+   multiple domains has been identified as a key motivation for PCE 
+   development.  In this context, a domain is a collection of network elements within a common
+   sphere of address management or path computational responsibility
+   such as an Interior Gateway Protocol (IGP) area or an Autonomous
+   Systems (AS).</t>   
+   
+   <t>This document presents general considerations for stateful PCE(s) deployment
+   in multi-domain scenarios.</t>
+    </section>
+
+    <section title="Overview" toc="default">
+    <t>A stateful PCE maintains two sets of information for use in path
+   computation.  The first is the Traffic Engineering Database (TED)
+   which includes the topology and resource state in the network. 
+   The second is the LSP State Database (LSP-DB), in which a PCE stores 
+   attributes of all active LSPs in the network, such as their paths 
+   through the network, bandwidth/resource usage, switching types and 
+   LSP constraints.  This state information allows the PCE to compute 
+   constrained paths while considering individual LSPs and their 
+   inter-dependency. <xref target="I-D.ietf-pce-stateful-pce"/> applies 
+   equally to MPLS-TE and GMPLS LSPs
+   and distinguishes between an active and a passive stateful PCE. A
+   passive stateful PCE uses LSP state information to optimize path
+   computations but does not actively update LSP state.  In contrast, an
+   active stateful PCE may issue recommendations to the network.  For
+   example, an active stateful PCE may update LSP parameters for those
+   LSPs that have been delegated control over to the PCE by its PCCs.</t>
+   
+   <t>The capability to compute the routes of end-to-end inter-domain 
+   MPLS-TE LSPs is expressed as requirements in 
+   <xref target="RFC4105"/> and <xref target="RFC4216"/> and may be 
+   realized by PCE(s). PCEs may use one of the following mechanisms to 
+   compute end-to-end paths: </t>
+   <t>
+   <list style="symbols"> 
+   <t>a per-domain path computation technique <xref target="RFC5152"/>;</t>
+   <t>a Backward-Recursive PCE-based Computation (BRPC) mechanism 
+   <xref target="RFC5441"/>;</t>
+   <t>a Hierarchical PCE mechanism <xref target="RFC6805"/>;</t>
+   </list>
+   </t>
+   <t>This document examines the stateful PCE inter-domain considerations
+   for all of these mechanisms.</t>
+   <section title="LSP State Synchronization" toc="default">
+   <t>The population of the LSP-DB using information received from PCCs
+   (ingress LSR) is supported by the stateful PCE extensions defined in
+   <xref target="I-D.ietf-pce-stateful-pce"/> , i.e., via LSP state 
+   report messages.</t>
+   <t>The inter-domain LSP state is synchronized to the ingress-PCE from 
+     the ingress LSR (PCC), but this PCC cannot synchronize to other PCEs
+     (in transit or egress domains), thus other mechanism must be investigated for
+     this purpose.</t>
+
+   <t>Either the boundary node of the other domains, would need to synchronize the state of 
+   	LSP passing though it to the PCE, or a mechanism for synchronization of inter-domain 
+   	LSPs between the PCEs is required. The former would require small change in the 
+   	existing state synchronization and reporting where a border node acts as a PCC. 
+   	The later could use the mechanism described in <xref target="I-D.litkowski-pce-state-sync"/> 
+   can be used between the PCEs to synchronize the inter-domain LSP state between each
+   other. Further section provide various considerations for this choice. </t>  
+   </section>
+    </section>
+    
+    <section title="Stateful PCE Deployments" toc="default">
+    <t>There are multiple models to perform PCE-based inter-domain path 
+    computation: 
+    <list style="symbols">
+   <t>A single PCE</t>
+   <t>Multiple PCEs
+       <list style="symbols">
+       <t>without inter-PCE communication</t>
+       <t>with inter-PCE communication</t>
+       </list></t>    
+    </list></t>
+    
+   <t>This section describe stateful PCE considerations for each 
+   of these deployment models.</t>   
+     <section title="Single Stateful PCE, Multiple Domains" toc="default">
+     <t>In this model, inter-domain path computation is 
+     performed by a single stateful PCE that has topology visibility into all 
+     domains. The inter-domain LSP state is synchronized to the PCE from 
+     the ingress LSR (PCC) itself. The PCC may also choose to delegate 
+     control over this LSP to the PCE. Thus this model is similar to a 
+     single domain in all aspects.</t>
+     
+     <t>Following figure show an example of inter-area case comprising
+     of Area 0,1 and 2. A single stateful PCE is deployed for all areas.
+     </t>
+     <figure>
+     <artwork align='center'>
+                         ******* 
+                         * PCE *
+                         ******* 
+                
+                !                      !
+                !                      !  
+A----B----C----ABR1----D----E----F----ABR2----G----H----I
+|    |    |     |      |    |    |     |      |    |    |
+|    |    |     |      |    |    |     |      |    |    |
+J----K----L----ABR3----M----N----O----ABR4----P----Q----R
+                !                      ! 
+     Area 1     !         Area 0       !      Area 2     
+     </artwork>
+     </figure>
+     <t>In this model, PCE has visibility into the topology (TED) of all 
+     domains as well as the state of all active LSPs (LSP-DB) including 
+     inter-domain LSPs. This model is thus well suited to take advantage 
+     of all stateful PCE capabilities.</t>
+     <t>It should be noted that in some deployments, a single stateful PCE may not be 
+     possible because of administrative and confidentiality concerns.</t>
+     </section>  
+    
+     <section title="Multiple Stateful PCE, Multiple Domains" toc="default">
+     <t>In this model, there is at least one PCE per domain, 
+     and each PCE has topology (TED) visibility restricted to its own domain.
+     The inter-domain LSP state is synchronized to the ingress-PCE from 
+     the ingress LSR (PCC), but this PCC may not be able to synchronize 
+     to other PCEs
+     (in transit or egress domains). This PCC may also choose to delegate 
+     control over this LSP to the Ingress-PCE, which may issue 
+     inter-domain path computation or re-optimization request to
+     other PCEs. An inter-domain LSP that originates in a domain, is 
+     synchronized to the PCE in that domain. A new procedure is needed
+     to synchronize state of inter-domain LSP that do not originate in 
+     the domain. In other words, inter-domain LSP state should also be
+     synchronized to transit and egress PCEs as the inter-domain LSP 
+     traverse through those domains.</t>
+     <t>Following figure show an example of inter-AS case comprising
+     of AS 100 and AS 200. A stateful PCE is deployed per AS.
+     </t>
+     <figure>
+     <artwork align='center'>     
+    ********                      ********
+    * PCE1 *                      * PCE2 *
+    ********                      ******** 
+                
+                !          !
+                !          !  
+A----B----C----ASBR1------ASBR2----D----E----F
+|    |    |     |          |       |    |    |
+|    |    |     |          |       |    |    |
+G----H----I----ASBR3------ASBR4----J----K----L
+                !          ! 
+     AS100      !          !       AS200     
+     </artwork>
+     </figure>     
+     <t>In order to conceal the information, a PCE may use path-key based 
+     confidentiality mechanisms as per <xref target="RFC5520"/>.</t>
+     <t>This section further describes considerations with respect to 
+     each of the inter-domain path computation techniques.</t>
+        <section title="Per Domain Path Computation" toc="default" anchor="SEC_PD">
+    <t>The per domain path computation technique <xref target="RFC5152"/>
+    is based on Multiple PCE Path Computation without Inter-PCE 
+    Communication Model as described in <xref target="RFC4655"/>.
+    It defines 
+    a method where the path is computed during the signaling process (on a 
+    per-domain basis). The entry Boundary Node (BN) of each domain is responsible 
+    for performing the path computation for the section of the LSP that crosses 
+    the domain, or for requesting that a PCE for that domain computes that piece 
+    of the path.</t>
+    <t>The ingress LSR would synchronize the state to the ingress 
+    PCE, further the entry boundary nodes should also synchronize the state of 
+    inter-domain LSP to transit and egress PCEs. Note that the BN on the 
+    path of an LSP can probably see the path (through the Record 
+    Route object in RSVP-TE signaling <xref target="RFC3209"/>) and 
+    knows the bandwidth reserved for the LSP. Thus each
+    entry BN along the path could be made responsible to synchronize 
+    the LSP state to the transit/egress PCE(s).</t>
+    <t>Since the stateful PCE(s) do not communicate during this 
+    inter-domain path computation technique and each entry BN would perform
+    path computation via Path Computation Request (PCReq) and Reply (PCRep) messages, 
+	a passive
+    stateful PCE is well suited for this case.</t>
+    <t>In case of delegation to the ingress PCE (active stateful PCE), it would be capable of
+    loose path computation only and make updates to the ingress LSR with
+    this limited visibility. The entry BN would perform
+    path computation via Path Computation Request and Reply messages (and thus rely on 
+    the passive stateful mode). Thus the 
+   inter-domain LSP is delegated only to the ingress PCE.</t>
+    
+        </section>  
+        <section title="Backward-Recursive PCE-based Computation" toc="default" anchor="SEC_BRPC">
+   <t>The BRPC <xref target="RFC5441"/> technique is based on 
+   Multiple PCE Path Computation with Inter-PCE Communication Model 
+   as described in <xref target="RFC4655"/>. It involves cooperation and 
+   communication between PCEs in order to compute an optimal end-to-end path 
+   across multiple domains. The sequence of domains to be traversed may be 
+   known before the path computation, but it can also be used when the 
+   domain path is unknown and determined during path computation.</t>
+   <t>As described in <xref target="SEC_PD"/>, the entry boundary nodes 
+   may synchronize the state of inter-domain LSPs to transit and egress 
+   PCEs. An alternative approach may be for each PCE to synchronize the state 
+   along the path across domains, i.e., each PCE would report the
+   state to the next PCE(s) in the adjacent domain along the domain 
+   sequence of the inter-domain path. A mechanism described in 
+   <xref target="I-D.litkowski-pce-state-sync"/>  can be 
+   utilized to synchronize between inter-domain PCEs.</t> 
+   <t>Some path segment in the end to end path may also be 
+    hidden via path-key as per <xref target="RFC5520"/> during state 
+	synchronization.</t>
+   <t>In case of passive path computation request to the ingress PCE 
+   from the ingress LSR the BRPC path computation procedure is applied 
+   to compute end-to-end path by using PCReq and PCRep
+   messages among stateful PCE(s) in passive mode. </t>
+   <t>In case of delegation to the ingress PCE (active stateful PCE), the
+   ingress PCE may trigger the end-to-end path computation via the same
+   BRPC procedure using the path computation request and 
+   reply messages among stateful PCE(s) (acting in passive mode). For 
+   re-optimization the ingress PCE still rely on the same 
+   BRPC procedure triggered by the ingress PCE. Ultimately the inter-domain LSP 
+   is delegated to the ingress PCE and only the ingress PCE can 
+   trigger end-to-end (E2E) path re-optimization with help of 
+   transit/egress PCE using the BRPC procedure, based on the result 
+   the ingress PCE would issue updates to the inter-domain LSP.
+</t>
+   
+        </section>  
+        <section title="Hierarchical PCE" toc="default">
+    <t>In H-PCE <xref target="RFC6805"/> architecture, the parent PCE is used to 
+    compute a multi-domain path based on the domain connectivity information. 
+    The parent PCE may be requested to provide a end-to-end path or only 
+    the sequence of domains.</t>    
+	
+    <t>As described in <xref target="SEC_PD"/> and <xref target="SEC_BRPC"/>, the entry boundary nodes 
+   may synchronize the state of inter-domain LSP to transit and egress 
+   child PCEs. In this case, it might not be possible to synchronize state to the
+   parent PCE. 
+   If the parent PCE provides the sequence of domains and BRPC 
+   procedure is used to get the E2E path, each PCE may be responsible to synchronize the state 
+   along the path across domains similar to <xref target="SEC_BRPC"/>. 
+   An alternative approach may be for ingress PCE to synchronize
+   LSP state with the Parent PCE and it may further synchronize the state 
+   to the child PCE(s) along the path across domains, i.e. parent PCE would report the
+   state to the child PCE(s) along the domain 
+   sequence. A mechanism described in 
+   <xref target="I-D.litkowski-pce-state-sync"/>  can be 
+   utilized to synchronize between the child and the parent PCE.</t>
+<t>Some path segment  in the end to end path may also be 
+    hidden via path-key as per <xref target="RFC5520"/> during state synchronization.</t>
+   <t>In case of passive path computation request to the ingress PCE 
+   from the ingress LSR, the H-PCE path computation procedure is applied 
+   to compute sequence of domains or end-to-end path by using PCReq and 
+   PCRep messages among stateful PCE(s) in passive mode. </t>
+   <t>In case of delegation to the ingress PCE (active stateful PCE), the
+   ingress child PCE may further delegate to parent PCE. See <xref target='I-D.dhodylee-pce-stateful-hpce'/> for 
+   details. </t>  
+   
+        </section>  
+     </section>  
+    </section>  
+
+    <section title="Other Considerations" toc="default">
+	<section title="Delegation" toc="default">
+      <t>As noted in this document, the inter-domain LSP 
+   is delegated to the ingress PCE and only the ingress PCE can issue updates to 
+   the inter-domain LSP. The ingress PCE is responsible to trigger E2E path 
+   re-optimization.</t>
+   <t>Thus the ingress PCE can recommend updation for all aspects of the inter-domain LSP 
+   including the segment of path in another domain (which it may have computed 
+    with the help of other cooperating PCEs). These interaction between PCEs 
+	for the inter-domain path computation are done using PCReq/PCRep messages 
+	(i.e., in a passive mode).</t>
+   <t>The transit/egress PCE cannot update any attribute of the inter-domain LSP
+   on its own as it may not have any interaction with the ingress LSR. A mechanism 
+   may be developed for transit/egress PCE to inform the ingress PCE
+   to trigger E2E re-optimization and choose to update the inter-domain LSP based
+   on the result. Also the ingress PCE may use combination of local information 
+   and events along with some external mechanism (management / monitoring interface) 
+   to trigger E2E path re-optimization.
+</t>
+    <t>Though ingress PCE can recommend update for path segments in other domains,
+	the entry boundary node of that domain can apply policy control during signalling
+	as explained in <xref target="RFC4105"/> and <xref target="RFC4216"/>. </t>
+
+    </section>
+	<section title="PCE-initiated LSP" toc="default">
+	<t><xref target="I-D.ietf-pce-pce-initiated-lsp"/> describes setup, 
+	maintenance and teardown of PCE-initiated LSPs under the stateful 
+	PCE model, without the need for
+   local configuration on the PCC. Similar to LSP updation, 
+   the inter-domain LSP can be initiated by the ingress PCE using the 
+   PCInitiate message to the ingress LSR. Note that per-domain LSP may 
+   also be initiated by respective domain's PCE and stitched together 
+   but this is out of scope for this document.</t>
+	</section>
+    </section>
+    <section title="Security Considerations" toc="default">
+      <t>The security considerations are as per <xref target="RFC5440"/> and 
+	  <xref target="I-D.ietf-pce-stateful-pce"/>. Any multi-domain operation 
+	  necessarily involves the exchange 
+   of information across domain boundaries.  This may represent a 
+   significant security and confidentiality risk especially when the 
+   domains are controlled by different commercial entities.  PCEP 
+   allows individual PCEs to maintain confidentiality of their domain 
+   path information by using path-keys <xref target="RFC5520"/>.</t>
+    </section>
+    <section title="Manageability Considerations" toc="default">
+      <section title="Control of Function and Policy" toc="default">
+        <t>Mechanisms defined in this document do not imply any new control of 
+        function and policy requirements.</t>
+      </section>
+      <section title="Information and Data Models" toc="default">
+        <t><xref target='RFC7420'/> describes the PCEP MIB, there are no new MIB Objects 
+        for this document.</t>
+      </section>
+      <section title="Liveness Detection and Monitoring" toc="default">
+        <t>Mechanisms defined in this document do not imply any new liveness detection 
+        and monitoring requirements in addition to those already listed in 
+        <xref target="RFC5440"/>.</t>
+      </section>
+      <section title="Verify Correct Operations" toc="default">
+        <t>Mechanisms defined in this document do not imply any new operation 
+        verification requirements in addition to those already listed in 
+        <xref target="RFC5440"/>.</t>
+      </section>
+      <section title="Requirements On Other Protocols" toc="default">
+        <t>Mechanisms defined in this document do not imply any new requirements 
+        on other protocols.</t>
+      </section>
+      <section title="Impact On Network Operations" toc="default">
+        <t>Mechanisms defined in this document do not have any impact on 
+        network operations in addition to those already listed in 
+        <xref target="RFC5440"/>.</t>
+      </section>
+    </section>    
+    <section title="IANA Considerations" toc="default">
+    <t>This is an informational document and has no IANA considerations.</t>
+    </section>
+    
+    <section title="Acknowledgments" toc="default">
+      <t>The authors would like to that Young Lee, Haomian Zheng, Fatai Zhang for this comments.</t>
+    </section>    
+  </middle>
+  <back>
+    <references title="Normative References">
+    <?rfc include="reference.RFC.5440.xml" ?>
+    <?rfc include="reference.I-D.ietf-pce-stateful-pce"?>
+    
+    </references>
+    <references title="Informative References">
+    <?rfc include="reference.RFC.3209.xml" ?>
+      <?rfc include="reference.RFC.4105.xml" ?>
+      <?rfc include="reference.RFC.4216.xml" ?>
+      <?rfc include="reference.RFC.4655.xml" ?>
+      <?rfc include="reference.RFC.5152.xml" ?>
+      <?rfc include="reference.RFC.5441.xml" ?>
+      <?rfc include="reference.RFC.5520.xml" ?>
+      <?rfc include="reference.RFC.6805.xml" ?>
+      <?rfc include="reference.RFC.7420.xml" ?>
+      <?rfc include="reference.RFC.8051.xml" ?>
+      <?rfc include="reference.I-D.ietf-pce-pce-initiated-lsp"?>
+      <?rfc include="reference.I-D.litkowski-pce-state-sync"?>
+      <?rfc include="reference.I-D.dhodylee-pce-stateful-hpce"?>
+      
+
+    </references>
+<section title="Contributor Addresses" toc="default">
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+          <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Udayasree Palle
+Huawei Technologies
+Divyasree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: udayasree.palle@huawei.com
+
+             
+Avantika
+Huawei Technologies
+Divyasree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: avantika.sushilkumar@huawei.com
+
+
+        ]]></artwork>
+        </figure>
+      </t>
+    </section>    
+  </back>
+</rfc>
