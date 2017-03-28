@@ -6,9 +6,9 @@ PCE Working Group                                               D. Lopez
 Internet-Draft                                       O. Gonzalez de Dios
 Updates: 5440 (if approved)                               Telefonica I+D
 Intended status: Standards Track                                   Q. Wu
-Expires: September 28, 2017                                     D. Dhody
+Expires: September 29, 2017                                     D. Dhody
                                                                   Huawei
-                                                          March 27, 2017
+                                                          March 28, 2017
 
 
                        Secure Transport for PCEP
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 28, 2017.
+   This Internet-Draft will expire on September 29, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 1]
+Lopez, et al.          Expires September 29, 2017               [Page 1]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 2]
+Lopez, et al.          Expires September 29, 2017               [Page 2]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -165,7 +165,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 3]
+Lopez, et al.          Expires September 29, 2017               [Page 3]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -207,11 +207,11 @@ Internet-Draft          Secure Transport for PCEP             March 2017
    for the PCEP speaker to indicate whether it wants to set up a TLS
    connection or not.  For this purpose, this document specifies a new
    PCEP message called StartTLS.  This message MUST be the first PCEP
-   message issued by the PCEP speaker, willing to use TLS.  Note that,
-   this includes the open message.  This document thus updates [RFC5440]
-   which required the Open message to be the first PCEP message, since
-   in the case of a PCEP session using TLS the StartTLS message will be
-   sent first.
+   message issued by the PCEP speaker willing to use TLS.  Note that,
+   this includes the open message.  Thus, this document updates
+   [RFC5440], which required the Open message to be the first PCEP
+   message.  In the case of a PCEP session using TLS the StartTLS
+   message will be sent first.
 
    The PCEP speaker MAY discover that the PCEP peer supports PCEPS or
    can be preconfigured to use PCEPS for a given peer (see Section 4 for
@@ -221,7 +221,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 4]
+Lopez, et al.          Expires September 29, 2017               [Page 4]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -257,9 +257,9 @@ Internet-Draft          Secure Transport for PCEP             March 2017
    prior to an Open message) or section 6.9 of [RFC5440] (for the case
    of reception of unknown message).
 
-   After the exchange of startTLS messages, if the PCEP speaker cannot
+   After the exchange of startTLS messages, if a PCEP speaker cannot
    establish a TLS connection for some reason (e.g. the required
-   mechanisms for certificate revocation checking are not available) it
+   mechanisms for certificate revocation checking are not available), it
    MUST return a PCErr message with Error-Type set to [TBA2 by IANA]
    (PCEP StartTLS failure) and Error-value set to:
 
@@ -277,7 +277,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 5]
+Lopez, et al.          Expires September 29, 2017               [Page 5]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -333,7 +333,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 6]
+Lopez, et al.          Expires September 29, 2017               [Page 6]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -389,7 +389,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 7]
+Lopez, et al.          Expires September 29, 2017               [Page 7]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -445,7 +445,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 8]
+Lopez, et al.          Expires September 29, 2017               [Page 8]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -501,7 +501,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017               [Page 9]
+Lopez, et al.          Expires September 29, 2017               [Page 9]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -557,7 +557,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 10]
+Lopez, et al.          Expires September 29, 2017              [Page 10]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -583,9 +583,9 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
    In case the initial TLS negotiation or the peer identity check fails,
    according to the procedures listed in this document, the peer MUST
-   send the PCErr message as per the Section 3.2 and then MUST terminate
-   the session.  It SHOULD follow the procedure listed in [RFC5440] to
-   retry session setup along with an exponential back-off session
+   first send a PCErr message as per Section 3.2 and then terminate the
+   session.  It SHOULD follow the procedure listed in [RFC5440] to retry
+   session setup along with an exponential back-off session
    establishment retry procedure.
 
 4.  Discovery Mechanisms
@@ -613,7 +613,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 11]
+Lopez, et al.          Expires September 29, 2017              [Page 11]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -669,7 +669,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 12]
+Lopez, et al.          Expires September 29, 2017              [Page 12]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -725,7 +725,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 13]
+Lopez, et al.          Expires September 29, 2017              [Page 13]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -781,16 +781,16 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 14]
+Lopez, et al.          Expires September 29, 2017              [Page 14]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
 
    An implementation SHOULD allow the operator to configure the PCEPS
-   capability as well as various TLS related parameters, as well as view
-   the current TLS status for a PCEP session.  To serve this purpose,
-   the PCEP YANG module [I-D.ietf-pce-pcep-yang] can be extended to
-   include TLS related configuration and state.
+   capability and various TLS related parameters, as well as allow to
+   view the current TLS status for a PCEP session.  To serve this
+   purpose, the PCEP YANG module [I-D.ietf-pce-pcep-yang] can be
+   extended to include TLS related configuration and state.
 
 8.3.  Liveness Detection and Monitoring
 
@@ -837,7 +837,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 15]
+Lopez, et al.          Expires September 29, 2017              [Page 15]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -893,7 +893,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 16]
+Lopez, et al.          Expires September 29, 2017              [Page 16]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -949,7 +949,7 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 17]
+Lopez, et al.          Expires September 29, 2017              [Page 17]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -1005,7 +1005,7 @@ Authors' Addresses
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 18]
+Lopez, et al.          Expires September 29, 2017              [Page 18]
 
 Internet-Draft          Secure Transport for PCEP             March 2017
 
@@ -1061,4 +1061,4 @@ Internet-Draft          Secure Transport for PCEP             March 2017
 
 
 
-Lopez, et al.          Expires September 28, 2017              [Page 19]
+Lopez, et al.          Expires September 29, 2017              [Page 19]

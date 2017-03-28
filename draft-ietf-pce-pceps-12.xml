@@ -109,7 +109,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="27" month="March" year="2017"/>
+    <date day="28" month="March" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -161,10 +161,10 @@
     for the PCEP speaker to indicate whether it wants to set up a TLS
     connection or not.  For this purpose, this document specifies a new
     PCEP message called StartTLS. This message MUST be the first PCEP message
-    issued by the PCEP speaker, willing to use TLS. Note that, this includes the
+    issued by the PCEP speaker willing to use TLS. Note that, this includes the
     open message. 
-    This document thus updates <xref target="RFC5440"/> which required the
-    Open message to be the first PCEP message, since in the case of a PCEP
+    Thus, this document updates <xref target="RFC5440"/>, which required the
+    Open message to be the first PCEP message. In the case of a PCEP
     session using TLS the StartTLS message will be sent first.</t>
 
     <t>The PCEP speaker MAY
@@ -205,9 +205,9 @@
     section 6.9 of <xref target="RFC5440"/> (for the case of reception of
     unknown message).</t>
 
-    <t>After the exchange of startTLS messages, if the PCEP speaker cannot establish a TLS connection
+    <t>After the exchange of startTLS messages, if a PCEP speaker cannot establish a TLS connection
     for some reason (e.g. the required mechanisms for certificate revocation
-    checking are not available) it MUST return a PCErr message with Error-Type
+    checking are not available), it MUST return a PCErr message with Error-Type
     set to [TBA2 by IANA] (PCEP StartTLS failure) and Error-value set to:</t>
 
     <t><list style="symbols">
@@ -422,7 +422,7 @@
       </section>
 
       <section title="Connection Establishment Failure">
-        <t>In case the initial TLS negotiation or the peer identity check fails, according to the procedures listed in this document, the peer MUST send the PCErr message as per the <xref target="init"/> and then MUST terminate the session. It SHOULD follow the procedure listed in <xref target="RFC5440"/> to retry session setup along with an exponential back-off session establishment retry procedure.</t>
+        <t>In case the initial TLS negotiation or the peer identity check fails, according to the procedures listed in this document, the peer MUST first send a PCErr message as per <xref target="init"/> and then terminate the session. It SHOULD follow the procedure listed in <xref target="RFC5440"/> to retry session setup along with an exponential back-off session establishment retry procedure.</t>
       </section>
 
     </section>
@@ -511,7 +511,7 @@ TBA2    StartTLS Failure      0:Unassigned            This document
       </section>
       <section title="Information and Data Models" toc="default">
         <t>The PCEP MIB module SHOULD be extended to include PCEPS capabilities, information, and status.</t>
-        <t>An implementation SHOULD allow the operator to configure the PCEPS capability as well as various TLS related parameters, as well as view the current TLS 
+        <t>An implementation SHOULD allow the operator to configure the PCEPS capability and various TLS related parameters, as well as allow to view the current TLS 
    status for a PCEP session.  To serve this purpose, the PCEP YANG module
    <xref target="I-D.ietf-pce-pcep-yang"/> can be extended to include TLS related configuration and state.</t>
       </section>
