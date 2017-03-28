@@ -21,6 +21,7 @@
 <!ENTITY RFC6698 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
 <!ENTITY RFC7525 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7525.xml">
 <!ENTITY I-D.ietf-pce-stateful-sync-optimizations SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-pce-stateful-sync-optimizations">
+<!ENTITY I-D.ietf-pce-pcep-yang SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang">
 <!ENTITY I-D.wu-pce-dns-pce-discovery SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.wu-pce-dns-pce-discovery">
 <!ENTITY I-D.wu-pce-discovery-pceps-support SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.wu-pce-discovery-pceps-support">
 <!ENTITY I-D.chunduri-karp-using-ikev2-with-tcp-ao SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.chunduri-karp-using-ikev2-with-tcp-ao">
@@ -155,12 +156,13 @@
    are discussed in the following sections.</t>
    </section>
 
-   <section title="Initiating the TLS Procedures">
+   <section title="Initiating the TLS Procedures" anchor="init">
     <t>Since PCEP can operate either with or without TLS, it is necessary
     for the PCEP speaker to indicate whether it wants to set up a TLS
     connection or not.  For this purpose, this document specifies a new
-    PCEP message called StartTLS. This message MUST be issued by the party
-    willing to use TLS, prior to any other PCEP message including open message.
+    PCEP message called StartTLS. This message MUST be the first PCEP message
+    issued by the PCEP speaker, willing to use TLS. Note that, this includes the
+    open message. 
     This document thus updates <xref target="RFC5440"/> which required the
     Open message to be the first PCEP message, since in the case of a PCEP
     session using TLS the StartTLS message will be sent first.</t>
@@ -169,9 +171,9 @@
     discover that the PCEP peer supports PCEPS or can be preconfigured
     to use PCEPS for a given peer (see <xref target="Discovery"/> for more
     details). Thus the PCEP session is secured via TLS from the
-    start before exchange of any other PCEP message including the Open message.
+    start before exchange of any other PCEP message (that includes the Open message).
     Securing via TLS of an existing PCEP session is not permitted, the session
-    must be closed and re-established with TLS as per the procedure described in
+    MUST be closed and re-established with TLS as per the procedure described in
     this document.</t>
 
     <t>The StartTLS message is a PCEP message sent by a PCC to a PCE and by a
@@ -182,9 +184,9 @@
     <t>Once the TCP connection has been successfully established, the first
     message sent by the PCC to the PCE and by the PCE to the PCC MUST be
     a StartTLS message for the PCEPS. Note this is a significant change
-    from <xref target="RFC5440"/> where the first PCEP message is Open.</t>
+    from <xref target="RFC5440"/> where the first PCEP message is the Open message.</t>
 
-    <t>A PCEP speaker receiving a StartTLS message after any other PCEP
+    <t>A PCEP speaker receiving a StartTLS message, after any other PCEP
     exchange has taken place (by receiving or sending any other messages
     from either side) MUST treat it as an unexpected message and reply with a
     PCErr message with Error-Type set to [TBA2 by IANA] (PCEP StartTLS
@@ -203,7 +205,7 @@
     section 6.9 of <xref target="RFC5440"/> (for the case of reception of
     unknown message).</t>
 
-    <t>If the PCEP speaker supports PCEPS but cannot establish a TLS connection
+    <t>After the exchange of startTLS messages, if the PCEP speaker cannot establish a TLS connection
     for some reason (e.g. the required mechanisms for certificate revocation
     checking are not available) it MUST return a PCErr message with Error-Type
     set to [TBA2 by IANA] (PCEP StartTLS failure) and Error-value set to:</t>
@@ -263,13 +265,15 @@
    <t>The StartTLS message MUST contain only the PCEP common header with
    Message-Type field set to [TBA1 by IANA].</t>
 
-   <t>Once the TCP connection has been successfully established and the StartTLS
-   message sent, the sender MUST start a timer called StartTLSWait timer, after
-   the expiration of which, if no StartTLS message has been received, it sends a
-   PCErr message and releases the TCP connection with Error-Type set
-   to [TBA2 by IANA] and Error-value set to 5 (no StartTLS message
-   received before the expiration of the StartTLSWait timer). A RECOMMENDED
-   value for StartTLSWait timer is 60 seconds.</t>
+   <t>Once the TCP connection has been successfully established and the
+   StartTLS message sent, the sender MUST start a timer called
+   StartTLSWait timer, after the expiration of which, if no StartTLS
+   message has been received, it MUST send a PCErr message and releases the
+   TCP connection with Error-Type set to [TBA2 by IANA] and Error-value
+   set to 5 (no StartTLS message received before the expiration of the
+   StartTLSWait timer). A RECOMMENDED
+   value for StartTLSWait timer is 60 seconds.
+</t>
 
              <figure title="Both PCEP Speaker supports PCEPS"
              suppress-title="false" align="left" alt="" width="" height="" anchor="F1">
@@ -382,11 +386,25 @@
         <t>To support TLS re-negotiation both peers MUST support the mechanism described in <xref target="RFC5746"/>. Any attempt of initiate a TLS handshake to establish new cryptographic parameters not aligned with <xref target="RFC5746"/> SHALL be considered a TLS negotiation failure.</t>
       </section>
 
-      <section title="Peer Identity" anchor="Identity">
-        <t>Depending on the peer authentication method in use, PCEPS supports different operation modes to establish peer's identity and whether it is entitled to perform requests or can be considered authoritative in its replies. PCEPS implementations SHOULD provide mechanisms for associating peer identities with different levels of access and/or authoritativeness, and they MUST provide a mechanism for establish a default level for properly identified peers. Any connection established with a peer that cannot be properly identified SHALL be terminated before any PCEP exchange takes place.</t>
+      
+<section title="Peer Identity" anchor="Identity">
+<t>
+   Depending on the peer authentication method in use, PCEPS supports
+   different operation modes to establish peer's identity and whether it
+   is entitled to perform requests or can be considered authoritative in
+   its replies.  PCEPS implementations SHOULD provide mechanisms for
+   associating peer identities with different levels of access and/or
+   authoritativeness, and they MUST provide a mechanism for establish a
+   default level for properly identified peers.  Any connection
+   established with a peer that cannot be properly identified SHALL be
+   terminated before any PCEP exchange takes place.
+</t>
+      
         <t>In TLS-X.509 mode using fingerprints, a peer is uniquely identified by the fingerprint of the presented certificate.</t>
-        <t>There are numerous trust models in PKIX environments, and it is beyond the scope of this document to define how a particular deployment determines whether a peer is trustworthy. Implementations that want to support a wide variety of trust models should expose as many details of the presented certificate to the administrator as possible so that the trust model can be implemented by the administrator. As a suggestion, at least the following parameters of the X.509 certificate should be exposed:
-          <list style="symbols">
+      
+        <t>There are numerous trust models in PKIX environments, and it is beyond the scope of this document to define how a particular deployment determines whether a peer is trustworthy. Implementations that want to support a wide variety of trust models SHOULD expose as many details of the presented certificate to the administrator as possible so that the trust model can be implemented by the administrator. 
+        At least the following parameters of the X.509 certificate SHOULD be exposed:</t>
+          <t><list style="symbols">
             <t>Peer's IP address</t>
             <t>Peer's fully qualified domain name (FQDN)</t>
             <t>Certificate Fingerprint</t>
@@ -404,7 +422,7 @@
       </section>
 
       <section title="Connection Establishment Failure">
-        <t>In case the initial TLS negotiation or the peer identity check fails, according to the procedures listed in this document, the peer MUST immediately terminate the session. It SHOULD follow the procedure listed in <xref target="RFC5440"/> to retry session setup along with an exponential back-off session establishment retry procedure.</t>
+        <t>In case the initial TLS negotiation or the peer identity check fails, according to the procedures listed in this document, the peer MUST send the PCErr message as per the <xref target="init"/> and then MUST terminate the session. It SHOULD follow the procedure listed in <xref target="RFC5440"/> to retry session setup along with an exponential back-off session establishment retry procedure.</t>
       </section>
 
     </section>
@@ -433,8 +451,8 @@
 
   <section anchor="IANA" title="IANA Considerations">
   <section title="New PCEP Message">
-  <t>Each PCEP message has a message type value.</t>
-    <t>One new PCEP messages is defined in this document:</t>
+  <t>IANA is requested to allocate new message types within the "PCEP
+   Messages" sub-registry of the PCEP Numbers registry, as follows:</t>
              <figure>
             <artwork><![CDATA[
    Value  Description                             Reference
@@ -443,8 +461,9 @@
           </figure>
         </section>
         <section title="New Error-Values">
-   <t>A registry was created for the Error-type and Error-value of the PCEP
-   Error Object. Following new Error-Types and Error-Values are defined:</t>
+   <t>IANA is requested to allocate new Error Types and Error Values within
+   the " PCEP-ERROR Object Error Types and Values" sub-registry of the
+   PCEP Numbers registry, as follows:</t>
              <figure>
             <artwork><![CDATA[
 Error-
@@ -492,6 +511,9 @@ TBA2    StartTLS Failure      0:Unassigned            This document
       </section>
       <section title="Information and Data Models" toc="default">
         <t>The PCEP MIB module SHOULD be extended to include PCEPS capabilities, information, and status.</t>
+        <t>An implementation SHOULD allow the operator to configure the PCEPS capability as well as various TLS related parameters, as well as view the current TLS 
+   status for a PCEP session.  To serve this purpose, the PCEP YANG module
+   <xref target="I-D.ietf-pce-pcep-yang"/> can be extended to include TLS related configuration and state.</t>
       </section>
       <section title="Liveness Detection and Monitoring" toc="default">
         <t>Mechanisms defined in this document do not imply any new liveness detection and monitoring requirements in addition to those already listed in <xref target="RFC5440"/> and <xref target="RFC5246"/>.</t>
@@ -544,6 +566,7 @@ TBA2    StartTLS Failure      0:Unassigned            This document
       &RFC6614;
       &RFC6952;
       &I-D.ietf-pce-stateful-sync-optimizations;
+      &I-D.ietf-pce-pcep-yang;
       &I-D.wu-pce-dns-pce-discovery;
       &I-D.wu-pce-discovery-pceps-support;
       &I-D.chunduri-karp-using-ikev2-with-tcp-ao;
