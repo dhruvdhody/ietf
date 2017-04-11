@@ -100,7 +100,7 @@ Table of Contents
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
    8.  Manageability Considerations  . . . . . . . . . . . . . . . .  14
      8.1.  Control of Function and Policy  . . . . . . . . . . . . .  14
-     8.2.  Information and Data Models . . . . . . . . . . . . . . .  15
+     8.2.  Information and Data Models . . . . . . . . . . . . . . .  14
      8.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  15
      8.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  15
      8.5.  Requirements on Other Protocols . . . . . . . . . . . . .  15
@@ -114,8 +114,8 @@ Lopez, et al.           Expires October 13, 2017                [Page 2]
 Internet-Draft          Secure Transport for PCEP             April 2017
 
 
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  15
      10.2.  Informative References . . . . . . . . . . . . . . . . .  17
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
 
@@ -257,8 +257,8 @@ Internet-Draft          Secure Transport for PCEP             April 2017
    After the exchange of startTLS messages, if a PCEP speaker cannot
    establish a TLS connection for some reason (e.g. the required
    mechanisms for certificate revocation checking are not available), it
-   MUST return a PCErr message with Error-Type set to [TBA2 by IANA]
-   (PCEP StartTLS failure) and Error-value set to:
+   MUST return a PCErr message (in clear) with Error-Type set to [TBA2
+   by IANA] (PCEP StartTLS failure) and Error-value set to:
 
    o  3 (not without TLS) if it is not willing to exchange PCEP messages
       without the solicited TLS connection, and it MUST close the TCP
@@ -707,20 +707,20 @@ Internet-Draft          Secure Transport for PCEP             April 2017
 
    While the application of TLS satisfies the requirement on privacy as
    well as fine-grained, policy-based peer authentication, there are
-   security threats that it cannot address.  It is advisable to apply
-   additional protection measures, in particular in what relates to
-   attacks specifically addressed to forging the TCP connection
-   underpinning TLS.  TCP-AO (TCP Authentication Option [RFC5925]) is
-   fully compatible with and deemed as complementary to TLS, so its
-   usage is to be considered as a security enhancement whenever any of
-   the PCEPS peers require it, especially in the case of long-lived
-   connections.  The mechanisms to configure the requirements to use
-   TCP-AO and other lower-layer protection measures, as well as the
-   association of the required crypto material (MKT in the case of TCP-
-   AO) with a particular peer are outside the scope of this document.
-   [I-D.chunduri-karp-using-ikev2-with-tcp-ao] defines a method to
-   perform such association.
+   security threats that it cannot address.  It may be advisable to
+   apply additional protection measures, in particular in what relates
+   to attacks specifically addressed to forging the TCP connection
+   underpinning TLS, especially in the case of long-lived connections.
+   One of these measures is the application of TCP-AO (TCP
+   Authentication Option [RFC5925]), which is fully compatible with and
+   deemed as complementary to TLS.  The mechanisms to configure the
+   requirements to use TCP-AO and other lower-layer protection measures
+   with a particular peer are outside the scope of this document.
 
+   Since computational resources required by TLS handshake and
+   ciphersuite are higher than unencrypted TCP, clients connecting to a
+   PCEPS server can more easily create high load conditions and a
+   malicious client might create a Denial-of-Service attack more easily.
 
 
 
@@ -729,11 +729,6 @@ Lopez, et al.           Expires October 13, 2017               [Page 13]
 
 Internet-Draft          Secure Transport for PCEP             April 2017
 
-
-   Since computational resources required by TLS handshake and
-   ciphersuite are higher than unencrypted TCP, clients connecting to a
-   PCEPS server can more easily create high load conditions and a
-   malicious client might create a Denial-of-Service attack more easily.
 
    Some TLS ciphersuites only provide integrity validation of their
    payload, and provide no encryption.  This specification does not
@@ -776,8 +771,13 @@ Internet-Draft          Secure Transport for PCEP             April 2017
 
    o  StartTLSWait timer value
 
+8.2.  Information and Data Models
 
+   The PCEP MIB module SHOULD be extended to include PCEPS capabilities,
+   information, and status.
 
+   An implementation SHOULD allow the operator to configure the PCEPS
+   capability and various TLS related parameters, as well as allow to
 
 
 
@@ -786,13 +786,6 @@ Lopez, et al.           Expires October 13, 2017               [Page 14]
 Internet-Draft          Secure Transport for PCEP             April 2017
 
 
-8.2.  Information and Data Models
-
-   The PCEP MIB module SHOULD be extended to include PCEPS capabilities,
-   information, and status.
-
-   An implementation SHOULD allow the operator to configure the PCEPS
-   capability and various TLS related parameters, as well as allow to
    view the current TLS status for a PCEP session.  To serve this
    purpose, the PCEP YANG module [I-D.ietf-pce-pcep-yang] can be
    extended to include TLS related configuration and state.
@@ -832,16 +825,6 @@ Internet-Draft          Secure Transport for PCEP             April 2017
 
    Thanks to Cyril Margaria for shepherding this document.
 
-
-
-
-
-
-Lopez, et al.           Expires October 13, 2017               [Page 15]
-
-Internet-Draft          Secure Transport for PCEP             April 2017
-
-
 10.  References
 
 10.1.  Normative References
@@ -850,6 +833,14 @@ Internet-Draft          Secure Transport for PCEP             April 2017
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
+
+
+
+
+Lopez, et al.           Expires October 13, 2017               [Page 15]
+
+Internet-Draft          Secure Transport for PCEP             April 2017
+
 
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
@@ -887,17 +878,6 @@ Internet-Draft          Secure Transport for PCEP             April 2017
               Protocol: TLSA", RFC 6698, DOI 10.17487/RFC6698, August
               2012, <http://www.rfc-editor.org/info/rfc6698>.
 
-
-
-
-
-
-
-Lopez, et al.           Expires October 13, 2017               [Page 16]
-
-Internet-Draft          Secure Transport for PCEP             April 2017
-
-
    [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
               "Recommendations for Secure Use of Transport Layer
               Security (TLS) and Datagram Transport Layer Security
@@ -909,6 +889,14 @@ Internet-Draft          Secure Transport for PCEP             April 2017
               DOI 10.6028/NIST.FIPS.180-4, August 2015,
               <http://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.180-4.pdf>.
+
+
+
+
+Lopez, et al.           Expires October 13, 2017               [Page 16]
+
+Internet-Draft          Secure Transport for PCEP             April 2017
+
 
 10.2.  Informative References
 
@@ -942,18 +930,6 @@ Internet-Draft          Secure Transport for PCEP             April 2017
               Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,
               <http://www.rfc-editor.org/info/rfc6952>.
 
-
-
-
-
-
-
-
-Lopez, et al.           Expires October 13, 2017               [Page 17]
-
-Internet-Draft          Secure Transport for PCEP             April 2017
-
-
    [I-D.ietf-pce-stateful-sync-optimizations]
               Crabbe, E., Minei, I., Medved, J., Varga, R., Zhang, X.,
               and D. Dhody, "Optimizations of Label Switched Path State
@@ -968,6 +944,16 @@ Internet-Draft          Secure Transport for PCEP             April 2017
               draft-ietf-pce-pcep-yang-02 (work in progress), March
               2017.
 
+
+
+
+
+
+Lopez, et al.           Expires October 13, 2017               [Page 17]
+
+Internet-Draft          Secure Transport for PCEP             April 2017
+
+
    [I-D.wu-pce-dns-pce-discovery]
               Wu, W., Dhody, D., King, D., Lopez, D., and J. Tantsura,
               "Path Computation Element (PCE) Discovery using Domain
@@ -980,11 +966,6 @@ Internet-Draft          Secure Transport for PCEP             April 2017
               discovery", draft-wu-pce-discovery-pceps-support-07 (work
               in progress), March 2017.
 
-   [I-D.chunduri-karp-using-ikev2-with-tcp-ao]
-              Chunduri, U., Tian, A., and J. Touch, "A framework for RPs
-              to use IKEv2 KMP", draft-chunduri-karp-using-ikev2-with-
-              tcp-ao-06 (work in progress), February 2014.
-
 Authors' Addresses
 
    Diego R. Lopez
@@ -995,19 +976,6 @@ Authors' Addresses
 
    Phone: +34 913 129 041
    EMail: diego.r.lopez@telefonica.com
-
-
-
-
-
-
-
-
-
-
-Lopez, et al.           Expires October 13, 2017               [Page 18]
-
-Internet-Draft          Secure Transport for PCEP             April 2017
 
 
    Oscar Gonzalez de Dios
@@ -1029,6 +997,19 @@ Internet-Draft          Secure Transport for PCEP             April 2017
    EMail: sunseawq@huawei.com
 
 
+
+
+
+
+
+
+
+
+Lopez, et al.           Expires October 13, 2017               [Page 18]
+
+Internet-Draft          Secure Transport for PCEP             April 2017
+
+
    Dhruv Dhody
    Huawei
    Divyashree Techno Park, Whitefield
@@ -1036,6 +1017,25 @@ Internet-Draft          Secure Transport for PCEP             April 2017
    India
 
    EMail: dhruv.ietf@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

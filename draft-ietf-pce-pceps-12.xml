@@ -24,7 +24,7 @@
 <!ENTITY I-D.ietf-pce-pcep-yang SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang">
 <!ENTITY I-D.wu-pce-dns-pce-discovery SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.wu-pce-dns-pce-discovery">
 <!ENTITY I-D.wu-pce-discovery-pceps-support SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.wu-pce-discovery-pceps-support">
-<!ENTITY I-D.chunduri-karp-using-ikev2-with-tcp-ao SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.chunduri-karp-using-ikev2-with-tcp-ao">
+
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
@@ -208,7 +208,7 @@
 
     <t>After the exchange of startTLS messages, if a PCEP speaker cannot establish a TLS connection
     for some reason (e.g. the required mechanisms for certificate revocation
-    checking are not available), it MUST return a PCErr message with Error-Type
+    checking are not available), it MUST return a PCErr message (in clear) with Error-Type
     set to [TBA2 by IANA] (PCEP StartTLS failure) and Error-value set to:</t>
 
     <t><list style="symbols">
@@ -492,7 +492,9 @@ TBA2    StartTLS Failure      0:Unassigned            This document
   </section>
 
   <section title="Security Considerations">
-    <t>While the application of TLS satisfies the requirement on privacy as well as fine-grained, policy-based peer authentication, there are security threats that it cannot address. It is advisable to apply additional protection measures, in particular in what relates to attacks specifically addressed to forging the TCP connection underpinning TLS. TCP-AO (TCP Authentication Option <xref target="RFC5925"/>) is fully compatible with and deemed as complementary to TLS, so its usage is to be considered as a security enhancement whenever any of the PCEPS peers require it, especially in the case of long-lived connections. The mechanisms to configure the requirements to use TCP-AO and other lower-layer protection measures, as well as the association of the required crypto material (MKT in the case of TCP-AO) with a particular peer are outside the scope of this document. <xref target="I-D.chunduri-karp-using-ikev2-with-tcp-ao"/> defines a method to perform such association.</t>
+    <!--<t>While the application of TLS satisfies the requirement on privacy as well as fine-grained, policy-based peer authentication, there are security threats that it cannot address. It is advisable to apply additional protection measures, in particular in what relates to attacks specifically addressed to forging the TCP connection underpinning TLS. TCP-AO (TCP Authentication Option <xref target="RFC5925"/>) is fully compatible with and deemed as complementary to TLS, so its usage is to be considered as a security enhancement whenever any of the PCEPS peers require it, especially in the case of long-lived connections. The mechanisms to configure the requirements to use TCP-AO and other lower-layer protection measures, as well as the association of the required crypto material (MKT in the case of TCP-AO) with a particular peer are outside the scope of this document. <xref target="I-D.chunduri-karp-using-ikev2-with-tcp-ao"/> defines a method to perform such association.</t>-->
+    <t>While the application of TLS satisfies the requirement on privacy as well as fine-grained, policy-based peer authentication, there are security threats that it cannot address.  It may be advisable to apply additional protection measures, in particular in what relates to attacks specifically addressed to forging the TCP connection underpinning TLS, especially in the case of long-lived connections. One of these measures is the application of TCP-AO (TCP Authentication Option <xref target="RFC5925"/>), which is fully compatible with and deemed as complementary to TLS. The mechanisms to configure the requirements to use TCP-AO and other lower-layer protection measures with a particular peer are outside the scope of this document.</t>
+
     <t>Since computational resources required by TLS handshake and ciphersuite are higher than unencrypted TCP, clients connecting to a PCEPS server can more easily create high load conditions and a malicious client might create a Denial-of-Service attack more easily.</t>
     <t>Some TLS ciphersuites only provide integrity validation of their payload, and provide no encryption. This specification does not forbid the use of such ciphersuites, but administrators must weight carefully the risk of relevant internal data leakage that can occur in such a case, as explicitly stated by <xref target="RFC6952"/>.</t>
     <t>When using certificate fingerprints to identify PCEPS peers, any two certificates that produce the same hash value will be considered the same peer. Therefore, it is important to make sure that the hash function used is cryptographically uncompromised so that attackers are very unlikely to be able to produce a hash collision with a certificate of their choice. This document mandates support for SHA-256 as defined by <xref target="SHS"/>, but a later revision may demand support for stronger functions if suitable attacks on it are known.</t>
@@ -572,7 +574,7 @@ TBA2    StartTLS Failure      0:Unassigned            This document
       &I-D.ietf-pce-pcep-yang;
       &I-D.wu-pce-dns-pce-discovery;
       &I-D.wu-pce-discovery-pceps-support;
-      &I-D.chunduri-karp-using-ikev2-with-tcp-ao;
+      
     </references>
   </back>
 </rfc>
