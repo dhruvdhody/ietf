@@ -109,7 +109,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="28" month="March" year="2017"/>
+    <date day="11" month="April" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -160,18 +160,19 @@
     <t>Since PCEP can operate either with or without TLS, it is necessary
     for the PCEP speaker to indicate whether it wants to set up a TLS
     connection or not.  For this purpose, this document specifies a new
-    PCEP message called StartTLS. This message MUST be the first PCEP message
-    issued by the PCEP speaker willing to use TLS. Note that, this includes the
-    open message. 
-    Thus, this document updates <xref target="RFC5440"/>, which required the
+    PCEP message called StartTLS. 
+    Thus the PCEP session is secured via TLS from the
+   start before exchange of any other PCEP message (that includes the
+   Open message). This document thus updates
+   <xref target="RFC5440"/>, which required the
     Open message to be the first PCEP message. In the case of a PCEP
-    session using TLS the StartTLS message will be sent first.</t>
+    session using TLS the StartTLS message will be sent first. 
+    </t>
 
     <t>The PCEP speaker MAY
     discover that the PCEP peer supports PCEPS or can be preconfigured
     to use PCEPS for a given peer (see <xref target="Discovery"/> for more
-    details). Thus the PCEP session is secured via TLS from the
-    start before exchange of any other PCEP message (that includes the Open message).
+    details). 
     Securing via TLS of an existing PCEP session is not permitted, the session
     MUST be closed and re-established with TLS as per the procedure described in
     this document.</t>
@@ -394,7 +395,7 @@
    is entitled to perform requests or can be considered authoritative in
    its replies.  PCEPS implementations SHOULD provide mechanisms for
    associating peer identities with different levels of access and/or
-   authoritativeness, and they MUST provide a mechanism for establish a
+   authoritativeness, and they MUST provide a mechanism for establishing a
    default level for properly identified peers.  Any connection
    established with a peer that cannot be properly identified SHALL be
    terminated before any PCEP exchange takes place.
@@ -495,6 +496,7 @@ TBA2    StartTLS Failure      0:Unassigned            This document
     <t>Since computational resources required by TLS handshake and ciphersuite are higher than unencrypted TCP, clients connecting to a PCEPS server can more easily create high load conditions and a malicious client might create a Denial-of-Service attack more easily.</t>
     <t>Some TLS ciphersuites only provide integrity validation of their payload, and provide no encryption. This specification does not forbid the use of such ciphersuites, but administrators must weight carefully the risk of relevant internal data leakage that can occur in such a case, as explicitly stated by <xref target="RFC6952"/>.</t>
     <t>When using certificate fingerprints to identify PCEPS peers, any two certificates that produce the same hash value will be considered the same peer. Therefore, it is important to make sure that the hash function used is cryptographically uncompromised so that attackers are very unlikely to be able to produce a hash collision with a certificate of their choice. This document mandates support for SHA-256 as defined by <xref target="SHS"/>, but a later revision may demand support for stronger functions if suitable attacks on it are known.</t>
+    <t>The guidance given in <xref target="RFC7525"/> SHOULD be followed to avoid attacks on TLS.</t>
   </section>
 
 <section title="Manageability Considerations"
@@ -532,6 +534,7 @@ TBA2    StartTLS Failure      0:Unassigned            This document
     <t>This specification relies on the analysis and profiling of TLS included in <xref target="RFC6614"/> and the procedures described for the STARTTLS command in <xref target="RFC4513"/>.</t>
     <t>We would like to thank Joe Touch for his suggestions and support regarding the TLS start mechanisms.</t>
     <t>Thanks to Dan King for reminding the authors about manageability considerations.</t>
+    <t>Thanks to Cyril Margaria for shepherding this document.</t>
   </section>
   </middle>
 
