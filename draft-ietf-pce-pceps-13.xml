@@ -109,7 +109,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="11" month="May" year="2017"/>
+    <date day="12" month="May" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -238,7 +238,7 @@
     <t>These procedures minimize the impact of PCEPS support in PCEP
     implementations without requiring additional dedicated ports for
     running PCEP with TLS.</t>
-    <t>As per the recommendation from <xref target="RFC7525"/>, PCEP peers that 
+    <t>As per the recommendation from <xref target="RFC7525"/> to avoid downgrade attacks, PCEP peers that 
     support PCEPS, SHOULD prefer strict TLS configuration i.e. do not allow 
     non-TLS PCEP sessions to be established.</t>
   </section>
@@ -531,8 +531,16 @@ TBA2    StartTLS Failure      0:Unassigned            This document
         <t>Mechanisms defined in this document do not imply any new requirements on other protocols.</t>
       </section>
       <section title="Impact on Network Operation" toc="default">
-        <t>Mechanisms defined in this document do not have any significant impact on network operations in addition to those already listed in <xref target="RFC5440"/>.</t>
-        <t></t>
+        <!--<t>Mechanisms defined in this document do not have any significant impact on network operations in addition to those already listed in <xref target="RFC5440"/>.</t>-->
+        <t>The operator need to develop suitable security policies around PCEP, within his network. Further the PCEP peers SHOULD provide ways for the operator to complete following tasks: 
+          <list style="symbols">
+            <t>Determine if a PCEP session is protected via PCEPS.</t>
+            <t>Determine the version of TLS, mechanism for authentication used.</t>
+            <t>Determine if the certificate cannot be verified and the cipher suite used.</t>
+            <t>Inspect the certificate offered by the PCEP peer.</t>
+            <t>Be warned if StartTLS procedure fails for the PCEP peers, that are known to support PCEPS (via configurations or capability advertisements).</t>
+          </list></t>
+        <t>Further, the backward compatibility considerations are stated in <xref target="Backward"/>.</t>
       </section>
     </section>
   <section title="Acknowledgements">
@@ -540,7 +548,7 @@ TBA2    StartTLS Failure      0:Unassigned            This document
     <t>We would like to thank Joe Touch for his suggestions and support regarding the TLS start mechanisms.</t>
     <t>Thanks to Dan King for reminding the authors about manageability considerations.</t>
     <t>Thanks to Cyril Margaria for shepherding this document.</t>
-    <t>Thanks to Dan Frost for RTGDIR review.</t>
+    <t>Thanks to Dan Frost for the RTGDIR review.</t>
   </section>
   </middle>
 
