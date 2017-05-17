@@ -5,7 +5,7 @@
 PCE Working Group                                               I. Minei
 Internet-Draft                                              Google, Inc.
 Intended status: Standards Track                               E. Crabbe
-Expires: November 13, 2017                        Individual Contributor
+Expires: November 16, 2017                        Individual Contributor
                                                             S. Sivabalan
                                                      Cisco Systems, Inc.
                                                       H. Ananthakrishnan
@@ -14,7 +14,7 @@ Expires: November 13, 2017                        Individual Contributor
                                                                   Huawei
                                                                Y. Tanaka
                                           NTT Communications Corporation
-                                                            May 12, 2017
+                                                            May 15, 2017
 
 
   PCEP Extensions for Establishing Relationships Between Sets of LSPs
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Minei, et al.           Expires November 13, 2017               [Page 1]
+Minei, et al.           Expires November 16, 2017               [Page 1]
 
 Internet-Draft            PCE association group                 May 2017
 
 
-   This Internet-Draft will expire on November 13, 2017.
+   This Internet-Draft will expire on November 16, 2017.
 
 Copyright Notice
 
@@ -82,37 +82,42 @@ Table of Contents
    3.  Architectural Overview  . . . . . . . . . . . . . . . . . . .   4
      3.1.  Motivation  . . . . . . . . . . . . . . . . . . . . . . .   4
      3.2.  Operation Overview  . . . . . . . . . . . . . . . . . . .   4
+     3.3.  Operator-configured Association Range . . . . . . . . . .   5
    4.  ASSOCIATION Object  . . . . . . . . . . . . . . . . . . . . .   5
      4.1.  Object Definition . . . . . . . . . . . . . . . . . . . .   5
        4.1.1.  Global Association Source TLV . . . . . . . . . . . .   7
        4.1.2.  Extended Association ID TLV . . . . . . . . . . . . .   7
      4.2.  Object Encoding in PCEP messages  . . . . . . . . . . . .   8
        4.2.1.  Stateful PCEP messages  . . . . . . . . . . . . . . .   8
-       4.2.2.  Request Message . . . . . . . . . . . . . . . . . . .   9
-     4.3.  Processing Rules  . . . . . . . . . . . . . . . . . . . .  10
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+       4.2.2.  Request Message . . . . . . . . . . . . . . . . . . .  10
+     4.3.  Processing Rules  . . . . . . . . . . . . . . . . . . . .  11
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
      5.1.  PCEP Object . . . . . . . . . . . . . . . . . . . . . . .  12
-     5.2.  PCEP TLV  . . . . . . . . . . . . . . . . . . . . . . . .  12
-     5.3.  Association Flags . . . . . . . . . . . . . . . . . . . .  12
-     5.4.  PCEP-Error Object . . . . . . . . . . . . . . . . . . . .  12
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  13
-   8.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  13
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  14
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+     5.2.  PCEP TLV  . . . . . . . . . . . . . . . . . . . . . . . .  13
+     5.3.  Association Flags . . . . . . . . . . . . . . . . . . . .  13
+     5.4.  PCEP-Error Object . . . . . . . . . . . . . . . . . . . .  13
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  14
+     7.1.  Control of Function and Policy  . . . . . . . . . . . . .  14
+     7.2.  Information and Data Models . . . . . . . . . . . . . . .  14
+     7.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  14
+     7.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  15
+     7.5.  Requirements On Other Protocols . . . . . . . . . . . . .  15
+     7.6.  Impact On Network Operations  . . . . . . . . . . . . . .  15
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  15
+   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  15
 
 
 
-
-
-
-
-Minei, et al.           Expires November 13, 2017               [Page 2]
+Minei, et al.           Expires November 16, 2017               [Page 2]
 
 Internet-Draft            PCE association group                 May 2017
 
+
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  16
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
 
 1.  Introduction
 
@@ -135,10 +140,10 @@ Internet-Draft            PCE association group                 May 2017
    LSPs.  This grouping can then be used to define associations between
    sets of LSPs or between a set of LSPs and a set of attributes (such
    as configuration parameters or behaviors), and is equally applicable
-   to the active and passive modes of a stateful PCE and a stateless
-   PCE.  The associations could be created dynamically and conveyed to a
-   PCEP peer within PCEP, or it could be configured by an operator on
-   the PCEP peers.  Refer Section 3.2 for more details.
+   to stateful PCE (active and passive modes) and stateless PCE.  The
+   associations could be created dynamically and conveyed to a PCEP peer
+   within PCEP, or it could be configured by an operator on the PCEP
+   peers.  Refer Section 3.2 for more details.
 
 2.  Terminology
 
@@ -157,18 +162,17 @@ Internet-Draft            PCE association group                 May 2017
 
    The following term is defined in this document:
 
-   Association Timeout Interval: when a PCEP session is terminated, a
-   PCC waits for this time period before deleting associations created
-   by the PCEP peer.
 
 
 
-
-
-Minei, et al.           Expires November 13, 2017               [Page 3]
+Minei, et al.           Expires November 16, 2017               [Page 3]
 
 Internet-Draft            PCE association group                 May 2017
 
+
+   Association Timeout Interval: when a PCEP session is terminated, a
+   PCC waits for this time period before deleting associations created
+   by the PCEP peer.
 
 3.  Architectural Overview
 
@@ -189,7 +193,7 @@ Internet-Draft            PCE association group                 May 2017
    behaviors with the request.
 
    Some associations could be created dynamically, such as association
-   between the working and protections LSPs of a tunnel.  Where as some
+   between the working and protections LSPs of a tunnel.  Whereas some
    association could be created by the operator manually, such as policy
    based association, where the LSP could join an operator-configured
    existing association.
@@ -214,18 +218,18 @@ Internet-Draft            PCE association group                 May 2017
 
    For the operator-configured association, the association identifier,
    type, as well as the association source IP address is manually
-   configured by the operator.  In case of dynamic association, the
-   association identifier is allocated dynamically by the PCEP speaker.
-   A range of association identifier is marked for operator-configured
-   associations.  The dynamically created association can then be
 
 
 
-Minei, et al.           Expires November 13, 2017               [Page 4]
+Minei, et al.           Expires November 16, 2017               [Page 4]
 
 Internet-Draft            PCE association group                 May 2017
 
 
+   configured by the operator.  In case of dynamic association, the
+   association identifier is allocated dynamically by the PCEP speaker.
+   A range of association identifier is marked for operator-configured
+   associations.  The dynamically created association can then be
    reported to the PCEP peer via the PCEP messages as per the stateful
    extensions.  The association are properties of the LSP and could be
    stored in the LSP state database.  Thus, the dynamic association
@@ -240,6 +244,24 @@ Internet-Draft            PCE association group                 May 2017
    multiple association groups, of different or of the same association
    type.
 
+3.3.  Operator-configured Association Range
+
+   A range of association identifier are kept for the operator-
+   configured associations.  Dynamic associations MUST NOT use the
+   identifier from this range.
+
+   Two proposals -
+
+   o  All operator-configured associations MUST use identifier from the
+      range 0x10000 to 0xFFFFF and encode it in the extended association
+      id TLV.  (Section 4.1.2)
+
+   o  Operator is allowed to configure a range of identifier earmarked
+      for operator-configured associations, this information MUST be
+      advertised to the peer.
+
+   TBD
+
 4.  ASSOCIATION Object
 
 4.1.  Object Definition
@@ -251,6 +273,13 @@ Internet-Draft            PCE association group                 May 2017
 
    ASSOCIATION Object-Type is 1 for IPv4 and its format is shown in
    Figure 1:
+
+
+
+
+Minei, et al.           Expires November 16, 2017               [Page 5]
+
+Internet-Draft            PCE association group                 May 2017
 
 
        0                   1                   2                   3
@@ -270,16 +299,6 @@ Internet-Draft            PCE association group                 May 2017
 
    ASSOCIATION Object-Type is 2 for IPv6 and its format is shown in
    Figure 2:
-
-
-
-
-
-
-
-Minei, et al.           Expires November 13, 2017               [Page 5]
-
-Internet-Draft            PCE association group                 May 2017
 
 
        0                   1                   2                   3
@@ -311,6 +330,14 @@ Internet-Draft            PCE association group                 May 2017
    protection).  The association type will be defined in separate
    documents.
 
+
+
+
+Minei, et al.           Expires November 16, 2017               [Page 6]
+
+Internet-Draft            PCE association group                 May 2017
+
+
    Association ID: 16 bits - the identifier of the association group.
    When combined with Type and Association Source, this value uniquely
    identifies an association group.  The value 0xffff and 0x0 are
@@ -329,14 +356,6 @@ Internet-Draft            PCE association group                 May 2017
    Optional TLVs: The optional TLVs follow the PCEP TLV format of
    [RFC5440].  This document defines two optional TLVs.  Other documents
    can define more TLVs.
-
-
-
-
-Minei, et al.           Expires November 13, 2017               [Page 6]
-
-Internet-Draft            PCE association group                 May 2017
-
 
 4.1.1.  Global Association Source TLV
 
@@ -368,6 +387,13 @@ Internet-Draft            PCE association group                 May 2017
    Association Object.
 
 
+
+
+Minei, et al.           Expires November 16, 2017               [Page 7]
+
+Internet-Draft            PCE association group                 May 2017
+
+
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -386,14 +412,6 @@ Internet-Draft            PCE association group                 May 2017
 
    Extended Association ID: as defined in [RFC6780].  The operator-
    configured associations MUST use the extended association ID TLV to
-
-
-
-Minei, et al.           Expires November 13, 2017               [Page 7]
-
-Internet-Draft            PCE association group                 May 2017
-
-
    encode the association ID from the association identifier range
    carved out for the operator-configured associations.  This is done to
    avoid any conflict in association identifier between the manual
@@ -416,6 +434,20 @@ Internet-Draft            PCE association group                 May 2017
 
    The PCRpt message is defined in [I-D.ietf-pce-stateful-pce] and
    updated as below:
+
+
+
+
+
+
+
+
+
+
+
+Minei, et al.           Expires November 16, 2017               [Page 8]
+
+Internet-Draft            PCE association group                 May 2017
 
 
       <PCRpt Message> ::= <Common Header>
@@ -443,13 +475,6 @@ Internet-Draft            PCE association group                 May 2017
    remove a delegated LSP from one or more association groups by setting
    the R flag to 1 in the ASSOCIATION object.
 
-
-
-Minei, et al.           Expires November 13, 2017               [Page 8]
-
-Internet-Draft            PCE association group                 May 2017
-
-
    The PCUpd message is defined in [I-D.ietf-pce-stateful-pce] and
    updated as below:
 
@@ -473,38 +498,39 @@ Internet-Draft            PCE association group                 May 2017
    PCInitiate message.  The PCInitiate message is defined in
    [I-D.ietf-pce-pce-initiated-lsp] and updated as below:
 
-     <PCInitiate Message> ::= <Common Header>
-                              <PCE-initiated-lsp-list>
-  Where:
 
-     <PCE-initiated-lsp-list> ::= <PCE-initiated-lsp-request>
-                                  [<PCE-initiated-lsp-list>]
 
-     <PCE-initiated-lsp-request> ::= (<PCE-initiated-lsp-instantiation>|
-                                      <PCE-initiated-lsp-deletion>)
 
-     <PCE-initiated-lsp-instantiation> ::= <SRP>
-                                           <LSP>
-                                           [<END-POINTS>]
-                                           <ERO>
-                                           [<association-list>]
-                                           [<attribute-list>]
+Minei, et al.           Expires November 16, 2017               [Page 9]
+
+Internet-Draft            PCE association group                 May 2017
 
-  Where:
-     <association-list> ::= <ASSOCIATION> [<association-list>]
+
+   <PCInitiate Message> ::= <Common Header>
+                                 <PCE-initiated-lsp-list>
+   Where:
+
+   <PCE-initiated-lsp-list> ::= <PCE-initiated-lsp-request>
+                                [<PCE-initiated-lsp-list>]
+
+   <PCE-initiated-lsp-request> ::= (<PCE-initiated-lsp-instantiation>|
+                                   <PCE-initiated-lsp-deletion>)
+
+   <PCE-initiated-lsp-instantiation> ::= <SRP>
+                                         <LSP>
+                                         [<END-POINTS>]
+                                         <ERO>
+                                         [<association-list>]
+                                         [<attribute-list>]
+
+   Where:
+   <association-list> ::= <ASSOCIATION> [<association-list>]
 
 4.2.2.  Request Message
 
    In case of passive stateful or stateless PCE, the ASSOCIATION Object
    is OPTIONAL and MAY be carried in the Path Computation Request
    (PCReq) message.
-
-
-
-Minei, et al.           Expires November 13, 2017               [Page 9]
-
-Internet-Draft            PCE association group                 May 2017
-
 
    When carried in a PCReq message, the ASSOCIATION Object is used to
    associate the path computation request to an association group.  The
@@ -515,6 +541,26 @@ Internet-Draft            PCE association group                 May 2017
 
    The PCReq message is defined in [RFC5440] and updated in [I-D.ietf-
    pce-stateful-pce], it is further updated below for association:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Minei, et al.           Expires November 16, 2017              [Page 10]
+
+Internet-Draft            PCE association group                 May 2017
+
 
    <PCReq Message>::= <Common Header>
                       [<svec-list>]
@@ -544,44 +590,47 @@ Internet-Draft            PCE association group                 May 2017
 4.3.  Processing Rules
 
    Association groups can be operator-configured on the necessary PCC
-   and PCE.  Both a PCC and a PCE can create association groups
-   dynamically and report the association to its peer via PCEP messages.
-   If a PCEP speaker does not recognize the ASSOCIATION object, it MUST
-   return a PCErr message with Error-Type "Unknown Object" as described
-   in [RFC5440].  On receiving a PCEP message with ASSOCIATION, if a
-   PCEP speaker finds that too many LSPs belong to the association
-   group, it MUST return a PCErr message with Error-Type TBD
-   "Association Error" and Error-Value 1 "Too many LSPs in the
-   association group".  If a PCEP speaker cannot handle a new
-   associations, it MUST return a PCErr message with Error-Type TBD
+   and PCE.  In addition, a PCC or a PCE can create association groups
+   dynamically.  The PCEP speaker can reports the association to its
+   peer via PCEP messages.  If a PCEP speaker does not recognize the
+   ASSOCIATION object, it MUST return a PCErr message with Error-Type
+   "Unknown Object" as described in [RFC5440].  If a PCEP speaker
+   understand the ASSOCIATION object but does not support the
+   association-type, it MUST return a PCErr message with Error-Type TBD
+   "Association Error" and Error-Value 1 "Association-type is not
+   supported".  On receiving a PCEP message with ASSOCIATION, if a PCEP
+   speaker finds that too many LSPs belong to the association group, it
+   MUST return a PCErr message with Error-Type TBD "Association Error"
+   and Error-Value 2 "Too many LSPs in the association group".  If a
+   PCEP speaker cannot handle a new associations, it MUST return a PCErr
+   message with Error-Type TBD "Association Error" and Error-Value 3
+   "Too many association groups".  These number MAY be set by operator
+   or decided based on a local policy.
+
+   If a PCE speaker receives ASSOCIATION in PCReq message, and the
+   association information is not known (association is not configured,
+   or created dynamically, or learned from a PCEP peer), it MUST return
 
 
 
-Minei, et al.           Expires November 13, 2017              [Page 10]
+Minei, et al.           Expires November 16, 2017              [Page 11]
 
 Internet-Draft            PCE association group                 May 2017
 
 
-   "Association Error" and Error-Value 2 "Too many association groups".
-   These number MAY be set by operator or decided based on a local
-   policy.
-
-   If a PCEP speaker receives an association identifier from the
-   operator-configuration range, and the association has not been
-   configured by the operator, it MUST return a PCErr message with
-   Error-Type TBD "Association Error" and Error-Value 3 "Operator-
-   configured association missing".  If the association information
+   a PCErr message with Error-Type TBD "Association Error" and Error-
+   Value 4 "Association unknown".  If the association information
    received from the peer does not match with the local operator
    configured information, it MUST return a PCErr message with Error-
-   Type TBD "Association Error" and Error-Value 4 "Operator-configured
+   Type TBD "Association Error" and Error-Value 5 "Operator-configured
    association information mismatch".  On receiving association
    information that does not match with the association information
-   previously received from a peer, it MUST return a PCErr message with
-   Error-Type TBD "Association Error" and Error-Value 5 "Association
-   information mismatch".  If a PCE peer is unwilling or unable to
-   process the ASSOCIATION object, it MUST return a PCErr message with
-   the Error-Type "Not supported object" and follow the relevant
-   procedures described in [RFC5440].
+   previously received about the same association from a peer, it MUST
+   return a PCErr message with Error-Type TBD "Association Error" and
+   Error-Value 6 "Association information mismatch".  If a PCE peer is
+   unwilling or unable to process the ASSOCIATION object, it MUST return
+   a PCErr message with the Error-Type "Not supported object" and follow
+   the relevant procedures described in [RFC5440].
 
    The association information is cleared along with the LSP state
    information as per the [I-D.ietf-pce-stateful-pce].  When a PCEP
@@ -606,18 +655,6 @@ Internet-Draft            PCE association group                 May 2017
 
 5.  IANA Considerations
 
-
-
-
-
-
-
-
-Minei, et al.           Expires November 13, 2017              [Page 11]
-
-Internet-Draft            PCE association group                 May 2017
-
-
 5.1.  PCEP Object
 
    The "PCEP Parameters" registry contains a subregistry "PCEP Objects".
@@ -629,6 +666,13 @@ Internet-Draft            PCE association group                 May 2017
                          Object-Type
                          1: IPv4
                          2: IPv6
+
+
+
+Minei, et al.           Expires November 16, 2017              [Page 12]
+
+Internet-Draft            PCE association group                 May 2017
+
 
 5.2.  PCEP TLV
 
@@ -660,75 +704,111 @@ Internet-Draft            PCE association group                 May 2017
    registry, as follows:
 
 
+       Error-Type  Meaning
+          TBD      Association Error [This I-D]
+                   Error-value=1:
+                      Association-type is not supported
+                   Error-value=2:
+                     Too many LSPs in the association group
+                   Error-value=3:
+                     Too many association groups
+                   Error-value=4:
+                     Association unknown
+                   Error-value=5:
+                     Operator-configured association
+                     information mismatch
+                   Error-value=6:
+                     Association information mismatch
 
 
 
 
 
 
-
-
-
-Minei, et al.           Expires November 13, 2017              [Page 12]
+Minei, et al.           Expires November 16, 2017              [Page 13]
 
 Internet-Draft            PCE association group                 May 2017
-
-
-      Error-Type  Meaning
-         TBD      Association Error [This I-D]
-                  Error-value=1:
-                    Too many LSPs in the association group
-                  Error-value=2:
-                    Too many association groups
-                  Error-value=3:
-                    Operator-configured association missing
-                  Error-value=4:
-                    Operator-configured association information mismatch
-                  Error-value=5:
-                    Association information mismatch
-
-
 
 
 6.  Security Considerations
 
    The security considerations described in [I-D.ietf-pce-stateful-pce]
-   apply to the extensions described in this document.  Additional
-   considerations related to a malicious PCE are introduced, as the PCE
-   may now create additional state on the PCC through the creation of
-   association groups.
+   and [RFC5440] apply to the extensions described in this document as
+   well.  Additional considerations related to a malicious PCEP speaker
+   are introduced, as associations could be spoofed and could be used as
+   an attack vector.  An attacker could report too many associations in
+   an attempt to load the PCEP peer.  The PCEP peer responds with PCErr
+   as described in Section 4.3.  An attacker could impact LSP operations
+   by creating bogus associations.  Further, association information
+   could provides an adversary with the opportunity to eavesdrop on the
+   relationship between the LSPs.  Thus securing the PCEP session using
+   Transport Layer Security (TLS) [I-D.ietf-pce-pceps], as per the
+   recommendations and best current practices in [RFC7525], is
+   RECOMMENDED.
 
-7.  Acknowledgements
+7.  Manageability Considerations
+
+   All manageability requirements and considerations listed in [RFC5440]
+   and [I-D.ietf-pce-stateful-pce] apply to PCEP protocol extensions
+   defined in this document.  In addition, requirements and
+   considerations listed in this section apply.
+
+7.1.  Control of Function and Policy
+
+   A PCE or PCC implementation MUST allow operator-configured
+   associations as described in this document.  The identifier MUST be
+   from the operator-configured identifier range Section 3.3.
+
+7.2.  Information and Data Models
+
+   An implementation SHOULD allow the operator to view the associations
+   configured or created dynamically.  Further implementation SHOULD
+   allow to view associations reported by each peer, and the current set
+   of LSPs in the association .  To serve this purpose, the PCEP YANG
+   module [I-D.ietf-pce-pcep-yang] can be extended to include
+   association information.
+
+7.3.  Liveness Detection and Monitoring
+
+   Mechanisms defined in this document do not imply any new liveness
+   detection and monitoring requirements in addition to those already
+   listed in [RFC5440].
+
+
+
+
+
+
+
+
+Minei, et al.           Expires November 16, 2017              [Page 14]
+
+Internet-Draft            PCE association group                 May 2017
+
+
+7.4.  Verify Correct Operations
+
+   Mechanisms defined in this document do not imply any new operation
+   verification requirements in addition to those already listed in
+   [RFC5440] and [I-D.ietf-pce-stateful-pce].
+
+7.5.  Requirements On Other Protocols
+
+   Mechanisms defined in this document do not imply any new requirements
+   on other protocols.
+
+7.6.  Impact On Network Operations
+
+   Mechanisms defined in [RFC5440] and [I-D.ietf-pce-stateful-pce] also
+   apply to PCEP extensions defined in this document.
+
+8.  Acknowledgements
 
    We would like to thank Yuji Kamite and Joshua George for their
    contributions to this document.  Also Thank Venugopal Reddy and Cyril
    Margaria for their useful comments.
 
-8.  Contributors
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Minei, et al.           Expires November 13, 2017              [Page 13]
-
-Internet-Draft            PCE association group                 May 2017
-
+9.  Contributors
 
       Stephane Litkowski
       Orange
@@ -749,20 +829,20 @@ Internet-Draft            PCE association group                 May 2017
 
       Email: mustapha.aissaoui@nokia.com
 
-9.  References
+10.  References
 
-9.1.  Normative References
 
-   [I-D.ietf-pce-pce-initiated-lsp]
-              Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP
-              Extensions for PCE-initiated LSP Setup in a Stateful PCE
-              Model", draft-ietf-pce-pce-initiated-lsp-09 (work in
-              progress), March 2017.
 
-   [I-D.ietf-pce-stateful-pce]
-              Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP
-              Extensions for Stateful PCE", draft-ietf-pce-stateful-
-              pce-18 (work in progress), December 2016.
+
+
+
+
+Minei, et al.           Expires November 16, 2017              [Page 15]
+
+Internet-Draft            PCE association group                 May 2017
+
+
+10.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -779,24 +859,56 @@ Internet-Draft            PCE association group                 May 2017
               DOI 10.17487/RFC6780, October 2012,
               <http://www.rfc-editor.org/info/rfc6780>.
 
+   [I-D.ietf-pce-stateful-pce]
+              Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP
+              Extensions for Stateful PCE", draft-ietf-pce-stateful-
+              pce-18 (work in progress), December 2016.
 
+   [I-D.ietf-pce-pce-initiated-lsp]
+              Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP
+              Extensions for PCE-initiated LSP Setup in a Stateful PCE
+              Model", draft-ietf-pce-pce-initiated-lsp-09 (work in
+              progress), March 2017.
 
-Minei, et al.           Expires November 13, 2017              [Page 14]
-
-Internet-Draft            PCE association group                 May 2017
-
-
-9.2.  Informative References
+10.2.  Informative References
 
    [RFC4657]  Ash, J., Ed. and J. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol Generic
               Requirements", RFC 4657, DOI 10.17487/RFC4657, September
               2006, <http://www.rfc-editor.org/info/rfc4657>.
 
+   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "Recommendations for Secure Use of Transport Layer
+              Security (TLS) and Datagram Transport Layer Security
+              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
+              2015, <http://www.rfc-editor.org/info/rfc7525>.
+
    [RFC8051]  Zhang, X., Ed. and I. Minei, Ed., "Applicability of a
               Stateful Path Computation Element (PCE)", RFC 8051,
               DOI 10.17487/RFC8051, January 2017,
               <http://www.rfc-editor.org/info/rfc8051>.
+
+
+
+
+
+
+Minei, et al.           Expires November 16, 2017              [Page 16]
+
+Internet-Draft            PCE association group                 May 2017
+
+
+   [I-D.ietf-pce-pceps]
+              Lopez, D., Dios, O., Wu, Q., and D. Dhody, "Secure
+              Transport for PCEP", draft-ietf-pce-pceps-12 (work in
+              progress), April 2017.
+
+   [I-D.ietf-pce-pcep-yang]
+              Dhody, D., Hardwick, J., Beeram, V., and j.
+              jefftant@gmail.com, "A YANG Data Model for Path
+              Computation Element Communications Protocol (PCEP)",
+              draft-ietf-pce-pcep-yang-02 (work in progress), March
+              2017.
 
 Authors' Addresses
 
@@ -837,7 +949,7 @@ Authors' Addresses
 
 
 
-Minei, et al.           Expires November 13, 2017              [Page 15]
+Minei, et al.           Expires November 16, 2017              [Page 17]
 
 Internet-Draft            PCE association group                 May 2017
 
@@ -893,4 +1005,4 @@ Internet-Draft            PCE association group                 May 2017
 
 
 
-Minei, et al.           Expires November 13, 2017              [Page 16]
+Minei, et al.           Expires November 16, 2017              [Page 18]
