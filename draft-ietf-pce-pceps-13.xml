@@ -109,7 +109,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="12" month="May" year="2017"/>
+    <date day="17" month="May" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -239,8 +239,12 @@
     implementations without requiring additional dedicated ports for
     running PCEP with TLS.</t>
     <t>As per the recommendation from <xref target="RFC7525"/> to avoid downgrade attacks, PCEP peers that 
-    support PCEPS, SHOULD prefer strict TLS configuration i.e. do not allow 
-    non-TLS PCEP sessions to be established.</t>
+    support PCEPS, SHOULD default to strict TLS configuration i.e. do not allow 
+    non-TLS PCEP sessions to be established. PCEPS implementations MAY 
+    provide an option to allow the operator to manually override strict TLS 
+    configuration and allow unsecured connections. Execution of this override 
+    SHOULD trigger a warning about the security implications of permitting 
+    unsecured connections.</t>
   </section>
 
       <section title="The StartTLS Message">
@@ -449,7 +453,7 @@
    connection initiated by means of a specific extended message
    (StartTLS) that does not interfere with PCEP speaker implementations
    not supporting it.</t>
-    <t>If a PCEP implementation that does not support PCEPS receives a StartTLS message it MUST behave according to the existing error mechanism of <xref target="RFC5440"/>.</t>
+    <t>If a PCEP implementation that does not support PCEPS receives a StartTLS message, would behave according to the existing error mechanism of <xref target="RFC5440"/>.</t>
   </section>
 
   <section anchor="IANA" title="IANA Considerations">
@@ -514,6 +518,19 @@ TBA2    StartTLS Failure      0:Unassigned            This document
    <t>StartTLSWait timer value</t>
    </list>
    </t>
+   <t>PCEPS implementations MAY 
+    provide an option to allow the operator to manually override strict TLS 
+    configuration and allow unsecured connections. Execution of this override 
+    SHOULD trigger a warning about the security implications of permitting 
+    unsecured connections.</t>
+    <t>Further, the operator need to develop suitable security policies around PCEP, within his network. Further the PCEP peers SHOULD provide ways for the operator to complete following tasks: 
+          <list style="symbols">
+            <t>Determine if a PCEP session is protected via PCEPS.</t>
+            <t>Determine the version of TLS, mechanism for authentication used.</t>
+            <t>Determine if the certificate cannot be verified and the cipher suite used.</t>
+            <t>Inspect the certificate offered by the PCEP peer.</t>
+            <t>Be warned if StartTLS procedure fails for the PCEP peers, that are known to support PCEPS (via configurations or capability advertisements).</t>
+          </list></t>
       </section>
       <section title="Information and Data Models" toc="default">
         <t>The PCEP MIB module SHOULD be extended to include PCEPS capabilities, information, and status.</t>
@@ -531,16 +548,10 @@ TBA2    StartTLS Failure      0:Unassigned            This document
         <t>Mechanisms defined in this document do not imply any new requirements on other protocols.</t>
       </section>
       <section title="Impact on Network Operation" toc="default">
-        <!--<t>Mechanisms defined in this document do not have any significant impact on network operations in addition to those already listed in <xref target="RFC5440"/>.</t>-->
-        <t>The operator need to develop suitable security policies around PCEP, within his network. Further the PCEP peers SHOULD provide ways for the operator to complete following tasks: 
-          <list style="symbols">
-            <t>Determine if a PCEP session is protected via PCEPS.</t>
-            <t>Determine the version of TLS, mechanism for authentication used.</t>
-            <t>Determine if the certificate cannot be verified and the cipher suite used.</t>
-            <t>Inspect the certificate offered by the PCEP peer.</t>
-            <t>Be warned if StartTLS procedure fails for the PCEP peers, that are known to support PCEPS (via configurations or capability advertisements).</t>
-          </list></t>
-        <t>Further, the backward compatibility considerations are stated in <xref target="Backward"/>.</t>
+        <t>Mechanisms defined in this document do not have any significant impact on network operations in addition to those already listed in <xref target="RFC5440"/>.</t>        
+        <t>A legacy PCEP implementation that does not support PCEPS, can exist in the network with the PCEPS implementations. 
+        On receiving a StartTLS message, a legacy implementation would behave according to the existing error mechanism of <xref target="RFC5440"/>.
+        </t>
       </section>
     </section>
   <section title="Acknowledgements">
