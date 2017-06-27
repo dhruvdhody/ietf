@@ -1,0 +1,877 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0030)https://tools.ietf.org/rfcdiff -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+   
+  <meta http-equiv="Content-Style-Type" content="text/css"> 
+  <title>Diff: draft-ietf-pce-association-group-03-old.txt - draft-ietf-pce-association-group-03.txt</title> 
+  <style type="text/css"> 
+    body    { margin: 0.4ex; margin-right: auto; } 
+    tr      { } 
+    td      { white-space: pre; font-family: monospace; vertical-align: top; font-size: 0.86em;} 
+    th      { font-size: 0.86em; } 
+    .small  { font-size: 0.6em; font-style: italic; font-family: Verdana, Helvetica, sans-serif; } 
+    .left   { background-color: #EEE; } 
+    .right  { background-color: #FFF; } 
+    .diff   { background-color: #CCF; } 
+    .lblock { background-color: #BFB; } 
+    .rblock { background-color: #FF8; } 
+    .insert { background-color: #8FF; } 
+    .delete { background-color: #ACF; } 
+    .void   { background-color: #FFB; } 
+    .cont   { background-color: #EEE; } 
+    .linebr { background-color: #AAA; } 
+    .lineno { color: red; background-color: #FFF; font-size: 0.7em; text-align: right; padding: 0 2px; } 
+    .elipsis{ background-color: #AAA; } 
+    .left .cont { background-color: #DDD; } 
+    .right .cont { background-color: #EEE; } 
+    .lblock .cont { background-color: #9D9; } 
+    .rblock .cont { background-color: #DD6; } 
+    .insert .cont { background-color: #0DD; } 
+    .delete .cont { background-color: #8AD; } 
+    .stats, .stats td, .stats th { background-color: #EEE; padding: 2px 0; } 
+    span.hide { display: none; color: #aaa;}    a:hover span { display: inline; }    tr.change { background-color: gray; } 
+    tr.change a { text-decoration: none; color: black } 
+  </style> 
+     <script>
+var chunk_index = 0;
+var old_chunk = null;
+
+function format_chunk(index) {
+    var prefix = "diff";
+    var str = index.toString();
+    for (x=0; x<(4-str.length); ++x) {
+        prefix+='0';
+    }
+    return prefix + str;
+}
+
+function find_chunk(n){
+    return document.querySelector('tr[id$="' + n + '"]');
+}
+
+function change_chunk(offset) {
+    var index = chunk_index + offset;
+    var new_str;
+    var new_chunk;
+
+    new_str = format_chunk(index);
+    new_chunk = find_chunk(new_str);
+    if (!new_chunk) {
+        return;
+    }
+    if (old_chunk) {
+        old_chunk.style.outline = "";
+    }
+    old_chunk = new_chunk;
+    old_chunk.style.outline = "1px solid red";
+    window.location.hash = "#" + new_str;
+    window.scrollBy(0,-100);
+    chunk_index = index;
+}
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+    case 78:
+        change_chunk(1);
+        break;
+    case 80:
+        change_chunk(-1);
+        break;
+    }
+};
+   </script> 
+<style type="text/css" id="GINGER_SOFTWARE_style">.GINGER_SOFTWARE_noMark { background : transparent; }  .GINGER_SOFTWARE_wrapper{ position: absolute; overflow: hidden; margin: 0px; padding: 0px; border: 0px solid transparent } .GINGER_SOFTWARE_contour { position : absolute; margin: 0px; }  .GINGER_SOFTWARE_richText { margin : 0px; padding-bottom: 3px; border-width: 0px; border-color: transparent; display: block; color: transparent; -webkit-text-fill-color: transparent; overflow: hidden; white-space: pre-wrap;}  .GINGER_SOFTWARE_inputWrapper .GINGER_SOFTWARE_richText {position: absolute;}  .GINGER_SOFTWARE_canvas { display:none; background-repeat:no-repeat;}  .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark {border-top-left-radius:2px; border-top-right-radius:2px; border-bottom-right-radius:2px; border-bottom-left-radius:2px;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjhFQ0Y2OENGMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjhFQ0Y2OEQwMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OEVDRjY4Q0QzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OEVDRjY4Q0UzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5RRxRxAAAAD0lEQVR42mK48+w7QIABAAVbAroowN08AAAAAElFTkSuQmCC)!important;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark.GINGER_SOFTWARE_synonym {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAABJJREFUeNpi+P9gEwAAAP//AwAFcwKS3d7BnwAAAABJRU5ErkJggg==)!important;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark.GINGER_SOFTWARE_noSuggestion {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjhFQ0Y2OENGMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjhFQ0Y2OEQwMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OEVDRjY4Q0QzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OEVDRjY4Q0UzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5RRxRxAAAAD0lEQVR42mK48+w7QIABAAVbAroowN08AAAAAElFTkSuQmCC)!important;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_mark {position:relative; background-image:none!important;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightLeft { position : absolute; left:-2px; top:0px; bottom:0px; width:2px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightRight { position : absolute; right:-2px; top:0px; bottom:0px; width:2px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightTop { position : absolute; left:0px; right:0px; top:-2px; height:3px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightBottom { position : absolute; left:0px; right:0px; bottom:-2px; height:3px;}</style></head> 
+<body ginger_software_stylesheet="true" ginger_software_doc="true"> 
+  <table border="0" cellpadding="0" cellspacing="0"> 
+  <tbody><tr id="part-1" bgcolor="orange"><th></th><th><a href="https://tools.ietf.org/rfcdiff?url2=draft-ietf-pce-association-group-03-old.txt" style="color:#008; text-decoration:none;">&lt;</a>&nbsp;<a href="https://tools.ietf.org/html/draft-ietf-pce-association-group-03-old.txt" style="color:#008">draft-ietf-pce-association-group-03-old.txt</a>&nbsp;</th><th> </th><th>&nbsp;<a href="https://tools.ietf.org/html/draft-ietf-pce-association-group-03.txt" style="color:#008">draft-ietf-pce-association-group-03.txt</a>&nbsp;<a href="https://tools.ietf.org/rfcdiff?url1=draft-ietf-pce-association-group-03.txt" style="color:#008; text-decoration:none;">&gt;</a></th><th></th></tr> 
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">PCE Working Group                                               I. Minei</td><td> </td><td class="right">PCE Working Group                                               I. Minei</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Internet-Draft                                              Google, Inc.</td><td> </td><td class="right">Internet-Draft                                              Google, Inc.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Intended status: Standards Track                               E. Crabbe</td><td> </td><td class="right">Intended status: Standards Track                               E. Crabbe</td><td class="lineno"></td></tr>
+      <tr id="diff0001"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">Expires: December <span class="delete">1, 2017 </span>                        Individual Contributor</td><td> </td><td class="rblock">Expires: December <span class="insert">29, 2017</span>                        Individual Contributor</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                            S. Sivabalan</td><td> </td><td class="right">                                                            S. Sivabalan</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                     Cisco Systems, Inc.</td><td> </td><td class="right">                                                     Cisco Systems, Inc.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                      H. Ananthakrishnan</td><td> </td><td class="right">                                                      H. Ananthakrishnan</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                           Packet Design</td><td> </td><td class="right">                                                           Packet Design</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                                D. Dhody</td><td> </td><td class="right">                                                                D. Dhody</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                                  Huawei</td><td> </td><td class="right">                                                                  Huawei</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                               Y. Tanaka</td><td> </td><td class="right">                                                               Y. Tanaka</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                          NTT Communications Corporation</td><td> </td><td class="right">                                          NTT Communications Corporation</td><td class="lineno"></td></tr>
+      <tr id="diff0002"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                                           <span class="delete"> May 30</span>, 2017</td><td> </td><td class="rblock">                                                           <span class="insert">June 27</span>, 2017</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">  PCEP Extensions for Establishing Relationships Between Sets of LSPs</td><td> </td><td class="right">  PCEP Extensions for Establishing Relationships Between Sets of LSPs</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                  draft-ietf-pce-association-group-03</td><td> </td><td class="right">                  draft-ietf-pce-association-group-03</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Abstract</td><td> </td><td class="right">Abstract</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document introduces a generic mechanism to create a grouping of</td><td> </td><td class="right">   This document introduces a generic mechanism to create a grouping of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   LSPs in the context of a PCE.  This grouping can then be used to</td><td> </td><td class="right">   LSPs in the context of a PCE.  This grouping can then be used to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   define associations between sets of LSPs or between a set of LSPs and</td><td> </td><td class="right">   define associations between sets of LSPs or between a set of LSPs and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   a set of attributes (such as configuration parameters or behaviors),</td><td> </td><td class="right">   a set of attributes (such as configuration parameters or behaviors),</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-2" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-2"><em> page 2, line 4<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-2"><em> page 2, line 4<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are working documents of the Internet Engineering</td><td> </td><td class="right">   Internet-Drafts are working documents of the Internet Engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Task Force (IETF).  Note that other groups may also distribute</td><td> </td><td class="right">   Task Force (IETF).  Note that other groups may also distribute</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   working documents as Internet-Drafts.  The list of current Internet-</td><td> </td><td class="right">   working documents as Internet-Drafts.  The list of current Internet-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Drafts is at http://datatracker.ietf.org/drafts/current/.</td><td> </td><td class="right">   Drafts is at http://datatracker.ietf.org/drafts/current/.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are draft documents valid for a maximum of six months</td><td> </td><td class="right">   Internet-Drafts are draft documents valid for a maximum of six months</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and may be updated, replaced, or obsoleted by other documents at any</td><td> </td><td class="right">   and may be updated, replaced, or obsoleted by other documents at any</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   time.  It is inappropriate to use Internet-Drafts as reference</td><td> </td><td class="right">   time.  It is inappropriate to use Internet-Drafts as reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   material or to cite them other than as "work in progress."</td><td> </td><td class="right">   material or to cite them other than as "work in progress."</td><td class="lineno"></td></tr>
+      <tr id="diff0003"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   This Internet-Draft will expire on December <span class="delete">1</span>, 2017.</td><td> </td><td class="rblock">   This Internet-Draft will expire on December <span class="insert">29</span>, 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Copyright Notice</td><td> </td><td class="right">Copyright Notice</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Copyright (c) 2017 IETF Trust and the persons identified as the</td><td> </td><td class="right">   Copyright (c) 2017 IETF Trust and the persons identified as the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document authors.  All rights reserved.</td><td> </td><td class="right">   document authors.  All rights reserved.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td> </td><td class="right">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Provisions Relating to IETF Documents</td><td> </td><td class="right">   Provisions Relating to IETF Documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (http://trustee.ietf.org/license-info) in effect on the date of</td><td> </td><td class="right">   (http://trustee.ietf.org/license-info) in effect on the date of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   publication of this document.  Please review these documents</td><td> </td><td class="right">   publication of this document.  Please review these documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-3" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-3"><em> page 2, line 29<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-3"><em> page 2, line 29<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   described in the Simplified BSD License.</td><td> </td><td class="right">   described in the Simplified BSD License.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Table of Contents</td><td> </td><td class="right">Table of Contents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td> </td><td class="right">   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td> </td><td class="right">   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   3.  Architectural Overview  . . . . . . . . . . . . . . . . . . .   4</td><td> </td><td class="right">   3.  Architectural Overview  . . . . . . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.1.  Motivation  . . . . . . . . . . . . . . . . . . . . . . .   4</td><td> </td><td class="right">     3.1.  Motivation  . . . . . . . . . . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.2.  Operation Overview  . . . . . . . . . . . . . . . . . . .   4</td><td> </td><td class="right">     3.2.  Operation Overview  . . . . . . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.3.  Operator-configured Association Range . . . . . . . . . .   5</td><td> </td><td class="right">     3.3.  Operator-configured Association Range . . . . . . . . . .   5</td><td class="lineno"></td></tr>
+      <tr id="diff0004"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   4.  ASSOCIATION Object  . . . . . . . . . . . . . . . . . . . . .   <span class="delete">5</span></td><td> </td><td class="rblock">   4.  <span class="insert">Operator-configured Association Range TLV . . . . . . . . . .   5</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     4.1.</span>  Object Definition . . . . . . . . . . . . . . . . . . . .   <span class="delete">5</span></td><td> </td><td class="rblock"><span class="insert">     4.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .   7</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">       4.1.1.</span>  Global Association Source TLV . . . . . . . . . . . .   <span class="delete">7</span></td><td> </td><td class="rblock"><span class="insert">   5.</span>  ASSOCIATION Object  . . . . . . . . . . . . . . . . . . . . .   <span class="insert">7</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">       4.1.2.</span>  Extended Association ID TLV . . . . . . . . . . . . .   <span class="delete">7</span></td><td> </td><td class="rblock"><span class="insert">     5.1.</span>  Object Definition . . . . . . . . . . . . . . . . . . . .   <span class="insert">7</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     4.2.</span>  Object Encoding in PCEP messages  . . . . . . . . . . . .   <span class="delete">8</span></td><td> </td><td class="rblock"><span class="insert">       5.1.1.</span>  Global Association Source TLV . . . . . . . . . . . .   <span class="insert">9</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">       4.2.1.</span>  Stateful PCEP messages  . . . . . . . . . . . . . . .   <span class="delete">8</span></td><td> </td><td class="rblock"><span class="insert">       5.1.2.</span>  Extended Association ID TLV . . . . . . . . . . . . .   <span class="insert">9</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">       4.2.2.</span>  Request Message . . . . . . . . . . . . . . . . . . .  <span class="delete">10</span></td><td> </td><td class="rblock"><span class="insert">     5.2.</span>  Object Encoding in PCEP messages  . . . . . . . . . . . .  <span class="insert">10</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     4.3.</span>  Processing Rules  . . . . . . . . . . . . . . . . . . . .  <span class="delete">11</span></td><td> </td><td class="rblock"><span class="insert">       5.2.1.</span>  Stateful PCEP messages  . . . . . . . . . . . . . . .  <span class="insert">10</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   5.</span>  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  <span class="delete">12</span></td><td> </td><td class="rblock"><span class="insert">       5.2.2.</span>  Request Message . . . . . . . . . . . . . . . . . . .  <span class="insert">12</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     5.1.</span>  PCEP Object . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">12</span></td><td> </td><td class="rblock"><span class="insert">     5.3.</span>  Processing Rules  . . . . . . . . . . . . . . . . . . . .  <span class="insert">13</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     5.2.</span>  PCEP TLV  . . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">13</span></td><td> </td><td class="rblock"><span class="insert">   6.</span>  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  <span class="insert">14</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     5.3.</span>  Association Flags . . . . . . . . . . . . . . . . . . . .  <span class="delete">13</span></td><td> </td><td class="rblock"><span class="insert">     6.1.</span>  PCEP Object . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">14</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     5.4.</span>  PCEP-Error Object . . . . . . . . . . . . . . . . . . . .  <span class="delete">13</span></td><td> </td><td class="rblock"><span class="insert">     6.2.</span>  PCEP TLV  . . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">15</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   6.</span>  Security Considerations . . . . . . . . . . . . . . . . . . .  <span class="delete">14</span></td><td> </td><td class="rblock"><span class="insert">     6.3.</span>  Association Flags . . . . . . . . . . . . . . . . . . . .  <span class="insert">15</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   7.</span>  Manageability Considerations  . . . . . . . . . . . . . . . .  <span class="delete">14</span></td><td> </td><td class="rblock"><span class="insert">     6.4.  Association Type  . . . . . . . . . . . . . . . . . . . .  15</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     7.1.</span>  Control of Function and Policy  . . . . . . . . . . . . .  <span class="delete">14</span></td><td> </td><td class="rblock"><span class="insert">     6.5.</span>  PCEP-Error Object . . . . . . . . . . . . . . . . . . . .  <span class="insert">15</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     7.2.</span>  Information and Data Models . . . . . . . . . . . . . . .  <span class="delete">14</span></td><td> </td><td class="rblock"><span class="insert">   7.</span>  Security Considerations . . . . . . . . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     7.3.</span>  Liveness Detection and Monitoring . . . . . . . . . . . .  <span class="delete">14</span></td><td> </td><td class="rblock"><span class="insert">   8.</span>  Manageability Considerations  . . . . . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     7.4.</span>  Verify Correct Operations . . . . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock"><span class="insert">     8.1.</span>  Control of Function and Policy  . . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     7.5.</span>  Requirements On Other Protocols . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock"><span class="insert">     8.2.</span>  Information and Data Models . . . . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     7.6.</span>  Impact On Network Operations  . . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock"><span class="insert">     8.3.</span>  Liveness Detection and Monitoring . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   8.</span>  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock"><span class="insert">     8.4.</span>  Verify Correct Operations . . . . . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   9.</span>  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock"><span class="insert">     8.5.</span>  Requirements On Other Protocols . . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   10.</span> References  . . . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock"><span class="insert">     8.6.</span>  Impact On Network Operations  . . . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     10.1.</span>  Normative References . . . . . . . . . . . . . . . . . .  <span class="delete">16</span></td><td> </td><td class="rblock"><span class="insert">   9.</span>  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     10.2.</span>  Informative References . . . . . . . . . . . . . . . . .  <span class="delete">16</span></td><td> </td><td class="rblock"><span class="insert">   10.</span> Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">17</span></td><td> </td><td class="rblock"><span class="insert">   11.</span> References  . . . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">18</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">     11.1.</span>  Normative References . . . . . . . . . . . . . . . . . .  <span class="insert">18</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">     11.2.</span>  Informative References . . . . . . . . . . . . . . . . .  <span class="insert">19</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">19</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">1.  Introduction</td><td> </td><td class="right">1.  Introduction</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5440] describes the Path Computation Element Protocol PCEP.  PCEP</td><td> </td><td class="right">   [RFC5440] describes the Path Computation Element Protocol PCEP.  PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   enables the communication between a Path Computation Client (PCC) and</td><td> </td><td class="right">   enables the communication between a Path Computation Client (PCC) and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   a Path Control Element (PCE), or between PCE and PCE, for the purpose</td><td> </td><td class="right">   a Path Control Element (PCE), or between PCE and PCE, for the purpose</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   of computation of Multiprotocol Label Switching (MPLS) as well as</td><td> </td><td class="right">   of computation of Multiprotocol Label Switching (MPLS) as well as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Generalzied MPLS (GMPLS) for Traffic Engineering Label Switched Path</td><td> </td><td class="right">   Generalzied MPLS (GMPLS) for Traffic Engineering Label Switched Path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (TE LSP) characteristics.</td><td> </td><td class="right">   (TE LSP) characteristics.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-4" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-4"><em> page 5, line 6<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-4"><em> page 5, line 9<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   peer.  Whereas, some associations are configured by the operator on</td><td> </td><td class="right">   peer.  Whereas, some associations are configured by the operator on</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the PCEP peers involved before hand, a PCEP speaker then could ask</td><td> </td><td class="right">   the PCEP peers involved before hand, a PCEP speaker then could ask</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   for a LSP to join the operator-configured association.  Usage of</td><td> </td><td class="right">   for a LSP to join the operator-configured association.  Usage of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   dynamic and configured is usually dependent on the type of the</td><td> </td><td class="right">   dynamic and configured is usually dependent on the type of the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association.</td><td> </td><td class="right">   association.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   For the operator-configured association, the association identifier,</td><td> </td><td class="right">   For the operator-configured association, the association identifier,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   type, as well as the association source IP address is manually</td><td> </td><td class="right">   type, as well as the association source IP address is manually</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   configured by the operator.  In case of dynamic association, the</td><td> </td><td class="right">   configured by the operator.  In case of dynamic association, the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association identifier is allocated dynamically by the PCEP speaker.</td><td> </td><td class="right">   association identifier is allocated dynamically by the PCEP speaker.</td><td class="lineno"></td></tr>
+      <tr id="diff0005"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">A range of association identifier is marked for operator-configured</span></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   associations.</span>  The dynamically created association can <span class="delete">then</span> be</td><td> </td><td class="rblock">   The dynamically created association can be reported to the PCEP peer</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   reported to the PCEP peer via the PCEP messages as per the stateful</td><td> </td><td class="rblock">   via the PCEP messages as per the stateful extensions.  <span class="insert">While the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   extensions.  The association are properties of the LSP and could be</td><td> </td><td class="rblock"><span class="insert">   operator-configured association are known to the PCEP peer before</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   stored in the LSP state database.  <span class="delete">Thus, the</span> dynamic association</td><td> </td><td class="rblock"><span class="insert">   hand, a PCEP peer could ask for a LSP to join the operator-configured</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   exist as long as the LSP state.  In case of PCEP session termination,</td><td> </td><td class="rblock"><span class="insert">   association via the stateful PCEP messages.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   the LSP state clean up SHOULD also take care of associations.</td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   The association are properties of the LSP and <span class="insert">thus</span> could be stored in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   the LSP state database.  <span class="insert">The</span> dynamic association exist as long as the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   LSP state.  In case of PCEP session termination, the LSP state clean</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   up SHOULD also take care of associations.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Multiple types of associations can exist, each with their own</td><td> </td><td class="right">   Multiple types of associations can exist, each with their own</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association identifier space.  The definition of the different</td><td> </td><td class="right">   association identifier space.  The definition of the different</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association types and their behaviors is outside the scope of this</td><td> </td><td class="right">   association types and their behaviors is outside the scope of this</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document.  The establishment and removal of the association</td><td> </td><td class="right">   document.  The establishment and removal of the association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   relationship can be done on a per LSP basis.  An LSP may join</td><td> </td><td class="right">   relationship can be done on a per LSP basis.  An LSP may join</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   multiple association groups, of different or of the same association</td><td> </td><td class="right">   multiple association groups, of different or of the same association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   type.</td><td> </td><td class="right">   type.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">3.3.  Operator-configured Association Range</td><td> </td><td class="right">3.3.  Operator-configured Association Range</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0006"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">A</span> range of association <span class="delete">identifier</span> are <span class="delete">kept</span> for <span class="delete">the operator-</span></td><td> </td><td class="rblock">   <span class="insert">Some association types are dynamic, some are operator-configured and</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   configured associations.  Dynamic</span> associations <span class="delete">MUST NOT use the</span></td><td> </td><td class="rblock"><span class="insert">   some could be both.  For the association types that could be dynamic</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   identifier <span class="delete">from this range.</span></td><td> </td><td class="rblock"><span class="insert">   and operator-configured, it is necessary to configure a</span> range of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   association <span class="insert">identifiers that</span> are <span class="insert">marked</span> for <span class="insert">operator-configured</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   associations <span class="insert">to avoid any association</span> identifier <span class="insert">clash.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0007"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">All</span> operator-configured associations MUST use <span class="delete">identifier from the</span></td><td> </td><td class="rblock">   <span class="insert">A range of association identifier for each association-type are kept</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   range 0x10000 to 0xFFFFF and encode it in</span> the <span class="delete">extended</span> association <span class="delete">id</span></td><td> </td><td class="rblock"><span class="insert">   for the</span> operator-configured <span class="insert">associations.  Dynamic</span> associations MUST</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   TLV.  (Section 4.1.2)</span></td><td> </td><td class="rblock">   <span class="insert">NOT</span> use the association <span class="insert">identifier from this range.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0008"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">4.  ASSOCIATION Object</span></td><td> </td><td class="rblock">   <span class="insert">This range needs to be communicated to a PCEP peer in the Open</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Message.  A new TLV is defined in this specification for this purpose</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   (Section 4).</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0009"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">4.1.  Object Definition</td><td> </td><td class="rblock"><span class="insert">4.  Operator-configured Association Range TLV</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   This section defines PCEP extension to support the advertisement of</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   the Operator-configured Association Range used for an association-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   type.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   A new PCEP OP-CONF-ASSOC-RANGE (Operator-configured Association</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Range) TLV is defined.  The PCEP OP-CONF-ASSOC-RANGE TLV is carried</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   within an OPEN object.  This way, during PCEP session-setup phase, a</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   PCEP speaker can advertise to a PCEP peer the Operator-configured</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Association Range for an association type.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The PCEP OP-CONF-ASSOC-RANGE TLV is optional.  It MAY be carried</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   within an OPEN object sent by a PCEP speaker in an Open message to a</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   PCEP peer.  The OP-CONF-ASSOC-RANGE TLV format is compliant with the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   PCEP TLV format defined in [RFC5440].  That is, the TLV is composed</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   of 2 octets for the type, 2 octets specifying the TLV length, and a</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Value field.  The Length field defines the length of the value</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   portion in octets.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The PCEP OP-CONF-ASSOC-RANGE TLV has the following format:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">     TYPE:    TBD</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">     LENGTH:  N * 8 (where N is the number of association types)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">     VALUE:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        0                   1                   2                   3</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       |             Reserved          |          Assoc-type #1        |</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       |      Start-Assoc-ID #1        |           Range #1            |</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       //                                                             //</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       |             Reserved          |          Assoc-type #N        |</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       |      Start-Assoc-ID #N        |           Range #N            |</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">               Figure 1: The OP-CONF-ASSOC-RANGE TLV format</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      Reserved (2 bytes): This field MUST be set to 0 on transmission</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      and MUST be ignored on receipt.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      Assoc-type (2 bytes): The association type.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      Start-Assoc-ID (2 bytes): The start association identifier for the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      Operator-configured Association Range for the particular</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      association type.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      Range (2 bytes): The number of associations marked for the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      Operator-configured Associations.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">4.1.  <span class="insert">Procedure</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   A PCEP speaker MAY include an OP-CONF-ASSOC-RANGE TLV within an OPEN</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   object in an Open message sent to a PCEP peer in order to advertise</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   the Operator-configured Association Range for an association type.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The OP-CONF-ASSOC-RANGE TLV MUST NOT appear more than once in an OPEN</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   object.  If it appears more than once, the PCEP session MUST be</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   rejected with error type 1 and error value 1 (PCEP session</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   establishment failure / Reception of an invalid Open message).  The</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   absence of the OP-CONF-ASSOC-RANGE TLV in an OPEN object MUST be</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   interpreted as an absence of Operator-configured Associations.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   As specified in [RFC5440], a PCEP peer that does not recognize the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   OP-CONF-ASSOC-RANGE TLV will silently ignore it.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The Operator-configured Association Range SHOULD be included for each</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   association type that could be both dynamic and operator-configured.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   For associations that are only dynamic or only operator-configured</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   can be skipped, in which case the full range of association</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   identifier is considered dynamic or operator-configured respectively.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Each association type (that are defined in separate documents) can</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   specify the default value for the operator-configured association</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   range for their respective association type.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">5.  ASSOCIATION Object</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">5.1.</span>  Object Definition</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Association groups and their memberships are defined using a new</td><td> </td><td class="right">   Association groups and their memberships are defined using a new</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ASSOCIATION object.</td><td> </td><td class="right">   ASSOCIATION object.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ASSOCIATION Object-Class is to be assigned by IANA (TBD).</td><td> </td><td class="right">   ASSOCIATION Object-Class is to be assigned by IANA (TBD).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ASSOCIATION Object-Type is 1 for IPv4 and its format is shown in</td><td> </td><td class="right">   ASSOCIATION Object-Type is 1 for IPv4 and its format is shown in</td><td class="lineno"></td></tr>
+      <tr id="diff0010"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Figure <span class="delete">1</span>:</td><td> </td><td class="rblock">   Figure <span class="insert">2</span>:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0                   1                   2                   3</td><td> </td><td class="right">       0                   1                   2                   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td> </td><td class="right">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |         Reserved              |            Flags            |R|</td><td> </td><td class="right">      |         Reserved              |            Flags            |R|</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |      Association type         |      Association ID           |</td><td> </td><td class="right">      |      Association type         |      Association ID           |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |              IPv4 Association Source                          |</td><td> </td><td class="right">      |              IPv4 Association Source                          |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      //                   Optional TLVs                             //</td><td> </td><td class="right">      //                   Optional TLVs                             //</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0011"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">               Figure <span class="delete">1</span>: The IPv4 ASSOCIATION Object format</td><td> </td><td class="rblock">               Figure <span class="insert">2</span>: The IPv4 ASSOCIATION Object format</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ASSOCIATION Object-Type is 2 for IPv6 and its format is shown in</td><td> </td><td class="right">   ASSOCIATION Object-Type is 2 for IPv6 and its format is shown in</td><td class="lineno"></td></tr>
+      <tr id="diff0012"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Figure <span class="delete">2</span>:</td><td> </td><td class="rblock">   Figure <span class="insert">3</span>:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0                   1                   2                   3</td><td> </td><td class="right">       0                   1                   2                   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td> </td><td class="right">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |         Reserved              |            Flags            |R|</td><td> </td><td class="right">      |         Reserved              |            Flags            |R|</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |      Association type         |      Association ID           |</td><td> </td><td class="right">      |      Association type         |      Association ID           |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |                                                               |</td><td> </td><td class="right">      |                                                               |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |                    IPv6 Association Source                    |</td><td> </td><td class="right">      |                    IPv6 Association Source                    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |                                                               |</td><td> </td><td class="right">      |                                                               |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |                                                               |</td><td> </td><td class="right">      |                                                               |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      //                   Optional TLVs                             //</td><td> </td><td class="right">      //                   Optional TLVs                             //</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0013"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">               Figure <span class="delete">2</span>: The IPv6 ASSOCIATION Object format</td><td> </td><td class="rblock">               Figure <span class="insert">3</span>: The IPv6 ASSOCIATION Object format</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0014"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Reserved<span class="delete">: 16 bits -</span> MUST be set to 0 and ignored upon receipt.</td><td> </td><td class="rblock">   Reserved<span class="insert"> (2-byte):</span> MUST be set to 0 and ignored upon receipt.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0015"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Flags<span class="delete">: 16 bits -</span> The following flags are currently defined:</td><td> </td><td class="rblock">   Flags<span class="insert"> (2-byte):</span> The following flags are currently defined:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   R (Removal - 1 bit):  when set, the requesting PCE peer requires the</td><td> </td><td class="right">   R (Removal - 1 bit):  when set, the requesting PCE peer requires the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      removal of an LSP from the association group.</td><td> </td><td class="right">      removal of an LSP from the association group.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0016"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Association <span class="delete">type: 16 bits -</span> the association type (for example</td><td> </td><td class="rblock">   Association <span class="insert">type (2-byte):</span> the association type (for example</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   protection).  The association type <span class="delete">will be</span> defined in separate</td><td> </td><td class="rblock">   protection).  The association type <span class="insert">are</span> defined in separate documents.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   documents.</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0017"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Association ID<span class="delete">: 16 bits -</span> the identifier of the association group.</td><td> </td><td class="rblock">   Association ID<span class="insert"> (2-byte):</span> the identifier of the association group.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   When combined with Type and Association Source, this value uniquely</td><td> </td><td class="right">   When combined with Type and Association Source, this value uniquely</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   identifies an association group.  The value 0xffff and 0x0 are</td><td> </td><td class="right">   identifies an association group.  The value 0xffff and 0x0 are</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   reserved.  The value 0xffff is used to indicate all association</td><td> </td><td class="right">   reserved.  The value 0xffff is used to indicate all association</td><td class="lineno"></td></tr>
+      <tr id="diff0018"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   groups.  <span class="delete">To accommodate more number of associations, Extended</span></td><td> </td><td class="rblock">   groups.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   Association ID TLV can be included.  In case of the operator-</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   configured association, this field is set to 0x0 and the association</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   identifier is encoded in the Extended Association ID TLV.</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Association Source: 4 or 16 bytes - An IPv4 or IPv6 address.  This</td><td> </td><td class="right">   Association Source: 4 or 16 bytes - An IPv4 or IPv6 address.  This</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   could be the IP address of the PCEP speaker that created a dynamic</td><td> </td><td class="right">   could be the IP address of the PCEP speaker that created a dynamic</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association, an operator configured IP address, or an IP address</td><td> </td><td class="right">   association, an operator configured IP address, or an IP address</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   selected as per the local policy.  The value such as 0.0.0.0 or</td><td> </td><td class="right">   selected as per the local policy.  The value such as 0.0.0.0 or</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ::/128 are acceptable.</td><td> </td><td class="right">   ::/128 are acceptable.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Optional TLVs: The optional TLVs follow the PCEP TLV format of</td><td> </td><td class="right">   Optional TLVs: The optional TLVs follow the PCEP TLV format of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5440].  This document defines two optional TLVs.  Other documents</td><td> </td><td class="right">   [RFC5440].  This document defines two optional TLVs.  Other documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   can define more TLVs.</td><td> </td><td class="right">   can define more TLVs.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0019"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">4</span>.1.1.  Global Association Source TLV</td><td> </td><td class="rblock"><span class="insert">5</span>.1.1.  Global Association Source TLV</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The Global Association Source TLV is an optional TLV for use in the</td><td> </td><td class="right">   The Global Association Source TLV is an optional TLV for use in the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Association Object.</td><td> </td><td class="right">   Association Object.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0                   1                   2                   3</td><td> </td><td class="right">       0                   1                   2                   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td> </td><td class="right">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |         Type                  |            Length             |</td><td> </td><td class="right">      |         Type                  |            Length             |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |              Global Association Source                        |</td><td> </td><td class="right">      |              Global Association Source                        |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0020"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">            Figure <span class="delete">3</span>: The Global Association Source TLV format</td><td> </td><td class="rblock">            Figure <span class="insert">4</span>: The Global Association Source TLV format</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Type: To be allocated by IANA</td><td> </td><td class="right">   Type: To be allocated by IANA</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Length: Fixed value of 4 bytes</td><td> </td><td class="right">   Length: Fixed value of 4 bytes</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Global Association Source: as defined in [RFC6780]</td><td> </td><td class="right">   Global Association Source: as defined in [RFC6780]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0021"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">4</span>.1.2.  Extended Association ID TLV</td><td> </td><td class="rblock"><span class="insert">5</span>.1.2.  Extended Association ID TLV</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The Extended Association ID TLV is an optional TLV except for</td><td> </td><td class="right">   The Extended Association ID TLV is an optional TLV except for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Operator-configured Associations, for use in the Association Object.</td><td> </td><td class="right">   Operator-configured Associations, for use in the Association Object.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0                   1                   2                   3</td><td> </td><td class="right">       0                   1                   2                   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td> </td><td class="right">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      |         Type                  |            Length             |</td><td> </td><td class="right">      |         Type                  |            Length             |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr id="diff0022"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      //                Extended Association ID                      <span class="delete"> </span>//</td><td> </td><td class="rblock">      //                Extended Association ID                      //</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0023"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">             Figure <span class="delete">4</span>: The Extended Association ID TLV format</td><td> </td><td class="rblock">             Figure <span class="insert">5</span>: The Extended Association ID TLV format</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Type: To be allocated by IANA</td><td> </td><td class="right">   Type: To be allocated by IANA</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Length: variable</td><td> </td><td class="right">   Length: variable</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0024"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Extended Association ID: as defined in [RFC6780].  <span class="delete">The operator-</span></td><td> </td><td class="rblock">   Extended Association ID: as defined in [RFC6780].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   configured associations MUST use the extended association ID TLV to</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   encode the association ID from the association identifier range</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   carved out for the operator-configured associations.  This is done to</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   avoid any conflict in association identifier between the manual</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   configurations and the dynamic associations.</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0025"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">4</span>.2.  Object Encoding in PCEP messages</td><td> </td><td class="rblock"><span class="insert">5</span>.2.  Object Encoding in PCEP messages</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0026"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">4</span>.2.1.  Stateful PCEP messages</td><td> </td><td class="rblock"><span class="insert">5</span>.2.1.  Stateful PCEP messages</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The ASSOCIATION Object is OPTIONAL and MAY be carried in the Path</td><td> </td><td class="right">   The ASSOCIATION Object is OPTIONAL and MAY be carried in the Path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Computation Update (PCUpd), Path Computation Report (PCRpt) and Path</td><td> </td><td class="right">   Computation Update (PCUpd), Path Computation Report (PCRpt) and Path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Computation Initiate (PCInitiate) messages.</td><td> </td><td class="right">   Computation Initiate (PCInitiate) messages.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   When carried in PCRpt message, it is used to report the association</td><td> </td><td class="right">   When carried in PCRpt message, it is used to report the association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   group membership information pertaining to a LSP to a stateful PCE.</td><td> </td><td class="right">   group membership information pertaining to a LSP to a stateful PCE.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   It can also be used to remove an LSP from one or more association</td><td> </td><td class="right">   It can also be used to remove an LSP from one or more association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   groups by setting the R flag to 1 in the ASSOCIATION object.  Unless,</td><td> </td><td class="right">   groups by setting the R flag to 1 in the ASSOCIATION object.  Unless,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   a PCE wants to delete an association from an LSP, it does not need to</td><td> </td><td class="right">   a PCE wants to delete an association from an LSP, it does not need to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-5" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-5"><em> page 10, line 6<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-5"><em> page 12, line 6<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">       &lt;path&gt;::= &lt;intended-path&gt;&lt;intended-attribute-list&gt;</td><td> </td><td class="right">       &lt;path&gt;::= &lt;intended-path&gt;&lt;intended-attribute-list&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       &lt;association-list&gt; ::= &lt;ASSOCIATION&gt; [&lt;association-list&gt;]</td><td> </td><td class="right">       &lt;association-list&gt; ::= &lt;ASSOCIATION&gt; [&lt;association-list&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A PCE initiating a new LSP, can include the association group</td><td> </td><td class="right">   A PCE initiating a new LSP, can include the association group</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   information.  This is done by including the ASSOCIATION Object in a</td><td> </td><td class="right">   information.  This is done by including the ASSOCIATION Object in a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCInitiate message.  The PCInitiate message is defined in</td><td> </td><td class="right">   PCInitiate message.  The PCInitiate message is defined in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pce-initiated-lsp] and updated as below:</td><td> </td><td class="right">   [I-D.ietf-pce-pce-initiated-lsp] and updated as below:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   &lt;PCInitiate Message&gt; ::= &lt;Common Header&gt;</td><td> </td><td class="right">   &lt;PCInitiate Message&gt; ::= &lt;Common Header&gt;</td><td class="lineno"></td></tr>
+      <tr id="diff0027"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                            <span class="delete">     </span>&lt;PCE-initiated-lsp-list&gt;</td><td> </td><td class="rblock">                            &lt;PCE-initiated-lsp-list&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Where:</td><td> </td><td class="right">   Where:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   &lt;PCE-initiated-lsp-list&gt; ::= &lt;PCE-initiated-lsp-request&gt;</td><td> </td><td class="right">   &lt;PCE-initiated-lsp-list&gt; ::= &lt;PCE-initiated-lsp-request&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                [&lt;PCE-initiated-lsp-list&gt;]</td><td> </td><td class="right">                                [&lt;PCE-initiated-lsp-list&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   &lt;PCE-initiated-lsp-request&gt; ::= (&lt;PCE-initiated-lsp-instantiation&gt;|</td><td> </td><td class="right">   &lt;PCE-initiated-lsp-request&gt; ::= (&lt;PCE-initiated-lsp-instantiation&gt;|</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                   &lt;PCE-initiated-lsp-deletion&gt;)</td><td> </td><td class="right">                                   &lt;PCE-initiated-lsp-deletion&gt;)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   &lt;PCE-initiated-lsp-instantiation&gt; ::= &lt;SRP&gt;</td><td> </td><td class="right">   &lt;PCE-initiated-lsp-instantiation&gt; ::= &lt;SRP&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                         &lt;LSP&gt;</td><td> </td><td class="right">                                         &lt;LSP&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                         [&lt;END-POINTS&gt;]</td><td> </td><td class="right">                                         [&lt;END-POINTS&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                         &lt;ERO&gt;</td><td> </td><td class="right">                                         &lt;ERO&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                         [&lt;association-list&gt;]</td><td> </td><td class="right">                                         [&lt;association-list&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                         [&lt;attribute-list&gt;]</td><td> </td><td class="right">                                         [&lt;attribute-list&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Where:</td><td> </td><td class="right">   Where:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   &lt;association-list&gt; ::= &lt;ASSOCIATION&gt; [&lt;association-list&gt;]</td><td> </td><td class="right">   &lt;association-list&gt; ::= &lt;ASSOCIATION&gt; [&lt;association-list&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0028"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">4</span>.2.2.  Request Message</td><td> </td><td class="rblock"><span class="insert">5</span>.2.2.  Request Message</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   In case of passive stateful or stateless PCE, the ASSOCIATION Object</td><td> </td><td class="right">   In case of passive stateful or stateless PCE, the ASSOCIATION Object</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   is OPTIONAL and MAY be carried in the Path Computation Request</td><td> </td><td class="right">   is OPTIONAL and MAY be carried in the Path Computation Request</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (PCReq) message.</td><td> </td><td class="right">   (PCReq) message.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   When carried in a PCReq message, the ASSOCIATION Object is used to</td><td> </td><td class="right">   When carried in a PCReq message, the ASSOCIATION Object is used to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   associate the path computation request to an association group.  The</td><td> </td><td class="right">   associate the path computation request to an association group.  The</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association (and the other LSPs) should be known to the PCE before</td><td> </td><td class="right">   association (and the other LSPs) should be known to the PCE before</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   hand.  These could be operator-configured or dynamically learned</td><td> </td><td class="right">   hand.  These could be operator-configured or dynamically learned</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   before.  The R flag in ASSOCIATION object within PCReq message MUST</td><td> </td><td class="right">   before.  The R flag in ASSOCIATION object within PCReq message MUST</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-6" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-6"><em> page 11, line 30<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-6"><em> page 13, line 30<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">                      [&lt;RRO&gt;[&lt;BANDWIDTH&gt;]]</td><td> </td><td class="right">                      [&lt;RRO&gt;[&lt;BANDWIDTH&gt;]]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                      [&lt;IRO&gt;]</td><td> </td><td class="right">                      [&lt;IRO&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                      [&lt;LOAD-BALANCING&gt;]</td><td> </td><td class="right">                      [&lt;LOAD-BALANCING&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Where:</td><td> </td><td class="right">   Where:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">         &lt;association-list&gt; ::= &lt;ASSOCIATION&gt; [&lt;association-list&gt;]</td><td> </td><td class="right">         &lt;association-list&gt; ::= &lt;ASSOCIATION&gt; [&lt;association-list&gt;]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Note that LSP object MAY be present for the passive stateful PCE</td><td> </td><td class="right">   Note that LSP object MAY be present for the passive stateful PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   mode.</td><td> </td><td class="right">   mode.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0029"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">4</span>.3.  Processing Rules</td><td> </td><td class="rblock"><span class="insert">5</span>.3.  Processing Rules</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Association groups can be operator-configured on the necessary PCC</td><td> </td><td class="right">   Association groups can be operator-configured on the necessary PCC</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and PCE.  In addition, a PCC or a PCE can create association groups</td><td> </td><td class="right">   and PCE.  In addition, a PCC or a PCE can create association groups</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   dynamically.  The PCEP speaker can reports the association to its</td><td> </td><td class="right">   dynamically.  The PCEP speaker can reports the association to its</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   peer via PCEP messages.  If a PCEP speaker does not recognize the</td><td> </td><td class="right">   peer via PCEP messages.  If a PCEP speaker does not recognize the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ASSOCIATION object, it MUST return a PCErr message with Error-Type</td><td> </td><td class="right">   ASSOCIATION object, it MUST return a PCErr message with Error-Type</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   "Unknown Object" as described in [RFC5440].  If a PCEP speaker</td><td> </td><td class="right">   "Unknown Object" as described in [RFC5440].  If a PCEP speaker</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   understand the ASSOCIATION object but does not support the</td><td> </td><td class="right">   understand the ASSOCIATION object but does not support the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association-type, it MUST return a PCErr message with Error-Type TBD</td><td> </td><td class="right">   association-type, it MUST return a PCErr message with Error-Type TBD</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   "Association Error" and Error-Value 1 "Association-type is not</td><td> </td><td class="right">   "Association Error" and Error-Value 1 "Association-type is not</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-7" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-7"><em> page 12, line 36<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-7"><em> page 14, line 36<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   are no LSPs in a association group, the association is considered to</td><td> </td><td class="right">   are no LSPs in a association group, the association is considered to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   be deleted.</td><td> </td><td class="right">   be deleted.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   In case the LSP is delegated to another PCE on session failure, the</td><td> </td><td class="right">   In case the LSP is delegated to another PCE on session failure, the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association information set by the PCE remains intact, unless updated</td><td> </td><td class="right">   association information set by the PCE remains intact, unless updated</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   by the new PCE.</td><td> </td><td class="right">   by the new PCE.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Upon LSP delegation revocation, the PCC MAY clear the association</td><td> </td><td class="right">   Upon LSP delegation revocation, the PCC MAY clear the association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   created by the PCE, but in order to avoid traffic loss, it can</td><td> </td><td class="right">   created by the PCE, but in order to avoid traffic loss, it can</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   perform this in a make-before-break fashion, which is the same as</td><td> </td><td class="right">   perform this in a make-before-break fashion, which is the same as</td><td class="lineno"></td></tr>
+      <tr id="diff0030"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   what is defined in <span class="delete">Stateful pce</span> [I-D.ietf-pce-stateful-pce] for</td><td> </td><td class="rblock">   what is defined in [I-D.ietf-pce-stateful-pce] for handling LSP state</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   handling LSP state cleanup.</td><td> </td><td class="rblock">   cleanup.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0031"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">5</span>.  IANA Considerations</td><td> </td><td class="rblock"><span class="insert">6</span>.  IANA Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0032"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">5</span>.1.  PCEP Object</td><td> </td><td class="rblock"><span class="insert">6</span>.1.  PCEP Object</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The "PCEP Parameters" registry contains a subregistry "PCEP Objects".</td><td> </td><td class="right">   The "PCEP Parameters" registry contains a subregistry "PCEP Objects".</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document request IANA to allocate the values from this registry.</td><td> </td><td class="right">   This document request IANA to allocate the values from this registry.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     Object-Class Value  Name                               Reference</td><td> </td><td class="right">     Object-Class Value  Name                               Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">            TBD          Association                        [This I-D]</td><td> </td><td class="right">            TBD          Association                        [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                         Object-Type</td><td> </td><td class="right">                         Object-Type</td><td class="lineno"></td></tr>
+      <tr id="diff0033"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                         0: Reserved</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                         1: IPv4</td><td> </td><td class="right">                         1: IPv4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                         2: IPv6</td><td> </td><td class="right">                         2: IPv6</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0034"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">5</span>.2.  PCEP TLV</td><td> </td><td class="rblock"><span class="insert">6</span>.2.  PCEP TLV</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   IANA is requested to make the assignment of a new value for the</td><td> </td><td class="right">   IANA is requested to make the assignment of a new value for the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   existing "PCEP TLV Type Indicators" registry as follows:</td><td> </td><td class="right">   existing "PCEP TLV Type Indicators" registry as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">               Value     Meaning                     Reference</td><td> </td><td class="right">               Value     Meaning                     Reference</td><td class="lineno"></td></tr>
+      <tr id="diff0035"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                <span class="insert">TBD      Operator-configured         [This I-D]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                         Association Range</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                TBD      Global Association Source   [This I-D]</td><td> </td><td class="right">                TBD      Global Association Source   [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                TBD      Extended Association Id     [This I-D]</td><td> </td><td class="right">                TBD      Extended Association Id     [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0036"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">5</span>.3.  Association Flags</td><td> </td><td class="rblock"><span class="insert">6</span>.3.  Association Flags</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document requests IANA to create a subregistry of the "PCEP</td><td> </td><td class="right">   This document requests IANA to create a subregistry of the "PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Parameters" for the bits carried in the Flags field of the</td><td> </td><td class="right">   Parameters" for the bits carried in the Flags field of the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ASSOCIATION object.  The subregistry is called "ASSOCIATION Flags</td><td> </td><td class="right">   ASSOCIATION object.  The subregistry is called "ASSOCIATION Flags</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Field".</td><td> </td><td class="right">   Field".</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The field contains 12 bits numbered from bit 0 as the most</td><td> </td><td class="right">   The field contains 12 bits numbered from bit 0 as the most</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   significant bit.</td><td> </td><td class="right">   significant bit.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">            Bit; Name: Description                  Reference</td><td> </td><td class="right">            Bit; Name: Description                  Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">            15   R: Removal                         [This I-D]</td><td> </td><td class="right">            15   R: Removal                         [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0037"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">5.4.</span>  PCEP-Error Object</td><td> </td><td class="rblock"><span class="insert">6.4.  Association Type</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   This document requests IANA to create a subregistry of the "PCEP</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Parameters" for the Association Type field of the the ASSOCIATION</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   object.  The subregistry is called "ASSOCIATION Type Field".</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   There are no association type specified in this document, future</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   document should request the assignment of association types from this</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   subregistry.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">6.5.</span>  PCEP-Error Object</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   IANA is requested to allocate new error values within the "PCEP-ERROR</td><td> </td><td class="right">   IANA is requested to allocate new error values within the "PCEP-ERROR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Object Error Types and Values" sub-registry of the PCEP Numbers</td><td> </td><td class="right">   Object Error Types and Values" sub-registry of the PCEP Numbers</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   registry, as follows:</td><td> </td><td class="right">   registry, as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       Error-Type  Meaning</td><td> </td><td class="right">       Error-Type  Meaning</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">          TBD      Association Error [This I-D]</td><td> </td><td class="right">          TBD      Association Error [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                   Error-value=1:</td><td> </td><td class="right">                   Error-value=1:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                      Association-type is not supported</td><td> </td><td class="right">                      Association-type is not supported</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                   Error-value=2:</td><td> </td><td class="right">                   Error-value=2:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-8" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-8"><em> page 14, line 5<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-8"><em> page 16, line 21<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">                   Error-value=3:</td><td> </td><td class="right">                   Error-value=3:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                     Too many association groups</td><td> </td><td class="right">                     Too many association groups</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                   Error-value=4:</td><td> </td><td class="right">                   Error-value=4:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                     Association unknown</td><td> </td><td class="right">                     Association unknown</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                   Error-value=5:</td><td> </td><td class="right">                   Error-value=5:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                     Operator-configured association</td><td> </td><td class="right">                     Operator-configured association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                     information mismatch</td><td> </td><td class="right">                     information mismatch</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                   Error-value=6:</td><td> </td><td class="right">                   Error-value=6:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                     Association information mismatch</td><td> </td><td class="right">                     Association information mismatch</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0038"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">6</span>.  Security Considerations</td><td> </td><td class="rblock"><span class="insert">7</span>.  Security Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The security considerations described in [I-D.ietf-pce-stateful-pce]</td><td> </td><td class="right">   The security considerations described in [I-D.ietf-pce-stateful-pce]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and [RFC5440] apply to the extensions described in this document as</td><td> </td><td class="right">   and [RFC5440] apply to the extensions described in this document as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   well.  Additional considerations related to a malicious PCEP speaker</td><td> </td><td class="right">   well.  Additional considerations related to a malicious PCEP speaker</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   are introduced, as associations could be spoofed and could be used as</td><td> </td><td class="right">   are introduced, as associations could be spoofed and could be used as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   an attack vector.  An attacker could report too many associations in</td><td> </td><td class="right">   an attack vector.  An attacker could report too many associations in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   an attempt to load the PCEP peer.  The PCEP peer responds with PCErr</td><td> </td><td class="right">   an attempt to load the PCEP peer.  The PCEP peer responds with PCErr</td><td class="lineno"></td></tr>
+      <tr id="diff0039"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   as described in Section <span class="delete">4</span>.3.  An attacker could impact LSP operations</td><td> </td><td class="rblock">   as described in Section <span class="insert">5</span>.3.  An attacker could impact LSP operations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   by creating bogus associations.  Further, association information</td><td> </td><td class="right">   by creating bogus associations.  Further, association information</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   could provides an adversary with the opportunity to eavesdrop on the</td><td> </td><td class="right">   could provides an adversary with the opportunity to eavesdrop on the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   relationship between the LSPs.  Thus securing the PCEP session using</td><td> </td><td class="right">   relationship between the LSPs.  Thus securing the PCEP session using</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Transport Layer Security (TLS) [I-D.ietf-pce-pceps], as per the</td><td> </td><td class="right">   Transport Layer Security (TLS) [I-D.ietf-pce-pceps], as per the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   recommendations and best current practices in [RFC7525], is</td><td> </td><td class="right">   recommendations and best current practices in [RFC7525], is</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   RECOMMENDED.</td><td> </td><td class="right">   RECOMMENDED.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0040"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">7</span>.  Manageability Considerations</td><td> </td><td class="rblock"><span class="insert">8</span>.  Manageability Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   All manageability requirements and considerations listed in [RFC5440]</td><td> </td><td class="right">   All manageability requirements and considerations listed in [RFC5440]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and [I-D.ietf-pce-stateful-pce] apply to PCEP protocol extensions</td><td> </td><td class="right">   and [I-D.ietf-pce-stateful-pce] apply to PCEP protocol extensions</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   defined in this document.  In addition, requirements and</td><td> </td><td class="right">   defined in this document.  In addition, requirements and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   considerations listed in this section apply.</td><td> </td><td class="right">   considerations listed in this section apply.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0041"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">7</span>.1.  Control of Function and Policy</td><td> </td><td class="rblock"><span class="insert">8</span>.1.  Control of Function and Policy</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A PCE or PCC implementation MUST allow operator-configured</td><td> </td><td class="right">   A PCE or PCC implementation MUST allow operator-configured</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   associations as described in this document.  The identifier MUST be</td><td> </td><td class="right">   associations as described in this document.  The identifier MUST be</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   from the operator-configured identifier range Section 3.3.</td><td> </td><td class="right">   from the operator-configured identifier range Section 3.3.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0042"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">7</span>.2.  Information and Data Models</td><td> </td><td class="rblock"><span class="insert">8</span>.2.  Information and Data Models</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   An implementation SHOULD allow the operator to view the associations</td><td> </td><td class="right">   An implementation SHOULD allow the operator to view the associations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   configured or created dynamically.  Further implementation SHOULD</td><td> </td><td class="right">   configured or created dynamically.  Further implementation SHOULD</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   allow to view associations reported by each peer, and the current set</td><td> </td><td class="right">   allow to view associations reported by each peer, and the current set</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   of LSPs in the association .  To serve this purpose, the PCEP YANG</td><td> </td><td class="right">   of LSPs in the association .  To serve this purpose, the PCEP YANG</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   module [I-D.ietf-pce-pcep-yang] can be extended to include</td><td> </td><td class="right">   module [I-D.ietf-pce-pcep-yang] can be extended to include</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association information.</td><td> </td><td class="right">   association information.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0043"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">7</span>.3.  Liveness Detection and Monitoring</td><td> </td><td class="rblock"><span class="insert">8</span>.3.  Liveness Detection and Monitoring</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in this document do not imply any new liveness</td><td> </td><td class="right">   Mechanisms defined in this document do not imply any new liveness</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   detection and monitoring requirements in addition to those already</td><td> </td><td class="right">   detection and monitoring requirements in addition to those already</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   listed in [RFC5440].</td><td> </td><td class="right">   listed in [RFC5440].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0044"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">7</span>.4.  Verify Correct Operations</td><td> </td><td class="rblock"><span class="insert">8</span>.4.  Verify Correct Operations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in this document do not imply any new operation</td><td> </td><td class="right">   Mechanisms defined in this document do not imply any new operation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   verification requirements in addition to those already listed in</td><td> </td><td class="right">   verification requirements in addition to those already listed in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5440] and [I-D.ietf-pce-stateful-pce].</td><td> </td><td class="right">   [RFC5440] and [I-D.ietf-pce-stateful-pce].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0045"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">7</span>.5.  Requirements On Other Protocols</td><td> </td><td class="rblock"><span class="insert">8</span>.5.  Requirements On Other Protocols</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in this document do not imply any new requirements</td><td> </td><td class="right">   Mechanisms defined in this document do not imply any new requirements</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   on other protocols.</td><td> </td><td class="right">   on other protocols.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0046"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">7</span>.6.  Impact On Network Operations</td><td> </td><td class="rblock"><span class="insert">8</span>.6.  Impact On Network Operations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in [RFC5440] and [I-D.ietf-pce-stateful-pce] also</td><td> </td><td class="right">   Mechanisms defined in [RFC5440] and [I-D.ietf-pce-stateful-pce] also</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   apply to PCEP extensions defined in this document.</td><td> </td><td class="right">   apply to PCEP extensions defined in this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0047"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">8</span>.  Acknowledgements</td><td> </td><td class="rblock"><span class="insert">9</span>.  Acknowledgements</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   We would like to thank Yuji Kamite and Joshua George for their</td><td> </td><td class="right">   We would like to thank Yuji Kamite and Joshua George for their</td><td class="lineno"></td></tr>
+      <tr id="diff0048"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   contributions to this document.  Also <span class="delete">Thank</span> Venugopal <span class="delete">Reddy and</span> Cyril</td><td> </td><td class="rblock">   contributions to this document.  Also <span class="insert">thanks to</span> Venugopal <span class="insert">Reddy,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Margaria for their useful comments.</td><td> </td><td class="rblock">   Cyril Margaria <span class="insert">and Rakesh Gandhi</span> for their useful comments.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0049"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">9.</span>  Contributors</td><td> </td><td class="rblock"><span class="insert">10.</span>  Contributors</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">Stephane Litkowski</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Orange</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0050"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      <span class="delete">Stephane Litkowski</span></td><td> </td><td class="rblock">   <span class="insert">Email: stephane.litkowski@orange.com</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">      Orange</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0051"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      <span class="delete">Email: stephane.litkowski@orange.com</span></td><td> </td><td class="rblock">   <span class="insert">Xian Zhang</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Huawei Technologies</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   F3-1-B RnD Center, Huawei Base</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Bantian, Longgang District</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Shenzhen 518129</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   China</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0052"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      <span class="delete">Xian Zhang</span></td><td> </td><td class="rblock">   <span class="insert">Email: zhang.xian@huawei.com</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">      Huawei Technologies</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">      F3-1-B RnD Center, Huawei Base</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">      Bantian, Longgang District</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">      Shenzhen 518129</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">      China</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0053"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      <span class="delete">Email: zhang.xian@huawei.com</span></td><td> </td><td class="rblock">   <span class="insert">Mustapha Aissaoui</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Nokia</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0054"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      <span class="delete">Mustapha Aissaoui</span></td><td> </td><td class="rblock">   <span class="insert">Email: mustapha.aissaoui@nokia.com</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">      Nokia</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0055"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">      Email: mustapha.aissaoui@nokia.com</span></td><td> </td><td class="rblock"><span class="insert">11.  References</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0056"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">10.  References</span></td><td> </td><td class="rblock"><span class="insert">11.1.</span>  Normative References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">10.1.</span>  Normative References</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate</td><td> </td><td class="right">   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Requirement Levels", BCP 14, RFC 2119,</td><td> </td><td class="right">              Requirement Levels", BCP 14, RFC 2119,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC2119, March 1997,</td><td> </td><td class="right">              DOI 10.17487/RFC2119, March 1997,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc2119&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc2119&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation</td><td> </td><td class="right">   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Element (PCE) Communication Protocol (PCEP)", RFC 5440,</td><td> </td><td class="right">              Element (PCE) Communication Protocol (PCEP)", RFC 5440,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC5440, March 2009,</td><td> </td><td class="right">              DOI 10.17487/RFC5440, March 2009,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc5440&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc5440&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC6780]  Berger, L., Le Faucheur, F., and A. Narayanan, "RSVP</td><td> </td><td class="right">   [RFC6780]  Berger, L., Le Faucheur, F., and A. Narayanan, "RSVP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              ASSOCIATION Object Extensions", RFC 6780,</td><td> </td><td class="right">              ASSOCIATION Object Extensions", RFC 6780,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC6780, October 2012,</td><td> </td><td class="right">              DOI 10.17487/RFC6780, October 2012,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc6780&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc6780&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-stateful-pce]</td><td> </td><td class="right">   [I-D.ietf-pce-stateful-pce]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP</td><td> </td><td class="right">              Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Extensions for Stateful PCE", draft-ietf-pce-stateful-</td><td> </td><td class="right">              Extensions for Stateful PCE", draft-ietf-pce-stateful-</td><td class="lineno"></td></tr>
+      <tr id="diff0057"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              pce-<span class="delete">19 (work in progress), May</span> 2017.</td><td> </td><td class="rblock">              pce-<span class="insert">21 (work in progress), June</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pce-initiated-lsp]</td><td> </td><td class="right">   [I-D.ietf-pce-pce-initiated-lsp]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP</td><td> </td><td class="right">              Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Extensions for PCE-initiated LSP Setup in a Stateful PCE</td><td> </td><td class="right">              Extensions for PCE-initiated LSP Setup in a Stateful PCE</td><td class="lineno"></td></tr>
+      <tr id="diff0058"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Model", <span class="delete">draft-ietf-pce-pce-initiated-lsp-09</span> (work in</td><td> </td><td class="rblock">              Model", <span class="insert">draft-ietf-pce-pce-initiated-lsp-10</span> (work in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              progress), <span class="delete">March</span> 2017.</td><td> </td><td class="rblock">              progress), <span class="insert">June</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0059"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">0</span>.2.  Informative References</td><td> </td><td class="rblock">1<span class="insert">1</span>.2.  Informative References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC4657]  Ash, J., Ed. and J. Le Roux, Ed., "Path Computation</td><td> </td><td class="right">   [RFC4657]  Ash, J., Ed. and J. Le Roux, Ed., "Path Computation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Element (PCE) Communication Protocol Generic</td><td> </td><td class="right">              Element (PCE) Communication Protocol Generic</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Requirements", RFC 4657, DOI 10.17487/RFC4657, September</td><td> </td><td class="right">              Requirements", RFC 4657, DOI 10.17487/RFC4657, September</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              2006, &lt;http://www.rfc-editor.org/info/rfc4657&gt;.</td><td> </td><td class="right">              2006, &lt;http://www.rfc-editor.org/info/rfc4657&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,</td><td> </td><td class="right">   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              "Recommendations for Secure Use of Transport Layer</td><td> </td><td class="right">              "Recommendations for Secure Use of Transport Layer</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Security (TLS) and Datagram Transport Layer Security</td><td> </td><td class="right">              Security (TLS) and Datagram Transport Layer Security</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May</td><td> </td><td class="right">              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May</td><td class="lineno"></td></tr>
+
+     <tr><td></td><td class="left"></td><td> </td><td class="right"></td><td></td></tr>
+     <tr id="end" bgcolor="gray"><th colspan="5" align="center">&nbsp;End of changes. 59 change blocks.&nbsp;</th></tr>
+     <tr class="stats"><td></td><th><i>114 lines changed or deleted</i></th><th><i> </i></th><th><i>209 lines changed or added</i></th><td></td></tr>
+     <tr><td colspan="5" align="center" class="small"><br>This html diff was produced by rfcdiff 1.45. The latest version is available from <a href="http://www.tools.ietf.org/tools/rfcdiff/">http://tools.ietf.org/tools/rfcdiff/</a> </td></tr>
+   </tbody></table>
+   
+   
+<iframe width="0" height="0" frameborder="0" src="./Diff_ draft-ietf-pce-association-group-03-old.txt - draft-ietf-pce-association-group-03.txt_files/saved_resource.html" id="GINGER_SOFTWARE_bubblesIFrame" scrolling="no" style="border: 0px solid; display: none; position: absolute; z-index: 2147483647; height: 0px; width: 0px; background-color: transparent;"></iframe><div id="GingerWidgetInfo" style="display:none;">{"version":"0.1.0.618","isExtension":true,"extensionName":"Chrome"}</div></body><script>(function(){(function (){
+            //Todo:is injection needed here?
+            var eventRegister = {};
+
+            var findReactProp = function(elem){
+                for(var key in elem){
+                    if(key.indexOf("__reactInternalInstance")===0){
+                        //var p = null;
+                        //if(elem[key].memoizedProps){
+                        //    p = elem[key].memoizedProps;
+                        //} else if(elem[key]._currentElement){
+                        //    p = elem[key]._currentElement.props
+                        //}
+
+                        //TODO: report if props is not found with Facebook version
+                        return (elem[key].memoizedProps || elem[key]._currentElement.props);
+                    }
+                }
+                return null;
+            };
+
+            document.addEventListener("gingerModule-eventEmitter-react-fire",function(e){
+                //console.log("firing", e);
+                var reactProps = findReactProp(document.activeElement);
+                var eventName = e.detail.event;
+                var eventParams = e.detail.params || {};
+                eventParams.preventDefault = function(){};
+                if(reactProps && eventName) {
+                    reactProps[eventName](eventParams);
+                }
+            });
+            document.addEventListener("gingerModule-eventEmitter-onselect",function(e){
+                var reactProps = findReactProp(document.activeElement);
+                //trigger("select");
+                if(reactProps) {
+                    reactProps.onSelect();
+                }
+            });
+            document.addEventListener("gingerModule-eventEmitter-onpaste",function(e){
+                var reactProps = findReactProp(document.activeElement);
+                var pasteObj = {
+                    defaultPrevented: false,
+                    target: document.activeElement,
+                    preventDefault: function() {},
+                    clipboardData : {
+                        getData: function () {
+                            return e.detail || "";
+                        },
+                        items: ["text/plain"]
+                    }
+                };
+                //trigger("paste",pasteObj);
+                if(reactProps) {
+                    reactProps.onPaste(pasteObj);
+                }
+            });
+
+            var trigger = function(eventName,data){
+                if(!eventRegister[eventName]) return;
+                for(var i = 0; i<eventRegister[eventName].length; i++){
+                    var listener = eventRegister[eventName][i];
+                    listener(new CustomEvent(eventName),data);
+                }
+            };
+
+            var nativeEventListener = document.addEventListener.bind(document);
+            document.addEventListener = function(eventName, callback, options) {
+                console.log("registering event",eventName);
+                var eventRegisterItem = eventRegister[eventName] || [];
+                eventRegisterItem.push(callback);
+                eventRegister[eventName] = eventRegisterItem;
+                nativeEventListener(eventName, callback, options);
+            };
+
+        })() })()</script></html>
