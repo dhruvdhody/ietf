@@ -1174,26 +1174,49 @@ Where:
         remote information learned via routing protocols should be reported or not.</t>
         <t>An implementation SHOULD allow the operator to specify the maximum
    number of LS data to be reported.</t>
-   <t>An implementation SHOULD allow the operator to create abstracted
+   <t>An implementation SHOULD also allow the operator to create abstracted
    topologies that are reported to the peers and create different
    abstractions for different peers.</t>
    <t>An implementation SHOULD allow the operator to configure a 64-bit
-   Instance-ID.</t>
+   Instance-ID for Routing Universe TLV.</t>
+
       </section>
       <section title="Information and Data Models" toc="default">
-        <t>TBD.</t>
+        <t>An implementation SHOULD allow the operator to view the LS
+   capabilities advertised by each peer.  To serve this purpose, the PCEP YANG module
+   <xref target="I-D.ietf-pce-pcep-yang"/>" can be extended to include advertised
+   capabilities.</t>
+   <t>An implementation SHOULD also provide the statistics:
+   <list style="symbols">
+   <t>Total number of LSRpt sent/received, as well as per neighbor</t>
+   <t>Number of error received for LSRpt, per neighbor</t>
+   <t>Total number of locally originated Link-State Information</t>
+</list></t>
+   <t>These statistics should be recorded as absolute counts since system
+   or session start time.  An implementation MAY also enhance this
+   information by recording peak per-second counts in each case.</t>
+   <t>An operator SHOULD define an import policy to limit inbound LSRpt
+   to "drop all LSRpt from a particular peers" as well provide means to 
+   limit inbound LSRpts.</t>
       </section>
       <section title="Liveness Detection and Monitoring" toc="default">
-        <t>TBD.</t>
+        <t>Mechanisms defined in this document do not imply any new liveness
+   detection and monitoring requirements in addition to those already
+   listed in <xref target="RFC5440"/>".</t>
       </section>
       <section title="Verify Correct Operations" toc="default">
-        <t>TBD.</t>
+        <t>
+   Mechanisms defined in this document do not imply any new operation
+   verification requirements in addition to those already listed in
+   <xref target="RFC5440"/> .</t>
       </section>
       <section title="Requirements On Other Protocols" toc="default">
-        <t>TBD.</t>
+        <t>   Mechanisms defined in this document do not imply any new requirements
+   on other protocols.</t>
       </section>
       <section title="Impact On Network Operations" toc="default">
-        <t>TBD.</t>
+        <t>Mechanisms defined in this document do not have any impact on network
+   operations in addition to those already listed in <xref target="RFC5440"/>.</t>
       </section>
     </section>
     <section title="IANA Considerations" toc="default">
@@ -1503,8 +1526,10 @@ Value     Meaning                        Reference
       <t>SKT orchestrator (acting as MDSC) also supported PCEP-LS (as well as RestConf) towards packet and optical PNCs on its SBI.</t>
      </list>
    </t>
-     <t>Further description can be found at <eref target="https://wiki.onosproject.org/display/ONOS/PCEP+Protocol">[ONOS-PCEP]</eref> 
-     and the code at <eref target="https://github.com/opennetworkinglab/onos/tree/master/protocols/pcep">[ONOS-PCEP-GITHUB]</eref>.</t>
+     <!--<t>Further description can be found at <eref target="https://wiki.onosproject.org/display/ONOS/PCEP+Protocol">[ONOS-PCEP]</eref> 
+     and the code at <eref target="https://github.com/opennetworkinglab/onos/tree/master/protocols/pcep">[ONOS-PCEP-GITHUB]</eref>.</t>-->
+     <t>Further description can be found at <eref target="ONOS-PCEP"/> 
+     and the code at <eref target="ONOS-PCEP-GITHUB"/>.</t>
     </section>
     </section>
     <section title="Acknowledgments" toc="default">
@@ -1546,6 +1571,7 @@ Value     Meaning                        Reference
       <?rfc include="reference.I-D.ietf-pce-stateful-pce"?>
       <?rfc include="reference.I-D.ietf-pce-pce-initiated-lsp"?>
       <?rfc include="reference.I-D.ietf-pce-pceps"?>
+      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
       <?rfc include="reference.I-D.ietf-pce-applicability-actn"?>
       <?rfc include="reference.I-D.ietf-teas-actn-framework"?>
       <?rfc include="reference.I-D.ietf-teas-actn-requirements"?>
@@ -1557,14 +1583,14 @@ Value     Meaning                        Reference
 
 <reference anchor="ONOS-PCEP" target="https://wiki.onosproject.org/display/ONOS/PCEP+Protocol">
   <front>
-    <title>ONOS-PCEP</title>
+    <title>Support for PCEP in ONOS</title>
     <author/>
     <date/>
   </front>
 </reference>      
 <reference anchor="ONOS-PCEP-GITHUB" target="https://github.com/opennetworkinglab/onos/tree/master/protocols/pcep">
   <front>
-    <title>ONOS-PCEP-GITHUB</title>
+    <title>Github for PCEP code in ONOS</title>
     <author/>
     <date/>
   </front>
@@ -1803,6 +1829,14 @@ Bangalore, Karnataka  560066
 India
 
 Email: veerendranatharv@huawei.com
+
+Satish Karunanithi
+Huawei Technologies
+Divyashree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+Email: satishk@huawei.com
 ]]></artwork>
         </figure>
       </t>

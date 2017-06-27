@@ -1,0 +1,944 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0030)https://tools.ietf.org/rfcdiff -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+   
+  <meta http-equiv="Content-Style-Type" content="text/css"> 
+  <title>Diff: draft-dhodylee-pce-pcep-ls-07.txt - draft-dhodylee-pce-pcep-ls-08.txt</title> 
+  <style type="text/css"> 
+    body    { margin: 0.4ex; margin-right: auto; } 
+    tr      { } 
+    td      { white-space: pre; font-family: monospace; vertical-align: top; font-size: 0.86em;} 
+    th      { font-size: 0.86em; } 
+    .small  { font-size: 0.6em; font-style: italic; font-family: Verdana, Helvetica, sans-serif; } 
+    .left   { background-color: #EEE; } 
+    .right  { background-color: #FFF; } 
+    .diff   { background-color: #CCF; } 
+    .lblock { background-color: #BFB; } 
+    .rblock { background-color: #FF8; } 
+    .insert { background-color: #8FF; } 
+    .delete { background-color: #ACF; } 
+    .void   { background-color: #FFB; } 
+    .cont   { background-color: #EEE; } 
+    .linebr { background-color: #AAA; } 
+    .lineno { color: red; background-color: #FFF; font-size: 0.7em; text-align: right; padding: 0 2px; } 
+    .elipsis{ background-color: #AAA; } 
+    .left .cont { background-color: #DDD; } 
+    .right .cont { background-color: #EEE; } 
+    .lblock .cont { background-color: #9D9; } 
+    .rblock .cont { background-color: #DD6; } 
+    .insert .cont { background-color: #0DD; } 
+    .delete .cont { background-color: #8AD; } 
+    .stats, .stats td, .stats th { background-color: #EEE; padding: 2px 0; } 
+    span.hide { display: none; color: #aaa;}    a:hover span { display: inline; }    tr.change { background-color: gray; } 
+    tr.change a { text-decoration: none; color: black } 
+  </style> 
+     <script>
+var chunk_index = 0;
+var old_chunk = null;
+
+function format_chunk(index) {
+    var prefix = "diff";
+    var str = index.toString();
+    for (x=0; x<(4-str.length); ++x) {
+        prefix+='0';
+    }
+    return prefix + str;
+}
+
+function find_chunk(n){
+    return document.querySelector('tr[id$="' + n + '"]');
+}
+
+function change_chunk(offset) {
+    var index = chunk_index + offset;
+    var new_str;
+    var new_chunk;
+
+    new_str = format_chunk(index);
+    new_chunk = find_chunk(new_str);
+    if (!new_chunk) {
+        return;
+    }
+    if (old_chunk) {
+        old_chunk.style.outline = "";
+    }
+    old_chunk = new_chunk;
+    old_chunk.style.outline = "1px solid red";
+    window.location.hash = "#" + new_str;
+    window.scrollBy(0,-100);
+    chunk_index = index;
+}
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+    case 78:
+        change_chunk(1);
+        break;
+    case 80:
+        change_chunk(-1);
+        break;
+    }
+};
+   </script> 
+<style type="text/css" id="GINGER_SOFTWARE_style">.GINGER_SOFTWARE_noMark { background : transparent; }  .GINGER_SOFTWARE_wrapper{ position: absolute; overflow: hidden; margin: 0px; padding: 0px; border: 0px solid transparent } .GINGER_SOFTWARE_contour { position : absolute; margin: 0px; }  .GINGER_SOFTWARE_richText { margin : 0px; padding-bottom: 3px; border-width: 0px; border-color: transparent; display: block; color: transparent; -webkit-text-fill-color: transparent; overflow: hidden; white-space: pre-wrap;}  .GINGER_SOFTWARE_inputWrapper .GINGER_SOFTWARE_richText {position: absolute;}  .GINGER_SOFTWARE_canvas { display:none; background-repeat:no-repeat;}  .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark {border-top-left-radius:2px; border-top-right-radius:2px; border-bottom-right-radius:2px; border-bottom-left-radius:2px;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjhFQ0Y2OENGMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjhFQ0Y2OEQwMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OEVDRjY4Q0QzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OEVDRjY4Q0UzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5RRxRxAAAAD0lEQVR42mK48+w7QIABAAVbAroowN08AAAAAElFTkSuQmCC)!important;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark.GINGER_SOFTWARE_synonym {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAABJJREFUeNpi+P9gEwAAAP//AwAFcwKS3d7BnwAAAABJRU5ErkJggg==)!important;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark.GINGER_SOFTWARE_noSuggestion {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjhFQ0Y2OENGMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjhFQ0Y2OEQwMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OEVDRjY4Q0QzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OEVDRjY4Q0UzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5RRxRxAAAAD0lEQVR42mK48+w7QIABAAVbAroowN08AAAAAElFTkSuQmCC)!important;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_mark {position:relative; background-image:none!important;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightLeft { position : absolute; left:-2px; top:0px; bottom:0px; width:2px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightRight { position : absolute; right:-2px; top:0px; bottom:0px; width:2px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightTop { position : absolute; left:0px; right:0px; top:-2px; height:3px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightBottom { position : absolute; left:0px; right:0px; bottom:-2px; height:3px;}</style></head> 
+<body ginger_software_stylesheet="true" ginger_software_doc="true"> 
+  <table border="0" cellpadding="0" cellspacing="0"> 
+  <tbody><tr id="part-1" bgcolor="orange"><th></th><th><a href="https://tools.ietf.org/rfcdiff?url2=draft-dhodylee-pce-pcep-ls-07.txt" style="color:#008; text-decoration:none;">&lt;</a>&nbsp;<a href="https://tools.ietf.org/html/draft-dhodylee-pce-pcep-ls-07.txt" style="color:#008">draft-dhodylee-pce-pcep-ls-07.txt</a>&nbsp;</th><th> </th><th>&nbsp;<a href="https://tools.ietf.org/html/draft-dhodylee-pce-pcep-ls-08.txt" style="color:#008">draft-dhodylee-pce-pcep-ls-08.txt</a>&nbsp;<a href="https://tools.ietf.org/rfcdiff?url1=draft-dhodylee-pce-pcep-ls-08.txt" style="color:#008; text-decoration:none;">&gt;</a></th><th></th></tr> 
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">PCE Working Group                                               D. Dhody</td><td> </td><td class="right">PCE Working Group                                               D. Dhody</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Internet-Draft                                                    Y. Lee</td><td> </td><td class="right">Internet-Draft                                                    Y. Lee</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Intended status: Standards Track                     Huawei Technologies</td><td> </td><td class="right">Intended status: Standards Track                     Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr id="diff0001"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">Expires: <span class="delete">September 2</span>, 2017                                 D. Ceccarelli</td><td> </td><td class="rblock">Expires: <span class="insert">December 28</span>, 2017                                 D. Ceccarelli</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                                Ericsson</td><td> </td><td class="right">                                                                Ericsson</td><td class="lineno"></td></tr>
+      <tr id="diff0002"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                                           <span class="delete">March 1</span>, 2017</td><td> </td><td class="rblock">                                                           <span class="insert">June 26</span>, 2017</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP Extension for Distribution of Link-State and TE Information.</td><td> </td><td class="right">   PCEP Extension for Distribution of Link-State and TE Information.</td><td class="lineno"></td></tr>
+      <tr id="diff0003"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                     draft-dhodylee-pce-pcep-ls-0<span class="delete">7</span></td><td> </td><td class="rblock">                     draft-dhodylee-pce-pcep-ls-0<span class="insert">8</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Abstract</td><td> </td><td class="right">Abstract</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   In order to compute and provide optimal paths, Path Computation</td><td> </td><td class="right">   In order to compute and provide optimal paths, Path Computation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Elements (PCEs) require an accurate and timely Traffic Engineering</td><td> </td><td class="right">   Elements (PCEs) require an accurate and timely Traffic Engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Database (TED).  Traditionally this TED has been obtained from a link</td><td> </td><td class="right">   Database (TED).  Traditionally this TED has been obtained from a link</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   state (LS) routing protocol supporting traffic engineering</td><td> </td><td class="right">   state (LS) routing protocol supporting traffic engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   extensions.</td><td> </td><td class="right">   extensions.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document extends the Path Computation Element Communication</td><td> </td><td class="right">   This document extends the Path Computation Element Communication</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-2" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-2"><em> page 1, line 39<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-2"><em> page 1, line 39<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are working documents of the Internet Engineering</td><td> </td><td class="right">   Internet-Drafts are working documents of the Internet Engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Task Force (IETF).  Note that other groups may also distribute</td><td> </td><td class="right">   Task Force (IETF).  Note that other groups may also distribute</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   working documents as Internet-Drafts.  The list of current Internet-</td><td> </td><td class="right">   working documents as Internet-Drafts.  The list of current Internet-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Drafts is at http://datatracker.ietf.org/drafts/current/.</td><td> </td><td class="right">   Drafts is at http://datatracker.ietf.org/drafts/current/.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are draft documents valid for a maximum of six months</td><td> </td><td class="right">   Internet-Drafts are draft documents valid for a maximum of six months</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and may be updated, replaced, or obsoleted by other documents at any</td><td> </td><td class="right">   and may be updated, replaced, or obsoleted by other documents at any</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   time.  It is inappropriate to use Internet-Drafts as reference</td><td> </td><td class="right">   time.  It is inappropriate to use Internet-Drafts as reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   material or to cite them other than as "work in progress."</td><td> </td><td class="right">   material or to cite them other than as "work in progress."</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0004"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   This Internet-Draft will expire on <span class="delete">September 2</span>, 2017.</td><td> </td><td class="rblock">   This Internet-Draft will expire on <span class="insert">December 28</span>, 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Copyright Notice</td><td> </td><td class="right">Copyright Notice</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Copyright (c) 2017 IETF Trust and the persons identified as the</td><td> </td><td class="right">   Copyright (c) 2017 IETF Trust and the persons identified as the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document authors.  All rights reserved.</td><td> </td><td class="right">   document authors.  All rights reserved.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td> </td><td class="right">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Provisions Relating to IETF Documents</td><td> </td><td class="right">   Provisions Relating to IETF Documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (http://trustee.ietf.org/license-info) in effect on the date of</td><td> </td><td class="right">   (http://trustee.ietf.org/license-info) in effect on the date of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   publication of this document.  Please review these documents</td><td> </td><td class="right">   publication of this document.  Please review these documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-3" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-3"><em> page 2, line 20<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-3"><em> page 2, line 20<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">Table of Contents</td><td> </td><td class="right">Table of Contents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td> </td><td class="right">   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   5</td><td> </td><td class="right">     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   5</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   5</td><td> </td><td class="right">   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   5</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   3.  Applicability . . . . . . . . . . . . . . . . . . . . . . . .   5</td><td> </td><td class="right">   3.  Applicability . . . . . . . . . . . . . . . . . . . . . . . .   5</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   4.  Requirements for PCEP extension . . . . . . . . . . . . . . .   6</td><td> </td><td class="right">   4.  Requirements for PCEP extension . . . . . . . . . . . . . . .   6</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   5.  New Functions to distribute link-state (and TE) via PCEP  . .   7</td><td> </td><td class="right">   5.  New Functions to distribute link-state (and TE) via PCEP  . .   7</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   6.  Overview of Extension to PCEP . . . . . . . . . . . . . . . .   7</td><td> </td><td class="right">   6.  Overview of Extension to PCEP . . . . . . . . . . . . . . . .   7</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     6.1.  New Messages  . . . . . . . . . . . . . . . . . . . . . .   7</td><td> </td><td class="right">     6.1.  New Messages  . . . . . . . . . . . . . . . . . . . . . .   7</td><td class="lineno"></td></tr>
+      <tr id="diff0005"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     6.2.  Capability Advertisement  . . . . . . . . . . . . . . . .   <span class="delete">8</span></td><td> </td><td class="rblock">     6.2.  Capability Advertisement  . . . . . . . . . . . . . . . .   <span class="insert">7</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     6.3.  Initial Link-State (and TE) Synchronization . . . . . . .   8</td><td> </td><td class="right">     6.3.  Initial Link-State (and TE) Synchronization . . . . . . .   8</td><td class="lineno"></td></tr>
+      <tr id="diff0006"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">       6.3.1.  Optimizations for LS Synchronization  . . . . . . . .  1<span class="delete">1</span></td><td> </td><td class="rblock">       6.3.1.  Optimizations for LS Synchronization  . . . . . . . .  1<span class="insert">0</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     6.4.  LS Report . . . . . . . . . . . . . . . . . . . . . . . .  11</td><td> </td><td class="right">     6.4.  LS Report . . . . . . . . . . . . . . . . . . . . . . . .  11</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   7.  Transport . . . . . . . . . . . . . . . . . . . . . . . . . .  11</td><td> </td><td class="right">   7.  Transport . . . . . . . . . . . . . . . . . . . . . . . . . .  11</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   8.  PCEP Messages . . . . . . . . . . . . . . . . . . . . . . . .  11</td><td> </td><td class="right">   8.  PCEP Messages . . . . . . . . . . . . . . . . . . . . . . . .  11</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     8.1.  LS Report Message . . . . . . . . . . . . . . . . . . . .  11</td><td> </td><td class="right">     8.1.  LS Report Message . . . . . . . . . . . . . . . . . . . .  11</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     8.2.  The PCErr Message . . . . . . . . . . . . . . . . . . . .  12</td><td> </td><td class="right">     8.2.  The PCErr Message . . . . . . . . . . . . . . . . . . . .  12</td><td class="lineno"></td></tr>
+      <tr id="diff0007"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   9.  Objects and TLV . . . . . . . . . . . . . . . . . . . . . . .  1<span class="delete">3</span></td><td> </td><td class="rblock">   9.  Objects and TLV . . . . . . . . . . . . . . . . . . . . . . .  1<span class="insert">2</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     9.1.  TLV Format  . . . . . . . . . . . . . . . . . . . . . . .  13</td><td> </td><td class="right">     9.1.  TLV Format  . . . . . . . . . . . . . . . . . . . . . . .  13</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     9.2.  Open Object . . . . . . . . . . . . . . . . . . . . . . .  13</td><td> </td><td class="right">     9.2.  Open Object . . . . . . . . . . . . . . . . . . . . . . .  13</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.2.1.  LS Capability TLV . . . . . . . . . . . . . . . . . .  13</td><td> </td><td class="right">       9.2.1.  LS Capability TLV . . . . . . . . . . . . . . . . . .  13</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     9.3.  LS Object . . . . . . . . . . . . . . . . . . . . . . . .  14</td><td> </td><td class="right">     9.3.  LS Object . . . . . . . . . . . . . . . . . . . . . . . .  14</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.1.  Routing Universe TLV  . . . . . . . . . . . . . . . .  15</td><td> </td><td class="right">       9.3.1.  Routing Universe TLV  . . . . . . . . . . . . . . . .  15</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.2.  Route Distinguisher TLV . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">       9.3.2.  Route Distinguisher TLV . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.3.  Virtual Network TLV . . . . . . . . . . . . . . . . .  17</td><td> </td><td class="right">       9.3.3.  Virtual Network TLV . . . . . . . . . . . . . . . . .  17</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.4.  Local Node Descriptors TLV  . . . . . . . . . . . . .  17</td><td> </td><td class="right">       9.3.4.  Local Node Descriptors TLV  . . . . . . . . . . . . .  17</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.5.  Remote Node Descriptors TLV . . . . . . . . . . . . .  18</td><td> </td><td class="right">       9.3.5.  Remote Node Descriptors TLV . . . . . . . . . . . . .  18</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.6.  Node Descriptors Sub-TLVs . . . . . . . . . . . . . .  19</td><td> </td><td class="right">       9.3.6.  Node Descriptors Sub-TLVs . . . . . . . . . . . . . .  19</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.7.  Link Descriptors TLV  . . . . . . . . . . . . . . . .  19</td><td> </td><td class="right">       9.3.7.  Link Descriptors TLV  . . . . . . . . . . . . . . . .  19</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.8.  Prefix Descriptors TLV  . . . . . . . . . . . . . . .  20</td><td> </td><td class="right">       9.3.8.  Prefix Descriptors TLV  . . . . . . . . . . . . . . .  20</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.9.  PCEP-LS Attributes  . . . . . . . . . . . . . . . . .  21</td><td> </td><td class="right">       9.3.9.  PCEP-LS Attributes  . . . . . . . . . . . . . . . . .  21</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">         9.3.9.1.  Node Attributes TLV . . . . . . . . . . . . . . .  21</td><td> </td><td class="right">         9.3.9.1.  Node Attributes TLV . . . . . . . . . . . . . . .  21</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">         9.3.9.2.  Link Attributes TLV . . . . . . . . . . . . . . .  22</td><td> </td><td class="right">         9.3.9.2.  Link Attributes TLV . . . . . . . . . . . . . . .  22</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">         9.3.9.3.  Prefix Attributes TLV . . . . . . . . . . . . . .  24</td><td> </td><td class="right">         9.3.9.3.  Prefix Attributes TLV . . . . . . . . . . . . . .  24</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       9.3.10. Removal of an Attribute . . . . . . . . . . . . . . .  25</td><td> </td><td class="right">       9.3.10. Removal of an Attribute . . . . . . . . . . . . . . .  25</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   10. Other Considerations  . . . . . . . . . . . . . . . . . . . .  25</td><td> </td><td class="right">   10. Other Considerations  . . . . . . . . . . . . . . . . . . . .  25</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     10.1.  Inter-AS Links . . . . . . . . . . . . . . . . . . . . .  25</td><td> </td><td class="right">     10.1.  Inter-AS Links . . . . . . . . . . . . . . . . . . . . .  25</td><td class="lineno"></td></tr>
+      <tr id="diff0008"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   11. <span class="delete">Processing Rules  . . . . . . . . . . . . . . . . . . . . . .  25</span></td><td> </td><td class="rblock">   11. Security Considerations . . . . . . . . . . . . . . . . . . .  25</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   12.</span> Security Considerations . . . . . . . . . . . . . . . . . . .  25</td><td> </td><td class="rblock">   <span class="insert">12.</span> Manageability Considerations  . . . . . . . . . . . . . . . .  25</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">13.</span> Manageability Considerations  . . . . . . . . . . . . . . . .  25</td><td> </td><td class="rblock">     <span class="insert">12.1.</span>  Control of Function and Policy . . . . . . . . . . . . .  <span class="insert">26</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     <span class="delete">13.1.</span>  Control of Function and Policy . . . . . . . . . . . . .  <span class="delete">25</span></td><td> </td><td class="rblock"><span class="insert">     12.2.</span>  Information and Data Models  . . . . . . . . . . . . . .  26</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     13.2.</span>  Information and Data Models  . . . . . . . . . . . . . .  26</td><td> </td><td class="rblock">     <span class="insert">12.3.</span>  Liveness Detection and Monitoring  . . . . . . . . . . .  26</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     <span class="delete">13.3.</span>  Liveness Detection and Monitoring  . . . . . . . . . . .  26</td><td> </td><td class="rblock">     <span class="insert">12.4.</span>  Verify Correct Operations  . . . . . . . . . . . . . . .  <span class="insert">27</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     <span class="delete">13.4.</span>  Verify Correct Operations  . . . . . . . . . . . . . . .  <span class="delete">26</span></td><td> </td><td class="rblock"><span class="insert">     12.5.</span>  Requirements On Other Protocols  . . . . . . . . . . . .  <span class="insert">27</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     13.5.</span>  Requirements On Other Protocols  . . . . . . . . . . . .  <span class="delete">26</span></td><td> </td><td class="rblock"><span class="insert">     12.6.</span>  Impact On Network Operations . . . . . . . . . . . . . .  <span class="insert">27</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     13.6.</span>  Impact On Network Operations . . . . . . . . . . . . . .  <span class="delete">26</span></td><td> </td><td class="rblock"><span class="insert">   13.</span> IANA Considerations . . . . . . . . . . . . . . . . . . . . .  <span class="insert">27</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   14.</span> IANA Considerations . . . . . . . . . . . . . . . . . . . . .  <span class="delete">26</span></td><td> </td><td class="rblock"><span class="insert">     13.1.</span>  PCEP Messages  . . . . . . . . . . . . . . . . . . . . .  <span class="insert">27</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     14.1.</span>  PCEP Messages  . . . . . . . . . . . . . . . . . . . . .  <span class="delete">26</span></td><td> </td><td class="rblock"><span class="insert">     13.2.</span>  PCEP Objects . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">27</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     14.2.</span>  PCEP Objects . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">26</span></td><td> </td><td class="rblock"><span class="insert">     13.3.</span>  LS Object  . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">28</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     14.3.</span>  LS Object  . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">27</span></td><td> </td><td class="rblock"><span class="insert">     13.4.</span>  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  <span class="insert">28</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     14.4.</span>  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  <span class="delete">27</span></td><td> </td><td class="rblock"><span class="insert">     13.5.</span>  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  <span class="insert">29</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     14.5.</span>  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  <span class="delete">28</span></td><td> </td><td class="rblock"><span class="insert">     13.6.</span>  PCEP-LS Sub-TLV Type Indicators  . . . . . . . . . . . .  <span class="insert">29</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">     14.6.</span>  PCEP-LS Sub-TLV Type Indicators  . . . . . . . . . . . .  <span class="delete">28</span></td><td> </td><td class="rblock"><span class="insert">   14.</span> TLV/Sub-TLV Code Points Summary . . . . . . . . . . . . . . .  <span class="insert">32</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   15.</span> TLV/Sub-TLV Code Points Summary . . . . . . . . . . . . . . .  <span class="delete">31</span></td><td> </td><td class="rblock"><span class="insert">   15. Implementation Status . . . . . . . . . . . . . . . . . . . .  32</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   16. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">31</span></td><td> </td><td class="rblock"><span class="insert">     15.1.  Hierarchical Transport PCE controllers . . . . . . . . .  32</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">32</span></td><td> </td><td class="rblock"><span class="insert">     15.2.  ONOS-based Controller (MDSC and PNC) . . . . . . . . . .  33</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     17.1.  Normative References . . . . . . . . . . . . . . . . . .  <span class="delete">32</span></td><td> </td><td class="rblock">   16. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">33</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     17.2.  Informative References . . . . . . . . . . . . . . . . .  <span class="delete">32</span></td><td> </td><td class="rblock">   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">33</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Appendix A.  Relevant OSPF TLV and sub-TLV  . . . . . . . . . . .  <span class="delete">36</span></td><td> </td><td class="rblock">     17.1.  Normative References . . . . . . . . . . . . . . . . . .  <span class="insert">33</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">37</span></td><td> </td><td class="rblock">     17.2.  Informative References . . . . . . . . . . . . . . . . .  <span class="insert">34</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     B.1.  All Nodes . . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">37</span></td><td> </td><td class="rblock">   Appendix A.  Relevant OSPF TLV and sub-TLV  . . . . . . . . . . .  <span class="insert">38</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     B.2.  Designated Node . . . . . . . . . . . . . . . . . . . . .  <span class="delete">38</span></td><td> </td><td class="rblock">   Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">39</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     B.3.  Between PCEs  . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">38</span></td><td> </td><td class="rblock">     B.1.  All Nodes . . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">39</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Appendix C.  Contributor Addresses  . . . . . . . . . . . . . . .  <span class="delete">40</span></td><td> </td><td class="rblock">     B.2.  Designated Node . . . . . . . . . . . . . . . . . . . . .  <span class="insert">40</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">40</span></td><td> </td><td class="rblock">     B.3.  Between PCEs  . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">40</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   Appendix C.  Contributor Addresses  . . . . . . . . . . . . . . .  <span class="insert">42</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">42</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">1.  Introduction</td><td> </td><td class="right">1.  Introduction</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   In Multiprotocol Label Switching (MPLS) and Generalized MPLS (GMPLS),</td><td> </td><td class="right">   In Multiprotocol Label Switching (MPLS) and Generalized MPLS (GMPLS),</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   a Traffic Engineering Database (TED) is used in computing paths for</td><td> </td><td class="right">   a Traffic Engineering Database (TED) is used in computing paths for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   connection oriented packet services and for circuits.  The TED</td><td> </td><td class="right">   connection oriented packet services and for circuits.  The TED</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   contains all relevant information that a Path Computation Element</td><td> </td><td class="right">   contains all relevant information that a Path Computation Element</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (PCE) needs to perform its computations.  It is important that the</td><td> </td><td class="right">   (PCE) needs to perform its computations.  It is important that the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   TED be complete and accurate each time, the PCE performs a path</td><td> </td><td class="right">   TED be complete and accurate each time, the PCE performs a path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   computation.</td><td> </td><td class="right">   computation.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-4" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-4"><em> page 4, line 25<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-4"><em> page 4, line 27<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The fastest way for a PCE to be updated on TED changes is via a</td><td> </td><td class="right">   The fastest way for a PCE to be updated on TED changes is via a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   direct interface with each network node and with incremental update</td><td> </td><td class="right">   direct interface with each network node and with incremental update</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   from each network node with only the attribute that is modified.</td><td> </td><td class="right">   from each network node with only the attribute that is modified.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pce-initiated-lsp] describes the setup, maintenance and</td><td> </td><td class="right">   [I-D.ietf-pce-pce-initiated-lsp] describes the setup, maintenance and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   teardown of PCE-initiated LSPs under the stateful PCE model, without</td><td> </td><td class="right">   teardown of PCE-initiated LSPs under the stateful PCE model, without</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the need for local configuration on the PCC, thus allowing for a</td><td> </td><td class="right">   the need for local configuration on the PCC, thus allowing for a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   dynamic network that is centrally controlled and deployed.  This</td><td> </td><td class="right">   dynamic network that is centrally controlled and deployed.  This</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   model requires timely topology and TED update at the PCE.</td><td> </td><td class="right">   model requires timely topology and TED update at the PCE.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0009"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.leedhody-teas-pcep-ls] proposes some other approaches for</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   learning and maintaining the Link-State and TE information directly</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   on a PCE as an alternative to IGPs and BGP flooding and investigate</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   the impact from the PCE, routing protocol, and node perspectives.</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                                                         </td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5440] describes the specifications for the Path Computation</td><td> </td><td class="right">   [RFC5440] describes the specifications for the Path Computation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Element Communication Protocol (PCEP).  PCEP specifies the</td><td> </td><td class="right">   Element Communication Protocol (PCEP).  PCEP specifies the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   communication between a Path Computation Client (PCC) and a Path</td><td> </td><td class="right">   communication between a Path Computation Client (PCC) and a Path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Computation Element (PCE), or between two PCEs based on the PCE</td><td> </td><td class="right">   Computation Element (PCE), or between two PCEs based on the PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   architecture [RFC4655].</td><td> </td><td class="right">   architecture [RFC4655].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document describes a mechanism by which Link State and TE</td><td> </td><td class="right">   This document describes a mechanism by which Link State and TE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   information can be collected from networks and shared with PCE using</td><td> </td><td class="right">   information can be collected from networks and shared with PCE using</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the PCEP itself.  This is achieved using a new PCEP message format.</td><td> </td><td class="right">   the PCEP itself.  This is achieved using a new PCEP message format.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The mechanism is applicable to physical and virtual links as well as</td><td> </td><td class="right">   The mechanism is applicable to physical and virtual links as well as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-5" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-5"><em> page 5, line 10<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-5"><em> page 5, line 6<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   reservation state, preemption and Shared Risk Link Groups (SRLG).</td><td> </td><td class="right">   reservation state, preemption and Shared Risk Link Groups (SRLG).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The node's PCEP process can retrieve topology from these databases</td><td> </td><td class="right">   The node's PCEP process can retrieve topology from these databases</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and distribute it to a PCE, either directly or via another PCEP</td><td> </td><td class="right">   and distribute it to a PCE, either directly or via another PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Speaker, using the encoding specified in this document.</td><td> </td><td class="right">   Speaker, using the encoding specified in this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Further [RFC6805] describes Hierarchical-PCE architecture, where a</td><td> </td><td class="right">   Further [RFC6805] describes Hierarchical-PCE architecture, where a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   parent PCE maintains a domain topology map.  To build this domain</td><td> </td><td class="right">   parent PCE maintains a domain topology map.  To build this domain</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   topology map, the child PCE can carry the border nodes and inter-</td><td> </td><td class="right">   topology map, the child PCE can carry the border nodes and inter-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   domain link information to the parent PCE using the mechanism</td><td> </td><td class="right">   domain link information to the parent PCE using the mechanism</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   described in this document.  Further as described in</td><td> </td><td class="right">   described in this document.  Further as described in</td><td class="lineno"></td></tr>
+      <tr id="diff0010"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   [I-D.<span class="delete">dhody</span>-pce-applicability-actn], the child PCE can also transport</td><td> </td><td class="rblock">   [I-D.<span class="insert">ietf</span>-pce-applicability-actn], the child PCE can also transport</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   abstract Link-State and TE information from child PCE to a Parent PCE</td><td> </td><td class="right">   abstract Link-State and TE information from child PCE to a Parent PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   using the mechanism described in this document to build an abstract</td><td> </td><td class="right">   using the mechanism described in this document to build an abstract</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   topology at the parent PCE.</td><td> </td><td class="right">   topology at the parent PCE.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-stateful-pce] describe LSP state synchronization</td><td> </td><td class="right">   [I-D.ietf-pce-stateful-pce] describe LSP state synchronization</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   between PCCs and PCEs in case of stateful PCE.  This document does</td><td> </td><td class="right">   between PCCs and PCEs in case of stateful PCE.  This document does</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   not make any change to the LSP state synchronization process.  The</td><td> </td><td class="right">   not make any change to the LSP state synchronization process.  The</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   mechanism described in this document are on top of the existing LSP</td><td> </td><td class="right">   mechanism described in this document are on top of the existing LSP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   state synchronization.</td><td> </td><td class="right">   state synchronization.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-6" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-6"><em> page 5, line 33<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-6"><em> page 5, line 29<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",</td><td> </td><td class="right">   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this</td><td> </td><td class="right">   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document are to be interpreted as described in [RFC2119].</td><td> </td><td class="right">   document are to be interpreted as described in [RFC2119].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">2.  Terminology</td><td> </td><td class="right">2.  Terminology</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The terminology is as per [RFC4655] and [RFC5440].</td><td> </td><td class="right">   The terminology is as per [RFC4655] and [RFC5440].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">3.  Applicability</td><td> </td><td class="right">3.  Applicability</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0011"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">As per [I-D.leedhody-teas-pcep-ls], the</span> mechanism specified in this</td><td> </td><td class="rblock">   <span class="insert">The</span> mechanism specified in this draft is applicable <span class="insert">to deployments:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   draft is applicable <span class="delete">to:</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Where there is no IGP or BGP-LS running in the network.</td><td> </td><td class="right">   o  Where there is no IGP or BGP-LS running in the network.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Where there is no IGP or BGP-LS running at the PCE to learn link-</td><td> </td><td class="right">   o  Where there is no IGP or BGP-LS running at the PCE to learn link-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      state and TE information.</td><td> </td><td class="right">      state and TE information.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Where there is IGP or BGP-LS running but with a need for a faster</td><td> </td><td class="right">   o  Where there is IGP or BGP-LS running but with a need for a faster</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      TE and link-state population and convergence at the PCE.</td><td> </td><td class="right">      TE and link-state population and convergence at the PCE.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      *  A PCE may receive partial information (say basic TE, link-</td><td> </td><td class="right">      *  A PCE may receive partial information (say basic TE, link-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-7" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-7"><em> page 7, line 8<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-7"><em> page 7, line 5<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   4.  It SHOULD be possible to encode only the changes in link-state</td><td> </td><td class="right">   4.  It SHOULD be possible to encode only the changes in link-state</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       (and TE) properties (after the initial sync) in PCEP messages.</td><td> </td><td class="right">       (and TE) properties (after the initial sync) in PCEP messages.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   5.  The same mechanism should be used for both MPLS TE as well as</td><td> </td><td class="right">   5.  The same mechanism should be used for both MPLS TE as well as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       GMPLS, optical and impairment aware properties.</td><td> </td><td class="right">       GMPLS, optical and impairment aware properties.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   6.  The same mechanism should be used for PCE to PCE Link-state (and</td><td> </td><td class="right">   6.  The same mechanism should be used for PCE to PCE Link-state (and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       TE) synchronization.</td><td> </td><td class="right">       TE) synchronization.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0012"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">7.  The extension in this draft SHOULD be extensible to support</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">       various architecture options listed in</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">       [I-D.leedhody-teas-pcep-ls].</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                                                         </td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.  New Functions to distribute link-state (and TE) via PCEP</td><td> </td><td class="right">5.  New Functions to distribute link-state (and TE) via PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Several new functions are required in PCEP to support distribution of</td><td> </td><td class="right">   Several new functions are required in PCEP to support distribution of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   link-state (and TE) information.  A function can be initiated either</td><td> </td><td class="right">   link-state (and TE) information.  A function can be initiated either</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   from a PCC towards a PCE (C-E) or from a PCE towards a PCC (E-C).</td><td> </td><td class="right">   from a PCC towards a PCE (C-E) or from a PCE towards a PCC (E-C).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The new functions are:</td><td> </td><td class="right">   The new functions are:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Capability advertisement (E-C,C-E): both the PCC and the PCE must</td><td> </td><td class="right">   o  Capability advertisement (E-C,C-E): both the PCC and the PCE must</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      announce during PCEP session establishment that they support PCEP</td><td> </td><td class="right">      announce during PCEP session establishment that they support PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      extensions for distribution of link-state (and TE) information</td><td> </td><td class="right">      extensions for distribution of link-state (and TE) information</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-8" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-8"><em> page 25, line 25<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-8"><em> page 25, line 25<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">10.1.  Inter-AS Links</td><td> </td><td class="right">10.1.  Inter-AS Links</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The main source of LS (and TE) information is the IGP, which is not</td><td> </td><td class="right">   The main source of LS (and TE) information is the IGP, which is not</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   active on inter-AS links.  In some cases, the IGP may have</td><td> </td><td class="right">   active on inter-AS links.  In some cases, the IGP may have</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   information of inter-AS links ([RFC5392], [RFC5316]).  In other</td><td> </td><td class="right">   information of inter-AS links ([RFC5392], [RFC5316]).  In other</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   cases, an implementation SHOULD provide a means to inject inter-AS</td><td> </td><td class="right">   cases, an implementation SHOULD provide a means to inject inter-AS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   links into PCEP.  The exact mechanism used to provision the inter-AS</td><td> </td><td class="right">   links into PCEP.  The exact mechanism used to provision the inter-AS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   links is outside the scope of this document.</td><td> </td><td class="right">   links is outside the scope of this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0013"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">11.  <span class="delete">Processing Rules</span></td><td> </td><td class="rblock">11.  Security Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete"></span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">12.</span>  Security Considerations</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document extends PCEP for LS (and TE) distribution including a</td><td> </td><td class="right">   This document extends PCEP for LS (and TE) distribution including a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   new LSRpt message with new object and TLVs.  Procedures and protocol</td><td> </td><td class="right">   new LSRpt message with new object and TLVs.  Procedures and protocol</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   extensions defined in this document do not effect the overall PCEP</td><td> </td><td class="right">   extensions defined in this document do not effect the overall PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   security model.  See [RFC5440], [I-D.ietf-pce-pceps].  Tampering with</td><td> </td><td class="right">   security model.  See [RFC5440], [I-D.ietf-pce-pceps].  Tampering with</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the LSRpt message may have an effect on path computations at PCE.  It</td><td> </td><td class="right">   the LSRpt message may have an effect on path computations at PCE.  It</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   also provides adversaries an opportunity to eavesdrop and learn</td><td> </td><td class="right">   also provides adversaries an opportunity to eavesdrop and learn</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   sensitive information and plan sophisticated attacks on the network</td><td> </td><td class="right">   sensitive information and plan sophisticated attacks on the network</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   infrastructure.  The PCE implementation SHOULD provide mechanisms to</td><td> </td><td class="right">   infrastructure.  The PCE implementation SHOULD provide mechanisms to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   prevent strains created by network flaps and amount of LS (and TE)</td><td> </td><td class="right">   prevent strains created by network flaps and amount of LS (and TE)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   information.  Thus it is suggested that any mechanism used for</td><td> </td><td class="right">   information.  Thus it is suggested that any mechanism used for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   securing the transmission of other PCEP message be applied here as</td><td> </td><td class="right">   securing the transmission of other PCEP message be applied here as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   well.  As a general precaution, it is RECOMMENDED that these PCEP</td><td> </td><td class="right">   well.  As a general precaution, it is RECOMMENDED that these PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   extensions only be activated on authenticated and encrypted sessions</td><td> </td><td class="right">   extensions only be activated on authenticated and encrypted sessions</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   belonging to the same administrative authority.</td><td> </td><td class="right">   belonging to the same administrative authority.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0014"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">3</span>.  Manageability Considerations</td><td> </td><td class="rblock">1<span class="insert">2</span>.  Manageability Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0015"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">13.1.  Control of Function</span> and <span class="delete">Policy</span></td><td> </td><td class="rblock">   <span class="insert">All manageability requirements</span> and <span class="insert">considerations listed in [RFC5440]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   apply to PCEP protocol extensions defined in this document.  In</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   addition, requirements and considerations listed in this section</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   apply.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0016"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   TBD.</span></td><td> </td><td class="rblock"><span class="insert">12.1.  Control of Function and Policy</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0017"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">13.2.  Information and Data Models</span></td><td> </td><td class="rblock">   <span class="insert">A PCE or PCC implementation MUST allow configuring the PCEP-LS</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   capabilities as described in this document.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0018"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">TBD.</span></td><td> </td><td class="rblock">   <span class="insert">A PCC implementation SHOULD allow configuration to suggest if remote</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   information learned via routing protocols should be reported or not.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0019"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">13.3.  Liveness Detection and Monitoring</span></td><td> </td><td class="rblock">   <span class="insert">An implementation SHOULD allow the operator to specify the maximum</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   number of LS data to be reported.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0020"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">TBD.</span></td><td> </td><td class="rblock">   <span class="insert">An implementation SHOULD also allow the operator to create abstracted</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   topologies that are reported to the peers and create different</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   abstractions for different peers.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0021"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">13.4.  Verify Correct Operations</span></td><td> </td><td class="rblock">   <span class="insert">An implementation SHOULD allow the operator to configure a 64-bit</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Instance-ID for Routing Universe TLV.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0022"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   TBD.</span></td><td> </td><td class="rblock"><span class="insert">12.2.  Information and Data Models</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0023"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">13.5.  Requirements On Other Protocols</span></td><td> </td><td class="rblock">   <span class="insert">An implementation SHOULD allow the operator to view the LS</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   capabilities advertised by each peer.  To serve this purpose, the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   PCEP YANG module [I-D.ietf-pce-pcep-yang]" can be extended to include</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   advertised capabilities.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0024"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">TBD.</span></td><td> </td><td class="rblock">   <span class="insert">An implementation SHOULD also provide the statistics:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0025"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">13.6.  Impact On Network Operations</span></td><td> </td><td class="rblock"><span class="insert">   o  Total number of LSRpt sent/received, as well as per neighbor</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0026"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">TBD.</span></td><td> </td><td class="rblock">   <span class="insert">o  Number of error received for LSRpt, per neighbor</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0027"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">14.</span>  IANA Considerations</td><td> </td><td class="rblock">   <span class="insert">o  Total number of locally originated Link-State Information</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   These statistics should be recorded as absolute counts since system</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   or session start time.  An implementation MAY also enhance this</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   information by recording peak per-second counts in each case.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   An operator SHOULD define an import policy to limit inbound LSRpt to</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   "drop all LSRpt from a particular peers" as well provide means to</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   limit inbound LSRpts.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">12.3.  Liveness Detection and Monitoring</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Mechanisms defined in this document do not imply any new liveness</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   detection and monitoring requirements in addition to those already</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   listed in [RFC5440]".</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">12.4.  Verify Correct Operations</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Mechanisms defined in this document do not imply any new operation</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   verification requirements in addition to those already listed in</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   [RFC5440] .</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">12.5.  Requirements On Other Protocols</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Mechanisms defined in this document do not imply any new requirements</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   on other protocols.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">12.6.  Impact On Network Operations</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Mechanisms defined in this document do not have any impact on network</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   operations in addition to those already listed in [RFC5440].</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">13.</span>  IANA Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document requests IANA actions to allocate code points for the</td><td> </td><td class="right">   This document requests IANA actions to allocate code points for the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   protocol elements defined in this document.</td><td> </td><td class="right">   protocol elements defined in this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0028"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">4</span>.1.  PCEP Messages</td><td> </td><td class="rblock">1<span class="insert">3</span>.1.  PCEP Messages</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   IANA created a registry for PCEP messages.  Each PCEP message has a</td><td> </td><td class="right">   IANA created a registry for PCEP messages.  Each PCEP message has a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   message type value.  This document defines a new PCEP message value.</td><td> </td><td class="right">   message type value.  This document defines a new PCEP message value.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">           Value     Meaning                          Reference</td><td> </td><td class="right">           Value     Meaning                          Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">            TBD3     LSRpt                            [This I-D]</td><td> </td><td class="right">            TBD3     LSRpt                            [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0029"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">4</span>.2.  PCEP Objects</td><td> </td><td class="rblock">1<span class="insert">3</span>.2.  PCEP Objects</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document defines the following new PCEP Object-classes and</td><td> </td><td class="right">   This document defines the following new PCEP Object-classes and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Object-values:</td><td> </td><td class="right">   Object-values:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">          Object-Class Value  Name                    Reference</td><td> </td><td class="right">          Object-Class Value  Name                    Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">               TBD6           LS Object               [This I-D]</td><td> </td><td class="right">               TBD6           LS Object               [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                              Object-Type=1</td><td> </td><td class="right">                              Object-Type=1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                              (LS Node)</td><td> </td><td class="right">                              (LS Node)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                              Object-Type=2</td><td> </td><td class="right">                              Object-Type=2</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                              (LS Link)</td><td> </td><td class="right">                              (LS Link)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                              Object-Type=3</td><td> </td><td class="right">                              Object-Type=3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                              (LS IPv4 Prefix)</td><td> </td><td class="right">                              (LS IPv4 Prefix)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                              Object-Type=4</td><td> </td><td class="right">                              Object-Type=4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                              (LS IPv6 Prefix)</td><td> </td><td class="right">                              (LS IPv6 Prefix)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0030"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">4</span>.3.  LS Object</td><td> </td><td class="rblock">1<span class="insert">3</span>.3.  LS Object</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document requests that a new sub-registry, named "LS Object</td><td> </td><td class="right">   This document requests that a new sub-registry, named "LS Object</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Protocol-ID Field", is created within the "Path Computation Element</td><td> </td><td class="right">   Protocol-ID Field", is created within the "Path Computation Element</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Protocol (PCEP) Numbers" registry to manage the Flag field of the LSP</td><td> </td><td class="right">   Protocol (PCEP) Numbers" registry to manage the Flag field of the LSP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   object.  New values are to be assigned by Standards Action [RFC5226].</td><td> </td><td class="right">   object.  New values are to be assigned by Standards Action [RFC5226].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">           Value       Meaning                        Reference</td><td> </td><td class="right">           Value       Meaning                        Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">           0           Reserved                       [This I-D]</td><td> </td><td class="right">           0           Reserved                       [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">           1           IS-IS Level 1                  [This I-D]</td><td> </td><td class="right">           1           IS-IS Level 1                  [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">           2           IS-IS Level 2                  [This I-D]</td><td> </td><td class="right">           2           IS-IS Level 2                  [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-9" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-9"><em> page 27, line 44<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-9"><em> page 28, line 44<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Defining RFC</td><td> </td><td class="right">   o  Defining RFC</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The following values are defined in this document:</td><td> </td><td class="right">   The following values are defined in this document:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                 Bit     Description           Reference</td><td> </td><td class="right">                 Bit     Description           Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                 0-21    Unassigned</td><td> </td><td class="right">                 0-21    Unassigned</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                 22      R (Remove bit)        [This I-D]</td><td> </td><td class="right">                 22      R (Remove bit)        [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                 23      S (Sync bit)          [This I-D]</td><td> </td><td class="right">                 23      S (Sync bit)          [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0031"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">4</span>.4.  PCEP-Error Object</td><td> </td><td class="rblock">1<span class="insert">3</span>.4.  PCEP-Error Object</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   IANA is requested to make the following allocation in the "PCEP-ERROR</td><td> </td><td class="right">   IANA is requested to make the following allocation in the "PCEP-ERROR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Object Error Types and Values" registry.</td><td> </td><td class="right">   Object Error Types and Values" registry.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Error-Type Meaning                        Reference</td><td> </td><td class="right">   Error-Type Meaning                        Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   6          Mandatory Object missing       [RFC5440]</td><td> </td><td class="right">   6          Mandatory Object missing       [RFC5440]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Error-Value=TBD4               [This I-D]</td><td> </td><td class="right">              Error-Value=TBD4               [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (LS object missing)</td><td> </td><td class="right">              (LS object missing)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   19         Invalid Operation              [I-D.ietf-pce-stateful-pce]</td><td> </td><td class="right">   19         Invalid Operation              [I-D.ietf-pce-stateful-pce]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-10" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-10"><em> page 28, line 23<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-10"><em> page 29, line 23<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">              remote capability was not</td><td> </td><td class="right">              remote capability was not</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              advertised)</td><td> </td><td class="right">              advertised)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   TBD2       LS Synchronization Error       [This I-D]</td><td> </td><td class="right">   TBD2       LS Synchronization Error       [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Error-Value=1</td><td> </td><td class="right">              Error-Value=1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (An error in processing the</td><td> </td><td class="right">              (An error in processing the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              LSRpt)</td><td> </td><td class="right">              LSRpt)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Error-Value=2</td><td> </td><td class="right">              Error-Value=2</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (An internal PCC error)</td><td> </td><td class="right">              (An internal PCC error)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0032"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">4</span>.5.  PCEP TLV Type Indicators</td><td> </td><td class="rblock">1<span class="insert">3</span>.5.  PCEP TLV Type Indicators</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document defines the following new PCEP TLVs.</td><td> </td><td class="right">   This document defines the following new PCEP TLVs.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">            Value     Meaning                        Reference</td><td> </td><td class="right">            Value     Meaning                        Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD5     LS-CAPABILITY TLV              [This I-D]</td><td> </td><td class="right">             TBD5     LS-CAPABILITY TLV              [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD7     ROUTING-UNIVERSE TLV           [This I-D]</td><td> </td><td class="right">             TBD7     ROUTING-UNIVERSE TLV           [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD15    ROUTE-DISTINGUISHER TLV        [This I-D]</td><td> </td><td class="right">             TBD15    ROUTE-DISTINGUISHER TLV        [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD8     Local Node Descriptors TLV     [This I-D]</td><td> </td><td class="right">             TBD8     Local Node Descriptors TLV     [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD9     Remote Node Descriptors TLV    [This I-D]</td><td> </td><td class="right">             TBD9     Remote Node Descriptors TLV    [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD10    Link Descriptors TLV           [This I-D]</td><td> </td><td class="right">             TBD10    Link Descriptors TLV           [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD11    Prefix Descriptors TLV         [This I-D]</td><td> </td><td class="right">             TBD11    Prefix Descriptors TLV         [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD12    Node Attributes TLV            [This I-D]</td><td> </td><td class="right">             TBD12    Node Attributes TLV            [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD13    Link Attributes TLV            [This I-D]</td><td> </td><td class="right">             TBD13    Link Attributes TLV            [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             TBD14    Prefix Attributes TLV          [This I-D]</td><td> </td><td class="right">             TBD14    Prefix Attributes TLV          [This I-D]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0033"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">4</span>.6.  PCEP-LS Sub-TLV Type Indicators</td><td> </td><td class="rblock">1<span class="insert">3</span>.6.  PCEP-LS Sub-TLV Type Indicators</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document specifies the PCEP-LS Sub-TLVs.  IANA is requested to</td><td> </td><td class="right">   This document specifies the PCEP-LS Sub-TLVs.  IANA is requested to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   create an "PCEP-LS Sub-TLV Types" sub-registry in the "PCEP TLV Type</td><td> </td><td class="right">   create an "PCEP-LS Sub-TLV Types" sub-registry in the "PCEP TLV Type</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Indicators" for the sub-TLVs carried in the PCEP-LS TLV (Local and</td><td> </td><td class="right">   Indicators" for the sub-TLVs carried in the PCEP-LS TLV (Local and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Remote Node Descriptors TLV, Link Descriptors TLV, Prefix Descriptors</td><td> </td><td class="right">   Remote Node Descriptors TLV, Link Descriptors TLV, Prefix Descriptors</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   TLV, Node Attributes TLV, Link Attributes TLV and Prefix Attributes</td><td> </td><td class="right">   TLV, Node Attributes TLV, Link Attributes TLV and Prefix Attributes</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   TLV.  This document defines the following types:</td><td> </td><td class="right">   TLV.  This document defines the following types:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-----------+---------------------+---------------+-----------------+</td><td> </td><td class="right">   +-----------+---------------------+---------------+-----------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |  Sub-TLV  | Description         |     Ref       | Value defined   |</td><td> </td><td class="right">   |  Sub-TLV  | Description         |     Ref       | Value defined   |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-11" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-11"><em> page 31, line 6<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-11"><em> page 32, line 6<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |           |                     |               | /3.3.3.3        |</td><td> </td><td class="right">   |           |                     |               | /3.3.3.3        |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    44     | Prefix Metric       |     1155      | [RFC7752]       |</td><td> </td><td class="right">   |    44     | Prefix Metric       |     1155      | [RFC7752]       |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |           |                     |               | /3.3.3.4        |</td><td> </td><td class="right">   |           |                     |               | /3.3.3.4        |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    45     | OSPF Forwarding     |     1156      | [RFC7752]       |</td><td> </td><td class="right">   |    45     | OSPF Forwarding     |     1156      | [RFC7752]       |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |           | Address             |               | /3.3.3.5        |</td><td> </td><td class="right">   |           | Address             |               | /3.3.3.5        |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    46     | Opaque Prefix       |     1157      | [RFC7752]       |</td><td> </td><td class="right">   |    46     | Opaque Prefix       |     1157      | [RFC7752]       |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |           | Attribute           |               | /3.3.3.6        |</td><td> </td><td class="right">   |           | Attribute           |               | /3.3.3.6        |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-----------+---------------------+---------------+-----------------+</td><td> </td><td class="right">   +-----------+---------------------+---------------+-----------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   New values are to be assigned by Standards Action [RFC5226].</td><td> </td><td class="right">   New values are to be assigned by Standards Action [RFC5226].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0034"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">1<span class="delete">5</span>.  TLV/Sub-TLV Code Points Summary</td><td> </td><td class="rblock">1<span class="insert">4</span>.  TLV/Sub-TLV Code Points Summary</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This section contains the global table of all TLVs/Sub-TLVs in LS</td><td> </td><td class="right">   This section contains the global table of all TLVs/Sub-TLVs in LS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   object defined in this document.</td><td> </td><td class="right">   object defined in this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-----------+---------------------+---------------+-----------------+</td><td> </td><td class="right">   +-----------+---------------------+---------------+-----------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    TLV    | Description         |     Ref TLV   | Value defined   |</td><td> </td><td class="right">   |    TLV    | Description         |     Ref TLV   | Value defined   |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |           |                     |               | in:             |</td><td> </td><td class="right">   |           |                     |               | in:             |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-----------+---------------------+---------------+-----------------+</td><td> </td><td class="right">   +-----------+---------------------+---------------+-----------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    TBD7   | Routing Universe    |      --       | Sec 9.2.1       |</td><td> </td><td class="right">   |    TBD7   | Routing Universe    |      --       | Sec 9.2.1       |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    TBD15  | Route               |      --       | Sec 9.2.2       |</td><td> </td><td class="right">   |    TBD15  | Route               |      --       | Sec 9.2.2       |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-12" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-12"><em> page 31, line 35<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-12"><em> page 32, line 35<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    TBD11  | Prefix Descriptors  |      --       | Sec 9.2.9       |</td><td> </td><td class="right">   |    TBD11  | Prefix Descriptors  |      --       | Sec 9.2.9       |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    TBD12  | Node Attributes     |      --       | Sec 9.2.10.1    |</td><td> </td><td class="right">   |    TBD12  | Node Attributes     |      --       | Sec 9.2.10.1    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    TBD13  | Link Attributes     |      --       | Sec 9.2.10.2    |</td><td> </td><td class="right">   |    TBD13  | Link Attributes     |      --       | Sec 9.2.10.2    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    TBD14  | Prefix Attributes   |      --       | Sec 9.2.10.3    |</td><td> </td><td class="right">   |    TBD14  | Prefix Attributes   |      --       | Sec 9.2.10.3    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-----------+---------------------+---------------+-----------------+</td><td> </td><td class="right">   +-----------+---------------------+---------------+-----------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   * this TLV is defined in a different PCEP document</td><td> </td><td class="right">   * this TLV is defined in a different PCEP document</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 TLV Table</td><td> </td><td class="right">                                 TLV Table</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0035"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Refer Section <span class="delete">14.6</span> for the table of Sub-TLVs.</td><td> </td><td class="rblock">   Refer Section <span class="insert">13.6</span> for the table of Sub-TLVs.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">15.  Implementation Status</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The PCEP-LS protocol extension as described in this I-D were</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   implemented and tested for a variety of applications.  Apart from the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   below implementation, there exist other experimental implementations</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   done for optical networks.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">15.1.  Hierarchical Transport PCE controllers</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The PCEP-LS has been implemented as part of IETF97 Hackathon and</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Bits-N-Bites demonstration.  The use-case demonstrated was DCI use-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   case of ACTN architecture in which to show the following scenarios:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      - connectivity services on the ACTN based recursive hierarchical</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      SDN/PCE platform that has the three tier level SDN controllers</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      (two-tier level MDSC and PNC) on the top of the PTN systems</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      managed by EMS.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      - Integration test of two tier-level MDSC: The SBI of the low</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      level MDSC is the YANG based Korean national standards and the one</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      of the high level MDSC the PCEP-LS based ACTN protocols.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      - Performance test of three types of SDN controller based recovery</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      schemes including protection, reactive and proactive restoration.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      PCEP-LS protocol was used to demonstrate quick report of failed</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      network components.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">15.2.  ONOS-based Controller (MDSC and PNC)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Huawei (PNC, MDSC) and SKT (MDSC) implemented PCEP-LS during</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Hackathon and IETF97 Bits-N-Bites demonstration.  The demonstration</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   was ONOS-based ACTN architecture in which to show the following</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   capabilities:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      Both packet PNC and optical PNC (with optical PCEP-LS extension)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      implemented PCEP-LS on its SBI and well as its NBI (towards MDSC).</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      SKT orchestrator (acting as MDSC) also supported PCEP-LS (as well</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      as RestConf) towards packet and optical PNCs on its SBI.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Further description can be found at &lt;ONOS-PCEP&gt; and the code at</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   &lt;ONOS-PCEP-GITHUB&gt;.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">16.  Acknowledgments</td><td> </td><td class="right">16.  Acknowledgments</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document borrows some of the structure and text from the</td><td> </td><td class="right">   This document borrows some of the structure and text from the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC7752].</td><td> </td><td class="right">   [RFC7752].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Thanks to Eric Wu, Venugopal Kondreddy, Mahendra Singh Negi,</td><td> </td><td class="right">   Thanks to Eric Wu, Venugopal Kondreddy, Mahendra Singh Negi,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Avantika, and Zhengbin Li for the reviews.</td><td> </td><td class="right">   Avantika, and Zhengbin Li for the reviews.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Thanks to Ramon Casellas for his comments and suggestions based on</td><td> </td><td class="right">   Thanks to Ramon Casellas for his comments and suggestions based on</td><td class="lineno"></td></tr>
+      <tr id="diff0036"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   his implementation exp<span class="delete">ier</span>ence.</td><td> </td><td class="rblock">   his implementation exp<span class="insert">eri</span>ence.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">17.  References</td><td> </td><td class="right">17.  References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">17.1.  Normative References</td><td> </td><td class="right">17.1.  Normative References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate</td><td> </td><td class="right">   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Requirement Levels", BCP 14, RFC 2119,</td><td> </td><td class="right">              Requirement Levels", BCP 14, RFC 2119,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC2119, March 1997,</td><td> </td><td class="right">              DOI 10.17487/RFC2119, March 1997,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc2119&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc2119&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-13" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-13"><em> page 33, line 26<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-13"><em> page 35, line 17<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC4655, August 2006,</td><td> </td><td class="right">              DOI 10.17487/RFC4655, August 2006,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc4655&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc4655&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5120]  Przygienda, T., Shen, N., and N. Sheth, "M-ISIS: Multi</td><td> </td><td class="right">   [RFC5120]  Przygienda, T., Shen, N., and N. Sheth, "M-ISIS: Multi</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Topology (MT) Routing in Intermediate System to</td><td> </td><td class="right">              Topology (MT) Routing in Intermediate System to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Intermediate Systems (IS-ISs)", RFC 5120,</td><td> </td><td class="right">              Intermediate Systems (IS-ISs)", RFC 5120,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC5120, February 2008,</td><td> </td><td class="right">              DOI 10.17487/RFC5120, February 2008,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc5120&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc5120&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an</td><td> </td><td class="right">   [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an</td><td class="lineno"></td></tr>
+      <tr id="diff0037"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              IANA Considerations Section in RFCs", <span class="delete">BCP 26, </span>RFC 5226,</td><td> </td><td class="rblock">              IANA Considerations Section in RFCs", RFC 5226,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC5226, May 2008,</td><td> </td><td class="right">              DOI 10.17487/RFC5226, May 2008,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc5226&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc5226&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5316]  Chen, M., Zhang, R., and X. Duan, "ISIS Extensions in</td><td> </td><td class="right">   [RFC5316]  Chen, M., Zhang, R., and X. Duan, "ISIS Extensions in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Support of Inter-Autonomous System (AS) MPLS and GMPLS</td><td> </td><td class="right">              Support of Inter-Autonomous System (AS) MPLS and GMPLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Traffic Engineering", RFC 5316, DOI 10.17487/RFC5316,</td><td> </td><td class="right">              Traffic Engineering", RFC 5316, DOI 10.17487/RFC5316,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              December 2008, &lt;http://www.rfc-editor.org/info/rfc5316&gt;.</td><td> </td><td class="right">              December 2008, &lt;http://www.rfc-editor.org/info/rfc5316&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5392]  Chen, M., Zhang, R., and X. Duan, "OSPF Extensions in</td><td> </td><td class="right">   [RFC5392]  Chen, M., Zhang, R., and X. Duan, "OSPF Extensions in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Support of Inter-Autonomous System (AS) MPLS and GMPLS</td><td> </td><td class="right">              Support of Inter-Autonomous System (AS) MPLS and GMPLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-14" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-14"><em> page 34, line 13<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-14"><em> page 35, line 49<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc6805&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc6805&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC6822]  Previdi, S., Ed., Ginsberg, L., Shand, M., Roy, A., and D.</td><td> </td><td class="right">   [RFC6822]  Previdi, S., Ed., Ginsberg, L., Shand, M., Roy, A., and D.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Ward, "IS-IS Multi-Instance", RFC 6822,</td><td> </td><td class="right">              Ward, "IS-IS Multi-Instance", RFC 6822,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC6822, December 2012,</td><td> </td><td class="right">              DOI 10.17487/RFC6822, December 2012,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc6822&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc6822&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-stateful-pce]</td><td> </td><td class="right">   [I-D.ietf-pce-stateful-pce]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP</td><td> </td><td class="right">              Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Extensions for Stateful PCE", draft-ietf-pce-stateful-</td><td> </td><td class="right">              Extensions for Stateful PCE", draft-ietf-pce-stateful-</td><td class="lineno"></td></tr>
+      <tr id="diff0038"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              pce-<span class="delete">18 (work in progress), December 2016</span>.</td><td> </td><td class="rblock">              pce-<span class="insert">21 (work in progress), June 2017</span>.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pce-initiated-lsp]</td><td> </td><td class="right">   [I-D.ietf-pce-pce-initiated-lsp]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP</td><td> </td><td class="right">              Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Extensions for PCE-initiated LSP Setup in a Stateful PCE</td><td> </td><td class="right">              Extensions for PCE-initiated LSP Setup in a Stateful PCE</td><td class="lineno"></td></tr>
+      <tr id="diff0039"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Model", <span class="delete">draft-ietf-pce-pce-initiated-lsp-07</span> (work in</td><td> </td><td class="rblock">              Model", <span class="insert">draft-ietf-pce-pce-initiated-lsp-10</span> (work in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              progress), <span class="delete">July 2016.</span></td><td> </td><td class="rblock">              progress), <span class="insert">June 2017.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pceps]</td><td> </td><td class="right">   [I-D.ietf-pce-pceps]</td><td class="lineno"></td></tr>
+      <tr id="diff0040"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Lopez, D., Dios, O., Wu, <span class="delete">W.,</span> and D. Dhody, "Secure</td><td> </td><td class="rblock">              Lopez, D., Dios, O., Wu, <span class="insert">Q.,</span> and D. Dhody, "Secure</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Transport for PCEP", <span class="delete">draft-ietf-pce-pceps-11</span> (work in</td><td> </td><td class="rblock">              Transport for PCEP", <span class="insert">draft-ietf-pce-pceps-14</span> (work in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              progress), <span class="delete">January</span> 2017.</td><td> </td><td class="rblock">              progress), <span class="insert">May</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0041"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.kondreddy-pce-pcep-ls-sync-optimizations]</span></td><td> </td><td class="rblock">   <span class="insert">[I-D.ietf-pce-pcep-yang]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              Kondreddy, V.</span> and <span class="delete">M. Negi, "Optimizations of PCEP Link-</span></td><td> </td><td class="rblock"><span class="insert">              Dhody, D., Hardwick, J., Beeram, V.,</span> and <span class="insert">j.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              State(LS) Synchronization Procedures", draft-kondreddy-</span></td><td> </td><td class="rblock"><span class="insert">              jefftant@gmail.com, "A YANG Data Model for Path</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              pce-pcep-ls-sync-optimizations-00</span> (work in progress),</td><td> </td><td class="rblock"><span class="insert">              Computation Element Communications Protocol (PCEP)",</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">October 2015.</span></td><td> </td><td class="rblock"><span class="insert">              draft-ietf-pce-pcep-yang-02</span> (work in progress), <span class="insert">March</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              2017.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0042"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.leedhody-teas-pcep-ls]</span></td><td> </td><td class="rblock">   <span class="insert">[I-D.ietf-pce-applicability-actn]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              Lee, Y.,</span> Dhody, D., and D. Ceccarelli, <span class="delete">"Architecture and</span></td><td> </td><td class="rblock">              Dhody, D., <span class="insert">Lee, Y.,</span> and D. Ceccarelli, <span class="insert">"Applicability</span> of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              Requirement for Distribution</span> of <span class="delete">Link-State</span> and TE</td><td> </td><td class="rblock">              <span class="insert">Path Computation Element (PCE) for Abstraction</span> and <span class="insert">Control</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">Information via PCEP.", draft-leedhody-teas-pcep-ls-03</span></td><td> </td><td class="rblock"><span class="insert">              of</span> TE <span class="insert">Networks (ACTN)", draft-ietf-pce-applicability-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              (work in progress), <span class="delete">September 2016.</span></td><td> </td><td class="rblock"><span class="insert">              actn-00</span> (work in progress), <span class="insert">June 2017.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-teas-actn-framework]</td><td> </td><td class="right">   [I-D.ietf-teas-actn-framework]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Ceccarelli, D. and Y. Lee, "Framework for Abstraction and</td><td> </td><td class="right">              Ceccarelli, D. and Y. Lee, "Framework for Abstraction and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Control of Traffic Engineered Networks", draft-ietf-teas-</td><td> </td><td class="right">              Control of Traffic Engineered Networks", draft-ietf-teas-</td><td class="lineno"></td></tr>
+      <tr id="diff0043"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              actn-framework-0<span class="delete">4 (work in progress), February</span> 2017.</td><td> </td><td class="rblock">              actn-framework-0<span class="insert">6 (work in progress), June</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-teas-actn-requirements]</td><td> </td><td class="right">   [I-D.ietf-teas-actn-requirements]</td><td class="lineno"></td></tr>
+      <tr id="diff0044"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Lee, Y., Dhody, D., Belotti, S., Pithewan, K., <span class="delete">and D.</span></td><td> </td><td class="rblock">              Lee, Y., Dhody, D., Belotti, S., Pithewan, K., Ceccarelli,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Ceccarelli, "Requirements for Abstraction and Control of</td><td> </td><td class="rblock">              <span class="insert">D., Miyasaka, T., and J. Shin,</span> "Requirements for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              TE Networks", <span class="delete">draft-ietf-teas-actn-requirements-04</span> (work</td><td> </td><td class="rblock">              Abstraction and Control of TE Networks", <span class="insert">draft-ietf-teas-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              in progress), <span class="delete">January</span> 2017.</td><td> </td><td class="rblock"><span class="insert">              actn-requirements-05</span> (work in progress), <span class="insert">May</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">[I-D.kondreddy-pce-pcep-ls-sync-optimizations]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              Kondreddy, V. and M. Negi, "Optimizations of PCEP Link-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              State(LS) Synchronization Procedures", draft-kondreddy-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              pce-pcep-ls-sync-optimizations-00 (work in progress),</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              October 2015.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.leedhody-pce-vn-association]</td><td> </td><td class="right">   [I-D.leedhody-pce-vn-association]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Lee, Y., Dhody, D., Zhang, X., and D. Ceccarelli, "PCEP</td><td> </td><td class="right">              Lee, Y., Dhody, D., Zhang, X., and D. Ceccarelli, "PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Extensions for Establishing Relationships Between Sets of</td><td> </td><td class="right">              Extensions for Establishing Relationships Between Sets of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              LSPs and Virtual Networks", draft-leedhody-pce-vn-</td><td> </td><td class="right">              LSPs and Virtual Networks", draft-leedhody-pce-vn-</td><td class="lineno"></td></tr>
+      <tr id="diff0045"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              association-0<span class="delete">1 (work in progress), October 2016</span>.</td><td> </td><td class="rblock">              association-0<span class="insert">2 (work in progress), March 2017</span>.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0046"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.dhody-pce-applicability-actn]</span></td><td> </td><td class="rblock">   <span class="insert">[ONOS-PCEP]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              Dhody, D., Lee, Y., and D. Ceccarelli, "Applicability of</span></td><td> </td><td class="rblock"><span class="insert">              "Support</span> for <span class="insert">PCEP</span> in <span class="insert">ONOS",</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              Path Computation Element (PCE)</span> for <span class="delete">Abstraction and Control</span></td><td> </td><td class="rblock"><span class="insert">              &lt;https://wiki.onosproject.org/display/ONOS/PCEP+Protocol&gt;.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              of TE Networks (ACTN)", draft-dhody-pce-applicability-</span></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              actn-01 (work</span> in <span class="delete">progress), October 2016.</span></td><td> </td><td class="rblock"><span class="insert">   [ONOS-PCEP-GITHUB]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              "Github for PCEP code in ONOS",</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              &lt;https://github.com/opennetworkinglab/onos/tree/master/</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              protocols/pcep&gt;.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Appendix A.  Relevant OSPF TLV and sub-TLV</td><td> </td><td class="right">Appendix A.  Relevant OSPF TLV and sub-TLV</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This section list the relevant TLVs and sub-TLVs defined for OSPF.</td><td> </td><td class="right">   This section list the relevant TLVs and sub-TLVs defined for OSPF.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-----------+---------------------+---------------+-----------------+</td><td> </td><td class="right">   +-----------+---------------------+---------------+-----------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |  Sub-TLV  | Description         |     OSPF-TE   | Value defined   |</td><td> </td><td class="right">   |  Sub-TLV  | Description         |     OSPF-TE   | Value defined   |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |           |                     |     Sub-TLV   | in:             |</td><td> </td><td class="right">   |           |                     |     Sub-TLV   | in:             |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-----------+---------------------+---------------+-----------------+</td><td> </td><td class="right">   +-----------+---------------------+---------------+-----------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |    6      | Link Local/Remote   |      11       | [RFC4203]/1.1   |</td><td> </td><td class="right">   |    6      | Link Local/Remote   |      11       | [RFC4203]/1.1   |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-15" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-15"><em> page 38, line 37<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-15"><em> page 40, line 37<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">      TLV - Link Attributes TLV</td><td> </td><td class="right">      TLV - Link Attributes TLV</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">          Sub-TLV(s)</td><td> </td><td class="right">          Sub-TLV(s)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">B.2.  Designated Node</td><td> </td><td class="right">B.2.  Designated Node</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A designated node(s) in the network will provide its own local node</td><td> </td><td class="right">   A designated node(s) in the network will provide its own local node</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   as well as all learned remote information, and in this way PCE can</td><td> </td><td class="right">   as well as all learned remote information, and in this way PCE can</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   build the full link state and TE information.</td><td> </td><td class="right">   build the full link state and TE information.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   As described in Appendix B.1, the same LS Node and Link objects will</td><td> </td><td class="right">   As described in Appendix B.1, the same LS Node and Link objects will</td><td class="lineno"></td></tr>
+      <tr id="diff0047"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   be generated with a differ<span class="delete">a</span>nce that it would be a designated router</td><td> </td><td class="rblock">   be generated with a differ<span class="insert">e</span>nce that it would be a designated router</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   say RTA that generate all this information.</td><td> </td><td class="right">   say RTA that generate all this information.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">B.3.  Between PCEs</td><td> </td><td class="right">B.3.  Between PCEs</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   As per Hierarchical-PCE [RFC6805], Parent PCE builds an abstract</td><td> </td><td class="right">   As per Hierarchical-PCE [RFC6805], Parent PCE builds an abstract</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   domain topology map with each domain as an abstract node and inter-</td><td> </td><td class="right">   domain topology map with each domain as an abstract node and inter-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   domain links as an abstract link.  Each child PCE may provide this</td><td> </td><td class="right">   domain links as an abstract link.  Each child PCE may provide this</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   information to the parent PCE.  Considering the example in figure 1</td><td> </td><td class="right">   information to the parent PCE.  Considering the example in figure 1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   of [RFC6805], following LS object will be generated:</td><td> </td><td class="right">   of [RFC6805], following LS object will be generated:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-16" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-16"><em> page 40, line 7<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-16"><em> page 42, line 7<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">          Sub-TLV - 7: IPv4 interface: 13.1.1.1</td><td> </td><td class="right">          Sub-TLV - 7: IPv4 interface: 13.1.1.1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">          Sub-TLV - 8: IPv4 neighbor: 13.1.1.2</td><td> </td><td class="right">          Sub-TLV - 8: IPv4 neighbor: 13.1.1.2</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      TLV - Link Attributes TLV</td><td> </td><td class="right">      TLV - Link Attributes TLV</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">          Sub-TLV(s)</td><td> </td><td class="right">          Sub-TLV(s)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   * similar information will be generated by other PCE</td><td> </td><td class="right">   * similar information will be generated by other PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     to help form the abstract domain topology.</td><td> </td><td class="right">     to help form the abstract domain topology.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Further the exact border nodes and abstract internal path between the</td><td> </td><td class="right">   Further the exact border nodes and abstract internal path between the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   border nodes may also be transported to the Parent PCE to enable ACTN</td><td> </td><td class="right">   border nodes may also be transported to the Parent PCE to enable ACTN</td><td class="lineno"></td></tr>
+      <tr id="diff0048"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   as described in [I-D.<span class="delete">dhody</span>-pce-applicability-actn] using the similar</td><td> </td><td class="rblock">   as described in [I-D.<span class="insert">ietf</span>-pce-applicability-actn] using the similar</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   LS node and link objects encodings.</td><td> </td><td class="right">   LS node and link objects encodings.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Appendix C.  Contributor Addresses</td><td> </td><td class="right">Appendix C.  Contributor Addresses</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Udayasree Palle</td><td> </td><td class="right">   Udayasree Palle</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Technologies</td><td> </td><td class="right">   Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Divyashree Techno Park, Whitefield</td><td> </td><td class="right">   Divyashree Techno Park, Whitefield</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Bangalore, Karnataka  560066</td><td> </td><td class="right">   Bangalore, Karnataka  560066</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   India</td><td> </td><td class="right">   India</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0049"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   EMail: udayasree<span class="delete">.palle@huawei</span>.com</td><td> </td><td class="rblock">   EMail: udayasree<span class="insert">reddy@gmail</span>.com</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Sergio Belotti</td><td> </td><td class="right">   Sergio Belotti</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Alcatel-Lucent</td><td> </td><td class="right">   Alcatel-Lucent</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Italy</td><td> </td><td class="right">   Italy</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   EMail: sergio.belotti@alcatel-lucent.com</td><td> </td><td class="right">   EMail: sergio.belotti@alcatel-lucent.com</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Veerendranatha Reddy Vallem</td><td> </td><td class="right">   Veerendranatha Reddy Vallem</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Technologies</td><td> </td><td class="right">   Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Divyashree Techno Park, Whitefield</td><td> </td><td class="right">   Divyashree Techno Park, Whitefield</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Bangalore, Karnataka  560066</td><td> </td><td class="right">   Bangalore, Karnataka  560066</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   India</td><td> </td><td class="right">   India</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Email: veerendranatharv@huawei.com</td><td> </td><td class="right">   Email: veerendranatharv@huawei.com</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0050"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">Satish Karunanithi</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Huawei Technologies</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Divyashree Techno Park, Whitefield</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Bangalore, Karnataka  560066</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   India</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Email: satishk@huawei.com</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Authors' Addresses</td><td> </td><td class="right">Authors' Addresses</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Dhruv Dhody</td><td> </td><td class="right">   Dhruv Dhody</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Technologies</td><td> </td><td class="right">   Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Divyashree Techno Park, Whitefield</td><td> </td><td class="right">   Divyashree Techno Park, Whitefield</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Bangalore, Karnataka  560066</td><td> </td><td class="right">   Bangalore, Karnataka  560066</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   India</td><td> </td><td class="right">   India</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   EMail: dhruv.ietf@gmail.com</td><td> </td><td class="right">   EMail: dhruv.ietf@gmail.com</td><td class="lineno"></td></tr>
+      <tr id="diff0051"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">                                                                         </span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Young Lee</td><td> </td><td class="right">   Young Lee</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Technologies</td><td> </td><td class="right">   Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   5340 Legacy Drive, Building 3</td><td> </td><td class="right">   5340 Legacy Drive, Building 3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Plano, TX  75023</td><td> </td><td class="right">   Plano, TX  75023</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   USA</td><td> </td><td class="right">   USA</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   EMail: leeyoung@huawei.com</td><td> </td><td class="right">   EMail: leeyoung@huawei.com</td><td class="lineno"></td></tr>
+      <tr id="diff0052"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                                                         </span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Daniele Ceccarelli</td><td> </td><td class="right">   Daniele Ceccarelli</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Ericsson</td><td> </td><td class="right">   Ericsson</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Torshamnsgatan,48</td><td> </td><td class="right">   Torshamnsgatan,48</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Stockholm</td><td> </td><td class="right">   Stockholm</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Sweden</td><td> </td><td class="right">   Sweden</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   EMail: daniele.ceccarelli@ericsson.com</td><td> </td><td class="right">   EMail: daniele.ceccarelli@ericsson.com</td><td class="lineno"></td></tr>
+
+     <tr><td></td><td class="left"></td><td> </td><td class="right"></td><td></td></tr>
+     <tr id="end" bgcolor="gray"><th colspan="5" align="center">&nbsp;End of changes. 52 change blocks.&nbsp;</th></tr>
+     <tr class="stats"><td></td><th><i>105 lines changed or deleted</i></th><th><i> </i></th><th><i>200 lines changed or added</i></th><td></td></tr>
+     <tr><td colspan="5" align="center" class="small"><br>This html diff was produced by rfcdiff 1.45. The latest version is available from <a href="http://www.tools.ietf.org/tools/rfcdiff/">http://tools.ietf.org/tools/rfcdiff/</a> </td></tr>
+   </tbody></table>
+   
+   
+<iframe width="0" height="0" frameborder="0" src="./Diff_ draft-dhodylee-pce-pcep-ls-07.txt - draft-dhodylee-pce-pcep-ls-08.txt_files/saved_resource.html" id="GINGER_SOFTWARE_bubblesIFrame" scrolling="no" style="border: 0px solid; display: none; position: absolute; z-index: 2147483647; height: 0px; width: 0px; background-color: transparent;"></iframe><div id="GingerWidgetInfo" style="display:none;">{"version":"0.1.0.618","isExtension":true,"extensionName":"Chrome"}</div></body><script>(function(){(function (){
+            //Todo:is injection needed here?
+            var eventRegister = {};
+
+            var findReactProp = function(elem){
+                for(var key in elem){
+                    if(key.indexOf("__reactInternalInstance")===0){
+                        //var p = null;
+                        //if(elem[key].memoizedProps){
+                        //    p = elem[key].memoizedProps;
+                        //} else if(elem[key]._currentElement){
+                        //    p = elem[key]._currentElement.props
+                        //}
+
+                        //TODO: report if props is not found with Facebook version
+                        return (elem[key].memoizedProps || elem[key]._currentElement.props);
+                    }
+                }
+                return null;
+            };
+
+            document.addEventListener("gingerModule-eventEmitter-react-fire",function(e){
+                //console.log("firing", e);
+                var reactProps = findReactProp(document.activeElement);
+                var eventName = e.detail.event;
+                var eventParams = e.detail.params || {};
+                eventParams.preventDefault = function(){};
+                if(reactProps && eventName) {
+                    reactProps[eventName](eventParams);
+                }
+            });
+            document.addEventListener("gingerModule-eventEmitter-onselect",function(e){
+                var reactProps = findReactProp(document.activeElement);
+                //trigger("select");
+                if(reactProps) {
+                    reactProps.onSelect();
+                }
+            });
+            document.addEventListener("gingerModule-eventEmitter-onpaste",function(e){
+                var reactProps = findReactProp(document.activeElement);
+                var pasteObj = {
+                    defaultPrevented: false,
+                    target: document.activeElement,
+                    preventDefault: function() {},
+                    clipboardData : {
+                        getData: function () {
+                            return e.detail || "";
+                        },
+                        items: ["text/plain"]
+                    }
+                };
+                //trigger("paste",pasteObj);
+                if(reactProps) {
+                    reactProps.onPaste(pasteObj);
+                }
+            });
+
+            var trigger = function(eventName,data){
+                if(!eventRegister[eventName]) return;
+                for(var i = 0; i<eventRegister[eventName].length; i++){
+                    var listener = eventRegister[eventName][i];
+                    listener(new CustomEvent(eventName),data);
+                }
+            };
+
+            var nativeEventListener = document.addEventListener.bind(document);
+            document.addEventListener = function(eventName, callback, options) {
+                console.log("registering event",eventName);
+                var eventRegisterItem = eventRegister[eventName] || [];
+                eventRegisterItem.push(callback);
+                eventRegister[eventName] = eventRegisterItem;
+                nativeEventListener(eventName, callback, options);
+            };
+
+        })() })()</script></html>
