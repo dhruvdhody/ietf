@@ -95,7 +95,7 @@ Table of Contents
    6.  Protocol extension  . . . . . . . . . . . . . . . . . . . . .  12
      6.1.  Association group . . . . . . . . . . . . . . . . . . . .  13
      6.2.  Trial LSP TLV in ASSOCIATION Objects  . . . . . . . . . .  13
-     6.3.  Optional TLVs . . . . . . . . . . . . . . . . . . . . . .  13
+     6.3.  Optional TLVs . . . . . . . . . . . . . . . . . . . . . .  14
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
      8.1.  PCEP TLV Indicators . . . . . . . . . . . . . . . . . . .  14
@@ -105,7 +105,7 @@ Table of Contents
    10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  15
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  15
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  16
 
 
 
@@ -684,6 +684,12 @@ Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
 
    o  Association type = TBD1 ("Explicit MBB Association Type").
 
+   This Association-Type is dynamic in nature and created by the PCE for
+   the LSPs originating at the same head node.  These associations are
+   conveyed via PCEP messages to the PCEP peer.  Operator-configured
+   Association Range SHOULD NOT be set for this association-type and
+   MUST be ignored.
+
 6.2.  Trial LSP TLV in ASSOCIATION Objects
 
    This document defines a new TLV named TRIAL-LSP TLV which can be
@@ -714,13 +720,7 @@ Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
       new trial LSP.  It MUST be zero otherwise.
    Flags:   None defined.  MUST be set to zero.  Ignored on receipt.
 
-6.3.  Optional TLVs
 
-   The MBB association group MAY carry some optional TLVs including but
-   not limited to:
-
-   o VENDOR-INFORMATION-TLV: Used to communicate arbitrary vendor
-   specific behavioral information,, described in [RFC7470].
 
 
 
@@ -729,6 +729,14 @@ Tanaka, et al.          Expires December 29, 2017              [Page 13]
 
 Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
 
+
+6.3.  Optional TLVs
+
+   The MBB association group MAY carry some optional TLVs including but
+   not limited to:
+
+   o VENDOR-INFORMATION-TLV: Used to communicate arbitrary vendor
+   specific behavioral information,, described in [RFC7470].
 
 7.  Security Considerations
 
@@ -769,6 +777,15 @@ Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
    Implicit mode M-B-B requires only one PCUpd message to trigger M-B-B
    process, therefore a PCC accepts a message from a primary PCE whom
    the PCC delegates the LSPs to.  An attempt to update parameters of a
+
+
+
+
+Tanaka, et al.          Expires December 29, 2017              [Page 14]
+
+Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
+
+
    non-delegated LSP results in the PCC sending a PCErr message as
    defined in [I-D.ietf-pce-stateful-pce].
 
@@ -778,14 +795,6 @@ Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
    be taken by one primary PCE because state synchronization of trial-
    LSPs between the primary and backup PCE may be complex.  If the PCC
    revokes LSP delegations after a Redelegation Timeout Interval, the
-
-
-
-Tanaka, et al.          Expires December 29, 2017              [Page 14]
-
-Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
-
-
    PCC MUST tear down all trial-LSPs and redelegate a working LSP to
    alternate PCE.  An attempt to trigger either step of explicit mode
    M-B-B of a non-delegated LSP results in the PCC sending the same
@@ -823,6 +832,16 @@ Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
+
+
+
+
+
+Tanaka, et al.          Expires December 29, 2017              [Page 15]
+
+Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
+
+
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
               DOI 10.17487/RFC5440, March 2009,
@@ -834,13 +853,6 @@ Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
               and G. Swallow, "RSVP-TE: Extensions to RSVP for LSP
               Tunnels", RFC 3209, DOI 10.17487/RFC3209, December 2001,
               <http://www.rfc-editor.org/info/rfc3209>.
-
-
-
-Tanaka, et al.          Expires December 29, 2017              [Page 15]
-
-Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
-
 
    [RFC4426]  Lang, J., Ed., Rajagopalan, B., Ed., and D. Papadimitriou,
               Ed., "Generalized Multi-Protocol Label Switching (GMPLS)
@@ -863,9 +875,8 @@ Authors' Addresses
 
    Yosuke Tanaka
    NTT Communications Corporation
-   Granpark Tower
-   3-4-1 Shibaura, Minato-ku
-   Tokyo  108-8118
+   1-1-6 Uchisaiwai-cho, Chiyoda-ku
+   Tokyo  100-8019
    Japan
 
    Email: yosuke.tanaka@ntt.com
@@ -881,6 +892,12 @@ Authors' Addresses
    Email: y.kamite@ntt.com
 
 
+
+Tanaka, et al.          Expires December 29, 2017              [Page 16]
+
+Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
+
+
    Dhruv Dhody
    Huawei Technologies
    Divyashree Techno Park, Whitefield
@@ -890,14 +907,6 @@ Authors' Addresses
    Email: dhruv.ietf@gmail.com
 
 
-
-
-
-Tanaka, et al.          Expires December 29, 2017              [Page 16]
-
-Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
-
-
    Ramanjaneya Reddy Palleti
    Huawei Technologies
    Divyashree Techno Park, Whitefield
@@ -905,15 +914,6 @@ Internet-Draft     M-B-B procedure using Stateful PCE          June 2017
    India
 
    Email: ramanjaneya.palleti@huawei.com
-
-
-
-
-
-
-
-
-
 
 
 
