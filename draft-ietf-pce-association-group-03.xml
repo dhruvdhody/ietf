@@ -269,23 +269,24 @@
    LENGTH:  N * 8 (where N is the number of association types)
    VALUE:   
 
-      0                   1                   2                   3
-      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |             Reserved          |          Assoc-type #1        |
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |      Start-Assoc-ID #1        |           Range #1            |        
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     //                                                             //
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |             Reserved          |          Assoc-type #N        |
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |      Start-Assoc-ID #N        |           Range #N            |        
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |             Reserved          |          Assoc-type #1        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      Start-Assoc-ID #1        |           Range #1            |        
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   //                                                             //
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |             Reserved          |          Assoc-type #N        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      Start-Assoc-ID #N        |           Range #N            |        
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
 ]]></artwork></figure>
-<t><list>
+<t>The Value portion includes the following fields, repeated for each association type:
+	<list>
    <t>Reserved (2 bytes): This field MUST be set to 0 on
    transmission and MUST be ignored on receipt.</t>
    <t>Assoc-type (2 bytes): The association type.</t>
@@ -299,14 +300,17 @@
    once in an OPEN object.  If it appears more than once, the PCEP
    session MUST be rejected with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
-   message).  The absence of the OP-CONF-ASSOC-RANGE TLV in an OPEN object MUST be
-   interpreted as an absence of Operator-configured Associations.</t> 
+   message).</t> 
 
    <t>As specified in <xref target="RFC5440"/>, a PCEP peer that does not recognize the
    OP-CONF-ASSOC-RANGE TLV will silently ignore it.</t>
 
    <t>The Operator-configured Association Range SHOULD be included for each association type that could be both dynamic and operator-configured. For associations that are only dynamic or only operator-configured can be skipped, in which case the full range of association identifier is considered dynamic or operator-configured respectively. 
     Each association type (that are defined in separate documents) can specify the default value for the operator-configured association range for their respective association type. </t>
+
+   <t>The absence of the OP-CONF-ASSOC-RANGE TLV in an OPEN object MUST be
+   interpreted as an absence of explicit Operator-configured Association Range at the PCEP peer. 
+   In which case, the default behavior as per each association type would be applied.</t> 
 </section>
     </section>
     <section anchor="association" title="ASSOCIATION Object">
@@ -412,9 +416,9 @@
 
           ]]></artwork>
         </figure>
-    <t> Type: To be allocated by IANA </t>
-    <t> Length: Fixed value of 4 bytes </t>
-    <t> Global Association Source: as defined in <xref target="RFC6780"/> </t>
+    <t> Type: To be allocated by IANA. </t>
+    <t> Length: Fixed value of 4 bytes. </t>
+    <t> Global Association Source: as defined in <xref target="RFC6780"/>. </t>
 
     </section>
 
@@ -440,8 +444,8 @@
 
           ]]></artwork>
         </figure>
-    <t> Type: To be allocated by IANA </t>
-    <t> Length: variable </t>
+    <t> Type: To be allocated by IANA. </t>
+    <t> Length: variable. </t>
     <t> Extended Association ID: as defined in <xref target="RFC6780"/>. </t>
 
     </section>
@@ -730,11 +734,12 @@ Where:
 
         <t> The field contains 12 bits numbered from bit 0 as the most significant bit.</t>
          <texttable anchor="Association-Flags" style="none" suppress-title="true">
-          <ttcol align="left">Bit;</ttcol>
-          <ttcol align="left" width='50%'>Name: Description </ttcol>
-          <ttcol align="left">Reference </ttcol>
-          <c></c><c>&nbsp;&nbsp;&nbsp;&nbsp;</c><c></c>
-          <c>15</c><c> R: Removal</c><c>[This I-D]</c>
+          <ttcol align="left" width='10%'>Bit</ttcol>
+          <ttcol align="left" width='10%'>Name</ttcol>
+          <ttcol align="left" width='40%'>Description </ttcol>
+          <ttcol align="left" width='40%'>Reference </ttcol>
+          <c></c><c></c><c>&nbsp;&nbsp;&nbsp;&nbsp;</c><c></c>
+          <c>15</c><c>R</c><c>Removal</c><c>[This I-D]</c>
         </texttable>
 
         </section>

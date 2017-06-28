@@ -296,27 +296,30 @@ Internet-Draft            PCE association group                June 2017
 
    The PCEP OP-CONF-ASSOC-RANGE TLV has the following format:
 
-     TYPE:    TBD
-     LENGTH:  N * 8 (where N is the number of association types)
-     VALUE:
+      TYPE:    TBD
+      LENGTH:  N * 8 (where N is the number of association types)
+      VALUE:
 
-        0                   1                   2                   3
-        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |             Reserved          |          Assoc-type #1        |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |      Start-Assoc-ID #1        |           Range #1            |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       //                                                             //
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |             Reserved          |          Assoc-type #N        |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |      Start-Assoc-ID #N        |           Range #N            |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |             Reserved          |          Assoc-type #1        |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |      Start-Assoc-ID #1        |           Range #1            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      //                                                             //
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |             Reserved          |          Assoc-type #N        |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |      Start-Assoc-ID #N        |           Range #N            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
 
                Figure 1: The OP-CONF-ASSOC-RANGE TLV format
+
+   The Value portion includes the following fields, repeated for each
+   association type:
 
       Reserved (2 bytes): This field MUST be set to 0 on transmission
       and MUST be ignored on receipt.
@@ -327,9 +330,6 @@ Internet-Draft            PCE association group                June 2017
       Operator-configured Association Range for the particular
       association type.
 
-      Range (2 bytes): The number of associations marked for the
-      Operator-configured Associations.
-
 
 
 
@@ -337,6 +337,9 @@ Minei, et al.           Expires December 29, 2017               [Page 6]
 
 Internet-Draft            PCE association group                June 2017
 
+
+      Range (2 bytes): The number of associations marked for the
+      Operator-configured Associations.
 
 4.1.  Procedure
 
@@ -346,9 +349,7 @@ Internet-Draft            PCE association group                June 2017
    The OP-CONF-ASSOC-RANGE TLV MUST NOT appear more than once in an OPEN
    object.  If it appears more than once, the PCEP session MUST be
    rejected with error type 1 and error value 1 (PCEP session
-   establishment failure / Reception of an invalid Open message).  The
-   absence of the OP-CONF-ASSOC-RANGE TLV in an OPEN object MUST be
-   interpreted as an absence of Operator-configured Associations.
+   establishment failure / Reception of an invalid Open message).
 
    As specified in [RFC5440], a PCEP peer that does not recognize the
    OP-CONF-ASSOC-RANGE TLV will silently ignore it.
@@ -362,6 +363,11 @@ Internet-Draft            PCE association group                June 2017
    specify the default value for the operator-configured association
    range for their respective association type.
 
+   The absence of the OP-CONF-ASSOC-RANGE TLV in an OPEN object MUST be
+   interpreted as an absence of explicit Operator-configured Association
+   Range at the PCEP peer.  In which case, the default behavior as per
+   each association type would be applied.
+
 5.  ASSOCIATION Object
 
 5.1.  Object Definition
@@ -373,12 +379,6 @@ Internet-Draft            PCE association group                June 2017
 
    ASSOCIATION Object-Type is 1 for IPv4 and its format is shown in
    Figure 2:
-
-
-
-
-
-
 
 
 
@@ -484,11 +484,11 @@ Internet-Draft            PCE association group                June 2017
 
             Figure 4: The Global Association Source TLV format
 
-   Type: To be allocated by IANA
+   Type: To be allocated by IANA.
 
-   Length: Fixed value of 4 bytes
+   Length: Fixed value of 4 bytes.
 
-   Global Association Source: as defined in [RFC6780]
+   Global Association Source: as defined in [RFC6780].
 
 5.1.2.  Extended Association ID TLV
 
@@ -518,9 +518,9 @@ Internet-Draft            PCE association group                June 2017
 
              Figure 5: The Extended Association ID TLV format
 
-   Type: To be allocated by IANA
+   Type: To be allocated by IANA.
 
-   Length: variable
+   Length: variable.
 
    Extended Association ID: as defined in [RFC6780].
 
@@ -815,9 +815,9 @@ Internet-Draft            PCE association group                June 2017
    The field contains 12 bits numbered from bit 0 as the most
    significant bit.
 
-            Bit; Name: Description                  Reference
+           Bit    Name   Description                 Reference
 
-            15   R: Removal                         [This I-D]
+           15     R      Removal                     [This I-D]
 
 6.4.  Association Type
 
