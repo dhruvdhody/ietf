@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902" category="std" docName="draft-palle-pce-controller-labeldb-sync-01" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+  <front>
+    <title abbrev="LABEL-DB-SYNC">LABEL-DB Synchronization Procedures for a PCE as a central controller(PCECC)</title>
+    <author initials="U" surname="Palle" fullname="Udayasree Palle">
+      <organization>Huawei Technologies</organization>
+        <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>udayasreereddy@gmail.com</email>
+      </address>
+    </author>
+    <author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+    <author initials="S" surname="Karunanithi" fullname="Satish Karunanithi">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>satishk@huawei.com</email>
+      </address>
+    </author>
+    <date month="June" year="2017" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+   <t>PCE as a central controller specifies the
+   procedures and PCEP protocol extensions where LSPs
+   are calculated/setup/initiated and label forwarding entries are
+   downloaded through a centralized PCE server to each network devices
+   along the LSP path while leveraging the existing PCE technologies as
+   much as possible.</t>
+
+   <t>Labels downloaded to forwarding entries requires a reliable
+   synchronization mechanism between the path computation clients (PCCs)
+   and the PCE. The basic mechanism for label database (LABEL-DB
+   synchronization is part of the PCE as a central controller specification.
+   This document presents motivations for optimizations to the LABEL-DB
+   synchronization and the corresponding PCEP procedures and extensions.</t>
+   </abstract>
+  </front>
+  <middle>
+    <section title="Introduction" toc="default">
+    <t><xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> specify the procedures and PCEP protocol extensions for
+   using the PCE as the central controller <xref target="I-D.ietf-teas-pce-central-control"/> and user cases where LSPs are
+   calculated/setup/initiated/downloaded through extending the existing
+   PCE architectures and PCEP.</t>
+
+    <t><xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
+   <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/> specifies 
+   reliable synchronization mechanism between the path computation
+   clients (PCCs) and the PCECC.</t>
+   
+   <t> This draft specify the optimizations for LABEL-DB synchronization and
+   the corresponding PCEP procedures and extensions.</t>
+   <section title="Requirements Language"
+               toc="default">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
+        and "OPTIONAL" in this document are to be interpreted as
+        described in
+        <xref target="RFC2119" />.</t>
+      </section>
+    </section>
+
+
+	<section title="LABEL-DB Synchronization" anchor="label-db-sync">
+		<t>PCECC MUST maintains the LABEL-DB for each PCEP session separately.
+		The purpose of LABEL-DB synchronization is to make sure that the
+		PCECC's view of LABEL-DB matches with the PCC's LABEL-DB. The LABEL-DB
+		synchronization MUST be performed from PCECC to PCC immediately after the LSP state synchronization.
+		<xref target="I-D.ietf-pce-stateful-pce"/> describes the basic
+		mechanism for LSP state synchronization. <xref target="I-D.ietf-pce-stateful-sync-optimizations"/> describes the optimizations for LSP state synchronization.</t>
+
+		<t>Full LABEL-DB synchronization performed from PCECC to PCC on Initial
+        session UP or every session flap is described in
+        <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
+        <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>.</t>
+
+		<t>Providing an Optimizations for LABEL-DB synchronization can result
+         in significant savings in both control-plane data exchanges and the
+         time it takes for the PCC to become fully operational.</t>
+
+		<t>Optimizations for LABEL-DB synchronization describes the need that both PCEP
+		speakers support label database version capability and maintain
+		label database version for each session. See <xref target="SEC_OPT_LABEL_DB"/> for detail procedures.</t>
+
+	</section>    
+
+<section title="Optimizations for LABEL-DB Synchronization" anchor="SEC_OPT_LABEL_DB">
+<t>This section add some of the optimization mechanisms for LABEL-DB
+synchronization. By default, the full LABEL-DB synchronization is performed.</t>
+
+<section title="LABEL-DB Synchronization Avoidance Procedure" anchor="SEC_OPT_LABEL_DB_AVOID">
+   <t>The LABEL-DB synchronization MAY be skipped following a PCEP session restart
+   if there is no change in the LABEL-DB of the session at PCECC, during the period
+   prior to session re-initialization.  To be able to make this
+   determination, labels must be exchanged and maintained by both PCECC and
+   PCC during normal operation.  This is accomplished by keeping track
+   of the changes to the label database, using a version tracking
+   field called the Label Database Version Number.</t>
+
+   <t>The Label Database Version Number, carried in LABEL-DB-VERSION TLV
+   (see <xref target="SEC_LABEL_DB_VER_TLV"/>), is owned by a PCECC and it MUST be incremented by
+   1 for each successive change in the PCECC's label database.  The
+   Label Database Version Number MUST start at 1 and may wrap
+   around.  Values 0 and 0xFFFFFFFFFFFFFFFF are reserved.  If either of
+   the two values are used during LABEL-DB synchronization, the
+   PCC speaker receiving this node should send back a PCErr with Error-type TBD1 Error-value 3 'Received an invalid
+   Label Database Version Number', and close the PCEP session.  Operations that
+   trigger a change to the Label database include an addition or deletion of labels that
+   would trigger a label update to the PCC.</t>
+
+   <t>LABEL-DB synchronization avoidance is advertised on a PCEP session
+   during session startup using the INCLUDE-LABEL-DB-VERSION (I) bit in the
+   PCECC capability TLV (see <xref target="SEC_PCECC_CAP"/>).
+   The PCEP peer MAY include the SPEAKER-ENTITY-ID TLV described in <xref target="I-D.ietf-pce-stateful-sync-optimizations"/>
+   in the OPEN message to identify the peer in case of IP address change.</t>
+
+   <t>If both PCEP speakers set the I flag in the OPEN object's PCECC Capability TLV
+   to 1, the PCECC MUST include the LABEL-DB-VERSION TLV
+   in each LABEL object of the PCLabelUpd message.  If the LABEL-DB-VERSION TLV
+   is missing in a PCLabelUpd message, the PCC will generate an error with
+   Error-Type 6 (mandatory object missing) and Error-Value TBD2
+   'LABEL-DB-VERSION TLV missing' and close the
+   session.  If LABEL-DB synchronization avoidance has not been enabled on
+   a PCEP session, the PCECC SHOULD NOT include the LABEL-DB-VERSION TLV in
+   the LABEL Object and the PCC SHOULD ignore it were it to receive one.</t>
+
+   <t>If a PCC's label database survived the restart of a PCEP session,
+   the PCC will include the LABEL-DB-VERSION TLV in its OPEN object, and
+   the TLV will contain the last Label Database Version Number
+   received on an Label Update from the PCECC in the previous PCEP
+   session.  If a PCECC's Label Database survived the restart of a
+   PCEP session, the PCECC will include the LABEL-DB-VERSION TLV in its OPEN
+   object and the TLV will contain the latest Label Database Version
+   Number.  If a PCEP speaker's label database did not survive the
+   restart of a PCEP session, the PCEP speaker MUST NOT include the LABEL-DB-VERSION TLV in the OPEN object.</t>
+
+   <t>If both PCEP speakers include the LABEL-DB-VERSION TLV in the OPEN
+   Object and the TLV values match, the PCECC MAY skip LABEL-DB
+   synchronization.  Otherwise, the PCECC MUST perform full LABEL-DB
+   synchronization (<xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
+   <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>) or incremental LABEL-DB synchronization
+   (see <xref target="SEC_OPT_LABEL_DB_INC"/>) to the PCC,  Incase, the PCECC attempts to skip LABEL-DB synchronization,
+   by setting the SYNC Flag to 0 on the first Label Update
+   from the PCECC, the PCC MUST send back a PCErr with Error-type TBD1
+   (Label Database Synchronization Error) and Error-value 4(Label Database Version mismatch),
+   and close the PCEP session.</t>
+
+   <t>If LABEL-DB synchronization is required, then prior to completing the
+   initialization phase, the PCC MUST mark any labels in the label database
+   that were previously updated by the PCECC as stale.  When the PCECC
+   updates a label during LABEL-DB synchronization, if the label already
+   exists in the label database, the PCC MUST update the label database and
+   clear the stale marker from the label.  When it has finished LABEL-DB
+   synchronization, the PCECC MUST immediately send an end of
+   synchronization marker.  The end of synchronization marker is a Path
+   Computation Label Update (PCLabelUpd) message with a SRP object
+   containing the SYNC flag set to 0 (see <xref target="SEC_SRP_OBJ"/>)
+   and Label as 0 in the LABEL object.
+   The LABEL-DB-VERSION TLV MUST be included in this PCLabelUpd message.
+   On receiving this Label Update, the PCC MUST report all the labels in the label database that are still
+   marked as stale to PCECC.</t>
+
+   <t>Note that a PCECC/PCC MAY force LABEL-DB synchronization by not including
+   the LABEL-DB-VERSION TLV in its OPEN object.</t>
+
+   <t><xref target="SEC_OPT_LABEL_DB_AVOID_SKIP"/> shows an example sequence where the LABEL-DB synchronization is
+   skipped.</t>
+   <t>
+          <figure title="LABEL-DB synchronization Skipped" suppress-title="false" align="center" alt="" width="" height="" anchor="SEC_OPT_LABEL_DB_AVOID_SKIP">
+            <artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height=""><![CDATA[
+          +-+-+-+                         +-+-+
+          |PCECC|                         |PCC|
+          +-+-+-+                         +-+-+
+             |                 ,----Open---|
+             |                /   DBv=35   |
+             |--Open--,      /     I=1     |
+             |  DBv=35 \    /              |
+             |    I=1   \  /               |
+             |           \/                |
+             |           /\                |
+             |          /   `------------->| (OK to skip sync)
+ (Skip sync) |<--------`                   |
+             |            .                |
+             |            .                |
+             |            .                |
+             |                             |
+             |--PCLabelUpd,DBv=36,SYNC=0-->| (Regular
+             |                             |  Label Update)
+             |--PCLabelUpd,DBv=37,SYNC=0-->| (Regular
+             |                             |  Label Update)
+             |--PCLabelUpd,DBv=38,SYNC=0-->|
+             |                             |
+]]></artwork>
+          </figure>
+        </t>
+        <t><xref target="SEC_OPT_LABEL_DB_AVOID_PERF"/> shows an example sequence where the LABEL-DB synchronization is
+   performed due to label database version mismatch during the PCEP
+   session setup.  Note that the same LABEL-DB synchronization sequence
+   would happen if either the PCC or the PCECC would not include the LABEL-
+   DB-VERSION TLV in their respective Open messages.</t>
+        <t>
+          <figure title="LABEL-DB synchronization Performed" suppress-title="false" align="center" alt="" width="" height="" anchor="SEC_OPT_LABEL_DB_AVOID_PERF">
+            <artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height=""><![CDATA[
+        +-+-+-+                         +-+-+
+        |PCECC|                         |PCC|
+        +-+-+-+                         +-+-+
+           |                 ,----Open---|
+           |                /   DBv=35   |
+           |--Open--,      /     I=1     |
+           |  DBv=39 \    /              |
+           |    I=1   \  /               |
+           |           \/                |
+           |           /\                |
+           |          /   `------------->| (Expect sync)
+ (Do sync) |<--------`                   |
+           |                             |
+           |--PCLabelUpd,DBv=39,SYNC=1-->| (Sync start)
+           |            .                |
+           |            .                |
+           |            .                |
+           |--PCLabelUpd,DBv=39,SYNC=0-->| (Sync done)
+           |            .                |
+           |            .                | 
+           |            .                |
+           |--PCLabelUpd,DBv=40,SYNC=0-->| (Regular
+           |                             |  Label Update)
+           |--PCLabelUpd,DBv=41,SYNC=0-->| (Regular
+           |                             |  Label Update)
+           |--PCLabelUpd,DBv=42,SYNC=0-->|
+           |                             |
+
+]]></artwork>
+          </figure>
+        </t>
+        <t><xref target="SEC_OPT_LABEL_DB_AVOID_SKIP_1"/> shows an example sequence where the LABEL-DB synchronization is
+   skipped, but because one or both PCEP speakers set the I Flag to 0,
+   the PCECC does not send LABEL-DB-VERSION TLVs in subsequent PCLabelUpd
+   messages to the PCC.  If the current PCEP session restarts, the PCEP
+   speakers will have to perform full LABEL-DB synchronization, since the PCC
+   does not know the PCECC's latest Label Database Version Number
+   information.</t>
+   <t>
+           <figure title="LABEL-DB Synchronization Skipped, no LABEL-DB-VERSION TLVs sent
+                                 from PCECC" suppress-title="false" align="center" alt="" width="" height="" anchor="SEC_OPT_LABEL_DB_AVOID_SKIP_1">
+            <artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height=""><![CDATA[
+
+         +-+-+-+                         +-+-+
+         |PCECC|                         |PCC|
+         +-+-+-+                         +-+-+
+            |                 ,----Open---|
+            |                /   DBv=43   |
+            |--Open--,      /     I=0     |
+            |  DBv=43 \    /              |
+            |    I=0   \  /               |
+            |           \/                |
+            |           /\                |
+            |          /   `------------->| (OK to skip sync)
+(Skip sync) |<--------`                   |
+            |            .                |
+            |            .                |
+            |            .                |
+            |------PCLabelUpd,SYNC=0----->| (Regular
+            |                             |  Label Update)
+            |------PCLabelUpd,SYNC=0----->| (Regular
+            |                             |  Label Update)
+            |------PCLabelUpd,SYNC=0----->|
+            |                             |
+]]></artwork>
+          </figure>
+        </t>
+        </section>
+
+        <section title="Incremental LABEL-DB Synchronization Procedure" anchor="SEC_OPT_LABEL_DB_INC">
+		<t>If a PCC restarts and its label database survived, PCECC with
+   mismatched Label Database Version Number will send all their Labels
+   information (full LABEL-DB) to the PCC, even if only a small number of
+   changes happened.  It can take a long time and consume large communication
+   channel bandwidth. </t>
+        <t>This section extends the idea to only synchronize the delta (changes) in case of
+        Label Database Version Number of both PCEP peers is non-zero and mismatch.</t>
+        <t>If both PCEP speakers include the LABEL-DB-VERSION TLV in the OPEN
+   object and the LABEL-DB-VERSION TLV values match, the PCECC MAY skip
+   LABEL-DB synchronization.  Otherwise, the PCECC MUST perform LABEL-DB
+   synchronization.  Incremental label database synchronization capability is
+   advertised on a PCEP session during session startup using the DELTA-LABEL-SYNC-CAPABILITY (D) bit in the capabilities TLV (see <xref target="SEC_PCECC_CAP"/>).
+   Instead of dumping full LABEL-DB to the PCC again, the PCECC
+   synchronizes the delta (changes) as described in <xref target="SEC_INC_LABEL-DB_FIG"/> when D flag
+   and I flag is set to 1 by both PCC and PCECC.  Other combinations of D
+   and I flags setting by PCC and PCECC result in full LABEL-DB
+   synchronization procedure as described in
+   <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
+   <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>.  The PCECC MAY force a full LABEL-DB
+   synchronization by setting the D flag to zero in the OPEN message.</t>
+   <t>
+           <figure title="Incremental Synchronization Procedure" suppress-title="false" align="center" alt="" width="" height="" anchor="SEC_INC_LABEL-DB_FIG">
+            <artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height=""><![CDATA[
+
+          +-+-+-+                         +-+-+
+          |PCECC|                         |PCC|
+          +-+-+-+                         +-+-+
+             |                 ,----Open---|
+             |                /   DBv=35   |
+             |--Open--,      /     I=1     |
+             |  DBv=39 \    /      D=1     |
+             |    I=1   \  /               |
+             |           \/                |
+             |           /\                |
+             |          /   `------------->| (Expect Delta sync)
+    (Do sync)|<--------`                   | 
+    (Delta)  |                             |
+             |                             |
+(Delta       |--PCLabelUpd,DBv=39,SYNC=1-->|
+Sync starts) |            .                |
+             |            .                |
+             |            .                |
+             |            .                |
+             |--PCLabelUpd,DBv=39,SYNC=0-->| (Sync done)
+             |                             |
+             |                             |
+             |--PCLabelUpd,DBv=40,SYNC=0-->| (Regular
+             |                             |  Label Update)
+             |--PCLabelUpd,DBv=41,SYNC=0-->| (Regular
+             |                             |  Label Update)
+             |--PCLabelUpd,DBv=42,SYNC=0-->|
+             |                             |
+]]></artwork>
+          </figure>
+          </t>
+    <t>As per <xref target="SEC_OPT_LABEL_DB_AVOID"/>, the Label Database Version Number is
+   incremented each time a change is made to the PCECC's label
+   database.  Each label is associated with the DB version at the time of
+   its addition.  This is needed to determine which label and what
+   information needs to be synchronized in incremental LABEL-DB
+   synchronization.</t>
+
+   <t>It is not necessary for a PCECC to store a complete history of label
+   database change, but rather remember the labels (including
+   label addition and deletion) that happened between the PCEP
+   session(s) restart in order to carry out incremental LABEL-DB
+   synchronization.  After the synchronization procedure finishes, the
+   PCECC can dump this history information.  In the example shown in
+   <xref target="SEC_INC_LABEL-DB_FIG"/>, the PCECC needs to store the label changes that happened
+   between DB Version 35 to 39 and synchronizes these changes only when
+   performing incremental label update.  So a PCECC needs to remember
+   at least the label changes that happened after an existing PCEP
+   session with a PCC goes down to have any chance of doing
+   incremental synchronization when the session is re-established.</t>
+
+   <t>If a PCECC finds out it does not have sufficient information to
+   complete incremental synchronization after advertising incremental
+   LABEL-DB synchronization capability, it MUST send a PCErr with
+   Error-Type TBD1 and Error-Value 5 'A PCECC indicates to a PCC that it can
+   not complete the LABEL-DB synchronization' and terminate the session.  The PCECC
+   SHOULD re-establish the session with the D bit set to 0 in the OPEN
+   message.</t>
+
+   <t>The other procedures and error checks remain unchanged from the default
+   LABEL-DB synchronization defined in <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
+   <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>.</t>
+    </section>
+</section>
+
+    <section title="PCEP Extensions">
+        <section title="Extension of SRP object" anchor="SEC_SRP_OBJ">
+			<t>SRP object extension for SYNC flag to specify the LABEL-DB
+            synchronization operation is defined in 
+            <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>.</t>
+        </section>
+
+        <section title="Extension of PCECC Capability TLV" anchor="SEC_PCECC_CAP">
+			<t>PCECC Capability TLV is defined in <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>.
+			This draft defines a new 'INCLUDE-LABEL-DB-VERSION' flag (I bit) to specify
+			the label database version capability  and 'DELTA-LABEL-SYNC-CAPABILITY' to specify the
+			incremental label database synchronization capability.</t>
+
+			<t>The TLV format is as per <xref target="RFC5440"/>. The format of the PCECC Capability TLV is shown <xref target="SEC_PCECC_CAP_FIG"/>:</t>
+		<t>
+           <figure title="PCECC Capability TLV" suppress-title="false" align="center" alt="" width="" height="" anchor="SEC_PCECC_CAP_FIG">
+            <artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height=""><![CDATA[
+
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |               Type            |            Length=4           |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                             Flags                       |D|I|S|
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+          </figure>
+        </t>
+
+			<t>I (INCLUDE-LABEL-DB-VERSION - 1 bit):  if set to 1 by both PCEP Speakers,
+			the PCECC will include the LABEL-DB-VERSION TLV in each LABEL Object.</t>
+
+			<t>D (DELTA-LABEL-SYNC-CAPABILITY - 1 bit):  if set to 1 by a PCEP
+			speaker, it indicates that the PCEP speaker allows incremental
+			(delta) LABEL-DB synchronization.</t>
+        </section>
+
+        <section title="New LABEL-DB-VERSION TLV" anchor="SEC_LABEL_DB_VER_TLV">
+			 <t>The Label Database Version Number (LABEL-DB-VERSION) TLV is an
+			optional TLV that MAY be included in the OPEN object and the LABEL
+			object.</t>
+
+			<t>The TLV format is as per <xref target="RFC5440"/>. The format of the LABEL-DB-VERSION TLV is shown in the following figure:</t>
+		<t>
+          <figure title="LABEL-DB-VERSION TLV format" suppress-title="false" align="center" alt="" width="" height="" anchor="SEC_LABEL_DB_VER_TLV_FIG">
+            <artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height=""><![CDATA[
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Type=[TBD3]         |            Length=8           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                 Label Database Version Number                 |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+          </figure>
+        </t>
+
+			<t> The type of the TLV is [TBD3] and it has a fixed length of 8 octets.
+			The value contains a 64-bit unsigned integer, representing the Label
+			Database Version Number.</t>
+        </section>
+    </section>
+
+    <section title="IANA Considerations" toc="default">
+        <section title="PCEP TLV Type Indicators" toc="default">
+			<t>IANA is requested to confirm the early allocation of the following
+   TLV Type Indicator values within the "PCEP TLV Type Indicators" sub-
+   registry of the PCEP Numbers registry, and to update the reference in
+   the registry to point to this document, when it is an RFC:</t>
+     <texttable anchor="PCEP-New-TLV-CP" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Value</ttcol>
+      <ttcol align="left" width="30%">Meaning</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>[TBD]</c>
+       <c>LABEL-DB-VERSION TLV</c>
+       <c>This document</c>
+     </texttable>
+   
+      </section>
+	  
+	  <section title="PCECC-CAPABILITY TLV" toc="default">
+	  <t><xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> defines the
+        PCECC-CAPABILITY TLV and 
+        <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>
+        extends this TLV to add PCECC-SR-CAPABILITY.</t>
+	 <t>Requests that IANA creates a registry to manage the value of the new
+   PCECC-CAPABILITY TLV's Flag field.  IANA is requested to allocate a
+   new bits in the PCECC-CAPABILITY TLV Flag Field registry, as follows:</t>
+   
+     <texttable anchor="PCECC-Capability-TLV" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Bit</ttcol>
+      <ttcol align="left" width="30%">Description</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>30</c>
+       <c>I (INCLUDE-LABEL-DB-VERSION )</c>
+       <c>This document</c>
+	   <c>29</c>
+       <c>D (DELTA-LABEL-SYNC-CAPABILITY)</c>
+       <c>This document</c>
+     </texttable>
+   
+      </section>
+		
+    </section>
+<section title="Manageability Considerations" toc="default">
+ <t>
+  All manageability requirements and considerations listed in <xref target="RFC5440" pageno="false" format="default" />, 
+   <xref target="I-D.ietf-pce-stateful-pce" pageno="false" format="default" /> and <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>
+  apply to PCEP protocol extensions defined in this document. In addition, requirements and considerations listed in this section apply. 
+  </t>
+ <section title="Control of Function and Policy" toc="default">
+  </section>
+ <section title="Information and Data Models" toc="default">
+  </section>
+ <section title="Liveness Detection and Monitoring" toc="default">
+  </section>
+ <section title="Verify Correct Operations" toc="default">
+  </section>
+ <section title="Requirements On Other Protocols" toc="default">
+ </section>
+ <section title="Impact On Network Operations" toc="default">
+ </section>
+</section>
+ 
+ <section anchor="Security" title="Security Considerations" toc="default">
+ <t>
+  The security considerations listed in <xref target="I-D.ietf-pce-stateful-pce" pageno="false" format="default" /> and <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller" pageno="false" format="default" />
+  apply to this document as well. 
+    Securing the PCEP session using <!--[Stephen Farrell IESG comment] mechanism like TCP Authentication Option (TCP-AO) <xref target="RFC5925"/> or--> Transport Layer Security (TLS) 
+  <xref target="I-D.ietf-pce-pceps"/>, as per the recommendations and best current practices in <xref target="RFC7525"/>, is RECOMMENDED. 
+  </t>
+  </section> 
+	
+    <section title="Acknowledgements" toc="default">
+    <t>This document borrows some of the structure and text from
+    <xref target="I-D.ietf-pce-stateful-sync-optimizations"/>, and
+    would like to thanks the authors and contributors of the document.
+    </t>
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+    <?rfc include="reference.RFC.2119.xml" ?>
+    <?rfc include="reference.RFC.5440.xml" ?>
+    <?rfc include="reference.I-D.ietf-pce-stateful-pce"?>
+
+
+    <?rfc include="reference.I-D.zhao-pce-pcep-extension-for-pce-controller"?>
+    </references>
+    <references title="Informative References">
+    <?rfc include="reference.RFC.7525.xml" ?>
+    <?rfc include="reference.I-D.ietf-pce-pceps"?>
+    <?rfc include="reference.I-D.ietf-teas-pce-central-control"?>
+    <?rfc include="reference.I-D.ietf-pce-stateful-sync-optimizations"?>
+
+<reference anchor="I-D.zhao-pce-pcep-extension-for-sr-pce-controller">
+<front>
+<title>
+PCEP Procedures and Protocol Extensions for Using PCE as a Central Controller (PCECC) of LSPs
+</title>
+<author initials="Q" surname="Zhao" fullname="Quintin Zhao">
+<organization/>
+</author>
+<author initials="Z" surname="Li" fullname="Zhenbin Li">
+<organization/>
+</author>
+<author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+<organization/>
+</author>
+<author initials="S" surname="Karunanithi" fullname="Satish Karunanithi">
+<organization/>
+</author>
+<author initials="A" surname="Farrel" fullname="Adrian Farrel">
+<organization/>
+</author>
+<author initials="C" surname="Zhou" fullname="Chao Zhou">
+<organization/>
+</author>
+
+
+<date month="June" day="29" year="2017"/>
+</front>
+<seriesInfo name="Internet-Draft" value="draft-zhao-pce-pcep-extension-for-sr-pce-controller-00"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-zhao-pce-pcep-extension-for-sr-pce-controller-00.txt"/>
+</reference>    
+    </references>
+
+  </back>
+</rfc>
