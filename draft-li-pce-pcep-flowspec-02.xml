@@ -1,0 +1,992 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+
+<?rfc strict="no" ?>
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC5440 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440.xml">
+<!ENTITY RFC5575 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5575.xml">
+<!ENTITY RFC4364 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4364.xml">
+<!ENTITY RFC4655 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4655.xml">
+<!ENTITY RFC4657 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4657.xml">
+<!ENTITY RFC5088 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5088.xml">
+<!ENTITY RFC5089 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5089.xml">
+<!ENTITY RFC8126 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8126.xml">
+<!ENTITY RFC7399 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7399.xml">
+<!ENTITY RFC7761 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7761.xml">
+<!ENTITY RFC8126 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8126.xml">
+]>
+
+<rfc category="std" docName="draft-li-pce-pcep-flowspec-02" ipr="trust200902">
+
+<front>
+<title abbrev="PCEP-FlowSpec">PCEP Extension for Flow Specification</title>
+
+<author surname="Dhody" initials="D. " fullname="Dhruv Dhody" role="editor">
+  <organization>Huawei Technologies</organization>
+  <address>
+    <postal>
+      <street>Divyashree Techno Park, Whitefield</street>
+      <city>Bangalore, Karnataka</city>
+      <code>560066</code>
+      <country>India</country>
+    </postal>
+    <email>dhruv.ietf@gmail.com</email>
+  </address>
+</author>
+
+<author surname="Farrel" initials="A. " fullname="Adrian Farrel" role="editor">
+  <organization>Juniper Networks</organization>
+  <address>
+    <email>afarrel@juniper.net</email>
+  </address>
+</author>
+
+<author surname="Li" initials="Z. " fullname="Zhenbin Li">
+  <organization>Huawei Technologies</organization>
+  <address>
+    <postal>
+      <street>Huawei Bld., No.156 Beiqing Rd.</street>
+      <city>Beijing</city>
+      <code>100095</code>
+      <country>China</country>
+    </postal>
+    <email>lizhenbin@huawei.com</email>
+  </address>
+</author>
+
+<date />
+
+<abstract>
+ <t>The Path Computation Element (PCE) is a functional component capable of selecting
+    the paths through a traffic engineered networks.  These paths may be supplied
+    in response to requests for computation, or may be unsolicited directions
+    issued by the PCE to network elements.  Both approaches use the PCE Communication
+    Protocol (PCEP) to convey the details of the computed path.</t>
+
+ <t>Traffic flows may be categorized and described using "Flow Specifications".  RFC
+    5575 defines the Flow Specification and describes how it may be distributed in BGP
+    to allow specific traffic flows to be associated with routes.</t>
+
+ <t>This document specifies a set of extensions to PCEP to support dissemination of
+    Flow Specifications.  This allows a PCE to indicate what traffic should be placed
+    on each flow that it is aware of.  It also allows a PCE to play a role in a BGP
+    network by installing Flow Specification information at BGP speakers.</t>
+</abstract>
+
+<note title="Requirements Language">
+ <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+    document are to be interpreted as described in <xref target="RFC2119" />.</t>
+</note>
+
+</front>
+
+<middle>
+
+<section title="Introduction">
+
+ <t>Dissemination of traffic flow specifications (Flow Specifications) was introduced
+    for BGP in <xref target="RFC5575" />.  A Flow Specification is comprised of traffic
+    filtering rules and actions.  The routers that receive a Flow Specification can
+    classify received packets according to the traffic filtering rules and shape, rate
+    limit, filter, or redirect packets based on the actions.  The Flow Specification
+    carried by BGP can be used to automate inter-domain coordination of traffic filtering
+    to mitigate (distributed) denial-of-service attacks and can also be used to provide
+    traffic filtering in the context of a BGP/MPLS Virtual Private Network (VPN) service.</t>
+
+ <t><xref target="RFC5575"/> also defines that a Flow Specification received from an
+    external autonomous system will need to be validated against unicast routing before
+    being accepted.  <xref target="I-D.ietf-idr-bgp-flowspec-oid"/> describes a
+    modification to the validation procedure to enable Flow Specifications to be originated
+    from a centralized BGP route controller.</t>
+
+ <t><xref target="I-D.ietf-ospf-flowspec-extensions"/> defines extensions to OSPF to
+    distribute Flow Specifications in the networks that only deploy an IGP (Interior
+    Gateway Protocol) (i.e., OSPF).  It also defines the validation procedures for imposing
+    filtering information at routers.</t>
+
+ <t><xref target="RFC4655"/> defines the Path Computation Element (PCE), a functional component
+    capable of computing paths for use in networks.  PCE was originally conceived for use in
+    Multiprotocol Label Switching (MPLS) for Traffic Engineering networks to derive the routes
+    of Label Switched Paths (LSPs).  However, the scope of PCE was quickly extended to make it
+    applicable to Generalized MPLS (GMPLS) networks, and more recent work has brought other
+    traffic engineering technologies and planning applications into scope (for example,
+    Segment Routing <xref target="I-D.ietf-pce-segment-routing" />).</t>
+
+ <t><xref target="RFC5440"/> describes the Path Computation Element Protocol (PCEP).  PCEP
+    defines the communication between a Path Computation Client (PCC) and a PCE, or between
+    PCE and PCE, enabling computation of MPLS for Traffic Engineering LSP (TE-LSP)
+    characteristics.</t>
+
+ <t>Stateful PCE <xref target="I-D.ietf-pce-stateful-pce"/> specifies a set of extensions to
+    PCEP to enable stateful control of TE-LSPs between and across PCEP sessions in compliance
+    with <xref target="RFC4657"/>.  It includes mechanisms to effect LSP state synchronization
+    between PCCs and PCEs, delegation of control of LSPs to PCEs, and PCE control of timing and
+    sequence of path computations within and across PCEP sessions and focuses on a model where
+    LSPs are configured on the PCC and control over them is delegated to the PCE.
+    <xref target="I-D.ietf-pce-pce-initiated-lsp"/> describes the setup, maintenance, and teardown
+    of PCE-initiated LSPs under the stateful PCE model, without the need for local configuration
+    on the PCC, thus allowing for a dynamic network that is centrally controlled and deployed.</t>
+
+ <t><xref target="I-D.ietf-teas-pce-central-control"/> introduces the architecture for PCE as a
+    central controller and describes how PCE can be viewed as a component that performs computation
+    to place &apos;flows&apos; within the network and decide how these flows are routed.</t>
+
+ <t>When a PCE is used to initiate tunnels (such as TE-LSPs) using PCEP, it is important that the
+    head end of the tunnels understands what traffic to place on each tunnel.  The data flows
+    intended for a tunnel can be described using Flow Specifications, and when PCEP is in use for
+    tunnel initiation it makes sense for that same protocol to be used to distribute the Flow
+    Specifications that describe what data flows on those tunnels.</t>
+
+ <t>This document specifies a set of extensions to PCEP to support dissemination of Flow
+    Specifications.  The extensions include the creation, update, and withdrawal of
+    Flow Specifications via PCEP and can be applied to tunnels initiated by the PCE or to
+    tunnels where control is delegated to the PCE by the PCC.  Furthermore, a PCC requesting a
+    new path can include Flow Specifications in the request to indicate the purpose of the tunnel
+    allowing the PCE to factor this in during the path computation.</t>
+
+ <t>Flow Specifications are carried in TLVs within a new Flow Spec Object defined in this document.
+    The flow filtering rules indicated by the Flow Specifications are mainly defined by BGP Flow
+    Specifications.</t>
+
+</section>
+
+<section title="Terminology">
+
+ <t>This document uses the following terms defined in <xref target="RFC5440"/>: PCC, PCE, PCEP Peer.</t>
+
+ <t>The following term from <xref target="RFC5575"/> is used frequently throughout this
+    document:
+    <list style="empty">
+
+       <t>Flow Specification (FlowSpec): A Flow Specification is an n-tuple consisting of several
+          matching criteria that can be applied to IP traffic, including filters and actions.  Each
+          FlowSpec consists of a set of filters and a set of actions.</t>
+
+    </list></t>
+
+ <t>This document uses the terms "stateful PCE" and "active PCE" as advocated in <xref target="RFC7399" />.</t>
+
+</section>
+
+<section title="Procedures for PCE Use of Flow Specifications">
+
+ <t>There are three elements of procedure:
+
+    <list style="symbols">
+       <t>A PCE and a PCC must be able to indicate whether or not they support the use of Flow
+          Specifications.</t>
+
+       <t>A PCE or PCC must be able to include Flow Specifications in PCEP messages with clear
+          understanding of the applicability of those Flow Specifications in each case including
+          whether the use of such information is mandatory, constrained, or optional.</t>
+
+       <t>Synchronization of Flow Specification information/state between PCEP peers.</t>
+    </list></t>
+
+ <t>The following subsections describe these points.</t>
+
+ <section title="Capability Advertisement">
+
+   <section title="PCEP OPEN Message" anchor="open">
+
+      <t>During PCEP session establishment, a PCC or PCE that supports the procedures described in
+         this document announces this fact by including the "PCE FlowSpec Capability" TLV, described in
+         <xref target="cap"/>, in the OPEN Object carried in the  to advertise its support for PCEP
+         extensions for PCE FlowSpec Capability.</t>
+
+      <t>The presence of the PCE FlowSpec Capability TLV in the OPEN Object in a PCE&apos;s OPEN message
+         indicates that the PCE can support distribute the FlowSpec to PCCs and can receive FlowSpecs in
+         messages from the PCCs.</t>
+
+      <t>The presence of the PCE FlowSpec Capability TLV in the OPEN Object in a PCC&apos;s OPEN message
+         indicates that the PCC supports the FlowSpec functionality described in this document.</t>
+
+      <t>If either one of a pair of PCEP peers does not indicate support of the FlowSpec functionality
+         described in this document by including the PCE FlowSpec Capability TLV in the OPEN Object in
+         its OPEN message, then the other peer MUST NOT include a FlowSpec object in any PCEP message send to
+         the peer that does not support the procedures.  If a FlowSpec object is received even though support
+         has not been indicated, the receiver will respond with a PCErr message reporting the objects
+         containing the FlowSpec as described in <xref target="RFC5440" />: that is, it will use &apos;Unknown
+         Object&apos; if it does not support this specification, and &apos;Not supported object&apos; if it
+         supports this specification but has not chosen to support FlowSpec objects on this PCEP session.</t>
+
+   </section>
+
+   <section title="IGP PCE Capabilities Advertisement">
+
+      <t>The ability to advertise support for PCEP and PCE features in IGP advertisements is provided
+         for OSPF in <xref target="RFC5088" /> and for IS-IS in <xref target="RFC5089" />.  The mechanism
+         uses the PCE Discovery TLV which has a PCE-CAP-FLAGS sub-TLV containing bit-flags each of which
+         indicates support for a different feature.</t>
+
+      <t>This document defines a new PCE-CAP-FLAGS sub-TLV bit, the FlowSpec Capable flag (bit number TBD1).
+         Setting the bit indicates that an advertising PCE supports the procedures defined in this document.</t>
+
+      <t>Note that while PCE FlowSpec Capability may be advertised during discovery, PCEP speakers that wish to
+         use Flow Specification in PCEP MUST negotiate PCE FlowSpec Capability during PCEP session setup, as
+         specified in <xref target="open" />.  A PCC MAY initiate PCE FlowSpec Capability negotiation at PCEP
+         session setup even if it did not receive any IGP PCE capability advertisement.</t>
+
+   </section>
+
+ </section>
+
+ <section title="Dissemination Procedures">
+
+   <t>This section introduces the procedures to support Flow Specifications in PCEP messages.</t>
+
+   <t>The primary purpose of distributing Flow Specifications information is to allow a PCE to indicate to
+      a PCC what traffic it should place on a path (such as an LSP or a Segment Routing path).  This means
+      that the Flow Specification may be included in:
+      <list style="symbols">
+
+         <t>PCInitiate messages so that an active PCE can indicate the traffic to place on a path at the time
+            that the PCE instantiates the path.</t>
+
+         <t>PCUpd messages so that an active PCE can indicate or change the traffic to place on a path
+            that has already been set up.</t>
+
+         <t>PCRpt messages so that a PCC could report the traffic that the PCC plans to place on the path.</t>
+
+         <t>PCReq messages so that a PCC can indicate what traffic it plans to place on a path at the time it
+            requests the PCE to perform a computation in case that information aids the PCE in its work.</t>
+
+         <t>PCRep messages so that a PCE that has been asked to compute a path can suggest which traffic
+            could be placed on a path that a PCC may be about to set up.</t>
+
+         <t>PCErr messages so that issues related to paths and the traffic they carry can be reported to the
+            PCE by the PCC, and so that problems with other PCEP messages that carry Flow Specifications can
+            be reported.</t>
+      </list></t>
+
+   <t>To carry Flow Specifications in PCEP messages, this document defines a new PCEP object called the
+      PCE Flow Spec Object.  The object optional can appear more than once in any of the messages described
+      above.</t>
+
+   <t>The PCE Flow Spec Object carries one or more Flow Filter TLVs, each of which describes a traffic flow.</t>
+
+   <t>The inclusion of multiple PCE Flow Spec Objects allow multiple traffic flows to be placed on a single
+      path.</t>
+
+   <t>Once a PCE and PCC have established that they can both support the use of Flow Specifications in PCEP
+      messages such information may be exchanged at any time for new or existing paths.</t>
+
+ </section>
+
+ <section title="Flow Specification Synchronization">
+
+   <t>The Flow Specifications are carried along with the LSP State information as per
+      <xref target="I-D.ietf-pce-stateful-pce" />, making the Flow Specifications as part of the LSP database
+      (LSP-DB).  Thus, the synchronization of the Flow Specification information is done as part of the LSP-DB
+      synchronization.  This may be achieved using normal state synchronization procedures as described in
+      <xref target="I-D.ietf-pce-stateful-pce" /> or enhanced state synchronization procedures as defined in
+      <xref target="I-D.ietf-pce-stateful-sync-optimizations" />.</t>
+
+   <t>The approach selected will be implementation and deployment specific and will depend on issues such as
+      how the databases are constructed and what level of synchronization support is needed.</t>
+
+ </section>
+
+</section>
+
+<section title="PCE FlowSpec Capability TLV" anchor="cap">
+
+ <t>The PCE-FLOWSPEC-CAPABILITY TLV is an optional TLV associated with the OPEN Object
+    <xref target="RFC5440"/> to exchange PCE FlowSpec capabilities of PCEP speakers.</t>
+
+ <t>The format of the PCE-FLOWSPEC-CAPABILITY TLV follows the format of all PCEP TLVs
+    as defined in <xref target="RFC5440" /> and is shown in <xref target="capfig" />.</t>
+
+ <figure title="PCE-FLOWSPEC-CAPABILITY TLV format" anchor="capfig">
+   <artwork>
+     <![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Type=[TBD2]           |          Length=2             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Value=0             |          Padding              |
++---------------------------------------------------------------+
+     ]]>
+    </artwork>
+  </figure>
+
+  <t>The type of the PCE-FLOWSPEC-CAPABILITY TLV is TBD2 and it has a fixed length of 2 octets.
+     The Value field is set to default value 0.</t>
+
+  <t>The inclusion of this TLV in an OPEN object indicate that the sender can perform FlowSpec handling
+     as defined in this document.</t>
+</section>
+
+<section title="PCE Flow Spec Object">
+
+ <t>The PCEP Flow Spec object defined in this document are compliant with the PCEP object format
+    defined in <xref target="RFC5440"/>.</t>
+
+ <t>The PCEP Flow Spec object carries a FlowSpec filter rule encoded in a TLV (as defined in
+    <xref target="tlv" /> and is OPTIONAL in the PCReq, PCRep, PCErr, PCInitiate, PCRpt, and PCUpd
+    messages.  It MAY be present zero, one, or more times.  Each instance of the object specifies a
+    traffic flow.</t>
+
+ <t>The FLOW SPEC Object-Class is TBD3 (to be assigned by IANA).</t>
+
+ <t>The FLOW SPEC Object-Type is 1.</t>
+
+ <t>The format of the body of the PCE Flow Spec object is shown in <xref target="FlowSpecFig" /></t>
+
+ <figure title="PCE Flow Spec Object Body Format" anchor="FlowSpecFig">
+   <artwork>
+     <![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            FS-ID                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                Reserved                                     |R|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                   Flow Filter TLV (variable)                  |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     ]]>
+   </artwork>
+ </figure>
+
+ <t>FS-ID(32-bit): A PCEP-specific identifier for the FlowSpec information.  A PCE
+    creates an unique FS-ID for each FlowSpec that is constant for the lifetime of
+    a PCEP session.  All subsequent PCEP messages then address the FlowSpec by the
+    FS-ID.  The values 0 and 0xFFFFFFFF are reserved.</t>
+
+ <t>Reserved bits: MUST be set to zero on transmission and ignored on receipt.</t>
+
+ <t>R bit: The Remove bit is set when a PCE Flow Spec Object is included in a PCEP
+    message to indicate removal of the Flow Specification from the associated tunnel.
+    If the bit is clear, the Flow Specification is being added or modified.</t>
+
+ <t>Flow Filter TLV (variable): One TLV MAY be included.</t>
+
+ <t>The Flow Filter TLV is OPTIONAL when the R bit is set.  The TLV MUST be present
+    when the R bit is clear. If the TLV is missing when the R bit is clear, the PCEP peer
+    MUST respond with a PCErr message with error-type TBD8 (FlowSpec Error), error-value 1
+    (Malformed FlowSpec).</t>
+
+</section>
+
+<section title="Flow Filter TLV" anchor="tlv">
+
+ <t>A new PCEP TLV is defined to convey Flow Specification filtering rules that specify
+    what traffic is carried on a path.  The TLV follows the format of all PCEP TLVs as defined
+    in <xref target="RFC5440" />.  The Type field values come from the codepoint space for
+    PCEP TLVs an has the value TBD4.</t>
+
+ <t>The Value field contains one or more sub-TLVs (the Flow Specification TLVs) as defined in
+    <xref target="subtlv" />.  Only one Flow Filter TLV can be present which represents the
+    complete definition of a Flow Specification for traffic to be placed on the tunnel indicated
+    by the PCEP message in which the PCE Flow Spec Object is carried.  The set of Flow Specification
+    TLVs in a single instance of a Flow Filter TLV are combined to indicate the specific Flow
+    Specification.</t>
+
+</section>
+
+<section title="Flow Specification TLVs" anchor="subtlv">
+
+ <t>The Flow Specification TLVs carried as sub-TLVs of the Flow Filter TLV also follow the format
+    of all PCEP TLVs as defined in <xref target="RFC5440" />, however, the Type values are selected
+    from a separate IANA registry (see <xref target="iana" />) rather than from the common PCEP TLV
+    registry.</t>
+
+ <t>Type values are chosen so that there can be commonality with Flow Specifications defined for use
+    with BGP.  This is possible because the BGP Flow Spec encoding uses a single octet to encode the
+    type where PCEP uses two octets.  Thus the space of values for the Type field is partitioned as
+    shown in <xref target="fspectlvs" />.</t>
+
+ <figure title="Flow Specification TLV Type Ranges" anchor="fspectlvs">
+   <artwork>
+     <![CDATA[
+Range          |
+---------------+---------------------------------------------------
+0              | Reserved - must not be allocated.
+               |
+1 .. 255       | Per BGP registry defined by [RFC5575].
+               | Not to be allocated in this registry.
+               |
+256 ..   65535 | New PCEP Flow Specs allocated according to the
+               | registry defined in this document.
+     ]]>
+   </artwork>
+ </figure>
+
+ <t>The content of Value field each TLV is specific to the type and describes the parameters
+    of the Flow Specification.  The definition of the format of many of these Value fields
+    is inherited from BGP specifications as shown in <xref target="tlvFig" />.  Specifically,
+    the inheritance is from <xref target="RFC5575"/> and <xref target="I-D.ietf-idr-flow-spec-v6"/>,
+    but may also be inherited from future BGP specifications.</t>
+
+ <t>When multiple Flow Specification TLVs are present in a single Flow Filter TLVs they are
+    combined to produce a more detailed description of a flow.  For examples and rules about how
+    this is achieved, see <xref target="RFC5575"/>.</t>
+
+ <t>When used in other protocols (such as BGP) these Flow Specifications are also associated
+    with actions to indicate how traffic matching the Flow Specification should be treated.
+    However, in PCEP the only action is to associated the traffic with a tunnel and to forward
+    matching traffic on to that path, so no encoding of an action is needed.</t>
+
+ <t><xref target="priorities" /> describes how overlapping Flow Specifications are prioritized and
+    handled.</t>
+
+ <figure title="Table of Flow Specification TLV Types" anchor="tlvFig">
+   <artwork>
+     <![CDATA[
++-------+-------------------------+-----------------------------+
+| Type  | Description             | Value defined in            |
+|       |                         |                             |
++-------+-------------------------+-----------------------------+
+| *     | Destination IPv4 Prefix | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Source IPv4 Prefix      | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | IP Protocol             | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Port                    | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Destination port        | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Source port             | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | ICMP type               | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | ICMP code               | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | TCP flags               | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Packet length           | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | DSCP                    | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Fragment                | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Flow Label              | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
+| *     | Destination IPv6 Prefix | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
+| *     | Source IPv6 Prefix      | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
+| *     | Next Header             | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
+| TBD5  | Route Distinguisher     | [I-D.dhodylee-pce-pcep-ls]  |
++-------+-------------------------+-----------------------------+
+| TBD6  | IPv4 Multicast Flow     | [This.I-D]                  |
++-------+-------------------------+-----------------------------+
+| TBD7  | IPv6 Multicast Flow     | [This.I-D]                  |
++-------+-------------------------+-----------------------------+
+
+  * Indicates that the TLV Type value comes from the value used in
+     ]]>
+   </artwork>
+ </figure>
+
+ <t>All Flow Specification TLVs with Types in the range 1 to 255 have Values defined
+    for use in BGP (for example in <xref target="RFC5575"/> and
+    <xref target="I-D.ietf-idr-flow-spec-v6"/>) and are set using the BGP encoding,
+    but without the type or length octets (the relevant information is in the
+    Type and Length fields of the TLV).  The Value field is padded with trailing
+    zeros to achieve 4-byte alignment if necessary.</t>
+
+ <t><xref target="I-D.dhodylee-pce-pcep-ls"/> defines a way to convey identification
+    of a VPN in PCEP via a Route Distinguisher (RD) <xref target="RFC4364"/> and
+    encoded in ROUTE-DISTINGUISHER TLV.  A Flow Specification TLV with Type TBD5
+    carries a Value field matching that in the ROUTE-DISTINGUISHER TLV and is used
+    to identify that other flow filter information (for example, an IPv4 destination
+    prefix) is associated with a specific VPN identified by the RD.</t>
+
+ <t>Although it may be possible to describe a multicast Flow Specification from the
+    combination of other Flow Specification TLVs with specific values, it is more convenient
+    to use a dedicated Flow Specification TLV.  Flow Specification TLVs with Type
+    values TBD6 and TBD7 are used to identify a multicast flow for IPv4 and IPv6 respectively.
+    The Value field is encoded as shown in <xref target="mcastfig" />.</t>
+
+ <figure title="Multicast Flow Specification TLV Encoding" anchor="mcastfig">
+   <artwork>
+     <![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Rsvd  |S|W|R|    Rsvd   |B|Z|  Src Mask Len | Grp Mask Len  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                        Source Address                         ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                Group multicast Address                        ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     ]]>
+   </artwork>
+ </figure>
+
+ <t>The fields of the two Multicast Flow Specification TLVs are as described in Section 4.9.1
+    of <xref target="RFC7761" /> noting that the two address fields are 32 bits for the IPv4
+    Multicast Flow and 128 bits for the IPv6 Multicast Flow.</t>
+
+</section>
+
+<section title="Detailed Procedures" anchor="detailes">
+
+ <t>This section outlines some specific detailed procedures for using the protocol extensions
+    defined in this document.</t>
+
+ <section title="Default Behavior" anchor="default">
+
+    <t>The default behavior is that no Flow Specification is applied to a tunnel.  That is,
+       the default is that the Flow Spec object is not used as in all systems before the
+       implementation of this specification.</t>
+
+    <t>In this case it is a local matter (such as through configuration) how tunnel head ends
+       are instructed what traffic to place on a tunnel.</t>
+
+ </section>
+
+ <section title="Composite Flow Specifications" anchor="composite">
+
+   <t>Flow Specifications may be represented by a single Flow Specification TLV or may require a
+      more complex description using multiple Flow Specification TLVs.  For example, a flow
+      indicated by a source-destination pair of IPv6 addresses would be described by the
+      combination of Destination IPv6 Prefix and Source IPv6 Prefix Flow Specification TLVs.</t>
+
+   <section title="Modifying Flow Specifications" anchor="modify">
+      <t>A PCE may want to modify a Flow Specification associate with a tunnel, or a PCC may
+         want to report a change to the Flow Specification it is using with a tunnel.</t>
+
+      <t>It is important that the specific Flow Specification is identified so that it is clear
+         that this is a modification of an existing flow and not the addition of a new flow as
+         described in <xref target="multiple" />.  The FS-ID field of the PCE Flow Spec Object
+         is used to identify an specific Flow Specification.</t>
+
+      <t>When modifying a Flow Specification, all Flow Specification TLVs for the intended specification
+         of the flow MUST be included in the PCE Flow Spec Object and the FS-ID MUST be retained from the
+         previous description of the flow.</t>
+
+   </section>
+
+ </section>
+
+ <section title="Multiple Flow Specifications" anchor="multiple">
+
+   <t>It is possible that multiple flows will be place on a single tunnel.  In some cases it is possible to
+      to define these within a single PCE Flow Spec Object: for example, two Destination IPv4 Prefix TLVs
+      could be included to indicate that packets matching either prefix are acceptable.  Note that from PCEP
+      point of view it would be considered as a single Flow Specification identified by an FS-ID.</t>
+
+   <t>However, in other scenarios using multiple Flow Specification TLVs would be confusing.  For example,
+      if flows from A to B and from C to D are to be included then using two Source IPv4 Prefix TLVs
+      and two Destination IPv4 Prefix TLVs would be confusing.  In these cases, each Flow Specification is
+      carried in its own PCE Flow Spec Object with multiple objects present on a single PCEP message.  Use
+      of separate object allow easier removal and modification of Flow  Specification.</t>
+
+   <section title="Adding and Removing Flow Specifications" anchor="addremove">
+      <t>The Remove bit in the the PCE Flow Spec Object is left clear when a Flow Specification is being
+         added or modified.</t>
+
+      <t>To remove a Flow Specification, a PCE Flow Spec Object is included with the FS-ID matching the
+         one being removed, and the R bit set to indicate removal.  In this case it is not necessary to
+         include any Flow Specification TLVs.</t>
+   </section>
+
+ </section>
+
+ <section title="Priorities and Overlapping Flow Specifications" anchor="priorities">
+   <t>TBD</t>
+ </section>
+
+ <section title="Error Processing" anchor="errors">
+   <t>TBD</t>
+ </section>
+
+</section>
+
+<section title="PCEP Messages" anchor="messages">
+
+ <t>The FLOW SPEC Object is OPTIONAL and MAY be carried in the PCEP messages.</t>
+
+ <t>The PCInitiate message is defined in <xref target="I-D.ietf-pce-pce-initiated-lsp" /> and updated
+    as below:</t>
+
+ <figure>
+   <artwork>
+     <![CDATA[
+<PCInitiate Message> ::= <Common Header>
+                         <PCE-initiated-lsp-list>
+
+Where:
+   <PCE-initiated-lsp-list> ::= <PCE-initiated-lsp-request>
+                                [<PCE-initiated-lsp-list>]
+
+   <PCE-initiated-lsp-request> ::=
+                                 ( <PCE-initiated-lsp-instantiation>|
+                                   <PCE-initiated-lsp-deletion> )
+
+   <PCE-initiated-lsp-instantiation> ::= <SRP>
+                                         <LSP>
+                                         [<END-POINTS>]
+                                         <ERO>
+                                         [<attribute-list>]
+                                         [<flowspec-list>]
+
+   Where:
+      <flowspec-list> ::= <FLOWSPEC> [<flowspec-list>]
+     ]]>
+   </artwork>
+ </figure>
+
+ <t>The PCUpd message is defined in <xref target="I-D.ietf-pce-stateful-pce" /> and
+    updated as below:</t>
+
+ <figure>
+   <artwork>
+     <![CDATA[
+<PCUpd Message> ::= <Common Header>
+                    <update-request-list>
+
+Where:
+   <update-request-list> ::= <update-request>
+                             [<update-request-list>]
+
+   <update-request> ::= <SRP>
+                        <LSP>
+                        <path>
+                        [<flowspec-list>]
+
+   Where:
+      <path>::= <intended-path><intended-attribute-list>
+
+      <flowspec-list> ::= <FLOWSPEC> [<flowspec-list>]
+     ]]>
+   </artwork>
+ </figure>
+
+ <t>The PCRpt message is defined in <xref target="I-D.ietf-pce-stateful-pce"/> and
+    updated as below:</t>
+
+ <figure>
+   <artwork>
+     <![CDATA[
+<PCRpt Message> ::= <Common Header>
+                    <state-report-list>
+
+Where:
+   <state-report-list> ::= <state-report>[<state-report-list>]
+
+   <state-report> ::= [<SRP>]
+                      <LSP>
+                      <path>
+                      [<flowspec-list>]
+
+    Where:
+      <path>::= <intended-path>
+                [<actual-attribute-list><actual-path>]
+                <intended-attribute-list>
+
+      <flowspec-list> ::= <FLOWSPEC> [<flowspec-list>]
+     ]]>
+   </artwork>
+ </figure>
+
+ <t>The PCReq message is defined in [RFC5440] and updated in <xref target="I-D.ietf-pce-stateful-pce" />,
+    it is further updated below for flow specification:</t>
+
+ <figure>
+   <artwork>
+     <![CDATA[
+<PCReq Message>::= <Common Header>
+                   [<svec-list>]
+                   <request-list>
+
+Where:
+   <svec-list>::= <SVEC>[<svec-list>]
+
+   <request-list>::= <request>[<request-list>]
+
+   <request>::= <RP>
+                <END-POINTS>
+                [<LSP>]
+                [<LSPA>]
+                [<BANDWIDTH>]
+                [<metric-list>]
+                [<RRO>[<BANDWIDTH>]]
+                [<IRO>]
+                [<LOAD-BALANCING>]
+                [<flowspec-list>]
+
+   Where:
+      <flowspec-list> ::= <FLOWSPEC> [<flowspec-list>]
+     ]]>
+   </artwork>
+ </figure>
+
+ <t>The PCRep message is defined in <xref target="RFC5440" /> and updated in
+    <xref target="I-D.ietf-pce-stateful-pce" />, it is further updated below for flow
+    specification:</t>
+
+ <figure>
+   <artwork>
+     <![CDATA[
+<PCRep Message> ::= <Common Header>
+                    <response-list>
+
+Where:
+
+   <response-list>::=<response>[<response-list>]
+
+   <response>::=<RP>
+               [<LSP>]
+               [<NO-PATH>]
+               [<attribute-list>]
+               [<path-list>]
+               [<flowspec-list>]
+
+   Where:
+      <flowspec-list> ::= <FLOWSPEC> [<flowspec-list>]
+     ]]>
+   </artwork>
+ </figure>
+
+</section>
+
+<section title="IANA Considerations" anchor="iana">
+
+ <t>IANA maintains the "Path Computation Element Protocol (PCEP) Numbers" registry.
+    This document requests IANA actions to allocate code points for the protocol elements
+    defined in this document.</t>
+
+ <section title="PCEP Objects">
+
+   <t>Each PCEP object has an Object-Class and an Object-Type.  IANA maintains a
+      subregistry called "PCEP Objects".  IANA is requested to make an assingment from this
+      subregistry as follows:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+Object-Class | Value Name    | Object-Type          |  Reference
+-------------+---------------+----------------------+----------------
+   TBD3      |   FLOW SPEC   |  0 (Reserved)        |  [This.I-D]
+                             |  1                   |  [This.I-D]
+       ]]>
+     </artwork>
+   </figure>
+ </section>
+
+ <section title="PCEP TLV Type Indicators">
+
+   <t>IANA maintains a subregistry called "PCEP TLV Type Indicators".  IANA is requested to
+      make an assingment from this subregistry as follows:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+Value   | Meaning                      | Reference
+--------+------------------------------+-------------
+ TBD2   | PCE-FLOWSPEC-CAPABILITY TLV  | [This.I-D]
+ TBD4   | FLOW FILTER TLV              | [This.I-D]
+       ]]>
+     </artwork>
+   </figure>
+ </section>
+
+ <section title="Flow Specification TLV Type Indicators">
+
+   <t>IANA is requested to create a new subregistry call the PCEP Flow Specification TLV Type Indicators registry.</t>
+
+   <t>Allocations from this registry are to be made according to the following assignment policies <xref target="RFC8126" />:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+Range          | Assignment policy
+---------------+---------------------------------------------------
+0              | Reserved - must not be allocated.
+               |
+1 .. 255       | Reserved - must not be allocated.
+               | Usage mirrors the BGP FlowSpec registry [RFC5575].
+               |
+258 ..   64506 | Specification Required
+               |
+64507 .. 65531 | First Come First Served
+               |
+65532 .. 65535 | Experimental
+       ]]>
+     </artwork>
+   </figure>
+
+   <t>IANA is requested to pre-populate this registry with values defined in this
+      document as follows:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+ Value | Meaning
+-------+------------------------
+ TBD5  | Route Distinguisher
+ TBD6  | IPv4 Multicast
+ TBD7  | IPv6 Multicast
+       ]]>
+     </artwork>
+   </figure>
+ </section>
+
+ <section title="PCEP Error Codes">
+
+   <t>IANA maintains a subregistry called "PCEP-ERROR Object Error Types and Values".  Entries
+      in this subregistry are described by Error-Type and Error-value.  IANA is requested to
+      make the following assignment from this subregistry:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+ Error-| Meaning            | Error-value                | Reference
+ Type  |                    |                            |
+-------+--------------------+----------------------------+-----------
+ TBD8  | FlowSpec error     | 0: Unassigned              | [This.I-D]
+       |                    | 1: Unsupported FlowSpec    | [This.I-D]
+       |                    | 2: Malformed FlowSpec      | [This.I-D]
+       |                    | 3: Unresolvable conflict   | [This.I-D]
+       |                    | 4-255: Unassigned          | [This.I-D]
+       ]]>
+     </artwork>
+   </figure>
+ </section>
+
+ <section title="PCE Capability Flag">
+   <t>IANA maintains a subregistry called "Open Shortest Path First v2 (OSPFv2) Parameters"
+      with a sub-registry called "Path Computation Element (PCE) Capability Flags".  IANA is
+      requested to assign a new capability bit from this registry as follows:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+ Bit   | Capability Description        | Reference
+-------+-------------------------------+------------
+ TBD1  | FlowSpec                      | [This.I-D]
+       ]]>
+     </artwork>
+   </figure>
+ </section>
+
+</section>
+
+<section title="Security Considerations" anchor="Security">
+ <t>TBD.</t>
+</section>
+
+<section title="Acknowledgements">
+ <t>Thanks to Julian Lucek and Sudhir Cheruathur for useful discussions.</t>
+</section>
+
+</middle>
+
+<back>
+
+<references title="Normative References">
+  &RFC2119;
+  &RFC5440;
+  &RFC5575;
+ <?rfc include='reference.I-D.ietf-idr-flow-spec-v6'?>
+ <?rfc include='reference.I-D.dhodylee-pce-pcep-ls'?>
+</references>
+
+<references title="Informative References">
+  &RFC4364;
+  &RFC4655;
+  &RFC4657;
+  &RFC5088;
+  &RFC5089;
+  &RFC7399;
+  &RFC7761;
+  &RFC8126;
+ <?rfc include='reference.I-D.ietf-pce-stateful-pce'?>
+ <?rfc include='reference.I-D.ietf-pce-pce-initiated-lsp'?>
+ <?rfc include='reference.I-D.ietf-idr-bgp-flowspec-oid'?>
+ <?rfc include='reference.I-D.ietf-ospf-flowspec-extensions'?>
+ <?rfc include='reference.I-D.ietf-pce-segment-routing'?>
+ <?rfc include='reference.I-D.ietf-pce-stateful-sync-optimizations'?>
+ <?rfc include='reference.I-D.ietf-teas-pce-central-control'?>
+</references>
+
+<section title="Contributor Addresses" toc="default">
+  <figure title="" align="left" height="" width="" alt="" suppress-title="false">
+    <artwork>
+      <![CDATA[
+Shankara
+Huawei Technologies
+Divyashree Techno Park,
+Whitefield Bangalore,
+Karnataka
+560066
+India
+
+Email: shankara@huawei.com
+
+Qiandeng Liang
+Huawei Technologies
+101 Software Avenue,
+Yuhuatai District
+Nanjing
+210012
+China
+
+Email: liangqiandeng@huawei.com
+
+Cyril Margaria
+Juniper Networks
+200 Somerset Corporate Boulevard, Suite 4001
+Bridgewater, NJ
+08807
+USA
+
+Email: cmargaria@juniper.net
+
+Colby Barth
+Juniper Networks
+200 Somerset Corporate Boulevard, Suite 4001
+Bridgewater, NJ
+08807
+USA
+
+Email: cbarth@juniper.net
+
+Xia Chen
+Huawei Technologies
+Huawei Bld., No.156 Beiqing Rd.
+Beijing
+100095
+China
+
+Email: jescia.chenxia@huawei.com
+
+Shunwan Zhuang
+Huawei Technologies
+Huawei Bld., No.156 Beiqing Rd.
+Beijing
+100095
+China
+
+Eemail: zhuangshunwan@huawei.com
+
+     ]]>
+   </artwork>
+ </figure>
+</section>
+
+</back>
+
+</rfc>
