@@ -1,0 +1,1465 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"
+[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902"
+     category="std"
+     docName="draft-zhao-pce-pcep-extension-for-pce-controller-05"
+     obsoletes=""
+     updates=""
+     submissionType="IETF"
+     xml:lang="en">
+  <front>
+    <title abbrev="PCECC">PCEP Procedures and Protocol Extensions for
+    Using PCE as a Central Controller (PCECC) of LSPs</title>
+    <author initials="Q"
+            surname="Zhao"
+            fullname="Quintin Zhao">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>125 Nagog Technology Park</street>
+          <city>Acton</city>
+          <region>MA</region>
+          <code>01719</code>
+          <country>USA</country>
+        </postal>
+        <email>quintin.zhao@huawei.com</email>
+      </address>
+    </author>
+    <author initials="Z"
+            surname="Li"
+            fullname="Zhenbin Li">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Huawei Bld., No.156 Beiqing Rd.</street>
+          <city>Beijing  </city>
+          <region></region>
+          <code>100095</code>
+          <country>China</country>
+        </postal>
+        <email>lizhenbin@huawei.com</email>
+      </address>
+    </author>
+    <author fullname="Dhruv Dhody"
+            initials="D"
+            surname="Dhody">
+      <organization abbrev="Huawei Technologies">Huawei
+      Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+    <author initials="S" surname="Karunanithi" fullname="Satish Karunanithi">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>satishk@huawei.com</email>
+      </address>
+    </author>
+    
+    <author initials="A"
+            surname="Farrel"
+            fullname="Adrian Farrel">
+      <organization>Juniper Networks, Inc</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country>UK</country>
+        </postal>
+        <email>adrian@olddog.co.uk</email>
+      </address>
+    </author>
+    
+    <author initials="C"
+            surname="Zhou"
+            fullname="Chao Zhou">
+      <organization>Cisco Systems</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>choa.zhou@cisco.com</email>
+      </address>
+    </author>
+    <date month="June" year="2017" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+   <t>In certain networks deployment scenarios, service providers would
+   like to keep all the existing MPLS functionalities in both MPLS and
+   GMPLS while removing the complexity of existing signalling protocols
+   such as LDP and RSVP-TE.  PCE has been proposed to be used as a
+   central controller (PCECC) so that LSP can be
+   calculated/setup/initiated and label forwarding entries are
+   downloaded through a centralized PCE server to each network devices
+   along the path while leveraging the existing PCE technologies as
+   much as possible.</t>
+
+   <t>This draft specify the procedures and PCEP protocol extensions for
+   using the PCE as the central controller, where LSPs are
+   calculated/setup/initiated and label forwarding entries are downloaded
+   through extending PCEP.
+   </t>
+
+   </abstract>
+  </front>
+  <middle>
+    <section title="Introduction"
+             toc="default">
+
+   <t>In certain network deployment scenarios, service providers would like
+   to have the ability to dynamically adapt to a wide range of
+   customer's requests for the sake of flexible network service
+   delivery, Software Defined Networks(SDN) has provides additional
+   flexibility in how the network is operated compared to the
+   traditional network.</t>
+
+   <t>The existing networking ecosystem has become awfully complex and
+   highly demanding in terms of robustness, performance, scalability,
+   flexibility, agility, etc.  By migrating to the SDN enabled network
+   from the existing network, service providers and network operators
+   must have a solution which they can evolve easily from the existing
+   network into the SDN enabled network while keeping the network
+   services remain scalable, guarantee robustness and availability etc.
+   </t>
+
+   <t>Taking the smooth transition between traditional network and the new
+   SDN enabled network into account, especially from a cost impact
+   assessment perspective, using the existing PCE components from the
+   current network to function as the central controller of the SDN
+   network is one choice, which not only achieves the goal of having a
+   centralized controller, but also leverage the existing PCE network
+   components.</t>
+
+   <t>The Path Computation Element communication Protocol (PCEP) provides
+   mechanisms for Path Computation Elements (PCEs) to perform route
+   computations in response to Path Computation Clients (PCCs) requests.
+   PCEP Extensions for PCE-initiated LSP Setup in a Stateful PCE Model
+   <xref target='I-D.ietf-pce-stateful-pce'/> describes a set of
+   extensions to PCEP to enable active control of MPLS-TE and GMPLS
+   tunnels.</t>
+
+   <t>
+   <xref target='I-D.ietf-pce-pce-initiated-lsp'/> describes the setup and
+   tear down of PCE-initiated LSPs under the active stateful PCE model,
+   without the need for local configuration on the PCC, thus allowing
+   for a dynamic MPLS network that is centrally controlled and deployed.
+   </t>
+
+   <t>
+   <xref target='I-D.ietf-teas-pce-central-control'/> introduces the architecture for
+   PCE as a central controller, examines the motivations and applicability
+   for PCEP as a southbound interface, and introduces the implications for the
+   protocol.  <xref target='I-D.ietf-teas-pcecc-use-cases'/> describes the use cases for
+   the PCECC architecture.</t>
+   
+   <t>This draft specify the procedures and PCEP protocol extensions for
+   using the PCE as the central controller and user cases where LSPs are
+   calculated/setup/initiated/downloaded through extending the existing
+   PCE architectures and PCEP.</t>
+   
+   <t>The extension for PCECC in Segment Routing (SR) is specified in a
+   seperate draft <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>.</t>
+   
+
+      <section title="Requirements Language"
+               toc="default">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
+        and "OPTIONAL" in this document are to be interpreted as
+        described in
+        <xref target="RFC2119" />.</t>
+      </section>
+    </section>
+    <section title="Terminology"
+             toc="default">
+      <t>Terminologies used in this document is same as described in the draft 
+       <xref target='I-D.ietf-teas-pcecc-use-cases'/>.</t>      
+    </section>
+    <section title="Basic PCECC Mode"
+             toc="default"
+             anchor="SEC_M">
+    <t>In this mode LSPs are provisioned as explicit label instructions at each
+   hop on the end-to-end path.  Each router along the path must be
+   told what label forwarding instructions to program and what resources
+   to reserve.  The controller uses PCEP to communicate with each router
+   along the path of the end-to-end LSP.</t>
+    <t>Note that the PCE-based controller will take responsibility for
+   managing some part of the MPLS label space for each of the routers
+   that it controls, and may taker wider responsibility for partitioning
+   the label space for each router and allocating different parts for
+   different uses. This is also described in section 3.1.2. of 
+   <xref target='I-D.ietf-teas-pce-central-control'/>. For the purpose
+   of this document, it is assumed that label range to be used by a PCE
+   is set on both PCEP peers. A future extention MAY add capability to
+   advertise the range via possible PCEP extention as well. 
+   The rest of processing is similar
+   to the existing stateful PCE mechanism.</t>
+
+    </section>
+    <section title="PCEP Requirements"
+             toc="default"
+             anchor="SEC_R">
+   <t>Following key requirements associated PCECC should be considered when
+   designing the PCECC based solution:</t>
+      <t>
+        <list style="numbers">
+   <t>PCEP speaker supporting this draft MUST have the capability to
+       advertise its PCECC capability to its peers.</t>
+
+
+   <t>PCEP speaker not supporting this draft MUST be able to reject
+       PCECC related message with a reason code that indicates no
+       support for PCECC.</t>
+
+   <t>PCEP SHOULD provide a means to identify PCECC based LSP in the
+       PCEP messages.</t>
+
+   <t>PCEP SHOULD provide a means to update (or cleanup) the label-
+       download entry to the PCC.</t>
+
+   <t>PCEP SHOULD provide a means to synchronize the labels between
+       PCE to PCC in PCEP messages.</t>       
+  
+        </list>
+      </t>
+    </section>
+    <section title="Procedures for Using the PCE as the Central Controller (PCECC)"
+             toc="default">
+    <section title="Stateful PCE Model"
+             toc="default">
+    <t>Active stateful PCE is described in <xref target='I-D.ietf-pce-stateful-pce'/>. PCE
+    as a central controller (PCECC) reuses existing Active stateful PCE
+    mechanism as much as possible to control the LSP.</t>
+    </section>
+    <section title="New LSP Functions"
+             toc="default">
+   <t>This document defines the following new PCEP messages and extends the
+   existing messages to support PCECC:</t>
+    <t>
+        <list style="hanging">
+          <t hangText="(PCRpt):">a PCEP message described in <xref target='I-D.ietf-pce-stateful-pce'/>.
+          PCRpt message MAYBE used to send PCECC LSP Reports.</t>
+          <t hangText="(PCInitiate):">a PCEP message described in <xref target='I-D.ietf-pce-pce-initiated-lsp'/>.
+          PCInitiate message is used to setup PCE-Initiated LSP based on PCECC mechanism. </t>
+          <t hangText="(PCUpd):">a PCEP message described in <xref target='I-D.ietf-pce-stateful-pce'/>.
+          PCUpd message is used to send PCECC LSP Update.</t>
+          <t hangText="(PCLabelUpd):">a new PCEP message sent by a PCE to a PCC
+          to download or cleanup the Label entry. The PCLabelUpd
+          message described in <xref target="SEC_PCLabelUpd"/>.</t>
+          <t hangText="(PCLabelRpt):">a new PCEP message sent by a PCC to a PCE to
+          report the set of labels for which explicit action is required
+          from PCE to update or cleanup or do nothing for these Label entries.
+          The PCLabelRpt message described in <xref target="SEC_PCLabelRpt"/>.</t>          
+        </list>
+    </t>
+
+    <t>The new LSP functions defined in this document are mapped onto the messages as
+    shown in the following table.</t>
+
+     <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG1">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
++----------------------------------------+--------------------------+
+| Function                               | Message                  |
++----------------------------------------+--------------------------+
+| PCECC Capability advertisement         | Open                     |
+| Label entry Update                     | PCLabelUpd               |
+| Label entry Cleanup                    | PCLabelUpd               |
+| PCECC Initiated LSP                    | PCInitiate               |
+| PCECC LSP Update                       | PCUpd                    |
+| PCECC LSP State Report                 | PCRpt                    |
+| PCECC LSP Delegation                   | PCRpt                    |
+| PCECC Label Report                     | PCLabelRpt               | 
++----------------------------------------+--------------------------+
+]]>
+</artwork>
+        </figure>
+    </section>
+    <section title="PCECC Capability Advertisement"
+             toc="default">
+   <t>During PCEP Initialization Phase, PCEP Speakers (PCE or PCC)
+   advertise their support of PCECC extensions. A PCEP Speaker includes
+   the "PCECC Capability" TLV, described in <xref target="SEC_PCECC_CAP_TLV"/> of this
+   document, in the OPEN Object to advertise its support for PCECC extensions.</t>
+   <t>The presence of the PCECC Capability TLV in PCC's OPEN Object
+   indicates that the PCC is willing to function as a PCECC client.</t>
+   <t>The presence of the PCECC Capability TLV in PCE's OPEN message
+   indicates that the PCE is interested in function as a PCECC server.</t>
+   <t>The PCEP protocol extensions for PCECC MUST NOT be used if one or
+   both PCEP Speakers have not included the PCECC Capability TLV in their
+   respective OPEN message.  If the PCEP Speakers support the extensions
+   of this draft but did not advertise this capability then a PCErr message with
+   Error-Type=19(Invalid Operation) and Error-Value=TBD (Attempted
+   LSP setup/download/label-range reservation if PCECC capability was not
+   advertised) will be generated and the PCEP session will be terminated.</t>
+   <t>A PCC or a PCE MUST include both PCECC-CAPABILITY TLV and
+   STATEFUL-PCE-CAPABILITY TLV (<xref target='I-D.ietf-pce-stateful-pce'/>) in OPEN Object to support the extensions defined
+   in this document. If PCECC-CAPABILITY TLV is advertised and STATEFUL-PCE-CAPABILITY TLV
+   is not advertised in OPEN Object, it SHOULD send a PCErr message with Error-Type=19
+   (Invalid Operation) and Error-value=TBD(stateful PCE capability was not advertised)
+   and terminate the session.</t>
+   </section>
+   
+    <section title="LSP Operations"
+             toc="default">
+    <t> The PCEP messages pertaining to PCECC MUST include PATH-SETUP-TYPE
+   TLV <xref target='I-D.ietf-pce-lsp-setup-type'/> in the SRP object
+   to clearly identify the PCECC LSP is intended.</t>
+    <section title="Basic PCECC LSP Setup"
+             toc="default"
+             anchor="SEC_BASIC_SETUP">
+    <t>In order to setup a LSP based on PCECC mechanism, a PCC MUST delegate the LSP by
+    sending a PCRpt message with Path Setup Type set for basic PCECC (see <xref target="SEC_PATH"/>) and D (Delegate)
+    flag (see <xref target='I-D.ietf-pce-stateful-pce'/>) set in the LSP object.</t>
+    <t>LSP-IDENTIFIER TLV MAY be included for PCECC LSP, the LSP-ID SHOULD be generated by
+    the PCE for PCECC LSP. In the first PCRpt message of PCECC LSP, LSP ID of LSP-IDENTIFIER
+    TLV is set to zero.</t>
+    <t>When a PCE receives PCRpt message with D flags and PST Type set, it MAY
+   generates LSP ID; calculates the path and assigns labels along the
+   path; and setups the path by sending PCLabelUpd message to each node
+   along the path of the LSP.</t>
+    <t>In response to the delegate PCRpt message, the PCE SHOULD send the PCUpd message with the same PLSP-ID to the
+    Ingress PCC.</t>
+    <t>The PCECC LSPs MUST be delegated to a PCE at all times.
+    </t>
+    <t>LSP deletion operation for PCECC LSP
+    is same as defined in <xref target='I-D.ietf-pce-stateful-pce'/>. If the PCE receives
+    PCRpt message for LSP deletion then it does Label cleanup operation as
+    described in <xref target="SEC_CLEANUP"/> for the corresponding LSP.</t>
+    <t>The Basic PCECC LSP setup sequence is as shown below using a new
+    message PCLabelUpd.</t>
+    <figure align="left"
+                alt=""
+                height=""
+                suppress-title="false"
+                title="Using PCLabelUpd For Label Operations"
+                width=""
+                anchor="SEC_FIG2">
+     <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+               +-------+                             +-------+
+               |PCC    |                             |  PCE  |
+               |Ingress|                             +-------+
+        +------|       |                                 |
+        | PCC  +-------+                                 |
+        | Transit| |                                     |
+ +------|        | |-- PCRpt,PLSP-ID=1, PST=TBD, D=1---->| PCECC LSP
+ |PCC   +--------+ |       (LSP ID=0)                    |(LSPID=1)
+ |Egress  |  |     |                                     |
+ +--------+  |     |                                     |
+     |       |     |                                     |
+     |<------ PCLabelUpd,PLSP-ID=1  -------------------- | Label
+     |       |     |       (LSP ID=1)                    | download
+     |       |     |                                     |
+     |       |<----- PCLabelUpd,PLSP-ID=1  ------------- | Label
+     |       |     |      (LSP ID=1)                     | download
+     |       |     |                                     |
+     |       |     |<--- PCLabelUpd,PLSP-ID=1  --------- | Label
+     |       |     |      (LSP ID=1)                     | download
+     |       |     |                                     |
+     |       |     |<-- PCUpd,PLSP-ID=1,PST=TBD, D=1-----| PCECC LSP
+     |       |     |      (LSP ID=1)                     | Update
+     |       |     |                                     |
+]]>
+        </artwork>
+        </figure>
+        
+        <t>The PCECC LSP are considered to be 'up' by default.
+        The Ingress MAY further choose to deploy a data plane check
+        mechanism and report the status back to the PCE via PCRpt message.</t>
+    </section>
+    
+    
+    <section title="Label Operations"
+             toc="default">
+    <t>The new label operations in PCEP can be done via a new PCLabelUpd message and by
+   defining new PCEP Objects for Label operations. Local label range of
+   each PCC can be configured at PCE and PCE.</t> 
+                   
+    <section title="Label Download"
+             toc="default">
+    <t>In order to setup an LSP based on PCECC, the PCE sends a PCLabelUpd message
+    to each node of the LSP to download the Label entry as described in <xref target="SEC_BASIC_SETUP"/>.</t>
+    <t>The LSP object in PCLabelUpd MUST include the LSP-IDENTIFIER TLV.</t>
+    <t>If a node (PCC) receives a PCLabelUpd message with a Label, out
+    	of the range set aside for the PCE, it MUST send a PCErr message with Error-type=TBD
+   (label download failure) and Error-value=TBD (Label out of range) and MUST include the
+   SRP object to specify the error is for the corresponding label update.
+    If a PCC receives a PCLabelUpd message but failed to download
+   the Label entry, it MUST send a PCErr message with Error-type=TBD
+   (label download failure) and Error-value=TBD (label failed to be download)and MUST include the
+   SRP object to specify the error is for the corresponding label update.</t>
+   
+    <t>New PCEP object for LABEL is defined in <xref target='SEC_LABEL'/> to encode the Label
+   operations.</t>
+    </section>
+    
+    <section title="Label Cleanup"
+             toc="default"
+             anchor="SEC_CLEANUP">
+    <t>In order to delete an LSP based on PCECC, the PCE sends a PCLabelUpd
+    message to each node along the path of the LSP to cleanup the Label entry.</t>
+    <t>If the PCC receives a PCLabelUpd message but does not recognize the
+   label, the PCC MUST generate a PCErr message with Error-Type
+   19(Invalid operation) and Error-Value=TBD, "Unknown Label" and 
+   MUST include the SRP object to specify the error is for the
+   corresponding label cleanup.
+    </t>
+    <t>The R flag in SRP object defined in <xref target='I-D.ietf-pce-pce-initiated-lsp'/> specifies
+    the deletion of Label Entry in the new PCLabelUpd message.</t>
+    <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG3">
+         <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+               +-------+                              +-------+
+               |PCC    |                              |  PCE  |
+               |Ingress|                              +-------+
+        +------|       |                                  |
+        | PCC  +-------+                                  |
+        | Transit| |                                      |
+ +------|        | |-- PCRpt,PLSP-ID=1,PST=TBD,D=1,R=1--->| PCECC LSP
+ |PCC   +--------+ |       (LSP ID=1)                     | remove
+ |Egress  |  |     |                                      |
+ +--------+  |     |                                      |
+     |       |     |                                      |
+     |<------ PCLabelUpd, PLSP-ID=1 --------------------- | Label
+     |       |     |       (LSP ID=1, R=1)                | cleanup
+     |       |     |                                      |
+     |       |<----- PCLabelUpd, PLSP-ID=1 -------------- | Label
+     |       |     |       (LSP ID=1, R=1)                | cleanup
+     |       |     |                                      |
+     |       |     |<--- PCLabelUpd, PLSP-ID=1 ---------- | Label
+     |       |     |       (LSP ID=1, R=1)                | cleanup
+     |       |     |                                      |
+]]>
+        </artwork>
+        </figure>
+        
+    </section>
+    </section>
+
+    <section title="PCE Initiated PCECC LSP"
+             toc="default">
+    <t>The LSP Instantiation operation is same as defined in <xref target='I-D.ietf-pce-pce-initiated-lsp'/>.</t>
+    <t>In order to setup a PCE Initiated LSP based on PCECC mechanism, a PCE
+    sends PCInitiate message with Path Setup Type set for basic PCECC
+    (see <xref target="SEC_PATH"/>) to the Ingress PCC.</t>
+    <t>The Ingress PCC MUST also set D (Delegate) flag (see
+    <xref target='I-D.ietf-pce-stateful-pce'/>) and C (Create) flag
+    (see <xref target='I-D.ietf-pce-pce-initiated-lsp'/>) in LSP object of
+    PCRpt message. The PCC responds with first PCRpt message with the status as "GOING-UP" and assigned PLSP-ID.</t>
+    <t>The rest of the PCECC LSP setup operations are same as those described in <xref target="SEC_BASIC_SETUP"/>.</t>
+    <t>The LSP deletion operation for PCE Initiated PCECC LSP is same as defined
+    in <xref target='I-D.ietf-pce-pce-initiated-lsp'/>. The PCE should further
+    perform Label entry cleanup operation as described in
+    <xref target="SEC_CLEANUP"/> for the corresponding LSP.</t>
+    <t>The PCE Initiated PCECC LSP setup sequence is shown below using 
+    a new PCLabelUpd message.</t>
+   <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG4">
+         <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+               +-------+                              +-------+
+               |PCC    |                              |  PCE  |
+               |Ingress|                              +-------+
+        +------|       |                                  |
+        | PCC  +-------+                                  |
+        | Transit| |                                      |
+ +------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD,D=1---| PCECC LSP
+ |PCC   +--------+ |                                      | Initiate
+ |Egress  |  |     |--- PCRpt,PLSP-ID=2,P=1,D=1,C=1--->   | PCECC LSP
+ +--------+  |     |       (LSP ID=0,GOING-UP)            |(LSPID=2
+     |       |     |                                      | assigned)
+     |<------ PCLabelUpd, PLSP-ID=2 --------------------- | Label
+     |       |     |       (LSP ID=2)                     | download
+     |       |     |                                      |
+     |       |<----- PCLabelUpd, PLSP-ID=2 -------------- | Label
+     |       |     |       (LSP ID=2)                     | download
+     |       |     |                                      |
+     |       |     |<--- PCLabelUpd, PLSP-ID=2 ---------- | Label
+     |       |     |       (LSP ID=2)                     | download
+     |       |     |                                      |
+     |       |     |<-- PCUpd, PLSP-ID=2, PST=TBD, D=1--- | PCECC LSP
+     |       |     |       (LSP ID=2)                     | Update
+     |       |     |                                      |
+]]>
+        </artwork>
+        </figure>
+    </section>
+    
+    <section title="PCECC LSP Update"
+             toc="default">
+    <t>Incase of a modification of PCECC LSP with a new path, a PCE sends
+    a PCUpd message to the
+    Ingress PCC.</t>
+    <t>When a PCC receives a PCUpd message for an existing LSP, a PCC MAY
+    follow the make-before-break procedure i.e. first download labels for the 
+    updated LSP and then switch traffic, before cleaning up the old labels. On successful traffic switch over to the
+    new LSP, PCC sends a PCRpt message to the PCE for the deletion of old LSP.
+    Further the PCE does cleanup operation for the old LSP as described in <xref target="SEC_CLEANUP"/>.</t>
+    <t>The PCECC LSP Update and make-before-break sequence is shown below 
+    using a new PCLabelUpd message.</t>
+    <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG5">
+         <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+               +-------+                             +-------+
+               |PCC    |                             |  PCE  |
+               |Ingress|                             +-------+
+        +------|       |                                 |
+        | PCC  +-------+                                 |
+        | Transit| |                                     |
+ +------|        | |                                     |
+ |PCC   +--------+ |                                     |
+ |Egress  |  |     |                                     |
+ +--------+  |     |                                     |
+     |       |     |                                     | Modify LSP
+     |<------ PCLabelUpd, PLSP-ID=1 -------------------  | (LSPID=3
+     |       |     |       (LSP ID=3)                    | assigned)
+     |       |     |                                     |
+     |       |<----- PCLabelUpd, PLSP-ID=1-------------  | Label
+     |       |     |      (LSP ID=3)                     | download
+     |       |     |                                     |
+     |       |     |<--- PCLabelUpd, PLSP-ID=1 --------  | Label
+     |       |     |      (LSP ID=3)                     | download
+     |       |     |                                     |
+     |       |     |<-- PCUpd, PLSP-ID=1, PST=TBD, D=1-- | PCECC
+     |       |     |       (LSP ID=3)                    | LSP Update
+     |       |     |                                     |
+     |       |     |-- PCRpt,PLSP-ID=1,PST=TBD,D=1,R=1-->| Delete
+     |       |     |       (LSP ID=1)                    | old LSP
+     |       |     |                                     |
+     |<------ PCLabelUpd, PLSP-ID=1 -------------------  | Label
+     |       |     |       (LSP ID=1, R=1)               | cleanup
+     |       |     |                                     |
+     |       |<----- PCLabelUpd, PLSP-ID=1 ------------  | Label
+     |       |     |      (LSP ID=1, R=1)                | cleanup
+     |       |     |                                     |
+     |       |     |<--- PCLabelUpd, PLSP-ID=1 --------  | Label
+     |       |     |      (LSP ID=1, R=1)                | cleanup
+]]>
+        </artwork>
+        </figure>
+
+        <t>The modified PCECC LSP are considered to be 'up' by default.
+        The Ingress MAY further choose to deploy a data plane check
+        mechanism and report the status back to the PCE via PCRpt message.</t>
+    </section>
+    
+    <section title="Session Termination"
+             toc="default">
+    <t>PCC MUST mark all labels that were previously reported by this PCE
+   as stale on session down. <xref target='I-D.ietf-pce-stateful-pce'/> defines the
+   State Timeout Interval. The labels which are marked stale and provisioned
+   for the Basic PCECC LSP on this session MUST be cleaned up at the expiration of 
+   the State Timeout Interval. The labels will be retained when the
+   Infinite State Timeout Interval is used.</t>
+    </section>    
+    
+    <section title="LABEL-DB Synchronization"
+             toc="default">
+    <t>The purpose of LABEL-DB synchronization is to make sure that the
+   PCE's view of LABEL-DB matches with the PCC's LABEL-DB.  The LABEL-
+   DB synchronization MUST be performed from PCE to PCC immediately
+   after the LSP state synchronization. <xref target='I-D.ietf-pce-stateful-pce'/>
+   describes the basic mechanism for LSP state synchronization.
+   <xref target='I-D.ietf-pce-stateful-sync-optimizations'/> describes the
+   optimizations for LSP state synchronization.</t>
+   
+    <t>LABEL-DB synchronization is a two phase procedure. In first phase, immediately
+   after the LSP state synchronization PCE MUST synchronize its LABEL-DB
+   to PCC. In second phase, PCC MUST report all the stale marked labels to PCE. </t>
+   
+    <section title="LABEL-DB Synchronization procedure"
+             toc="default">
+    <t>During LABEL-DB Synchronization, a PCE first takes a snapshot
+   of the label database for the session, then sends this snapshot to
+   the PCC in a sequence of Label Update message (PCLabelUpd message).
+   Each PCLabelUpd message sent during LABEL-DB Synchronization has
+   the SYNC Flag in the SRP Object(see <xref target="SEC_SRP_OBJ"/>) set to 1.</t>
+   <t>The end of synchronization marker is a PCLabelUpd message with the
+   SYNC Flag set to 0 for SRP Object and Label equal to a reserved value
+   of 0 in the LABEL object (<xref target='SEC_LABEL'/>).
+   If the PCE has no label to synchronize, it will only send
+   the end of synchronization marker.</t>
+   <t>PCC MUST remove the stale marking for the all labels on receipt of correspoding
+   PCLabelUpd message during the LABEL-DB Synchronization phase. The remaining
+   stale marked labels after the LABEL-DB synchronization process MUST be reported
+   to PCE in a sequence of Label Report message (PCLabelRpt message) with the SYNC Flag
+   in the SRP Object(see <xref target="SEC_SRP_OBJ"/>) set to 1.</t>
+   <t>The end of report synchronization marker is a PCLabelRpt message with the
+   SYNC Flag set to 0 for SRP Object with Label equal to reserved value
+   0 in the LABEL object ((<xref target='SEC_LABEL'/>)). If the PCC has no label to report, it will only
+   send the end of report synchronization marker.</t>
+   <t>Either the PCE or the PCC MAY terminate the session using the PCEP
+   session termination procedures during the LABEL-DB synchronization
+   phase. The session reestablishment MUST be re-attempted as per the
+   procedures defined in <xref target="RFC5440" />, including use of
+   a back-off timer.</t>
+   <t>The PCC does not send positive acknowledgements for properly received
+   label database synchronization messages.  It MUST respond with a
+   PCErr message with Error-type TBD1 (Label Database Synchronization
+   Error) and Error-value 1 (indicating an error in processing the
+   PCLabelUpd) if it encounters a problem with the Label Update it
+   received from the PCE and it MUST terminate the session.</t>
+   <t>If the PCE encounters a problem which prevents it from completing
+   the label transfer, it MUST send a PCErr message with Error-type TBD1
+   (Label Database Synchronization Error) and Error-value 2 (indicating
+   an internal PCE Error) to the PCC and terminate the session.</t>   
+   <t>PCE MUST respond with a PCErr message with Error-type TBD1 (Label Database
+   Report Synchronization Error) and Error-value 1 (indicating an error
+   in processing the PCLabelRpt) if it encounters a problem with the Label
+   Report it received from the PCC and it MUST terminate the session.</t>
+
+   <t>The successful LABEL-DB Synchronization sequence is shown below.</t>
+
+   <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG6">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+      + +-+-+-+-                         + +-+-+-+-
+      |        |                         |  PCC   |
+      |  PCE   |                         | Transit|
+      |        |                         |  Node  |
+      +-+-+-+-+-                         +-+-+-+-+-
+          |                                   |
+          |                                   |
+          |                .                  |
+          |                .                  |
+          |                                   |
+          |------- PCLabelUpd, PLSP-ID=2----->|(Label 
+          |            (LSP ID=2)             | Download       
+          |                                   | for LSP's) 
+          |------- PCLabelUpd, PLSP-ID=3----->|
+          |            (LSP ID=3)             |        
+          |                                   |
+          |------- PCLabelUpd, PLSP-ID=4----->|
+          |            (LSP ID=4)             |        
+          |                .                  |
+          |                .                  |(Session
+          |                                   | down, mark
+          |------- Session Down---------X     | all label's
+          |                                   | Stale of this
+          |                .                  | Session)  
+          |                .                  | 
+          |<------ Session Re-established---->|(Session up)
+          |                .                  |   
+          |                .                  |
+          |<-----PCRpt, SYNC=0----------------| (No LSP to SYNC)
+          |                                   |
+          |----PCLabelUpd,PLSP-ID=2,SYNC=1--->|(LABEL-DB
+          |----PCLabelUpd,PLSP-ID=3,SYNC=1--->| SYNC, unmark
+          |                                   | stale label)
+          |------PCLabelUpd, SYNC=0---------->|
+          |                                   |(End of LABEL-DB
+          |                                   | SYNC)
+          |                                   |
+          |<-----PCLabelRpt,PLSP-ID=4,SYNC=1--|(Report all stale
+          |                                   | Labels of this  
+          |<-----PCLabelRpt,SYNC=0------------| Session)
+          |                                   |
+          |------- PCLabelUpd, PLSP-ID=4 ---->|Label Cleanup
+          |        (LSP ID=4, R=1)            |
+          |                                   |
+          |                                   |
+]]>
+        </artwork>
+        </figure>   
+             
+    </section>   
+    </section>
+    
+    <section title="PCECC LSP State Report"
+             toc="default">
+    <t>As mentioned before, an Ingress PCC MAY choose to apply any OAM mechanism to check the status
+    of LSP in the Data plane and MAY further send its status in PCRpt message to the PCE.</t>
+    </section>
+
+    </section>
+    
+    </section>
+    
+    <section title="PCEP messages"
+             toc="default">
+    <t>As defined in <xref target="RFC5440" />, a PCEP message consists of a common header
+   followed by a variable-length body made of a set of objects that can
+   be either mandatory or optional.  An object is said to be mandatory
+   in a PCEP message when the object must be included for the message to
+   be considered valid.  For each PCEP message type, a set of rules is
+   defined that specify the set of objects that the message can carry.
+   An implementation MUST form the PCEP messages using the object
+   ordering specified in this document.</t>
+   
+   <t>LSP-IDENTIFIERS TLV MAY be included in the LSP object for PCECC
+   LSP.</t>
+   
+    <section title="Label Operations"
+             toc="default"
+             anchor="SEC_LabelOp"> 
+             
+    <section title="The PCLabelUpd message"
+             toc="default"
+             anchor="SEC_PCLabelUpd">
+    <t>A new Label Update Message (also referred to as PCLabelUpd) is a
+    PCEP message sent by a PCE to a PCC to download label or update the
+    label map. The same message is also used to cleanup the Label entry.
+    The Message-Type field of the PCEP common header for the PCLabelUpd message
+    is set to TBD.</t>
+    <t>The format of the PCLabelUpd message is as follows:</t>
+<figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG7">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+   <PCLabelUpd Message> ::= <Common Header>
+                            <pce-label-update-list>
+   Where:
+   <pce-label-update-list> ::= <pce-label-update>
+                      [<pce-label-update-list>]
+
+   <pce-label-update> ::= <pce-label-download>
+   
+   Where:
+   <pce-label-download> ::= <SRP>
+                            <LSP>
+                            <label-list>
+
+   <label-list > ::=  <LABEL>
+                     [<label-list>]
+]]>
+        </artwork>
+        </figure>
+    <t>The PCLabelUpd message is used to download label along the path
+    of the LSP.</t>
+
+    <t>The SRP object is defined in <xref target='I-D.ietf-pce-stateful-pce'/> and this
+    document extends the use of SRP object in PCLabelUpd message.
+    The SRP object is mandatory and MUST be included in PCLabelUpd
+    message. If the SRP object is missing, the receiving PCC MUST send
+    a PCErr message with Error-type=6 (Mandatory Object missing) and
+    Error-value=10 (SRP object missing).</t>
+
+    <t>The LSP object is defined in <xref target='I-D.ietf-pce-stateful-pce'/> and this
+    document extends the use of LSP object in PCLabelUpd message.
+    LSP Identifiers TLV is defined in <xref target='I-D.ietf-pce-stateful-pce'/>,
+    it MAY be included in the LSP object in PCLabelUpd message.
+    Either LSP object or FEC object defined in
+    <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> is mandatory in
+    PCLabelUpd message.
+    </t>
+
+    <t>The LABEL object is defined in <xref target="SEC_LABEL"/>. The LABEL is the mandatory object
+    and MUST be included in PCLabelUpd message. If the LABEL object is
+    missing, the receiving PCC MUST send a PCErr message with Error-type=6
+    (Mandatory Object missing) and Error-value=TBD (LABEL object missing).
+    More than one LABEL object MAY be included in the PCLabelUpd message
+    for the transit LSR.</t>
+
+    <t>To cleanup the SRP object must set the R (remove) bit.</t>
+    </section>
+    
+    <section title="The PCLabelRpt message"
+             toc="default"
+             anchor="SEC_PCLabelRpt">
+    <t>A new Label Report Message (also referred to as PCLabelRpt) is a PCEP
+   message sent by a PCC to a PCE to report the label. The Message-Type
+   field of the PCEP common header for the PCLabelRpt message is set to TBD.</t>
+   
+    <t>The format of the PCLabelRpt message is as follows:</t>
+<figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIGRPT">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+   <PCLabelRpt Message> ::= <Common Header>
+                            <pce-label-report-list>
+   Where:
+   <pce-label-report-list> ::= <pce-label-report>
+                      [<pce-label-report-list>]
+
+   <pce-label-report> ::= <pce-label-delegate>
+
+   Where:
+   <pce-label-delegate> ::= <SRP>
+                            <LSP>
+                            <label-list>
+
+   <label-list > ::=  <LABEL>
+                     [<label-list>]
+]]>
+        </artwork>
+        </figure>
+
+    <t>The SRP object is defined in <xref target='I-D.ietf-pce-stateful-pce'/> and this
+    document extends the use of SRP object in PCLabelRpt message.
+    The SRP object is mandatory and MUST be included in PCLabelRpt
+    message. If the SRP object is missing, the receiving PCE MUST send
+    a PCErr message with Error-type=6 (Mandatory Object missing) and
+    Error-value=10 (SRP object missing).</t>
+
+    <t>The LSP object is defined in <xref target='I-D.ietf-pce-stateful-pce'/> and this
+    document extends the use of LSP object in PCLabelRpt message.
+    LSP Identifiers TLV is defined in <xref target='I-D.ietf-pce-stateful-pce'/>,
+    it MAY be included in the LSP object in PCLabelRpt message.
+    Either LSP object or FEC object defined in
+    <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> is mandatory in
+    PCLabelRpt message.
+    </t>
+
+    <t>The LABEL object is defined in <xref target="SEC_LABEL"/>. The LABEL is the mandatory object
+    and MUST be included in PCLabelRpt message. If the LABEL object is
+    missing, the receiving PCE MUST send a PCErr message with Error-type=6
+    (Mandatory Object missing) and Error-value=TBD (LABEL object missing).
+    More than one LABEL object MAY be included in the PCLabelRpt message.</t>
+
+    </section>    
+    
+    <section title="The PCInitiate message"
+             toc="default"
+             anchor="SEC_PCInitiate">
+    <t>Message described in <xref target='I-D.ietf-pce-pce-initiated-lsp'/>
+    continue to apply.</t>         
+    </section> 
+    </section>
+    
+    </section>
+    
+    <section title="PCEP Objects"
+             toc="default">
+    <t>The PCEP objects defined in this document are compliant with the PCEP object
+    format defined in <xref target="RFC5440" />.  The P flag and the I flag of the PCEP objects
+    defined in this document MUST always be set to 0 on transmission and MUST
+    be ignored on receipt since these flags are exclusively related to
+    path computation requests.</t>
+    <section title="OPEN Object"
+             toc="default">
+    <t>This document defines a new optional TLVs for use in the OPEN Object.</t>
+    <section title="PCECC Capability TLV"
+             toc="default"
+             anchor="SEC_PCECC_CAP_TLV">
+    <t>The PCECC-CAPABILITY TLV is an optional TLV for use in the OPEN Object
+    for PCECC capability advertisement. Advertisement of the PCECC capability
+    implies support of LSPs that are setup through PCECC as per PCEP extensions
+    defined in this document.</t>
+    <t>Its format is shown in the following figure:</t>
+<figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG8">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |               Type=TBD      |            Length=4           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             Flags                             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]>
+        </artwork>
+        </figure>
+
+    <t>The type of the TLV is TBD and it has a fixed length of 4 octets.</t>
+    <t>The value comprises a single field - Flags (32 bits).</t>
+    <t>No flags are assigned right now.</t>
+    <t>Unassigned bits are considered reserved.  They MUST be set to 0 on
+    transmission and MUST be ignored on receipt.</t>
+    </section>
+
+    </section>
+    
+    <section title="PATH-SETUP-TYPE TLV"
+             toc="default"
+             anchor="SEC_PATH">
+      <t>The PATH-SETUP-TYPE TLV is defined in <xref target='I-D.ietf-pce-lsp-setup-type'/>;
+      this document defines a new PST value:
+      <list style="symbols">
+      <t>PST = TBD: Path is setup via Basic PCECC mode.</t>
+      </list></t>
+
+    <t>On a PCRpt/PCUpd/PCInitiate message, the PST=TBD in PATH-SETUP-TYPE TLV
+   in SRP object indicates that this LSP was setup via a basic PCECC
+   based mechanism.</t>
+    </section>
+    
+    <section title="Label Object"
+             toc="default"
+             anchor="SEC_LABEL">
+    <t>The LABEL Object is used to specify the Label information and
+    MUST be carried within PCLabelUpd message.</t>
+    <t>LABEL Object-Class is TBD.</t>
+    <t>LABEL Object-Type is 1.</t>
+      <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG9">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Reserved            |              Flags           |O|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                 Label                 |     Reserved          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+//                        Optional TLV                         //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]>
+        </artwork>
+        </figure>
+    <t>The fields in the LABEL object are as follows:
+    <list style="hanging">
+    <t hangText="Flags:"> is used to carry any additional information
+    pertaining to the label. Currently, the following flag bit is
+    defined: <list style="symbols">
+    <t>O bit(Out-label) : If the bit is set, it specifies the label is
+    the OUT label and it is mandatory to encode the nexthop
+    information (via IPV4-ADDRESS TLV or
+    IPV6-ADDRESS TLV or UNNUMBERED-IPV4-ID-ADDRESS TLV in
+    LABEL object). If the bit is not set, it specifies the label is
+    the IN label and it is optional to encode the local interface
+    information (via IPV4-ADDRESS TLV or
+    IPV6-ADDRESS TLV or UNNUMBERED-IPV4-ID-ADDRESS TLV in
+    LABEL object).</t> </list></t>
+    <t hangText="Label (20-bit):">The Label information encoded such
+    that the 20 rightmost bits represent a label.</t>
+    <t hangText="Reserved (12 bit):">Set to zero while sending, ignored on receive.</t>
+    </list></t>
+    
+    <section title="Address TLVs"
+             toc="default">
+    <t>This document defines the following TLV for the LABEL object to
+    associate the nexthop information incase of an outgoing label and
+    local interface information incase of an incoming label.</t>
+      <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIGC">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+IPV4-ADDRESS TLV:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Type=TBD          |  Length = 4                   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        IPv4 address                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+IPV6-ADDRESS TLV:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Type=TBD          |   Length = 16                 |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+//                IPv6 address (16 bytes)                      //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+UNNUMBERED-IPV4-ID-ADDRESS TLV:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Type=TBD          |   Length = 8                  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            Node-ID                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                          Interface ID                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]>
+        </artwork>
+        </figure>
+    <t>The address TLVs are as follows:
+    <list style="hanging">
+    <t hangText="IPV4-ADDRESS TLV:">an IPv4 address.</t>
+    <t hangText="IPV6-ADDRESS TLV:">an IPv6 address.</t>
+    <t hangText="UNNUMBERED-IPV4-ID-ADDRESS TLV:">a pair of Node ID / Interface ID tuples.</t>
+    </list>
+    </t>
+    </section>
+    </section>
+
+<section title="Extension of SRP object" anchor="SEC_SRP_OBJ">
+<t>
+SRP object is defined in <xref target="I-D.ietf-pce-stateful-pce"/>
+and extended in <xref target="I-D.ietf-pce-pce-initiated-lsp"/>.
+ This draft defines a new 'SYNC' flag (S bit) to specify the LABEL-DB synchronization operation.
+</t>
+<t>The format of the SRP object is shown <xref target="SEC_SRP_OBJ_FIG"/>:</t>
+<t>
+<figure title="SRP Object format" suppress-title="false" align="center" alt="" width="" height="" anchor="SEC_SRP_OBJ_FIG">
+<artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height="">
+<![CDATA[
+0 1 2 3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                         Flags                             |S|R|
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                     SRP-ID-number                             |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               |
+ //                       Optional TLVs                         //
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]>
+</artwork>
+</figure>
+</t>
+<t>S (SYNC - 1 bit):The S Flag MUST be set to 1 on each PCLabelUpd and
+   PCLabelRpt sent from a PCE and PCC respectively during LABEL-DB
+   Synchronization. The S Flag MUST be set to 0 in other messages sent
+   from the PCE and PCC.</t>
+</section>    
+    </section>
+    
+    
+    <section title="Security Considerations"
+             toc="default">
+      <t>The security considerations described in <xref target="I-D.ietf-pce-stateful-pce"/> and 
+       <xref target="I-D.ietf-pce-pce-initiated-lsp"/> apply to the extensions described in
+       this document. Additional considerations related to a malicious PCE are introduced.</t>
+           <section title="Malicious PCE"
+             toc="default">
+             <t>PCE has complete control over PCC to update the labels and can
+   cause the LSP's to behave inappropriate and cause cause major impact
+   to the network. As a general precaution, it is RECOMMENDED that
+   these PCEP extensions only be activated on authenticated and encrypted
+   sessions across PCEs and PCCs belonging to the same administrative
+   authority, using Transport Layer Security (TLS) <xref target="I-D.ietf-pce-pceps"/>,
+   as per the recommendations and best current practices in <xref target="RFC7525"/>. </t>
+           </section>
+    </section>
+    
+    <section title="Manageability Considerations"
+             toc="default">
+      <section title="Control of Function and Policy"
+               toc="default">
+        <t> A PCE or PCC implementation SHOULD allow to configure to
+   enable/disable PCECC capability as a global configuration.</t>
+      </section>
+      <section title="Information and Data Models"
+               toc="default">
+        <t><xref target="RFC7420"/> describes the PCEP MIB, this MIB can be extended to get the
+           PCECC capability status.</t>
+   
+        <t>The PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> could be extended
+           to enable/disable PCECC capability.</t>
+      </section>
+      <section title="Liveness Detection and Monitoring"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new liveness
+           detection and monitoring requirements in addition to those already
+           listed in <xref target="RFC5440"/>.</t>
+      </section>
+      <section title="Verify Correct Operations"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new operation
+   verification requirements in addition to those already listed in
+   <xref target="RFC5440"/> and <xref target="I-D.ietf-pce-stateful-pce"/>.</t>
+      </section>
+      <section title="Requirements On Other Protocols"
+               toc="default">
+        <t>PCEP extensions defined in this document do not put new requirements
+   on other protocols.</t>
+      </section>
+      <section title="Impact On Network Operations"
+               toc="default">
+        <t>PCEP implementation SHOULD allow a limit to be placed on the rate
+   of PCLabelUpd messages sent by PCE and processed by PCC.
+   It SHOULD also allow sending a notification when a rate threshold is
+   reached.</t>
+      </section>
+    </section>
+
+    
+    <section title="IANA Considerations"
+             toc="default">
+             
+      <section title="PCLabelUpd-PCLabelRpt message" toc="default">
+        <t>IANA is requested to allocate a new message type within the "PCEP
+          Messages" sub-registry of the PCEP Numbers registry for:</t>
+     <texttable anchor="PCEP-LBL-MSG" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Value</ttcol>
+      <ttcol align="left" width="30%">Meaning</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>TBD</c>
+       <c>Label Update</c>
+       <c>This document</c>
+       <c>TBD</c>
+       <c>Label Report</c>
+       <c>This document</c>       
+     </texttable>      
+      </section>
+      
+      <section title="PCEP TLV Type Indicators" toc="default">
+        <t>IANA is requested to confirm the early allocation of the following
+       TLV Type Indicator values within the "PCEP TLV Type Indicators" sub-
+       registry of the PCEP Numbers registry, and to update the reference in
+       the registry to point to this document, when it is an RFC:</t>
+     <texttable anchor="PCEP-TYPE-IND" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Value</ttcol>
+      <ttcol align="left" width="30%">Meaning</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>TBD</c>
+       <c>PCECC-CAPABILITY</c>
+       <c>This document</c>
+       <c>TBD</c>
+       <c>IPV4-ADDRESS TLV</c>
+       <c>This document</c>     
+       <c>TBD</c>
+       <c>IPV6-ADDRESS TLV</c>
+       <c>This document</c>
+       <c>TBD</c>
+       <c>UNNUMBERED-IPV4-ID-ADDRESS TLV</c>
+       <c>This document</c>           
+     </texttable>      
+      </section>
+      
+      <section title="New Path Setup Type Registry" toc="default">
+        <t>IANA is requested to allocate new PST Field in PATH-
+           SETUP-TYPE TLV.  The allocation policy for this new registry should
+           be by IETF Consensus. The new registry should contain the following value:</t>
+     <texttable anchor="PCEP-PATH-TYPE" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Value</ttcol>
+      <ttcol align="left" width="30%">Description</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>TBD</c>
+       <c>Traffic engineering path is</c>
+       <c>This document</c>
+       <c> </c>
+       <c>setup using Basic PCECC mode</c>
+       <c> </c>       
+     </texttable>      
+      </section>
+            
+      <section title="PCEP Object" toc="default">
+        <t>IANA is requested to allocate new registry for LABEL PCEP object.</t>
+     <texttable anchor="PCEP-OBJECT" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Object-Class Value</ttcol>
+      <ttcol align="left" width="30%">Name</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>TBD</c>
+       <c>LABEL Object-Type</c>
+       <c>This document</c>
+       <c> </c>
+       <c>1</c>
+       <c> </c>       
+     </texttable>            
+      </section>
+      
+      <section title="LABEL Object Flag Field" toc="default">
+        <t>IANA is requestd to create a registry to manage the Flag field
+           of the LABEL object.</t>
+        <t>One bit to be defined for the LABEL Object flag field in this document:</t>
+        <t>Codespace of the Flag field (LABEL Object)</t>
+     <texttable anchor="LABEL-FLAG" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Bit</ttcol>
+      <ttcol align="left" width="30%">Description</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>7</c>
+       <c>Specifies label</c>
+       <c>This document</c>
+       <c> </c>
+       <c> is out label</c>
+       <c> </c>       
+     </texttable>   
+      </section>
+      
+      <section title="SRP Object Flag Field" toc="default">
+      <t>SRP object is defined in <xref target="I-D.ietf-pce-stateful-pce"/> and extended in
+      <xref target="I-D.ietf-pce-pce-initiated-lsp"/>. IANA is requested to allocate a new
+      bit in SRP object flag. Field registry, as follows:</t>
+     <texttable anchor="SRP-FLAG" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Bit</ttcol>
+      <ttcol align="left" width="30%">Description</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>30</c>
+       <c>S(SYNC Flag)</c>
+       <c>This document</c>
+     </texttable>         
+      </section>
+      
+      <section title="PCEP-Error Object" toc="default">
+      <t>IANA is requested to allocate new error types and error values within
+         the "PCEP-ERROR Object Error Types and Values" sub-registry of the
+         PCEP Numbers registry for the following errors:
+
+        <vspace blankLines="1" /> 
+        
+        <?rfc subcompact="yes"?>
+
+        <list style="hanging" hangIndent="13">
+
+          <t hangText="Error-Type">Meaning</t>
+          <t hangText="----------   -------"></t>
+          <t hangText="19">Invalid operation.
+          <list style="hanging" hangIndent="37">
+            <t hangText=" Error-value = TBD :">Attempted LSP setup/download/label-range reservation if PCECC capability was not advertised</t>
+            <t hangText=" Error-value = TBD :">Stateful PCE capability was not advertised</t>
+            <t hangText=" Error-value = TBD :">Unknown Label</t>            
+          </list>
+          </t>
+          <t hangText="6">Mandatory Object missing.
+          <list style="hanging" hangIndent="37">
+            <t hangText=" Error-value = TBD :">LABEL object missing</t>
+          </list>
+          </t>
+          <t hangText="TBD">Label download failure.
+          <list style="hanging" hangIndent="37">
+            <t hangText=" Error-value = TBD :">Label out of range.</t>
+            <t hangText=" Error-value = TBD :">Download of label Failed.</t>
+          </list>
+          </t>
+          <t hangText="TBD">Label DB synchronization failed.
+          <list style="hanging" hangIndent="37">
+            <t hangText=" Error-value = TBD :">Processing label update Failed during synchronization.</t>
+            <t hangText=" Error-value = TBD :">Internal PCE Error during synchronization.</t>
+          </list>
+          </t>              
+        </list>
+        </t>         
+      </section>      
+      
+    </section>
+
+
+    
+    <section title="Acknowledgments"
+             toc="default">
+      <t>We would like to thank Robert Tao, Changjing Yan, Tieying Huang and Avantika for
+   their useful comments and suggestions.</t>
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119.xml" ?>
+      <?rfc include="reference.RFC.5440.xml" ?>
+      <?rfc include="reference.RFC.7420.xml" ?>
+      <?rfc include="reference.RFC.7525.xml" ?>
+      <?rfc include="reference.I-D.ietf-pce-stateful-pce"?>
+      <?rfc include="reference.I-D.ietf-pce-pce-initiated-lsp"?>
+      <?rfc include="reference.I-D.ietf-pce-stateful-sync-optimizations"?>
+      </references>
+
+    <references title="Informative References">
+    <?rfc include="reference.I-D.ietf-teas-pce-central-control"?>
+    <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>
+    <?rfc include="reference.I-D.ietf-pce-lsp-setup-type"?>
+    <?rfc include="reference.I-D.ietf-pce-pceps"?>
+    <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
+
+<reference anchor="I-D.zhao-pce-pcep-extension-pce-controller-sr">
+<front>
+<title>
+PCEP Procedures and Protocol Extensions for
+    Using PCE as a Central Controller (PCECC) of SR-LSPs
+</title>
+<author initials="Q" surname="Zhao" fullname="Quintin Zhao">
+<organization/>
+</author>
+<author initials="Z" surname="Li" fullname="Zhenbin Li">
+<organization/>
+</author>
+<author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+<organization/>
+</author>
+<author initials="S" surname="Karunanithi" fullname="Satish Karunanithi">
+<organization/>
+</author>
+<author initials="A" surname="Farrel" fullname="Adrian Farrel">
+<organization/>
+</author>
+<author initials="C" surname="Zhou" fullname="Chao Zhou">
+<organization/>
+</author>
+
+<date month="June" day="30" year="2017"/>
+</front>
+<seriesInfo name="Internet-Draft" value="draft-zhao-pce-pcep-extension-pce-controller-sr-00"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-zhao-pce-pcep-extension-pce-controller-sr-00.txt"/>
+</reference>  
+
+      </references>
+<section title="Contributor Addresses" toc="default">
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+       <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Udayasree Palle
+Huawei Technologies
+Divyashree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: udayasreereddy@gmail.com
+
+Katherine Zhao
+Huawei Technologies
+2330 Central Expressway
+Santa Clara, CA  95050
+USA
+
+EMail: katherine.zhao@huawei.com
+
+Boris Zhang
+Telus Ltd.
+Toronto
+Canada
+
+EMail: boris.zhang@telus.com
+      
+        ]]></artwork>
+        </figure>
+      </t>
+    </section>
+
+  </back>
+</rfc>
+
