@@ -110,7 +110,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="17" month="July" year="2017"/>
+    <date day="28" month="July" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -131,6 +131,9 @@
     <t>Among the possible solutions mentioned in these documents, Transport Layer Security (TLS) <xref target="RFC5246"/> provides support for peer authentication, and message encryption and integrity. TLS supports the usage of well-known mechanisms to support key configuration and exchange, and means to perform security checks on the results of PCE discovery procedures via Interior Gateway Protocol (IGP) (<xref target="RFC5088"/> and <xref target="RFC5089"/>).</t>
      <t>This document describes a security container for the transport of PCEP messages, and therefore it does not affect the flexibility and extensibility of PCEP.</t>
     <t>This document describes how to apply TLS in securing PCE interactions, including initiation of the TLS procedures, the TLS handshake mechanisms, the TLS methods for peer authentication, the applicable TLS ciphersuites for data exchange, and the handling of errors in the security checks.  In the rest of the document we will refer to this usage of TLS to provide a secure transport for PCEP as "PCEPS".</t>
+
+    <t>Within this document, PCEP communications are described through PCC-PCE relationship. The PCE architecture also supports the PCE-PCE communication, by having the requesting PCE fill the role of a PCC, as usual. Thus, the PCC refers to a PCC or a PCE initiating the PCEP session 
+    and acting as a client.</t>
 
     </section>
 
@@ -218,7 +221,7 @@
 
       <t>4 (ok without TLS) if it is willing to exchange PCEP messages without
       the solicited TLS connection, and it MUST close the TCP session. The
-      peer MAY choose to re-establish the PCEP session
+      receiver MAY choose to re-establish the PCEP session
         without TLS next.</t>
     </list></t>
 
@@ -277,10 +280,11 @@
    <t>Once the TCP connection has been successfully established and the
    StartTLS message sent, the sender MUST start a timer called
    StartTLSWait timer, after the expiration of which, if no StartTLS
-   message has been received, it MUST send a PCErr message and releases the
-   TCP connection with Error-Type set to [TBA2 by IANA] and Error-value
-   set to 5 (no StartTLS message received before the expiration of the
-   StartTLSWait timer). A RECOMMENDED
+   message has been received (and in case of failure, a PCErr or Open 
+   message is not received), it MUST send a PCErr message with Error-Type set to [TBA2 by IANA] and Error-value
+   set to 5 (no StartTLS (nor PCErr/Open) message received before the expiration of the
+   StartTLSWait timer) and it MUST release the
+   TCP connection . A RECOMMENDED
    value for StartTLSWait timer is 60 seconds.
 </t>
 
@@ -367,7 +371,7 @@
           <t>Once the establishment of TLS has been agreed by the PCEP peers, the connection establishment SHALL follow the following steps:</t>
                <t>
           <list style="numbers">
-              <t>Immediately negotiate TLS sessions according to <xref target="RFC5246"/>. The following restrictions apply:
+              <t>Immediately negotiate a TLS session according to <xref target="RFC5246"/>. The following restrictions apply:
               <list style="symbols">
                 <t>Support for TLS v1.2 <xref target="RFC5246"/> or later is REQUIRED.</t>
                 <t>Support for certificate-based mutual authentication is REQUIRED.</t>
@@ -423,6 +427,7 @@
             <t>All X509v3 Subject Alternative Name</t>
             <t>All X509v3 Certificate Policies</t>
           </list></t>
+          <t>Note that the remote IP address used for the TCP session establishment is also exposed.</t>
         <t><xref target="I-D.ietf-pce-stateful-sync-optimizations"/> specify a Speaker Entity Identifier TLV (SPEAKER-ENTITY-ID), as an optional
    TLV that MAY be included in the OPEN Object. It contains a unique identifier for the
    node that does not change during the lifetime of the PCEP speaker. An implementation would thus expose the speaker entity identifier as part of the X509v3 certificate, so that
@@ -437,11 +442,17 @@
     </section>
 
   <section anchor="Discovery" title="Discovery Mechanisms">
-    <t>A PCE can advertise its capability to support PCEPS using the IGP advertisement and discovery mechanism. The PCE-CAP-FLAGS sub-TLV is an optional sub-TLV used to advertise PCE capabilities. It MAY be present within the PCE Discovery (PCED) sub-TLV carried by OSPF or IS-IS. <xref target="RFC5088"/> and <xref target="RFC5089"/> provide the description and processing rules for this sub-TLV when carried within OSPF and IS-IS, respectively. PCE capability bits are defined in <xref target="RFC5088"/>. A new capability flag bit for the PCE-CAP-FLAGS sub-TLV that can be announced as attribute to distribute PCEP security support information is proposed in <xref target="I-D.wu-pce-discovery-pceps-support"/></t>
+    <t>This document does not specify any discovery mechanism for support of PCEPS. Other documents, <xref target="I-D.wu-pce-discovery-pceps-support"/>
+    and <xref target="I-D.wu-pce-dns-pce-discovery"/> have made proposals:
+    <list style="symbols">
 
-    <t>When DNS is used by a PCC (or a PCE acting as a client, for the rest of the section, PCC refers to both) willing to use PCEPS to locate an appropriate PCE <xref target="I-D.wu-pce-dns-pce-discovery"/>, the PCC as an initiating entity, chooses at least one of the returned FQDNs to resolve, which it does by performing DNS "A" or "AAAA" lookups on the FDQN. This will eventually result in an IPv4 or IPv6 address. The PCC SHALL use the IP address(es) from the successfully resolved FDQN (with the corresponding port number returned by the DNS Service Record (SRV) lookup) as the connection address(es) for the receiving entity.</t>
-    <t>If the PCC fails to connect using an IP address but the "A" or "AAAA" lookups returned more than one IP address, then the PCC SHOULD use the next resolved IP address for that FDQN as the connection address. If the PCC fails to connect using all resolved IP addresses for a given FDQN, then it SHOULD repeat the process of resolution and connection for the next FQDN returned by the SRV lookup based on the priority and weight.</t>
-    <t>If the PCC receives a response to its SRV query but it is not able to establish a PCEPS connection using the data received in the response, as initiating entity it MAY fall back to lookup a PCE that uses TCP as transport.</t>
+    <t>A PCE can advertise its capability to support PCEPS using the IGP's advertisement mechanism of the PCE discovery information. The PCE-CAP-FLAGS sub-TLV is an optional sub-TLV used to advertise PCE capabilities. It is present within the PCE Discovery (PCED) sub-TLV carried by OSPF or IS-IS. <xref target="RFC5088"/> and <xref target="RFC5089"/> provide the description and processing rules for this sub-TLV when carried within OSPF and IS-IS, respectively. PCE capability bits are defined in <xref target="RFC5088"/>. A new capability flag bit for the PCE-CAP-FLAGS sub-TLV that can be announced as an attribute to distribute PCEP security support information is proposed in <xref target="I-D.wu-pce-discovery-pceps-support"/>.</t>
+
+    <t>A PCE can advertise its capability to support PCEPS using the DNS <xref target="I-D.wu-pce-dns-pce-discovery"/> by identifying the support of TLS.</t>
+
+    <!--When DNS is used by a PCC willing to use PCEPS to locate an appropriate PCE as per <xref target="I-D.wu-pce-dns-pce-discovery"/>, the PCC 
+    chooses at least one of the returned FQDNs to resolve, which it does by performing DNS "A" or "AAAA" lookups on the FQDN. This will eventually result in an IPv4 or IPv6 address. As per the proposal, the PCC use the IP address(es) from the successfully resolved FQDN to initiate session. If the PCC fails to connect using an IP address but the "A" or "AAAA" lookups returned more than one IP address, then the PCC could use the next resolved IP address for that FQDN as the connection address. If the PCC fails to connect using all resolved IP addresses for a given FQDN, then it would repeat the process of resolution and connection for the next FQDN returned by the SRV lookup based on the priority and weight. If the PCC receives a response to its SRV query but it is not able to establish a PCEPS connection using the data received in the response, as initiating entity it could fall back to lookup a PCE that uses TCP as transport.</t>-->
+</list></t>
 
       <section anchor="DANE" title="DANE Applicability">
         <t>DANE <xref target="RFC6698"/> defines a secure method to associate the certificate that is obtained from a TLS server with a domain name using DNS, i.e., using the TLSA DNS resource record (RR) to associate a TLS server certificate or public key with the domain name where the record is found, thus forming a "TLSA certificate association". The DNS information needs to be protected by DNS Security (DNSSEC). A PCC willing to apply DANE to verify server identity MUST conform to the rules defined in section 4 of <xref target="RFC6698"/>. The server's domain name must be authorized separately, as TLSA does not provide any useful authorization guarantees.</t>
@@ -459,6 +470,8 @@
     StartTLS message, it would behave according to the existing error 
     mechanism of <xref target="RFC5440"/>. On receiving the error, based on the local policy, a peer could try to establishing PCEP session without TLS as per the procedures defined in <xref target="RFC5440"/>. For successful TLS operations with PCEP, both PCEP peers in the network would need to be
    upgraded to support this document.</t>
+   <t>An existing PCEP session cannot be upgraded to PCEPS, the session needs to be terminated and reestablished as per the procedure described in 
+   	this document. During the incremental upgrade, the PCEP speaker SHOULD allow session establishment with and without TLS. Once both PCEP speakers are upgraded to support PCEPS, the PCEP session is re-established with TLS, otherwise PCEP session without TLS is setup. A redundant PCE MAY also be used during the incremental deployment to take over the PCE undergoing upgrade. Once the upgrade is completed, support for unsecured version SHOULD be removed.</t>
   </section>
 
   <section anchor="IANA" title="IANA Considerations">
@@ -481,8 +494,8 @@
 Error-
 Type    Meaning               Error-value             Reference
 
-TBA2    StartTLS Failure      0:Unassigned            This document
-                              1:Reception of          This document
+TBA2    PCEP StartTLS         0:Unassigned            This document
+        failure               1:Reception of          This document
                               StartTLS after
                               any PCEP exchange
                               2:Reception of          This document
@@ -495,6 +508,7 @@ TBA2    StartTLS Failure      0:Unassigned            This document
                               4:Failure, connection   This document
                               without TLS possible
                               5:No StartTLS message   This document
+                              (nor PCErr/Open) 
                               before StartTLSWait
                               timer expiry
  ]]></artwork>
@@ -515,10 +529,10 @@ TBA2    StartTLS Failure      0:Unassigned            This document
       <section title="Control of Function and Policy" toc="default">
     <t>A PCE or PCC implementation MUST allow configuring the PCEP security via TLS capabilities as described in this document. </t>
       <t>A PCE or PCC implementation supporting PCEP security via TLS MUST support general TLS configuration as per <xref target="RFC5246"/>. At least the configuration of one of the trust models and its corresponding parameters, as  described in <xref target="Establishment"/> and <xref target="Identity"/>, MUST be supported by the implementation.</t>
-      <t>A PCEP implementation SHOULD allow configuring the following PCEP security parameters:
-   <list style="symbols">
+      <t>A PCEP implementation SHOULD allow configuring the StartTLSWait timer value.
+   <!--<list style="symbols">
    <t>StartTLSWait timer value</t>
-   </list>
+   </list>-->
    </t>
    <t>PCEPS implementations MAY provide an option to allow the operator to 
    manually override strict TLS configuration and allow unsecure 
@@ -526,9 +540,9 @@ TBA2    StartTLS Failure      0:Unassigned            This document
    the security implications of permitting unsecure connections.</t>
    <t>Further, the operator needs to develop suitable security policies 
    around PCEP within his network. Further the PCEP peers SHOULD provide 
-   ways for the operator to complete the following tasks:
+   ways for the operator to complete the following tasks in regards to a PCEP session:
    <list style="symbols">
-      <t>Determine if a PCEP session is protected via PCEPS.</t>
+      <t>Determine if a session is protected via PCEPS.</t>
       <t>Determine the version of TLS, the mechanism used for authentication, 
       and the ciphersuite in use.</t>
       <t>Determine if the certificate could not be verified, and the reason 
@@ -540,7 +554,7 @@ TBA2    StartTLS Failure      0:Unassigned            This document
    </list></t>
 </section>
       <section title="Information and Data Models" toc="default">
-        <t>The PCEP MIB module is defined in <xref target="RFC7420"/>. The MIB module MUST be extended to include the ability to view the PCEPS capability, TLS related information as well as TLS status for each PCEP peer.</t>
+        <t>The PCEP MIB module is defined in <xref target="RFC7420"/>. The MIB module could be extended to include the ability to view the PCEPS capability, TLS related information as well as TLS status for each PCEP peer.</t>
         <t>An implementation SHOULD also allow the operator to configure the PCEPS capability and various TLS related parameters in addition to ability to view the current TLS 
    status for a PCEP session.  To serve this purpose, the PCEP YANG module
    <xref target="I-D.ietf-pce-pcep-yang"/> is extended to include TLS related configuration and state information.</t>
@@ -548,11 +562,12 @@ TBA2    StartTLS Failure      0:Unassigned            This document
       <section title="Liveness Detection and Monitoring" toc="default">
         <t>Mechanisms defined in this document do not imply any new liveness detection and monitoring requirements in addition to those already listed in <xref target="RFC5440"/> and <xref target="RFC5246"/>.</t>
       </section>
-      <section title="Verify Correct Operations" toc="default">
+      <section title="Verifying Correct Operations" toc="default">
         <t>A PCEPS implementation SHOULD log error events and provide PCEPS failure statistics with reasons.</t>
       </section>
       <section title="Requirements on Other Protocols" toc="default">
-        <t>Mechanisms defined in this document do not imply any new requirements on other protocols.</t>
+        <t>Mechanisms defined in this document do not imply any new requirements on other protocols. Note that, <xref target="Discovery"/> list possible 
+        discovery mechanism for support of PCEPS.</t>
       </section>
       <section title="Impact on Network Operation" toc="default">
         <t>Mechanisms defined in this document do not have any significant impact on network operations in addition to those already listed in <xref target="RFC5440"/>, and the policy and management implications discussed above.</t>        

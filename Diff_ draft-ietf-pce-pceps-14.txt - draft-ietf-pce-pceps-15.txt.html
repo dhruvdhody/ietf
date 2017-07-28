@@ -1,0 +1,735 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0030)https://tools.ietf.org/rfcdiff -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+   
+  <meta http-equiv="Content-Style-Type" content="text/css"> 
+  <title>Diff: draft-ietf-pce-pceps-14.txt - draft-ietf-pce-pceps-15.txt</title> 
+  <style type="text/css"> 
+    body    { margin: 0.4ex; margin-right: auto; } 
+    tr      { } 
+    td      { white-space: pre; font-family: monospace; vertical-align: top; font-size: 0.86em;} 
+    th      { font-size: 0.86em; } 
+    .small  { font-size: 0.6em; font-style: italic; font-family: Verdana, Helvetica, sans-serif; } 
+    .left   { background-color: #EEE; } 
+    .right  { background-color: #FFF; } 
+    .diff   { background-color: #CCF; } 
+    .lblock { background-color: #BFB; } 
+    .rblock { background-color: #FF8; } 
+    .insert { background-color: #8FF; } 
+    .delete { background-color: #ACF; } 
+    .void   { background-color: #FFB; } 
+    .cont   { background-color: #EEE; } 
+    .linebr { background-color: #AAA; } 
+    .lineno { color: red; background-color: #FFF; font-size: 0.7em; text-align: right; padding: 0 2px; } 
+    .elipsis{ background-color: #AAA; } 
+    .left .cont { background-color: #DDD; } 
+    .right .cont { background-color: #EEE; } 
+    .lblock .cont { background-color: #9D9; } 
+    .rblock .cont { background-color: #DD6; } 
+    .insert .cont { background-color: #0DD; } 
+    .delete .cont { background-color: #8AD; } 
+    .stats, .stats td, .stats th { background-color: #EEE; padding: 2px 0; } 
+    span.hide { display: none; color: #aaa;}    a:hover span { display: inline; }    tr.change { background-color: gray; } 
+    tr.change a { text-decoration: none; color: black } 
+  </style> 
+     <script>
+var chunk_index = 0;
+var old_chunk = null;
+
+function format_chunk(index) {
+    var prefix = "diff";
+    var str = index.toString();
+    for (x=0; x<(4-str.length); ++x) {
+        prefix+='0';
+    }
+    return prefix + str;
+}
+
+function find_chunk(n){
+    return document.querySelector('tr[id$="' + n + '"]');
+}
+
+function change_chunk(offset) {
+    var index = chunk_index + offset;
+    var new_str;
+    var new_chunk;
+
+    new_str = format_chunk(index);
+    new_chunk = find_chunk(new_str);
+    if (!new_chunk) {
+        return;
+    }
+    if (old_chunk) {
+        old_chunk.style.outline = "";
+    }
+    old_chunk = new_chunk;
+    old_chunk.style.outline = "1px solid red";
+    window.location.hash = "#" + new_str;
+    window.scrollBy(0,-100);
+    chunk_index = index;
+}
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+    case 78:
+        change_chunk(1);
+        break;
+    case 80:
+        change_chunk(-1);
+        break;
+    }
+};
+   </script> 
+<style type="text/css" id="GINGER_SOFTWARE_style">.GINGER_SOFTWARE_noMark { background : transparent; }  .GINGER_SOFTWARE_wrapper{ position: absolute; overflow: hidden; margin: 0px; padding: 0px; border: 0px solid transparent } .GINGER_SOFTWARE_contour { position : absolute; margin: 0px; }  .GINGER_SOFTWARE_richText { margin : 0px; padding-bottom: 3px; border-width: 0px; border-color: transparent; display: block; color: transparent; -webkit-text-fill-color: transparent; overflow: hidden; white-space: pre-wrap;}  .GINGER_SOFTWARE_inputWrapper .GINGER_SOFTWARE_richText {position: absolute;}  .GINGER_SOFTWARE_canvas { display:none; background-repeat:no-repeat;}  .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark {border-top-left-radius:2px; border-top-right-radius:2px; border-bottom-right-radius:2px; border-bottom-left-radius:2px;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjhFQ0Y2OENGMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjhFQ0Y2OEQwMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OEVDRjY4Q0QzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OEVDRjY4Q0UzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5RRxRxAAAAD0lEQVR42mK48+w7QIABAAVbAroowN08AAAAAElFTkSuQmCC)!important;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark.GINGER_SOFTWARE_synonym {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAABJJREFUeNpi+P9gEwAAAP//AwAFcwKS3d7BnwAAAABJRU5ErkJggg==)!important;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark.GINGER_SOFTWARE_noSuggestion {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjhFQ0Y2OENGMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjhFQ0Y2OEQwMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OEVDRjY4Q0QzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OEVDRjY4Q0UzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5RRxRxAAAAD0lEQVR42mK48+w7QIABAAVbAroowN08AAAAAElFTkSuQmCC)!important;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_mark {position:relative; background-image:none!important;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightLeft { position : absolute; left:-2px; top:0px; bottom:0px; width:2px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightRight { position : absolute; right:-2px; top:0px; bottom:0px; width:2px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightTop { position : absolute; left:0px; right:0px; top:-2px; height:3px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightBottom { position : absolute; left:0px; right:0px; bottom:-2px; height:3px;}</style></head> 
+<body ginger_software_stylesheet="true" ginger_software_doc="true"> 
+  <table border="0" cellpadding="0" cellspacing="0"> 
+  <tbody><tr id="part-1" bgcolor="orange"><th></th><th><a href="https://tools.ietf.org/rfcdiff?url2=draft-ietf-pce-pceps-14.txt" style="color:#008; text-decoration:none;">&lt;</a>&nbsp;<a href="https://tools.ietf.org/html/draft-ietf-pce-pceps-14.txt" style="color:#008">draft-ietf-pce-pceps-14.txt</a>&nbsp;</th><th> </th><th>&nbsp;<a href="https://tools.ietf.org/html/draft-ietf-pce-pceps-15.txt" style="color:#008">draft-ietf-pce-pceps-15.txt</a>&nbsp;<a href="https://tools.ietf.org/rfcdiff?url1=draft-ietf-pce-pceps-15.txt" style="color:#008; text-decoration:none;">&gt;</a></th><th></th></tr> 
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">PCE Working Group                                               D. Lopez</td><td> </td><td class="right">PCE Working Group                                               D. Lopez</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Internet-Draft                                       O. Gonzalez de Dios</td><td> </td><td class="right">Internet-Draft                                       O. Gonzalez de Dios</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Updates: 5440 (if approved)                               Telefonica I+D</td><td> </td><td class="right">Updates: 5440 (if approved)                               Telefonica I+D</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Intended status: Standards Track                                   Q. Wu</td><td> </td><td class="right">Intended status: Standards Track                                   Q. Wu</td><td class="lineno"></td></tr>
+      <tr id="diff0001"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">Expires: <span class="delete">November 23, 2017</span>                                      D. Dhody</td><td> </td><td class="rblock">Expires: <span class="insert">January 29, 2018 </span>                                      D. Dhody</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                                  Huawei</td><td> </td><td class="right">                                                                  Huawei</td><td class="lineno"></td></tr>
+      <tr id="diff0002"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                                           <span class="delete"> May 22</span>, 2017</td><td> </td><td class="rblock">                                                           <span class="insert">July 28</span>, 2017</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                       Secure Transport for PCEP</td><td> </td><td class="right">                       Secure Transport for PCEP</td><td class="lineno"></td></tr>
+      <tr id="diff0003"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                        draft-ietf-pce-pceps-1<span class="delete">4</span></td><td> </td><td class="rblock">                        draft-ietf-pce-pceps-1<span class="insert">5</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Abstract</td><td> </td><td class="right">Abstract</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The Path Computation Element Communication Protocol (PCEP) defines</td><td> </td><td class="right">   The Path Computation Element Communication Protocol (PCEP) defines</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the mechanisms for the communication between a Path Computation</td><td> </td><td class="right">   the mechanisms for the communication between a Path Computation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Client (PCC) and a Path Computation Element (PCE), or among PCEs.</td><td> </td><td class="right">   Client (PCC) and a Path Computation Element (PCE), or among PCEs.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document describe the usage of Transport Layer Security (TLS) to</td><td> </td><td class="right">   This document describe the usage of Transport Layer Security (TLS) to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   enhance PCEP security, hence the PCEPS acronym proposed for it.  The</td><td> </td><td class="right">   enhance PCEP security, hence the PCEPS acronym proposed for it.  The</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   additional security mechanisms are provided by the transport protocol</td><td> </td><td class="right">   additional security mechanisms are provided by the transport protocol</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   supporting PCEP, and therefore they do not affect the flexibility and</td><td> </td><td class="right">   supporting PCEP, and therefore they do not affect the flexibility and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-2" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-2"><em> page 1, line 43<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-2"><em> page 1, line 43<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are working documents of the Internet Engineering</td><td> </td><td class="right">   Internet-Drafts are working documents of the Internet Engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Task Force (IETF).  Note that other groups may also distribute</td><td> </td><td class="right">   Task Force (IETF).  Note that other groups may also distribute</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   working documents as Internet-Drafts.  The list of current Internet-</td><td> </td><td class="right">   working documents as Internet-Drafts.  The list of current Internet-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Drafts is at http://datatracker.ietf.org/drafts/current/.</td><td> </td><td class="right">   Drafts is at http://datatracker.ietf.org/drafts/current/.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are draft documents valid for a maximum of six months</td><td> </td><td class="right">   Internet-Drafts are draft documents valid for a maximum of six months</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and may be updated, replaced, or obsoleted by other documents at any</td><td> </td><td class="right">   and may be updated, replaced, or obsoleted by other documents at any</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   time.  It is inappropriate to use Internet-Drafts as reference</td><td> </td><td class="right">   time.  It is inappropriate to use Internet-Drafts as reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   material or to cite them other than as "work in progress."</td><td> </td><td class="right">   material or to cite them other than as "work in progress."</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0004"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   This Internet-Draft will expire on <span class="delete">November 23, 2017</span>.</td><td> </td><td class="rblock">   This Internet-Draft will expire on <span class="insert">January 29, 2018</span>.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Copyright Notice</td><td> </td><td class="right">Copyright Notice</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Copyright (c) 2017 IETF Trust and the persons identified as the</td><td> </td><td class="right">   Copyright (c) 2017 IETF Trust and the persons identified as the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document authors.  All rights reserved.</td><td> </td><td class="right">   document authors.  All rights reserved.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td> </td><td class="right">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Provisions Relating to IETF Documents</td><td> </td><td class="right">   Provisions Relating to IETF Documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (http://trustee.ietf.org/license-info) in effect on the date of</td><td> </td><td class="right">   (http://trustee.ietf.org/license-info) in effect on the date of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   publication of this document.  Please review these documents</td><td> </td><td class="right">   publication of this document.  Please review these documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-3" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-3"><em> page 2, line 38<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-3"><em> page 2, line 38<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td> </td><td class="right">   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   2.  Requirements Language . . . . . . . . . . . . . . . . . . . .   4</td><td> </td><td class="right">   2.  Requirements Language . . . . . . . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   3.  Applying PCEPS  . . . . . . . . . . . . . . . . . . . . . . .   4</td><td> </td><td class="right">   3.  Applying PCEPS  . . . . . . . . . . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   4</td><td> </td><td class="right">     3.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.2.  Initiating the TLS Procedures . . . . . . . . . . . . . .   4</td><td> </td><td class="right">     3.2.  Initiating the TLS Procedures . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.3.  The StartTLS Message  . . . . . . . . . . . . . . . . . .   6</td><td> </td><td class="right">     3.3.  The StartTLS Message  . . . . . . . . . . . . . . . . . .   6</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.4.  TLS Connection Establishment  . . . . . . . . . . . . . .   8</td><td> </td><td class="right">     3.4.  TLS Connection Establishment  . . . . . . . . . . . . . .   8</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.5.  Peer Identity . . . . . . . . . . . . . . . . . . . . . .  10</td><td> </td><td class="right">     3.5.  Peer Identity . . . . . . . . . . . . . . . . . . . . . .  10</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.6.  Connection Establishment Failure  . . . . . . . . . . . .  11</td><td> </td><td class="right">     3.6.  Connection Establishment Failure  . . . . . . . . . . . .  11</td><td class="lineno"></td></tr>
+      <tr id="diff0005"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   4.  Discovery Mechanisms  . . . . . . . . . . . . . . . . . . . .  1<span class="delete">1</span></td><td> </td><td class="rblock">   4.  Discovery Mechanisms  . . . . . . . . . . . . . . . . . . . .  1<span class="insert">2</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     4.1.  DANE Applicability  . . . . . . . . . . . . . . . . . . .  12</td><td> </td><td class="right">     4.1.  DANE Applicability  . . . . . . . . . . . . . . . . . . .  12</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   5.  Backward Compatibility  . . . . . . . . . . . . . . . . . . .  12</td><td> </td><td class="right">   5.  Backward Compatibility  . . . . . . . . . . . . . . . . . . .  12</td><td class="lineno"></td></tr>
+      <tr id="diff0006"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  <span class="delete">12</span></td><td> </td><td class="rblock">   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  <span class="insert">13</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     6.1.  New PCEP Message  . . . . . . . . . . . . . . . . . . . .  <span class="delete">12</span></td><td> </td><td class="rblock">     6.1.  New PCEP Message  . . . . . . . . . . . . . . . . . . . .  <span class="insert">13</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     6.2.  New Error-Values  . . . . . . . . . . . . . . . . . . . .  13</td><td> </td><td class="right">     6.2.  New Error-Values  . . . . . . . . . . . . . . . . . . . .  13</td><td class="lineno"></td></tr>
+      <tr id="diff0007"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  <span class="delete">13</span></td><td> </td><td class="rblock">   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  <span class="insert">14</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   8.  Manageability Considerations  . . . . . . . . . . . . . . . .  <span class="delete">14</span></td><td> </td><td class="rblock">   8.  Manageability Considerations  . . . . . . . . . . . . . . . .  <span class="insert">15</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     8.1.  Control of Function and Policy  . . . . . . . . . . . . .  <span class="delete">14</span></td><td> </td><td class="rblock">     8.1.  Control of Function and Policy  . . . . . . . . . . . . .  <span class="insert">15</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     8.2.  Information and Data Models . . . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock">     8.2.  Information and Data Models . . . . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     8.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock">     8.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     8.4.  <span class="delete">Verify</span> Correct Operations . . . . . . . . . . . . . . <span class="delete">. .  15</span></td><td> </td><td class="rblock">     8.4.  <span class="insert">Verifying</span> Correct Operations  . . . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     8.5.  Requirements on Other Protocols . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock">     8.5.  Requirements on Other Protocols . . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     8.6.  Impact on Network Operation . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">     8.6.  Impact on Network Operation . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr id="diff0008"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">16</span></td><td> </td><td class="rblock">   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     10.1.  Normative References . . . . . . . . . . . . . . . . . .  <span class="delete">16</span></td><td> </td><td class="rblock">     10.1.  Normative References . . . . . . . . . . . . . . . . . .  <span class="insert">17</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     10.2.  Informative References . . . . . . . . . . . . . . . . .  <span class="delete">17</span></td><td> </td><td class="rblock">     10.2.  Informative References . . . . . . . . . . . . . . . . .  <span class="insert">18</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">18</span></td><td> </td><td class="rblock">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">20</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">1.  Introduction</td><td> </td><td class="right">1.  Introduction</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The Path Computation Element Communication Protocol (PCEP) [RFC5440]</td><td> </td><td class="right">   The Path Computation Element Communication Protocol (PCEP) [RFC5440]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   defines the mechanisms for the communication between a Path</td><td> </td><td class="right">   defines the mechanisms for the communication between a Path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Computation Client (PCC) and a Path Computation Element (PCE), or</td><td> </td><td class="right">   Computation Client (PCC) and a Path Computation Element (PCE), or</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   between two PCEs.  These interactions include requests and replies</td><td> </td><td class="right">   between two PCEs.  These interactions include requests and replies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   that can be critical for a sustainable network operation and adequate</td><td> </td><td class="right">   that can be critical for a sustainable network operation and adequate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   resource allocation, and therefore appropriate security becomes a key</td><td> </td><td class="right">   resource allocation, and therefore appropriate security becomes a key</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   element in the PCE infrastructure.  As the applications of the PCE</td><td> </td><td class="right">   element in the PCE infrastructure.  As the applications of the PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-4" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-4"><em> page 3, line 40<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-4"><em> page 3, line 40<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Among the possible solutions mentioned in these documents, Transport</td><td> </td><td class="right">   Among the possible solutions mentioned in these documents, Transport</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Layer Security (TLS) [RFC5246] provides support for peer</td><td> </td><td class="right">   Layer Security (TLS) [RFC5246] provides support for peer</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   authentication, and message encryption and integrity.  TLS supports</td><td> </td><td class="right">   authentication, and message encryption and integrity.  TLS supports</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the usage of well-known mechanisms to support key configuration and</td><td> </td><td class="right">   the usage of well-known mechanisms to support key configuration and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   exchange, and means to perform security checks on the results of PCE</td><td> </td><td class="right">   exchange, and means to perform security checks on the results of PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   discovery procedures via Interior Gateway Protocol (IGP) ([RFC5088]</td><td> </td><td class="right">   discovery procedures via Interior Gateway Protocol (IGP) ([RFC5088]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and [RFC5089]).</td><td> </td><td class="right">   and [RFC5089]).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document describes a security container for the transport of</td><td> </td><td class="right">   This document describes a security container for the transport of</td><td class="lineno"></td></tr>
+      <tr id="diff0009"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   PCEP messages, and therefore <span class="delete">they do</span> not affect the flexibility and</td><td> </td><td class="rblock">   PCEP messages, and therefore <span class="insert">it does</span> not affect the flexibility and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   extensibility of PCEP.</td><td> </td><td class="right">   extensibility of PCEP.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document describes how to apply TLS in securing PCE</td><td> </td><td class="right">   This document describes how to apply TLS in securing PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   interactions, including initiation of the TLS procedures, the TLS</td><td> </td><td class="right">   interactions, including initiation of the TLS procedures, the TLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   handshake mechanisms, the TLS methods for peer authentication, the</td><td> </td><td class="right">   handshake mechanisms, the TLS methods for peer authentication, the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   applicable TLS ciphersuites for data exchange, and the handling of</td><td> </td><td class="right">   applicable TLS ciphersuites for data exchange, and the handling of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   errors in the security checks.  In the rest of the document we will</td><td> </td><td class="right">   errors in the security checks.  In the rest of the document we will</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   refer to this usage of TLS to provide a secure transport for PCEP as</td><td> </td><td class="right">   refer to this usage of TLS to provide a secure transport for PCEP as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   "PCEPS".</td><td> </td><td class="right">   "PCEPS".</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0010"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">Within this document, PCEP communications are described through PCC-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   PCE relationship.  The PCE architecture also supports the PCE-PCE</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   communication, by having the requesting PCE fill the role of a PCC,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   as usual.  Thus, the PCC refers to a PCC or a PCE initiating the PCEP</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   session and acting as a client.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">2.  Requirements Language</td><td> </td><td class="right">2.  Requirements Language</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",</td><td> </td><td class="right">   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this</td><td> </td><td class="right">   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document are to be interpreted as described in [RFC2119].</td><td> </td><td class="right">   document are to be interpreted as described in [RFC2119].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">3.  Applying PCEPS</td><td> </td><td class="right">3.  Applying PCEPS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">3.1.  Overview</td><td> </td><td class="right">3.1.  Overview</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-5" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-5"><em> page 5, line 29<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-5"><em> page 5, line 35<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   StartTLS failure) and Error-value set to 1 (reception of StartTLS</td><td> </td><td class="right">   StartTLS failure) and Error-value set to 1 (reception of StartTLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   after any PCEP exchange), and MUST close the TCP connection.  A PCEP</td><td> </td><td class="right">   after any PCEP exchange), and MUST close the TCP connection.  A PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   speaker receiving any other message apart from StartTLS, Open, or</td><td> </td><td class="right">   speaker receiving any other message apart from StartTLS, Open, or</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCErr as the first message, MUST treat it as an unexpected message</td><td> </td><td class="right">   PCErr as the first message, MUST treat it as an unexpected message</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and reply with a PCErr message with Error-Type set to [TBA2 by IANA]</td><td> </td><td class="right">   and reply with a PCErr message with Error-Type set to [TBA2 by IANA]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (PCEP StartTLS failure) and Error-value set to 2 (reception of any</td><td> </td><td class="right">   (PCEP StartTLS failure) and Error-value set to 2 (reception of any</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   other message apart from StartTLS, Open, or PCErr message), and MUST</td><td> </td><td class="right">   other message apart from StartTLS, Open, or PCErr message), and MUST</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   close the TCP connection.</td><td> </td><td class="right">   close the TCP connection.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   If the PCEP speaker that does not support PCEPS, receives a StartTLS</td><td> </td><td class="right">   If the PCEP speaker that does not support PCEPS, receives a StartTLS</td><td class="lineno"></td></tr>
+      <tr id="diff0011"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   message, it <span class="delete">MUST</span> behave according to the existing error mechanism</td><td> </td><td class="rblock">   message, it <span class="insert">will</span> behave according to the existing error mechanism</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   described in section 6.2 of [RFC5440] (in case message is received</td><td> </td><td class="right">   described in section 6.2 of [RFC5440] (in case message is received</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   prior to an Open message) or section 6.9 of [RFC5440] (for the case</td><td> </td><td class="right">   prior to an Open message) or section 6.9 of [RFC5440] (for the case</td><td class="lineno"></td></tr>
+      <tr id="diff0012"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   of reception of unknown message).</td><td> </td><td class="rblock">   of reception of unknown message).<span class="insert">  See Section 5 for more details.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0013"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   After the exchange of <span class="delete">s</span>tartTLS messages, if a PCEP speaker cannot</td><td> </td><td class="rblock">   After the exchange of <span class="insert">S</span>tartTLS messages, if a PCEP speaker cannot</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   establish a TLS connection for some reason (e.g. the required</td><td> </td><td class="right">   establish a TLS connection for some reason (e.g. the required</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   mechanisms for certificate revocation checking are not available), it</td><td> </td><td class="right">   mechanisms for certificate revocation checking are not available), it</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   MUST return a PCErr message (in clear) with Error-Type set to [TBA2</td><td> </td><td class="right">   MUST return a PCErr message (in clear) with Error-Type set to [TBA2</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   by IANA] (PCEP StartTLS failure) and Error-value set to:</td><td> </td><td class="right">   by IANA] (PCEP StartTLS failure) and Error-value set to:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  3 (not without TLS) if it is not willing to exchange PCEP messages</td><td> </td><td class="right">   o  3 (not without TLS) if it is not willing to exchange PCEP messages</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      without the solicited TLS connection, and it MUST close the TCP</td><td> </td><td class="right">      without the solicited TLS connection, and it MUST close the TCP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      session.</td><td> </td><td class="right">      session.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  4 (ok without TLS) if it is willing to exchange PCEP messages</td><td> </td><td class="right">   o  4 (ok without TLS) if it is willing to exchange PCEP messages</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      without the solicited TLS connection, and it MUST close the TCP</td><td> </td><td class="right">      without the solicited TLS connection, and it MUST close the TCP</td><td class="lineno"></td></tr>
+      <tr id="diff0014"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      session.  The <span class="delete">pe</span>er MAY choose to re-establish the PCEP session</td><td> </td><td class="rblock">      session.  The <span class="insert">receiv</span>er MAY choose to re-establish the PCEP session</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      without TLS next.</td><td> </td><td class="right">      without TLS next.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   If the PCEP speaker supports PCEPS and can establish a TLS connection</td><td> </td><td class="right">   If the PCEP speaker supports PCEPS and can establish a TLS connection</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   it MUST start the TLS connection establishment steps described in</td><td> </td><td class="right">   it MUST start the TLS connection establishment steps described in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Section 3.4 before the PCEP initialization procedure (section 4.2.1</td><td> </td><td class="right">   Section 3.4 before the PCEP initialization procedure (section 4.2.1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   of [RFC5440]).</td><td> </td><td class="right">   of [RFC5440]).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A PCEP speaker that does not support PCEPS or has learned the peer</td><td> </td><td class="right">   A PCEP speaker that does not support PCEPS or has learned the peer</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   willingness to reestablish session without TLS, can send the Open</td><td> </td><td class="right">   willingness to reestablish session without TLS, can send the Open</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   message directly, as per [RFC5440].</td><td> </td><td class="right">   message directly, as per [RFC5440].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-6" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-6"><em> page 7, line 4<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-6"><em> page 7, line 13<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The format of a StartTLS message is as follows:</td><td> </td><td class="right">   The format of a StartTLS message is as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      &lt;StartTLS Message&gt;::= &lt;Common Header&gt;</td><td> </td><td class="right">      &lt;StartTLS Message&gt;::= &lt;Common Header&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The StartTLS message MUST contain only the PCEP common header with</td><td> </td><td class="right">   The StartTLS message MUST contain only the PCEP common header with</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Message-Type field set to [TBA1 by IANA].</td><td> </td><td class="right">   Message-Type field set to [TBA1 by IANA].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Once the TCP connection has been successfully established and the</td><td> </td><td class="right">   Once the TCP connection has been successfully established and the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   StartTLS message sent, the sender MUST start a timer called</td><td> </td><td class="right">   StartTLS message sent, the sender MUST start a timer called</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   StartTLSWait timer, after the expiration of which, if no StartTLS</td><td> </td><td class="right">   StartTLSWait timer, after the expiration of which, if no StartTLS</td><td class="lineno"></td></tr>
+      <tr id="diff0015"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   message has been <span class="delete">received,</span> it MUST send a PCErr message <span class="delete">and releases</span></td><td> </td><td class="rblock">   message has been <span class="insert">received (and in case of failure, a PCErr or Open</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   the TCP connection</span> with <span class="delete">Error-Type</span> set to [TBA2 by IANA] and <span class="delete">Error-</span></td><td> </td><td class="rblock"><span class="insert">   message is not received),</span> it MUST send a PCErr message with <span class="insert">Error-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   value</span> set to 5 (no StartTLS message received before the expiration of</td><td> </td><td class="rblock"><span class="insert">   Type</span> set to [TBA2 by IANA] and <span class="insert">Error-value</span> set to 5 (no StartTLS <span class="insert">(nor</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   the StartTLSWait <span class="delete">timer).</span>  A RECOMMENDED value for StartTLSWait timer</td><td> </td><td class="rblock"><span class="insert">   PCErr/Open)</span> message received before the expiration of the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   is 60 seconds.</td><td> </td><td class="rblock">   StartTLSWait <span class="insert">timer) and it MUST release the TCP connection .</span> A</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   RECOMMENDED value for StartTLSWait timer is 60 seconds.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                  +-+-+                 +-+-+</td><td> </td><td class="right">                  +-+-+                 +-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                  |PCC|                 |PCE|</td><td> </td><td class="right">                  |PCC|                 |PCE|</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                  +-+-+                 +-+-+</td><td> </td><td class="right">                  +-+-+                 +-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                    |                     |</td><td> </td><td class="right">                    |                     |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                    | StartTLS            |</td><td> </td><td class="right">                    | StartTLS            |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                    | msg                 |</td><td> </td><td class="right">                    | msg                 |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                    |-------              |</td><td> </td><td class="right">                    |-------              |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                    |       \   StartTLS  |</td><td> </td><td class="right">                    |       \   StartTLS  |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                    |        \  msg       |</td><td> </td><td class="right">                    |        \  msg       |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-7" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-7"><em> page 8, line 31<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-7"><em> page 8, line 45<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">                    |       PCErr         | (non-Open message</td><td> </td><td class="right">                    |       PCErr         | (non-Open message</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                    |                     |  received)</td><td> </td><td class="right">                    |                     |  received)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">             Figure 3: One PCEP Speaker does not support PCEPS</td><td> </td><td class="right">             Figure 3: One PCEP Speaker does not support PCEPS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">3.4.  TLS Connection Establishment</td><td> </td><td class="right">3.4.  TLS Connection Establishment</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Once the establishment of TLS has been agreed by the PCEP peers, the</td><td> </td><td class="right">   Once the establishment of TLS has been agreed by the PCEP peers, the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   connection establishment SHALL follow the following steps:</td><td> </td><td class="right">   connection establishment SHALL follow the following steps:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0016"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   1.  Immediately negotiate <span class="delete">TLS sessions</span> according to [RFC5246].  The</td><td> </td><td class="rblock">   1.  Immediately negotiate <span class="insert">a TLS session</span> according to [RFC5246].  The</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       following restrictions apply:</td><td> </td><td class="right">       following restrictions apply:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       *  Support for TLS v1.2 [RFC5246] or later is REQUIRED.</td><td> </td><td class="right">       *  Support for TLS v1.2 [RFC5246] or later is REQUIRED.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       *  Support for certificate-based mutual authentication is</td><td> </td><td class="right">       *  Support for certificate-based mutual authentication is</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">          REQUIRED.</td><td> </td><td class="right">          REQUIRED.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       *  Negotiation of mutual authentication is REQUIRED.</td><td> </td><td class="right">       *  Negotiation of mutual authentication is REQUIRED.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       *  Negotiation of a ciphersuite providing for integrity</td><td> </td><td class="right">       *  Negotiation of a ciphersuite providing for integrity</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-8" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-8"><em> page 11, line 4<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-8"><em> page 11, line 18<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Peer's fully qualified domain name (FQDN)</td><td> </td><td class="right">   o  Peer's fully qualified domain name (FQDN)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Certificate Fingerprint</td><td> </td><td class="right">   o  Certificate Fingerprint</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Issuer</td><td> </td><td class="right">   o  Issuer</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Subject</td><td> </td><td class="right">   o  Subject</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  All X509v3 Extended Key Usage</td><td> </td><td class="right">   o  All X509v3 Extended Key Usage</td><td class="lineno"></td></tr>
+      <tr id="diff0017"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                                                         </span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  All X509v3 Subject Alternative Name</td><td> </td><td class="right">   o  All X509v3 Subject Alternative Name</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  All X509v3 Certificate Policies</td><td> </td><td class="right">   o  All X509v3 Certificate Policies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0018"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">Note that the remote IP address used for the TCP session</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   establishment is also exposed.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-stateful-sync-optimizations] specify a Speaker Entity</td><td> </td><td class="right">   [I-D.ietf-pce-stateful-sync-optimizations] specify a Speaker Entity</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Identifier TLV (SPEAKER-ENTITY-ID), as an optional TLV that MAY be</td><td> </td><td class="right">   Identifier TLV (SPEAKER-ENTITY-ID), as an optional TLV that MAY be</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   included in the OPEN Object.  It contains a unique identifier for the</td><td> </td><td class="right">   included in the OPEN Object.  It contains a unique identifier for the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   node that does not change during the lifetime of the PCEP speaker.</td><td> </td><td class="right">   node that does not change during the lifetime of the PCEP speaker.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   An implementation would thus expose the speaker entity identifier as</td><td> </td><td class="right">   An implementation would thus expose the speaker entity identifier as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   part of the X509v3 certificate, so that an implementation could use</td><td> </td><td class="right">   part of the X509v3 certificate, so that an implementation could use</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   this identifier for the peer identification trust model.</td><td> </td><td class="right">   this identifier for the peer identification trust model.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   In addition, a PCC MAY apply the procedures described in [RFC6698]</td><td> </td><td class="right">   In addition, a PCC MAY apply the procedures described in [RFC6698]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   DNS-Based Authentication of Named Entities (DANE) to verify its peer</td><td> </td><td class="right">   DNS-Based Authentication of Named Entities (DANE) to verify its peer</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-9" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-9"><em> page 11, line 32<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-9"><em> page 12, line 7<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   In case the initial TLS negotiation or the peer identity check fails,</td><td> </td><td class="right">   In case the initial TLS negotiation or the peer identity check fails,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   according to the procedures listed in this document, the peer MUST</td><td> </td><td class="right">   according to the procedures listed in this document, the peer MUST</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   first send a PCErr message as per Section 3.2 and then terminate the</td><td> </td><td class="right">   first send a PCErr message as per Section 3.2 and then terminate the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   session.  It SHOULD follow the procedure listed in [RFC5440] to retry</td><td> </td><td class="right">   session.  It SHOULD follow the procedure listed in [RFC5440] to retry</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   session setup along with an exponential back-off session</td><td> </td><td class="right">   session setup along with an exponential back-off session</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   establishment retry procedure.</td><td> </td><td class="right">   establishment retry procedure.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">4.  Discovery Mechanisms</td><td> </td><td class="right">4.  Discovery Mechanisms</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0019"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">A PCE can advertise its capability to support PCEPS using the IGP</span></td><td> </td><td class="rblock">   <span class="insert">This document does not specify any</span> discovery <span class="insert">mechanism</span> for support of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   advertisement and</span> discovery <span class="delete">mechanism.  The PCE-CAP-FLAGS sub-TLV is</span></td><td> </td><td class="rblock">   <span class="insert">PCEPS.  Other documents, [I-D.wu-pce-discovery-pceps-support] and</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   an optional sub-TLV used to advertise PCE capabilities.  It MAY be</span></td><td> </td><td class="rblock"><span class="insert">   [I-D.wu-pce-dns-pce-discovery] have made proposals:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   present within the PCE Discovery (PCED) sub-TLV carried by OSPF or</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   IS-IS.  [RFC5088] and [RFC5089] provide the description and</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   processing rules for this sub-TLV when carried within OSPF and IS-IS,</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   respectively.  PCE capability bits are defined in [RFC5088].  A new</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   capability flag bit</span> for <span class="delete">the PCE-CAP-FLAGS sub-TLV that can be</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   announced as attribute to distribute PCEP security</span> support</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">information is proposed in [I-D.wu-pce-discovery-pceps-support]</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete"></span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   When DNS is used by a PCC (or a PCE acting as a client, for the rest</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   of <span class="delete">the section, PCC refers to both) willing to use PCEPS to locate an</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   appropriate PCE [I-D.wu-pce-dns-pce-discovery], the PCC as an</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   initiating entity, chooses at least one of the returned FQDNs to</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   resolve, which it does by performing DNS "A" or "AAAA" lookups on the</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   FDQN.  This will eventually result in an IPv4 or IPv6 address.  The</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   PCC SHALL use the IP address(es) from the successfully resolved FDQN</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   (with the corresponding port number returned by the DNS Service</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   Record (SRV) lookup) as the connection address(es) for the receiving</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   entity.</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0020"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">If the PCC fails</span> to <span class="delete">connect</span> using <span class="delete">an IP address but the "A" or "AAAA"</span></td><td> </td><td class="rblock">   <span class="insert">o  A PCE can advertise its capability</span> to <span class="insert">support PCEPS</span> using the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   lookups returned more than one IP address, then the PCC SHOULD use</span></td><td> </td><td class="rblock">      <span class="insert">IGP's advertisement mechanism of</span> the <span class="insert">PCE discovery information.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   the next resolved IP address for that FDQN as</span> the <span class="delete">connection address.</span></td><td> </td><td class="rblock"><span class="insert">      The PCE-CAP-FLAGS sub-TLV is an optional sub-TLV used</span> to <span class="insert">advertise</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   If</span> the <span class="delete">PCC fails</span> to <span class="delete">connect using all resolved IP addresses for a</span></td><td> </td><td class="rblock"><span class="insert">      PCE capabilities.  It is present within the PCE Discovery (PCED)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   given FDQN, then it SHOULD repeat</span> the <span class="delete">process of resolution</span> and</td><td> </td><td class="rblock"><span class="insert">      sub-TLV carried by OSPF or IS-IS.  [RFC5088] and [RFC5089] provide</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">connection</span> for <span class="delete">the next FQDN returned by the SRV lookup based on the</span></td><td> </td><td class="rblock">      the <span class="insert">description</span> and <span class="insert">processing rules</span> for <span class="insert">this sub-TLV when carried</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   priority</span> and <span class="delete">weight.</span></td><td> </td><td class="rblock"><span class="insert">      within OSPF</span> and <span class="insert">IS-IS, respectively.  PCE capability bits are</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      defined in [RFC5088].  A new capability flag bit for the PCE-CAP-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      FLAGS sub-TLV that can be announced as an attribute to distribute</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      PCEP security support information is proposed in</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      [I-D.wu-pce-discovery-pceps-support].</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0021"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">If the PCC receives a response to</span> its <span class="delete">SRV query but it is not able</span> to</td><td> </td><td class="rblock">   <span class="insert">o  A PCE can advertise</span> its <span class="insert">capability</span> to <span class="insert">support</span> PCEPS using the <span class="insert">DNS</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">establish a</span> PCEPS <span class="delete">connection</span> using the <span class="delete">data received in</span> the <span class="delete">response,</span></td><td> </td><td class="rblock"><span class="insert">      [I-D.wu-pce-dns-pce-discovery] by identifying</span> the <span class="insert">support of TLS.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   as initiating entity it MAY fall back to lookup a PCE that uses TCP</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   as transport.</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">4.1.  DANE Applicability</td><td> </td><td class="right">4.1.  DANE Applicability</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   DANE [RFC6698] defines a secure method to associate the certificate</td><td> </td><td class="right">   DANE [RFC6698] defines a secure method to associate the certificate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   that is obtained from a TLS server with a domain name using DNS,</td><td> </td><td class="right">   that is obtained from a TLS server with a domain name using DNS,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   i.e., using the TLSA DNS resource record (RR) to associate a TLS</td><td> </td><td class="right">   i.e., using the TLSA DNS resource record (RR) to associate a TLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   server certificate or public key with the domain name where the</td><td> </td><td class="right">   server certificate or public key with the domain name where the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   record is found, thus forming a "TLSA certificate association".  The</td><td> </td><td class="right">   record is found, thus forming a "TLSA certificate association".  The</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   DNS information needs to be protected by DNS Security (DNSSEC).  A</td><td> </td><td class="right">   DNS information needs to be protected by DNS Security (DNSSEC).  A</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCC willing to apply DANE to verify server identity MUST conform to</td><td> </td><td class="right">   PCC willing to apply DANE to verify server identity MUST conform to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-10" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-10"><em> page 12, line 43<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-10"><em> page 12, line 49<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.  Backward Compatibility</td><td> </td><td class="right">5.  Backward Compatibility</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The procedures described in this document define a security container</td><td> </td><td class="right">   The procedures described in this document define a security container</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   for the transport of PCEP requests and replies carried by a TLS</td><td> </td><td class="right">   for the transport of PCEP requests and replies carried by a TLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   connection initiated by means of a specific extended message</td><td> </td><td class="right">   connection initiated by means of a specific extended message</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (StartTLS) that does not interfere with PCEP speaker implementations</td><td> </td><td class="right">   (StartTLS) that does not interfere with PCEP speaker implementations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   not supporting it.</td><td> </td><td class="right">   not supporting it.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   If a PCEP implementation that does not support PCEPS receives a</td><td> </td><td class="right">   If a PCEP implementation that does not support PCEPS receives a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   StartTLS message, it would behave according to the existing error</td><td> </td><td class="right">   StartTLS message, it would behave according to the existing error</td><td class="lineno"></td></tr>
+      <tr id="diff0022"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   mechanism of [RFC5440].</td><td> </td><td class="rblock">   mechanism of [RFC5440].  <span class="insert">On receiving the error, based on the local</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   policy, a peer could try to establishing PCEP session without TLS as</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   per the procedures defined in [RFC5440].  For successful TLS</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   operations with PCEP, both PCEP peers in the network would need to be</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   upgraded to support this document.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   An existing PCEP session cannot be upgraded to PCEPS, the session</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   needs to be terminated and reestablished as per the procedure</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   described in this document.  During the incremental upgrade, the PCEP</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   speaker SHOULD allow session establishment with and without TLS.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Once both PCEP speakers are upgraded to support PCEPS, the PCEP</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   session is re-established with TLS, otherwise PCEP session without</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   TLS is setup.  A redundant PCE MAY also be used during the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   incremental deployment to take over the PCE undergoing upgrade.  Once</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   the upgrade is completed, support for unsecured version SHOULD be</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   removed.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">6.  IANA Considerations</td><td> </td><td class="right">6.  IANA Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">6.1.  New PCEP Message</td><td> </td><td class="right">6.1.  New PCEP Message</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   IANA is requested to allocate new message types within the "PCEP</td><td> </td><td class="right">   IANA is requested to allocate new message types within the "PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Messages" sub-registry of the PCEP Numbers registry, as follows:</td><td> </td><td class="right">   Messages" sub-registry of the PCEP Numbers registry, as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      Value  Description                             Reference</td><td> </td><td class="right">      Value  Description                             Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       TBA1  The Start TLS Message (StartTLS)        This document</td><td> </td><td class="right">       TBA1  The Start TLS Message (StartTLS)        This document</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">6.2.  New Error-Values</td><td> </td><td class="right">6.2.  New Error-Values</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   IANA is requested to allocate new Error Types and Error Values within</td><td> </td><td class="right">   IANA is requested to allocate new Error Types and Error Values within</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the " PCEP-ERROR Object Error Types and Values" sub-registry of the</td><td> </td><td class="right">   the " PCEP-ERROR Object Error Types and Values" sub-registry of the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP Numbers registry, as follows:</td><td> </td><td class="right">   PCEP Numbers registry, as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Error-</td><td> </td><td class="right">   Error-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Type    Meaning               Error-value             Reference</td><td> </td><td class="right">   Type    Meaning               Error-value             Reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0023"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   TBA2    StartTLS <span class="delete">Failure</span>      0:Unassigned            This document</td><td> </td><td class="rblock">   TBA2    <span class="insert">PCEP</span> StartTLS         0:Unassigned            This document</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                 1:Reception of          This document</td><td> </td><td class="rblock">           <span class="insert">failure</span>               1:Reception of          This document</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 StartTLS after</td><td> </td><td class="right">                                 StartTLS after</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 any PCEP exchange</td><td> </td><td class="right">                                 any PCEP exchange</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 2:Reception of          This document</td><td> </td><td class="right">                                 2:Reception of          This document</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 any other message</td><td> </td><td class="right">                                 any other message</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 apart from StartTLS,</td><td> </td><td class="right">                                 apart from StartTLS,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 Open or PCErr</td><td> </td><td class="right">                                 Open or PCErr</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 3:Failure, connection   This document</td><td> </td><td class="right">                                 3:Failure, connection   This document</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 without TLS not</td><td> </td><td class="right">                                 without TLS not</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 possible</td><td> </td><td class="right">                                 possible</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 4:Failure, connection   This document</td><td> </td><td class="right">                                 4:Failure, connection   This document</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 without TLS possible</td><td> </td><td class="right">                                 without TLS possible</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 5:No StartTLS message   This document</td><td> </td><td class="right">                                 5:No StartTLS message   This document</td><td class="lineno"></td></tr>
+      <tr id="diff0024"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                 (nor PCErr/Open)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 before StartTLSWait</td><td> </td><td class="right">                                 before StartTLSWait</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                 timer expiry</td><td> </td><td class="right">                                 timer expiry</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">7.  Security Considerations</td><td> </td><td class="right">7.  Security Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   While the application of TLS satisfies the requirement on privacy as</td><td> </td><td class="right">   While the application of TLS satisfies the requirement on privacy as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   well as fine-grained, policy-based peer authentication, there are</td><td> </td><td class="right">   well as fine-grained, policy-based peer authentication, there are</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   security threats that it cannot address.  It may be advisable to</td><td> </td><td class="right">   security threats that it cannot address.  It may be advisable to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   apply additional protection measures, in particular in what relates</td><td> </td><td class="right">   apply additional protection measures, in particular in what relates</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   to attacks specifically addressed to forging the TCP connection</td><td> </td><td class="right">   to attacks specifically addressed to forging the TCP connection</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-11" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-11"><em> page 14, line 41<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-11"><em> page 15, line 32<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A PCE or PCC implementation MUST allow configuring the PCEP security</td><td> </td><td class="right">   A PCE or PCC implementation MUST allow configuring the PCEP security</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   via TLS capabilities as described in this document.</td><td> </td><td class="right">   via TLS capabilities as described in this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A PCE or PCC implementation supporting PCEP security via TLS MUST</td><td> </td><td class="right">   A PCE or PCC implementation supporting PCEP security via TLS MUST</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   support general TLS configuration as per [RFC5246].  At least the</td><td> </td><td class="right">   support general TLS configuration as per [RFC5246].  At least the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   configuration of one of the trust models and its corresponding</td><td> </td><td class="right">   configuration of one of the trust models and its corresponding</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   parameters, as described in Section 3.4 and Section 3.5, MUST be</td><td> </td><td class="right">   parameters, as described in Section 3.4 and Section 3.5, MUST be</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   supported by the implementation.</td><td> </td><td class="right">   supported by the implementation.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0025"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   A PCEP implementation SHOULD allow configuring the <span class="delete">following PCEP</span></td><td> </td><td class="rblock">   A PCEP implementation SHOULD allow configuring the StartTLSWait timer</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   security parameters:</span></td><td> </td><td class="rblock">   <span class="insert">value.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete"></span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   o</span>  StartTLSWait timer <span class="delete">value</span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEPS implementations MAY provide an option to allow the operator to</td><td> </td><td class="right">   PCEPS implementations MAY provide an option to allow the operator to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   manually override strict TLS configuration and allow unsecure</td><td> </td><td class="right">   manually override strict TLS configuration and allow unsecure</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   connections.  Execution of this override SHOULD trigger a warning</td><td> </td><td class="right">   connections.  Execution of this override SHOULD trigger a warning</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   about the security implications of permitting unsecure connections.</td><td> </td><td class="right">   about the security implications of permitting unsecure connections.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Further, the operator needs to develop suitable security policies</td><td> </td><td class="right">   Further, the operator needs to develop suitable security policies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   around PCEP within his network.  Further the PCEP peers SHOULD</td><td> </td><td class="right">   around PCEP within his network.  Further the PCEP peers SHOULD</td><td class="lineno"></td></tr>
+      <tr id="diff0026"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   provide ways for the operator to complete the following <span class="delete">tasks:</span></td><td> </td><td class="rblock">   provide ways for the operator to complete the following <span class="insert">tasks in</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   regards to a PCEP session:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0027"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   o  Determine if a <span class="delete">PCEP </span>session is protected via PCEPS.</td><td> </td><td class="rblock">   o  Determine if a session is protected via PCEPS.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Determine the version of TLS, the mechanism used for</td><td> </td><td class="right">   o  Determine the version of TLS, the mechanism used for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      authentication, and the ciphersuite in use.</td><td> </td><td class="right">      authentication, and the ciphersuite in use.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Determine if the certificate could not be verified, and the reason</td><td> </td><td class="right">   o  Determine if the certificate could not be verified, and the reason</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      for this circumstance.</td><td> </td><td class="right">      for this circumstance.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Inspect the certificate offered by the PCEP peer.</td><td> </td><td class="right">   o  Inspect the certificate offered by the PCEP peer.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Be warned if StartTLS procedure fails for the PCEP peers, that are</td><td> </td><td class="right">   o  Be warned if StartTLS procedure fails for the PCEP peers, that are</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      known to support PCEPS, via configurations or capability</td><td> </td><td class="right">      known to support PCEPS, via configurations or capability</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      advertisements.</td><td> </td><td class="right">      advertisements.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">8.2.  Information and Data Models</td><td> </td><td class="right">8.2.  Information and Data Models</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0028"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   The PCEP MIB module <span class="delete">SHOULD</span> be extended to include PCEPS <span class="delete">capabilities,</span></td><td> </td><td class="rblock">   The PCEP MIB module <span class="insert">is defined in [RFC7420].  The MIB module could</span> be</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   information, and status.</span></td><td> </td><td class="rblock">   extended to include <span class="insert">the ability to view the</span> PCEPS <span class="insert">capability, TLS</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   related information as well as TLS status for each PCEP peer.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0029"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   An implementation SHOULD allow the operator to configure the PCEPS</td><td> </td><td class="rblock">   An implementation SHOULD <span class="insert">also</span> allow the operator to configure the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   capability and various TLS related <span class="delete">parameters, as well as allow</span> to</td><td> </td><td class="rblock">   PCEPS capability and various TLS related <span class="insert">parameters in addition to</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   view the current TLS status for a PCEP session.  To serve this</td><td> </td><td class="rblock"><span class="insert">   ability</span> to view the current TLS status for a PCEP session.  To serve</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   purpose, the PCEP YANG module [I-D.ietf-pce-pcep-yang] <span class="delete">can be</span></td><td> </td><td class="rblock">   this purpose, the PCEP YANG module [I-D.ietf-pce-pcep-yang] <span class="insert">is</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   extended to include TLS related configuration and <span class="delete">state.</span></td><td> </td><td class="rblock">   extended to include TLS related configuration and <span class="insert">state information.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">8.3.  Liveness Detection and Monitoring</td><td> </td><td class="right">8.3.  Liveness Detection and Monitoring</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in this document do not imply any new liveness</td><td> </td><td class="right">   Mechanisms defined in this document do not imply any new liveness</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   detection and monitoring requirements in addition to those already</td><td> </td><td class="right">   detection and monitoring requirements in addition to those already</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   listed in [RFC5440] and [RFC5246].</td><td> </td><td class="right">   listed in [RFC5440] and [RFC5246].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0030"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">8.4.  Verify Correct Operations</td><td> </td><td class="rblock">8.4.  Verify<span class="insert">ing</span> Correct Operations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A PCEPS implementation SHOULD log error events and provide PCEPS</td><td> </td><td class="right">   A PCEPS implementation SHOULD log error events and provide PCEPS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   failure statistics with reasons.</td><td> </td><td class="right">   failure statistics with reasons.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">8.5.  Requirements on Other Protocols</td><td> </td><td class="right">8.5.  Requirements on Other Protocols</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in this document do not imply any new requirements</td><td> </td><td class="right">   Mechanisms defined in this document do not imply any new requirements</td><td class="lineno"></td></tr>
+      <tr id="diff0031"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   on other protocols.</td><td> </td><td class="rblock">   on other protocols.  <span class="insert">Note that, Section 4 list possible discovery</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   mechanism for support of PCEPS.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">8.6.  Impact on Network Operation</td><td> </td><td class="right">8.6.  Impact on Network Operation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in this document do not have any significant</td><td> </td><td class="right">   Mechanisms defined in this document do not have any significant</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   impact on network operations in addition to those already listed in</td><td> </td><td class="right">   impact on network operations in addition to those already listed in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5440], and the policy and management implications discussed</td><td> </td><td class="right">   [RFC5440], and the policy and management implications discussed</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   above.</td><td> </td><td class="right">   above.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">9.  Acknowledgements</td><td> </td><td class="right">9.  Acknowledgements</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This specification relies on the analysis and profiling of TLS</td><td> </td><td class="right">   This specification relies on the analysis and profiling of TLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   included in [RFC6614] and the procedures described for the STARTTLS</td><td> </td><td class="right">   included in [RFC6614] and the procedures described for the STARTTLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   command in [RFC4513].</td><td> </td><td class="right">   command in [RFC4513].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   We would like to thank Joe Touch for his suggestions and support</td><td> </td><td class="right">   We would like to thank Joe Touch for his suggestions and support</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   regarding the TLS start mechanisms.</td><td> </td><td class="right">   regarding the TLS start mechanisms.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0032"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Thanks to Dan King for reminding the authors about manageability</td><td> </td><td class="rblock">   Thanks to Dan<span class="insert">iel</span> King for reminding the authors about manageability</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   considerations.</td><td> </td><td class="right">   considerations.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Thanks to Cyril Margaria for shepherding this document.</td><td> </td><td class="right">   Thanks to Cyril Margaria for shepherding this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0033"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Thanks to Dan Frost for the RTGDIR review.</td><td> </td><td class="rblock">   Thanks to <span class="insert">David Mandelberg for early SECDIR review comments as well</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   as re-reviewing during IETF last call.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Thanks to</span> Dan Frost for the RTGDIR <span class="insert">review and comments.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Thanks to Dale Worley for the Gen-ART review and comments.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Also thanks to Tianran Zhou for OPSDIR</span> review.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">Thanks to Deborah Brungard for being the responsible AD and guiding</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   the authors as needed.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">10.  References</td><td> </td><td class="right">10.  References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">10.1.  Normative References</td><td> </td><td class="right">10.1.  Normative References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate</td><td> </td><td class="right">   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Requirement Levels", BCP 14, RFC 2119,</td><td> </td><td class="right">              Requirement Levels", BCP 14, RFC 2119,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC2119, March 1997,</td><td> </td><td class="right">              DOI 10.17487/RFC2119, March 1997,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc2119&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc2119&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-12" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-12"><em> page 18, line 20<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-12"><em> page 19, line 20<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">              "Transport Layer Security (TLS) Encryption for RADIUS",</td><td> </td><td class="right">              "Transport Layer Security (TLS) Encryption for RADIUS",</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              RFC 6614, DOI 10.17487/RFC6614, May 2012,</td><td> </td><td class="right">              RFC 6614, DOI 10.17487/RFC6614, May 2012,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc6614&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc6614&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of</td><td> </td><td class="right">   [RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              BGP, LDP, PCEP, and MSDP Issues According to the Keying</td><td> </td><td class="right">              BGP, LDP, PCEP, and MSDP Issues According to the Keying</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              and Authentication for Routing Protocols (KARP) Design</td><td> </td><td class="right">              and Authentication for Routing Protocols (KARP) Design</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,</td><td> </td><td class="right">              Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;http://www.rfc-editor.org/info/rfc6952&gt;.</td><td> </td><td class="right">              &lt;http://www.rfc-editor.org/info/rfc6952&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0034"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">[RFC7420]  Koushik, A., Stephan, E., Zhao, Q., King, D., and J.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              Hardwick, "Path Computation Element Communication Protocol</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              (PCEP) Management Information Base (MIB) Module",</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              RFC 7420, DOI 10.17487/RFC7420, December 2014,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              &lt;http://www.rfc-editor.org/info/rfc7420&gt;.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-stateful-sync-optimizations]</td><td> </td><td class="right">   [I-D.ietf-pce-stateful-sync-optimizations]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Crabbe, E., Minei, I., Medved, J., Varga, R., Zhang, X.,</td><td> </td><td class="right">              Crabbe, E., Minei, I., Medved, J., Varga, R., Zhang, X.,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              and D. Dhody, "Optimizations of Label Switched Path State</td><td> </td><td class="right">              and D. Dhody, "Optimizations of Label Switched Path State</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Synchronization Procedures for a Stateful PCE", draft-</td><td> </td><td class="right">              Synchronization Procedures for a Stateful PCE", draft-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              ietf-pce-stateful-sync-optimizations-10 (work in</td><td> </td><td class="right">              ietf-pce-stateful-sync-optimizations-10 (work in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              progress), March 2017.</td><td> </td><td class="right">              progress), March 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pcep-yang]</td><td> </td><td class="right">   [I-D.ietf-pce-pcep-yang]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Dhody, D., Hardwick, J., Beeram, V., and j.</td><td> </td><td class="right">              Dhody, D., Hardwick, J., Beeram, V., and j.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              jefftant@gmail.com, "A YANG Data Model for Path</td><td> </td><td class="right">              jefftant@gmail.com, "A YANG Data Model for Path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Computation Element Communications Protocol (PCEP)",</td><td> </td><td class="right">              Computation Element Communications Protocol (PCEP)",</td><td class="lineno"></td></tr>
+      <tr id="diff0035"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">draft-ietf-pce-pcep-yang-02</span> (work in progress), <span class="delete">March</span></td><td> </td><td class="rblock">              <span class="insert">draft-ietf-pce-pcep-yang-05</span> (work in progress), <span class="insert">June</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              2017.</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.wu-pce-dns-pce-discovery]</td><td> </td><td class="right">   [I-D.wu-pce-dns-pce-discovery]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Wu, Q., Dhody, D., King, D., Lopez, D., and J. Tantsura,</td><td> </td><td class="right">              Wu, Q., Dhody, D., King, D., Lopez, D., and J. Tantsura,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              "Path Computation Element (PCE) Discovery using Domain</td><td> </td><td class="right">              "Path Computation Element (PCE) Discovery using Domain</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Name System(DNS)", draft-wu-pce-dns-pce-discovery-10 (work</td><td> </td><td class="right">              Name System(DNS)", draft-wu-pce-dns-pce-discovery-10 (work</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              in progress), March 2017.</td><td> </td><td class="right">              in progress), March 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.wu-pce-discovery-pceps-support]</td><td> </td><td class="right">   [I-D.wu-pce-discovery-pceps-support]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Lopez, D., Wu, Q., Dhody, D., and D. King, "IGP extension</td><td> </td><td class="right">              Lopez, D., Wu, Q., Dhody, D., and D. King, "IGP extension</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              for PCEP security capability support in the PCE</td><td> </td><td class="right">              for PCEP security capability support in the PCE</td><td class="lineno"></td></tr>
+
+     <tr><td></td><td class="left"></td><td> </td><td class="right"></td><td></td></tr>
+     <tr id="end" bgcolor="gray"><th colspan="5" align="center">&nbsp;End of changes. 35 change blocks.&nbsp;</th></tr>
+     <tr class="stats"><td></td><th><i>83 lines changed or deleted</i></th><th><i> </i></th><th><i>110 lines changed or added</i></th><td></td></tr>
+     <tr><td colspan="5" align="center" class="small"><br>This html diff was produced by rfcdiff 1.45. The latest version is available from <a href="http://www.tools.ietf.org/tools/rfcdiff/">http://tools.ietf.org/tools/rfcdiff/</a> </td></tr>
+   </tbody></table>
+   
+   
+<iframe width="0" height="0" frameborder="0" src="./Diff_ draft-ietf-pce-pceps-14.txt - draft-ietf-pce-pceps-15.txt_files/saved_resource.html" id="GINGER_SOFTWARE_bubblesIFrame" scrolling="no" style="border: 0px solid; display: none; position: absolute; z-index: 2147483647; height: 0px; width: 0px; background-color: transparent;"></iframe><div id="GingerWidgetInfo" style="display:none;">{"version":"0.1.0.618","isExtension":true,"extensionName":"Chrome"}</div></body><script>(function(){(function (){
+            //Todo:is injection needed here?
+            var eventRegister = {};
+
+            var findReactProp = function(elem){
+                for(var key in elem){
+                    if(key.indexOf("__reactInternalInstance")===0){
+                        //var p = null;
+                        //if(elem[key].memoizedProps){
+                        //    p = elem[key].memoizedProps;
+                        //} else if(elem[key]._currentElement){
+                        //    p = elem[key]._currentElement.props
+                        //}
+
+                        //TODO: report if props is not found with Facebook version
+                        return (elem[key].memoizedProps || elem[key]._currentElement.props);
+                    }
+                }
+                return null;
+            };
+
+            document.addEventListener("gingerModule-eventEmitter-react-fire",function(e){
+                //console.log("firing", e);
+                var reactProps = findReactProp(document.activeElement);
+                var eventName = e.detail.event;
+                var eventParams = e.detail.params || {};
+                eventParams.preventDefault = function(){};
+                if(reactProps && eventName) {
+                    reactProps[eventName](eventParams);
+                }
+            });
+            document.addEventListener("gingerModule-eventEmitter-onselect",function(e){
+                var reactProps = findReactProp(document.activeElement);
+                //trigger("select");
+                if(reactProps) {
+                    reactProps.onSelect();
+                }
+            });
+            document.addEventListener("gingerModule-eventEmitter-onpaste",function(e){
+                var reactProps = findReactProp(document.activeElement);
+                var pasteObj = {
+                    defaultPrevented: false,
+                    target: document.activeElement,
+                    preventDefault: function() {},
+                    clipboardData : {
+                        getData: function () {
+                            return e.detail || "";
+                        },
+                        items: ["text/plain"]
+                    }
+                };
+                //trigger("paste",pasteObj);
+                if(reactProps) {
+                    reactProps.onPaste(pasteObj);
+                }
+            });
+
+            var trigger = function(eventName,data){
+                if(!eventRegister[eventName]) return;
+                for(var i = 0; i<eventRegister[eventName].length; i++){
+                    var listener = eventRegister[eventName][i];
+                    listener(new CustomEvent(eventName),data);
+                }
+            };
+
+            var nativeEventListener = document.addEventListener.bind(document);
+            document.addEventListener = function(eventName, callback, options) {
+                console.log("registering event",eventName);
+                var eventRegisterItem = eventRegister[eventName] || [];
+                eventRegisterItem.push(callback);
+                eventRegister[eventName] = eventRegisterItem;
+                nativeEventListener(eventName, callback, options);
+            };
+
+        })() })()</script></html>
