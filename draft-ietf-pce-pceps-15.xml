@@ -169,7 +169,10 @@
    Open message). This document thus updates
    <xref target="RFC5440"/>, which required the
     Open message to be the first PCEP message. In the case of a PCEP
-    session using TLS the StartTLS message will be sent first. 
+    session using TLS the StartTLS message will be sent first. Also 
+    a PCEP speaker that supports PCEPS MUST not start the OpenWait timer
+    after the TCP establishment, instead it starts a StartTLSWait timer 
+    as described in <xref target="start"/>. 
     </t>
 
     <t>The PCEP speaker MAY
@@ -208,6 +211,18 @@
     case message is received prior to an Open message) or
     section 6.9 of <xref target="RFC5440"/> (for the case of reception of
     unknown message). See <xref target="Backward"/> for more details.</t>
+
+    <t>If the PCEP speaker that only supports PCEPS connection (as a local policy), receives a Open
+    message, it MUST treat it as an unexpected message and reply with a
+    PCErr message with Error-Type set to 1 (PCEP session establishment failure) and
+    Error-value set to 1 (reception of an invalid Open message or a non Open message), and MUST close the TCP connection.</t>
+
+    <t>If a PCC that supports PCEPS connection as well as allow non-PCEPS connection (as a local policy), 
+      it MUST first try to establish PCEPS, by sending StartTLS message and in case it receives an PCErr from the PCE,
+      it MAY retry to establish connection without PCEPS by sending an Open message. If a PCE that supports 
+      PCEPS connection as well as allow non-PCEPS connection (as a local policy), it MUST wait to respond after TCP establishment, 
+      based on the message received from the PCC. In case of StartTLS message, PCE responds with sending StartTLS message and moving to TLS 
+      establishment procedures as described in this document. In case of Open message, PCE responds with Open message and PCEP session establishment as per <xref target="RFC5440"/>.</t>
 
     <t>After the exchange of StartTLS messages, if a PCEP speaker cannot establish a TLS connection
     for some reason (e.g. the required mechanisms for certificate revocation
@@ -252,7 +267,7 @@
     connections.</t>
   </section>
 
-      <section title="The StartTLS Message">
+      <section title="The StartTLS Message" anchor="start">
             <t>
    The StartTLS message is used to initiate the TLS procedure for a PCEPS
    session between the PCEP peers. A PCEP speaker sends the
@@ -277,18 +292,18 @@
    <t>The StartTLS message MUST contain only the PCEP common header with
    Message-Type field set to [TBA1 by IANA].</t>
 
-   <t>Once the TCP connection has been successfully established and the
-   StartTLS message sent, the sender MUST start a timer called
-   StartTLSWait timer, after the expiration of which, if no StartTLS
-   message has been received (and in case of failure, a PCErr or Open 
-   message is not received), it MUST send a PCErr message with Error-Type set to [TBA2 by IANA] and Error-value
+   <t>Once the TCP connection has been successfully established, the 
+    PCEP speaker MUST start a timer called
+   StartTLSWait timer, after the expiration of which, if neither StartTLS
+   message has been received, nor a PCErr/Open (in case of failure
+   and PCEPS not supported by the peer respectively), it MUST send a PCErr message with Error-Type set to [TBA2 by IANA] and Error-value
    set to 5 (no StartTLS (nor PCErr/Open) message received before the expiration of the
    StartTLSWait timer) and it MUST release the
    TCP connection . A RECOMMENDED
-   value for StartTLSWait timer is 60 seconds.
+   value for StartTLSWait timer is 60 seconds. The value of StartTLSWait timer MUST NOT be less than OpenWait timer.
 </t>
 
-             <figure title="Both PCEP Speaker supports PCEPS"
+             <figure title="Both PCEP Speaker supports PCEPS (strict)"
              suppress-title="false" align="left" alt="" width="" height="" anchor="F1">
             <artwork><![CDATA[
 
@@ -316,26 +331,36 @@
             ]]></artwork>
           </figure>
 
-             <figure title="Both PCEP Speaker supports PCEPS, But cannot establish TLS"
+             <figure title="Both PCEP Speaker supports PCEPS (strict), But cannot establish TLS"
              suppress-title="false" align="left" alt="" width="" height="" anchor="F2">
             <artwork><![CDATA[
 
                +-+-+                 +-+-+
                |PCC|                 |PCE|
                +-+-+                 +-+-+
-                 |                     | Does not send
-                 |      StartTLS       | StartTLS as
-                 |-------------------->| cannot establish
-                 |                     | TLS
                  |                     |
-                 |<--------------------| Send Error
+                 | StartTLS            |
+                 | msg                 |
+                 |-------              |
+                 |       \   StartTLS  |
+                 |        \  msg       |
+                 |         \  ---------|
+                 |          \/         |
+                 |          /\         |
+                 |         /  -------->|
+                 |        /            |
+                 |<------              |
+                 |:::::::::TLS:::::::::| TLS Establishment
+                 |:::::Establishment:::| Failure
+                 |                     |
+                 |<--------------------| Send Error-Type TBA2
                  |      PCErr          | Error-Value 3/4
                  |                     |
 
             ]]></artwork>
-          </figure>
+          </figure>          
 
-            <figure title="One PCEP Speaker does not support PCEPS"
+<figure title="One PCEP Speaker (PCE) does not support PCEPS, while PCC supports both with or without PCEPS"
              suppress-title="false" align="left" alt="" width="" height="" anchor="F3">
             <artwork><![CDATA[
 
@@ -357,11 +382,70 @@
                  |                     |
                  |<--------------------| Send Error
                  |       PCErr         | (non-Open message
-                 |                     |  received)
+                 |<--------------------|  received)
+                 |       Close         |
+                 ///////// TCP /////////
+                 //////re-establish/////
+       Send Open | Open                |
+       this time | msg                 |
+                 |-------              |
+                 |       \   Open      |
+                 |        \  msg       |
+                 |         \  ---------|
+                 |          \/         |
+                 |          /\         |
+                 |         /  -------->|
+                 |        /            |
+                 |<------              |
 
 
             ]]></artwork>
+          </figure>          
+
+          <figure title="Both PCEP Speaker supports PCEPS as well as without PCEPS"
+             suppress-title="false" align="left" alt="" width="" height="" anchor="F4">
+            <artwork><![CDATA[
+
+               +-+-+                 +-+-+
+               |PCC|                 |PCE|
+               +-+-+                 +-+-+
+                 |                     |
+                 | StartTLS            |
+                 | msg                 | PCE waits 
+                 |-------------------->| for PCC and
+                 |            StartTLS | respond with   
+                 |<--------------------| Start TLS
+                 |                     |
+                 |:::::::::TLS:::::::::|
+                 |:::::Establishment:::|
+                 |                     |
+                 |                     |
+                 |:::::::PCEP::::::::::|
+                 |                     |
+            ]]></artwork>
           </figure>
+
+          <figure title="PCE supports PCEPS as well as without PCEPS, while PCC does not support PCEPS"
+             suppress-title="false" align="left" alt="" width="" height="" anchor="F5">
+            <artwork><![CDATA[
+
+               +-+-+                 +-+-+
+               |PCC|                 |PCE|
+               +-+-+                 +-+-+
+                 |                     |
+                 | Open                |
+                 | msg                 | PCE waits 
+                 |-------------------->| for PCC and
+                 |                Open | respond with   
+                 |<--------------------| Open
+                 |                     |
+                 |:::::::PCEP::::::::::|
+                 |                     |
+            ]]></artwork>
+          </figure>
+
+
+            
 
       </section>
 
@@ -394,7 +478,13 @@
                   </list></t>
                 <t>TLS with X.509 certificates using certificate fingerprints: Implementations MUST allow the configuration of a list of trusted certificates, identified via fingerprint of the Distinguished Encoding Rules (DER) encoded certificate octets. Implementations MUST support SHA-256 as defined by <xref target="SHS"/> as the hash algorithm for the fingerprint.</t>
               </list></t>
-            <t>Start exchanging PCEP messages.</t>
+            <t>Start exchanging PCEP messages.
+            <list style="symbols">
+              <t>Once the TLS connection has been successfully established, the PCEP speaker 
+   MUST start the OpenWait timer <xref target="RFC5440"/>, after the
+   expiration of which, if no Open message has been received, it sends a
+   PCErr message and releases the TCP/TLS connection.</t>
+            </list></t>    
           </list></t>
         <t>To support TLS re-negotiation both peers MUST support the mechanism described in <xref target="RFC5746"/>. Any attempt to initiate a TLS handshake to establish new cryptographic parameters not aligned with <xref target="RFC5746"/> SHALL be considered a TLS negotiation failure.</t>
       </section>
