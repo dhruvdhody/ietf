@@ -184,7 +184,9 @@
     this document.</t>
 
     <t>The StartTLS message is a PCEP message sent by a PCC to a PCE and by a
-    PCE to a PCC in order to initiate the TLS procedure for PCEP. The
+    PCE to a PCC in order to initiate the TLS procedure for PCEP. The TLS negotiation 
+    and establishment procedures are triggered once the PCEP speaker has sent and received
+    the StartTLS message. The
     Message-Type field of the PCEP common header for the StartTLS message is
     set to [TBA1 by IANA].</t>
 
@@ -221,8 +223,8 @@
       it MUST first try to establish PCEPS, by sending StartTLS message and in case it receives an PCErr from the PCE,
       it MAY retry to establish connection without PCEPS by sending an Open message. If a PCE that supports 
       PCEPS connection as well as allow non-PCEPS connection (as a local policy), it MUST wait to respond after TCP establishment, 
-      based on the message received from the PCC. In case of StartTLS message, PCE responds with sending StartTLS message and moving to TLS 
-      establishment procedures as described in this document. In case of Open message, PCE responds with Open message and move to PCEP session establishment procedure as per <xref target="RFC5440"/>.</t>
+      based on the message received from the PCC. In case of StartTLS message, PCE MUST responds with sending a StartTLS message and moving to TLS 
+      establishment procedures as described in this document. In case of Open message, PCE MUST responds with Open message and move to PCEP session establishment procedure as per <xref target="RFC5440"/>. If a PCE that supports PCEPS connection only (as a local policy), MAY send StartTLS message to PCC without waiting to receive a StartTLS message from PCC. </t>
 
     <t>After the exchange of StartTLS messages, if a PCEP speaker cannot establish a TLS connection
     for some reason (e.g. the required mechanisms for certificate revocation
@@ -245,9 +247,13 @@
     <xref target="Establishment"/> before the PCEP initialization procedure
     (section 4.2.1 of <xref target="RFC5440"/>).</t>
 
-    <t>A PCEP speaker that does not support PCEPS or has learned the peer
-    willingness to reestablish session without TLS, can send the Open message
-    directly, as per <xref target="RFC5440"/>.</t>
+    <t>
+    A PCEP speaker that does not support PCEPS sends the Open message
+   directly, as per <xref target="RFC5440"/>. A PCEP speaker that 
+   supports PCEPS but has previously already learned the
+   peer willingness to reestablish session without TLS, MAY send the Open
+   message directly, as per <xref target="RFC5440"/>.
+    </t>
 
     <t>Given the asymmetric nature of TLS for connection establishment it is
     relevant to identify the roles of each of the PCEP peers in it. The PCC
@@ -556,9 +562,14 @@
    connection initiated by means of a specific extended message
    (StartTLS) that does not interfere with PCEP speaker implementations
    not supporting it.</t>
-    <t>If a PCEP implementation that does not support PCEPS receives a 
+   
+    <t>A PCEP speaker that does not support PCEPS, on TCP establishment it would send Open message to the peer and it it receives a 
     StartTLS message, it would behave according to the existing error 
-    mechanism of <xref target="RFC5440"/>. On receiving the error, based on the local policy, a peer could try to establishing PCEP session without TLS as per the procedures defined in <xref target="RFC5440"/>. For successful TLS operations with PCEP, both PCEP peers in the network would need to be
+    mechanism of <xref target="RFC5440"/> and send PCErr message with Error-Type 1 (PCEP session establishment failure) and Error-Value 1 (reception of an invalid Open message or
+    a non Open message) and close the session. 
+    If a StartTLS message is received any other time by a PCEP speaker that does not implement PCEPS, it would consider it as unknown message and would behave according to the existing error 
+    mechanism of <xref target="RFC5440"/> and send PCErr message with Error-Type 2 (Capability not supported) and close the session.
+    On receiving the error, based on the local policy, a peer could try to establishing PCEP session without TLS as per the procedures defined in <xref target="RFC5440"/>. For successful TLS operations with PCEP, both PCEP peers in the network would need to be
    upgraded to support this document.</t>
    <t>An existing PCEP session cannot be upgraded to PCEPS, the session needs to be terminated and reestablished as per the procedure described in 
    	this document. During the incremental upgrade, the PCEP speaker SHOULD allow session establishment with and without TLS. Once both PCEP speakers are upgraded to support PCEPS, the PCEP session is re-established with TLS, otherwise PCEP session without TLS is setup. A redundant PCE MAY also be used during the incremental deployment to take over the PCE undergoing upgrade. Once the upgrade is completed, support for unsecured version SHOULD be removed.</t>
@@ -617,7 +628,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
 <section title="Manageability Considerations" toc="default">
       <t>All manageability requirements and considerations listed in <xref target="RFC5440"/> apply to PCEP protocol extensions defined in this document. In addition, requirements and considerations listed in this section apply.</t>
       <section title="Control of Function and Policy" toc="default">
-    <t>A PCE or PCC implementation MUST allow configuring the PCEP security via TLS capabilities as described in this document. </t>
+    <t>A PCE or PCC implementation SHOULD allow configuring the PCEP security via TLS capabilities as described in this document. </t>
       <t>A PCE or PCC implementation supporting PCEP security via TLS MUST support general TLS configuration as per <xref target="RFC5246"/>. At least the configuration of one of the trust models and its corresponding parameters, as  described in <xref target="Establishment"/> and <xref target="Identity"/>, MUST be supported by the implementation.</t>
       <t>A PCEP implementation SHOULD allow configuring the StartTLSWait timer value.
    <!--<list style="symbols">
@@ -645,9 +656,9 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
 </section>
       <section title="Information and Data Models" toc="default">
         <t>The PCEP MIB module is defined in <xref target="RFC7420"/>. The MIB module could be extended to include the ability to view the PCEPS capability, TLS related information as well as TLS status for each PCEP peer.</t>
-        <t>An implementation SHOULD also allow the operator to configure the PCEPS capability and various TLS related parameters in addition to ability to view the current TLS 
-   status for a PCEP session.  To serve this purpose, the PCEP YANG module
-   <xref target="I-D.ietf-pce-pcep-yang"/> is extended to include TLS related configuration and state information.</t>
+        <t>Further, to allow the operator to configure the PCEPS capability and various TLS related parameters as well as to view the current TLS 
+   status for a PCEP session, the PCEP YANG module
+   <xref target="I-D.ietf-pce-pcep-yang"/> is extended to include TLS related information.</t>
       </section>
       <section title="Liveness Detection and Monitoring" toc="default">
         <t>Mechanisms defined in this document do not imply any new liveness detection and monitoring requirements in addition to those already listed in <xref target="RFC5440"/> and <xref target="RFC5246"/>.</t>
@@ -674,6 +685,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
     <t>Also thanks to Tianran Zhou for OPSDIR review.</t>
     <t>Thanks to Deborah Brungard for being the responsible AD and guiding
    the authors as needed.</t>
+   <t>Thanks to Mirja Kuhlewind for IESG review and comments.</t>
   </section>
   </middle>
 

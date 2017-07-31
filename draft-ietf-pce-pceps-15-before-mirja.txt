@@ -237,8 +237,6 @@ Internet-Draft          Secure Transport for PCEP              July 2017
 
    The StartTLS message is a PCEP message sent by a PCC to a PCE and by
    a PCE to a PCC in order to initiate the TLS procedure for PCEP.  The
-   TLS negotiation and establishment procedures are triggered once the
-   PCEP speaker has sent and received the StartTLS message.  The
    Message-Type field of the PCEP common header for the StartTLS message
    is set to [TBA1 by IANA].
 
@@ -273,7 +271,9 @@ Internet-Draft          Secure Transport for PCEP              July 2017
    an invalid Open message or a non Open message), and MUST close the
    TCP connection.
 
-
+   If a PCC that supports PCEPS connection as well as allow non-PCEPS
+   connection (as a local policy), it MUST first try to establish PCEPS,
+   by sending StartTLS message and in case it receives an PCErr from the
 
 
 
@@ -282,20 +282,15 @@ Lopez, et al.           Expires February 1, 2018                [Page 5]
 Internet-Draft          Secure Transport for PCEP              July 2017
 
 
-   If a PCC that supports PCEPS connection as well as allow non-PCEPS
-   connection (as a local policy), it MUST first try to establish PCEPS,
-   by sending StartTLS message and in case it receives an PCErr from the
    PCE, it MAY retry to establish connection without PCEPS by sending an
    Open message.  If a PCE that supports PCEPS connection as well as
    allow non-PCEPS connection (as a local policy), it MUST wait to
    respond after TCP establishment, based on the message received from
-   the PCC.  In case of StartTLS message, PCE MUST responds with sending
-   a StartTLS message and moving to TLS establishment procedures as
-   described in this document.  In case of Open message, PCE MUST
-   responds with Open message and move to PCEP session establishment
-   procedure as per [RFC5440].  If a PCE that supports PCEPS connection
-   only (as a local policy), MAY send StartTLS message to PCC without
-   waiting to receive a StartTLS message from PCC.
+   the PCC.  In case of StartTLS message, PCE responds with sending
+   StartTLS message and moving to TLS establishment procedures as
+   described in this document.  In case of Open message, PCE responds
+   with Open message and move to PCEP session establishment procedure as
+   per [RFC5440].
 
    After the exchange of StartTLS messages, if a PCEP speaker cannot
    establish a TLS connection for some reason (e.g. the required
@@ -317,26 +312,14 @@ Internet-Draft          Secure Transport for PCEP              July 2017
    Section 3.4 before the PCEP initialization procedure (section 4.2.1
    of [RFC5440]).
 
-   A PCEP speaker that does not support PCEPS sends the Open message
-   directly, as per [RFC5440].  A PCEP speaker that supports PCEPS but
-   has previously already learned the peer willingness to reestablish
-   session without TLS, MAY send the Open message directly, as per
-   [RFC5440].
+   A PCEP speaker that does not support PCEPS or has learned the peer
+   willingness to reestablish session without TLS, can send the Open
+   message directly, as per [RFC5440].
 
    Given the asymmetric nature of TLS for connection establishment it is
    relevant to identify the roles of each of the PCEP peers in it.  The
    PCC SHALL act as TLS client, and the PCE SHALL act as TLS server,
    according to [RFC5246].
-
-
-
-
-
-
-Lopez, et al.           Expires February 1, 2018                [Page 6]
-
-Internet-Draft          Secure Transport for PCEP              July 2017
-
 
    These procedures minimize the impact of PCEPS support in PCEP
    implementations without requiring additional dedicated ports for
@@ -347,6 +330,14 @@ Internet-Draft          Secure Transport for PCEP              July 2017
    configuration i.e. do not allow non-TLS PCEP sessions to be
    established.  PCEPS implementations MAY provide an option to allow
    the operator to manually override strict TLS configuration and allow
+
+
+
+Lopez, et al.           Expires February 1, 2018                [Page 6]
+
+Internet-Draft          Secure Transport for PCEP              July 2017
+
+
    unsecured connections.  Execution of this override SHOULD trigger a
    warning about the security implications of permitting unsecured
    connections.
@@ -384,6 +375,15 @@ Internet-Draft          Secure Transport for PCEP              July 2017
    timer) and it MUST release the TCP connection . A RECOMMENDED value
    for StartTLSWait timer is 60 seconds.  The value of StartTLSWait
    timer MUST NOT be less than OpenWait timer.
+
+
+
+
+
+
+
+
+
 
 
 
@@ -828,12 +828,12 @@ Internet-Draft          Secure Transport for PCEP              July 2017
    (StartTLS) that does not interfere with PCEP speaker implementations
    not supporting it.
 
-   A PCEP speaker that does not support PCEPS, on TCP establishment it
-   would send Open message to the peer and it it receives a StartTLS
-   message, it would behave according to the existing error mechanism of
-   [RFC5440] and send PCErr message with Error-Type 1 (PCEP session
-   establishment failure) and Error-Value 1 (reception of an invalid
-   Open message or a non Open message) and close the session.  If a
+   If a PCEP implementation that does not support PCEPS receives a
+   StartTLS message, it would behave according to the existing error
+   mechanism of [RFC5440].  On receiving the error, based on the local
+   policy, a peer could try to establishing PCEP session without TLS as
+   per the procedures defined in [RFC5440].  For successful TLS
+
 
 
 
@@ -842,13 +842,6 @@ Lopez, et al.           Expires February 1, 2018               [Page 15]
 Internet-Draft          Secure Transport for PCEP              July 2017
 
 
-   StartTLS message is received any other time by a PCEP speaker that
-   does not implement PCEPS, it would consider it as unknown message and
-   would behave according to the existing error mechanism of [RFC5440]
-   and send PCErr message with Error-Type 2 (Capability not supported)
-   and close the session.  On receiving the error, based on the local
-   policy, a peer could try to establishing PCEP session without TLS as
-   per the procedures defined in [RFC5440].  For successful TLS
    operations with PCEP, both PCEP peers in the network would need to be
    upgraded to support this document.
 
@@ -878,6 +871,13 @@ Internet-Draft          Secure Transport for PCEP              July 2017
    IANA is requested to allocate new Error Types and Error Values within
    the " PCEP-ERROR Object Error Types and Values" sub-registry of the
    PCEP Numbers registry, as follows:
+
+
+
+
+
+
+
 
 
 
@@ -973,8 +973,8 @@ Internet-Draft          Secure Transport for PCEP              July 2017
 
 8.1.  Control of Function and Policy
 
-   A PCE or PCC implementation SHOULD allow configuring the PCEP
-   security via TLS capabilities as described in this document.
+   A PCE or PCC implementation MUST allow configuring the PCEP security
+   via TLS capabilities as described in this document.
 
    A PCE or PCC implementation supporting PCEP security via TLS MUST
    support general TLS configuration as per [RFC5246].  At least the
@@ -1022,11 +1022,11 @@ Internet-Draft          Secure Transport for PCEP              July 2017
    extended to include the ability to view the PCEPS capability, TLS
    related information as well as TLS status for each PCEP peer.
 
-   Further, to allow the operator to configure the PCEPS capability and
-   various TLS related parameters as well as to view the current TLS
-   status for a PCEP session, the PCEP YANG module
-   [I-D.ietf-pce-pcep-yang] is extended to include TLS related
-   information.
+   An implementation SHOULD also allow the operator to configure the
+   PCEPS capability and various TLS related parameters in addition to
+   ability to view the current TLS status for a PCEP session.  To serve
+   this purpose, the PCEP YANG module [I-D.ietf-pce-pcep-yang] is
+   extended to include TLS related configuration and state information.
 
 8.3.  Liveness Detection and Monitoring
 
@@ -1086,8 +1086,6 @@ Internet-Draft          Secure Transport for PCEP              July 2017
    Thanks to Deborah Brungard for being the responsible AD and guiding
    the authors as needed.
 
-   Thanks to Mirja Kuhlewind for IESG review and comments.
-
 10.  References
 
 10.1.  Normative References
@@ -1112,6 +1110,8 @@ Internet-Draft          Secure Transport for PCEP              July 2017
               Counter Mode (GCM) Cipher Suites for TLS", RFC 5288,
               DOI 10.17487/RFC5288, August 2008,
               <http://www.rfc-editor.org/info/rfc5288>.
+
+
 
 
 
