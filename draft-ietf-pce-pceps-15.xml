@@ -110,7 +110,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="28" month="July" year="2017"/>
+    <date day="31" month="July" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -170,7 +170,7 @@
    <xref target="RFC5440"/>, which required the
     Open message to be the first PCEP message. In the case of a PCEP
     session using TLS the StartTLS message will be sent first. Also 
-    a PCEP speaker that supports PCEPS MUST not start the OpenWait timer
+    a PCEP speaker that supports PCEPS MUST NOT start the OpenWait timer
     after the TCP establishment, instead it starts a StartTLSWait timer 
     as described in <xref target="start"/>. 
     </t>
@@ -212,7 +212,7 @@
     section 6.9 of <xref target="RFC5440"/> (for the case of reception of
     unknown message). See <xref target="Backward"/> for more details.</t>
 
-    <t>If the PCEP speaker that only supports PCEPS connection (as a local policy), receives a Open
+    <t>If the PCEP speaker that only supports PCEPS connection (as a local policy), receives an Open
     message, it MUST treat it as an unexpected message and reply with a
     PCErr message with Error-Type set to 1 (PCEP session establishment failure) and
     Error-value set to 1 (reception of an invalid Open message or a non Open message), and MUST close the TCP connection.</t>
@@ -222,7 +222,7 @@
       it MAY retry to establish connection without PCEPS by sending an Open message. If a PCE that supports 
       PCEPS connection as well as allow non-PCEPS connection (as a local policy), it MUST wait to respond after TCP establishment, 
       based on the message received from the PCC. In case of StartTLS message, PCE responds with sending StartTLS message and moving to TLS 
-      establishment procedures as described in this document. In case of Open message, PCE responds with Open message and PCEP session establishment as per <xref target="RFC5440"/>.</t>
+      establishment procedures as described in this document. In case of Open message, PCE responds with Open message and move to PCEP session establishment procedure as per <xref target="RFC5440"/>.</t>
 
     <t>After the exchange of StartTLS messages, if a PCEP speaker cannot establish a TLS connection
     for some reason (e.g. the required mechanisms for certificate revocation
@@ -331,7 +331,7 @@
             ]]></artwork>
           </figure>
 
-             <figure title="Both PCEP Speaker supports PCEPS (strict), But cannot establish TLS"
+             <figure title="Both PCEP Speaker supports PCEPS (strict), but cannot establish TLS"
              suppress-title="false" align="left" alt="" width="" height="" anchor="F2">
             <artwork><![CDATA[
 
