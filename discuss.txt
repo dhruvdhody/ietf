@@ -1,0 +1,208 @@
+> -----Original Message-----
+> From: Pce [mailto:pce-bounces@ietf.org] On Behalf Of Eric Rescorla
+> Sent: 01 August 2017 22:09
+> To: The IESG <iesg@ietf.org>
+> Cc: cmargaria@juniper.net; draft-ietf-pce-pceps@ietf.org; pce@ietf.org;
+> pce-chairs@ietf.org
+> Subject: [Pce] Eric Rescorla's Discuss on draft-ietf-pce-pceps-15: (with
+> DISCUSS and COMMENT)
+> 
+> Eric Rescorla has entered the following ballot position for
+> draft-ietf-pce-pceps-15: Discuss
+> 
+> When responding, please keep the subject line intact and reply to all
+> email addresses included in the To and CC lines. (Feel free to cut this
+> introductory paragraph, however.)
+> 
+> 
+> Please refer to https://www.ietf.org/iesg/statement/discuss-criteria.html
+> for more information about IESG DISCUSS and COMMENT positions.
+> 
+> 
+> The document, along with other ballot positions, can be found here:
+> https://datatracker.ietf.org/doc/draft-ietf-pce-pceps/
+> 
+> 
+> 
+> ----------------------------------------------------------------------
+> DISCUSS:
+> ----------------------------------------------------------------------
+> 
+> 1. This needs a cite to RFC 6125 to define how to do name validation.
+
+[[[Dhruv Dhody]]] Ack, Updated
+
+          +  Implementations MUST follow the rules and guidelines for
+             peer validation as defined in [RFC6125].
+
+> 
+> 2. You require TLS_RSA_WITH_AES_128_GCM_SHA256, but this is not consistent
+> with modern recommendations, which are for algorithms that provide forward
+> secrecy. You should be recommending
+> TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 with P-256, which is consistent
+> with the recommendations for TLS 1.3 (and UTA, IIRC).
+> 
+[[[Dhruv Dhody]]] Ack, Updated. 
+
+       *  PCEPS implementations MUST, at a minimum, support negotiation
+          of the TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, and SHOULD
+          support TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 as well
+          [RFC6460].  Implementations SHOULD support the NIST P-256
+          (secp256r1) curve [RFC4492].  In addition, PCEPS
+          implementations MUST support negotiation of the mandatory-to-
+          implement ciphersuites required by the versions of TLS that
+          they support.
+
+> 3, It's clear to me how authentication of the PCE works in that the PCC
+> connects to it using a domain name or IP address and therefore can check
+> the PCC's certificate against that, but it's not clear to me what the PCE
+> does when the client connects?
+> Is it supposed to have a list of valid peers?
+>
+
+[[[Dhruv Dhody]]] Yes it could, it can also create a whitelist based on some other mechanism such as TE nodes in the topology. 
+
+
+> 4. The error reporting mechanism you describe in S 3.2 is unusual:
+> 
+>    After the exchange of StartTLS messages, if a PCEP speaker cannot
+>    establish a TLS connection for some reason (e.g. the required
+>    mechanisms for certificate revocation checking are not available), it
+>    MUST return a PCErr message (in clear) with Error-Type set to [TBA2
+>    by IANA] (PCEP StartTLS failure) and Error-value set to:
+> 
+> I am not aware of any other protocol that does this, and it's a bit
+> problematic because you either need to (a) require that you always send a
+> TLS alert so that the receiver knows that the next byte is a PCE message
+> or (b) specify some mechanism for demuxing PCE and TLS. Even in the former
+> category, many TLS stacks are greedy about their IO, so they will read the
+> alert + the PCE message and then discard the message. Instead you should
+> either:
+> 
+> (a) specify that you always send TLS alerts and don't send PCE errors (TLS
+> alerts are pretty rich)
+> (b) send any post-handshake alerts over the TLS connection.
+> 
+> Failing that, you need to provide detailed instructions about how to make
+> this work.
+>
+[[[Dhruv Dhody]]] The (b) above would not work because we do not have a TLS connection. 
+I was under the impression that the PCEP implementation at both peers would be aware of TLS establishment failure and thus would be able to parse a PCErr in clear. You have pointed out that some implementation might have some issue with that. Would you be fine with adding this as an implementation consideration but keeping the errors? 	
+ 
+> 
+> 5. It seems like it would be a good idea to specify a pinning mechanism so
+> you could say "always do TLS in future". Is that something that was
+> discussed?
+> 
+[[[Dhruv Dhody]]] The document uses a SHOULD right now. Do you have some suggested text or a reference for this? 
+
+> 6.        *  TLS with X.509 certificates using certificate fingerprints:
+>           Implementations MUST allow the configuration of a list of
+>           trusted certificates, identified via fingerprint of the
+>           Distinguished Encoding Rules (DER) encoded certificate octets.
+>           Implementations MUST support SHA-256 as defined by [SHS] as
+>           the hash algorithm for the fingerprint.
+> 
+> What does "trusted" mean here? I think it means "one I would accept as a
+> counterparty" rather than "can sign other certs". In any case, this must
+> be clear.
+[[[Dhruv Dhody]]] Ack. Updated to "certificates that are trusted"
+> 
+> A bunch of other stuff is underspecified (see below).
+> 
+> 
+> ----------------------------------------------------------------------
+> COMMENT:
+> ----------------------------------------------------------------------
+> 
+> This document needs a significant editorial pass. I found a number of
+> writing errors, e.g., "Securing via TLS of an existing PCEP session is not
+> permitted,"
+> 
+[[[Dhruv Dhody]]] Updated. Will do a re-check. 
+> S 1.
+>    defining their application in depth.  Moreover, [RFC6952] remarks the
+>    importance of ensuring PCEP communication privacy, especially when
+> 
+> The term here is "confidentiality"
+> 
+[[[Dhruv Dhody]]] Ack, updated but RFC6952 used that word :)
+> S 3.2.
+> The whole description of how you can race StartTLS iff you know you are
+> TLS only is really hard to understand until you get to the diagrams. I
+> would write something like:
+> 
+>    The PCC initiates the use of TLS by sending a StartTLS message
+>    The PCE agrees to the use of TLS by responding with its own
+>    StartTLS message. If the PCE is configured to only do TLS, it
+>    may send the StartTLS message immediately upon TCP connection
+>    establishment; otherwise it MUST wait for the PCC's first
+>    message to see whether it is an Open or StartTLS message.
+> 
+[[[Dhruv Dhody]]] Ack. I have added this at the start. 
+> 
+> 
+> S 3.4.
+>           +  Implementations SHOULD indicate their trusted CAs.  For TLS
+>              1.2, this is done using [RFC5246], Section 7.4.4,
+>              "certificate_authorities" (server side) and [RFC6066],
+>              Section 6 "Trusted CA Indication" (client side).
+> 
+> Do common stacks do this? I know NSS does not.
+> 
+[[[Dhruv Dhody]]] Should be a part of platform setup, BTW this text is same as RFC6614. 
+> 
+>    To support TLS re-negotiation both peers MUST support the mechanism
+>    described in [RFC5746].  Any attempt to initiate a TLS handshake to
+>    establish new cryptographic parameters not aligned with [RFC5746]
+>    SHALL be considered a TLS negotiation failure.
+> 
+> Is there a reason to allow renegotiation at all?
+> 
+[[[Dhruv Dhody]]] Only in-case of any change in crypto parameters. 
+> 
+> S 3.5
+>    [I-D.ietf-pce-stateful-sync-optimizations] specify a Speaker Entity
+>    Identifier TLV (SPEAKER-ENTITY-ID), as an optional TLV that MAY be
+>    included in the OPEN Object.  It contains a unique identifier for the
+>    node that does not change during the lifetime of the PCEP speaker.
+>    An implementation would thus expose the speaker entity identifier as
+>    part of the X509v3 certificate, so that an implementation could use
+>    this identifier for the peer identification trust model.
+> 
+> This seems underspecified. Is there an OID assigned?
+
+ [[[Dhruv Dhody]]] Updated, added subjectAltName:otherName
+> 
+> 
+> S 4.1.
+>    DANE [RFC6698] defines a secure method to associate the certificate
+>    that is obtained from a TLS server with a domain name using DNS,
+>    i.e., using the TLSA DNS resource record (RR) to associate a TLS
+>    server certificate or public key with the domain name where the
+>    record is found, thus forming a "TLSA certificate association".  The
+>    DNS information needs to be protected by DNS Security (DNSSEC).  A
+>    PCC willing to apply DANE to verify server identity MUST conform to
+>    the rules defined in section 4 of [RFC6698].  The server's domain
+>    name must be authorized separately, as TLSA does not provide any
+>    useful authorization guarantees.
+> 
+> This is also underspecified. Which DANE types are you suggesting you use?
+> 
+[[[Dhruv Dhody]]] Pending. 
+> 
+> S  7.
+>    Some TLS ciphersuites only provide integrity validation of their
+>    payload, and provide no encryption.  This specification does not
+>    forbid the use of such ciphersuites, but administrators must weight
+>    carefully the risk of relevant internal data leakage that can occur
+>    in such a case, as explicitly stated by [RFC6952].
+> 
+> Why don't you forbid it?
+> 
+> 
+[[[Dhruv Dhody]]] Pending. 
+> _______________________________________________
+> Pce mailing list
+> Pce@ietf.org
+> https://www.ietf.org/mailman/listinfo/pce
