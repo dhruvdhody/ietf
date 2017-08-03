@@ -23,6 +23,7 @@
 <!ENTITY RFC6952 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6952.xml">
 <!ENTITY RFC6698 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
 <!ENTITY RFC7420 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7420.xml">
+<!ENTITY RFC7457 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7457.xml">
 <!ENTITY RFC7525 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7525.xml">
 <!ENTITY RFC7671 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7671.xml">
 <!ENTITY I-D.ietf-pce-stateful-sync-optimizations SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-pce-stateful-sync-optimizations.xml">
@@ -501,7 +502,7 @@
                 <t>Negotiation of a ciphersuite providing for integrity protection is REQUIRED.</t>
                 <t>Negotiation of a ciphersuite providing for confidentiality is RECOMMENDED.</t>
                 <t>Support for and negotiation of compression is OPTIONAL.</t>
-                <t>PCEPS implementations MUST, at a minimum, support negotiation of the TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 <xref target="RFC6460"/>, and SHOULD support TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 as well. Implementations SHOULD support the NIST P-256 (secp256r1) curve <xref target="RFC4492"/>. In addition, PCEPS implementations MUST support negotiation of the mandatory-to-implement ciphersuites required by the versions of TLS that they support.</t>
+                <t>PCEPS implementations MUST, at a minimum, support negotiation of the TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 <xref target="RFC6460"/>, and SHOULD support TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 as well. Implementations SHOULD support the NIST P-256 (secp256r1) curve <xref target="RFC4492"/>. In addition, PCEPS implementations MUST support negotiation of the mandatory-to-implement ciphersuites required by the versions of TLS that they support from TLS 1.3 onwards.</t>
               </list></t>
             <t>Peer authentication can be performed in any of the following two REQUIRED operation models:
               <list style="symbols">
@@ -667,6 +668,10 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
     <t>Since computational resources required by TLS handshake and ciphersuite are higher than unencrypted TCP, clients connecting to a PCEPS server can more easily create high load conditions and a malicious client might create a Denial-of-Service attack more easily.</t>
     <t>Some TLS ciphersuites only provide integrity validation of their payload, and provide no encryption, such ciphersuites SHOULD NOT be used by default. Administrators MAY allow the usage of these ciphersuites after careful weighting of the risk of relevant internal data leakage, that can occur in such a case, as explicitly stated by <xref target="RFC6952"/>.</t>
     <t>When using certificate fingerprints to identify PCEPS peers, any two certificates that produce the same hash value will be considered the same peer. Therefore, it is important to make sure that the hash function used is cryptographically uncompromised so that attackers are very unlikely to be able to produce a hash collision with a certificate of their choice. This document mandates support for SHA-256 as defined by <xref target="SHS"/>, but a later revision may demand support for stronger functions if suitable attacks on it are known.</t>
+    <t>PCEPS implementations that continue to accept connections without TLS are susceptible to downgrade attacks as described in <xref target="RFC7457"/>. 
+   An attacker could attempt to remove the use of StartTLS message 
+   that request the use of TLS as it pass on the wire in clear, and further inject a PCErr message that suggest to attempt PCEP connection without TLS.
+     </t>
     <t>The guidance given in <xref target="RFC7525"/> SHOULD be followed to avoid attacks on TLS.</t>
   </section>
 
@@ -770,6 +775,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
       &RFC6614;
       &RFC6952;
       &RFC7420;
+      &RFC7457;
       &I-D.ietf-pce-stateful-sync-optimizations;
       &I-D.ietf-pce-pcep-yang;
       &I-D.wu-pce-dns-pce-discovery;

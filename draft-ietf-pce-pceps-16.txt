@@ -94,16 +94,16 @@ Table of Contents
    4.  Discovery Mechanisms  . . . . . . . . . . . . . . . . . . . .  15
      4.1.  DANE Applicability  . . . . . . . . . . . . . . . . . . .  15
    5.  Backward Compatibility  . . . . . . . . . . . . . . . . . . .  15
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
-     6.1.  New PCEP Message  . . . . . . . . . . . . . . . . . . . .  16
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
+     6.1.  New PCEP Message  . . . . . . . . . . . . . . . . . . . .  17
      6.2.  New Error-Values  . . . . . . . . . . . . . . . . . . . .  17
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
    8.  Manageability Considerations  . . . . . . . . . . . . . . . .  18
-     8.1.  Control of Function and Policy  . . . . . . . . . . . . .  18
+     8.1.  Control of Function and Policy  . . . . . . . . . . . . .  19
      8.2.  Information and Data Models . . . . . . . . . . . . . . .  19
-     8.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  19
-     8.4.  Verifying Correct Operations  . . . . . . . . . . . . . .  19
-     8.5.  Requirements on Other Protocols . . . . . . . . . . . . .  19
+     8.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  20
+     8.4.  Verifying Correct Operations  . . . . . . . . . . . . . .  20
+     8.5.  Requirements on Other Protocols . . . . . . . . . . . . .  20
      8.6.  Impact on Network Operation . . . . . . . . . . . . . . .  20
    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  20
 
@@ -114,10 +114,10 @@ Lopez, et al.           Expires February 4, 2018                [Page 2]
 Internet-Draft          Secure Transport for PCEP            August 2017
 
 
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  20
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  21
      10.2.  Informative References . . . . . . . . . . . . . . . . .  22
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  23
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  24
 
 1.  Introduction
 
@@ -296,13 +296,13 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    Open message.  If a PCE supports PCEPS connections as well as allow
    non-PCEPS connection (as a local policy), it MUST wait to respond
    after TCP establishment, based on the message received from the PCC.
-   In case of StartTLS message, PCE MUST responds with sending a
-   StartTLS message and moving to TLS establishment procedures as
-   described in this document.  In case of Open message, PCE MUST
-   responds with Open message and move to PCEP session establishment
-   procedure as per [RFC5440].  If a PCE supports PCEPS connections only
-   (as a local policy), it MAY send StartTLS message to PCC without
-   waiting to receive a StartTLS message from PCC.
+   In case of StartTLS message, PCE MUST respond with sending a StartTLS
+   message and moving to TLS establishment procedures as described in
+   this document.  In case of Open message, PCE MUST respond with Open
+   message and move to PCEP session establishment procedure as per
+   [RFC5440].  If a PCE supports PCEPS connections only (as a local
+   policy), it MAY send StartTLS message to PCC without waiting to
+   receive a StartTLS message from PCC.
 
    After the exchange of StartTLS messages, if a PCEP speaker cannot
    establish a TLS connection for some reason (e.g. the required
@@ -635,7 +635,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
           (secp256r1) curve [RFC4492].  In addition, PCEPS
           implementations MUST support negotiation of the mandatory-to-
           implement ciphersuites required by the versions of TLS that
-          they support.
+          they support from TLS 1.3 onwards.
 
    2.  Peer authentication can be performed in any of the following two
        REQUIRED operation models:
@@ -683,7 +683,8 @@ Internet-Draft          Secure Transport for PCEP            August 2017
              additional properties of the certificate to check for a
              peer's authorization to communicate (e.g., a set of allowed
              values in subjectAltName:URI or a set of allowed X509v3
-             Certificate Policies)
+             Certificate Policies).  The definition of these properties
+             are out of scope of this document.
 
        *  TLS with X.509 certificates using certificate fingerprints:
           Implementations MUST allow the configuration of a list of
@@ -724,7 +725,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-
 Lopez, et al.           Expires February 4, 2018               [Page 13]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
@@ -753,7 +753,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    establishment is also exposed.
 
    [I-D.ietf-pce-stateful-sync-optimizations] specify a Speaker Entity
-   Identifier TLV (SPEAKER-ENTITY-ID), as an optional TLV that MAY be
+   Identifier TLV (SPEAKER-ENTITY-ID), as an optional TLV that is
    included in the OPEN Object.  It contains a unique identifier for the
    node that does not change during the lifetime of the PCEP speaker.
    An implementation would thus expose the speaker entity identifier as
@@ -842,31 +842,26 @@ Lopez, et al.           Expires February 4, 2018               [Page 15]
 Internet-Draft          Secure Transport for PCEP            August 2017
 
 
-   A PCEP speaker that does not support PCEPS, on TCP establishment it
-   would send Open message to the peer and it it receives a StartTLS
-   message, it would behave according to the existing error mechanism of
-   [RFC5440] and send PCErr message with Error-Type 1 (PCEP session
-   establishment failure) and Error-Value 1 (reception of an invalid
-   Open message or a non Open message) and close the session.  If a
-   StartTLS message is received any other time by a PCEP speaker that
-   does not implement PCEPS, it would consider it as unknown message and
-   would behave according to the existing error mechanism of [RFC5440]
-   and send PCErr message with Error-Type 2 (Capability not supported)
-   and close the session.  On receiving the error, based on the local
-   policy, a peer could try to establishing PCEP session without TLS as
-   per the procedures defined in [RFC5440].  For successful TLS
-   operations with PCEP, both PCEP peers in the network would need to be
-   upgraded to support this document.
+   A PCC that does not support PCEPS will send Open message as the first
+   message on TCP establishment.  A PCE that supports PCEPS only will
+   send StartTLS message on TCP establishment.  On receiving StartTLS
+   message, PCC would consider it as an error and behave according to
+   the existing error mechanism of [RFC5440] and send PCErr message with
+   Error-Type 1 (PCEP session establishment failure) and Error-Value 1
+   (reception of an invalid Open message or a non Open message) and
+   close the session.
 
-   Note that, a PCEP implementation that support PCEPS would respond
-   with PCErr message with Error-Type set to [TBA2 by IANA] (PCEP
-   StartTLS failure) and Error-value set to 2 if any other message is
-   sent before StartTLS or Open.  If the sender of the invalid message
-   is a PCEP implementation that does not support PCEPS, it will not be
-   able to understand this error.  A PCEPS implementation could also
-   send the PCErr message as per [RFC5440] with Error-Type "PCEP session
-   establishment failure" and Error-value "reception of an invalid Open
-   message or a non Open message" before closing the session.
+   A PCC that support PCEPS will send StartTLS message as the first
+   message on TCP establishment.  A PCE that does not supports PCEPS,
+   would consider receiving StartTLS message as an error and respond
+   with PCErr message (with Error-Type 1 and Error-Value 1) and close
+   the session.
+
+   If a StartTLS message is received, any other time by a PCEP speaker
+   that does not implement PCEPS, it would consider it as an unknown
+   message and would behave according to the existing error mechanism of
+   [RFC5440] and send PCErr message with Error-Type 2 (Capability not
+   supported) and close the session.
 
    An existing PCEP session cannot be upgraded to PCEPS, the session
    needs to be terminated and reestablished as per the procedure
@@ -879,6 +874,33 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    the upgrade is completed, support for unsecured version SHOULD be
    removed.
 
+   A PCE that accepts connections with or without PCEPS, it would
+   respond based on the message received from PCC.  A PCC that supports
+   connection with or without PCEPS, it would first attempt to connect
+   with PCEPS and in case of error, it MAY retry to establish connection
+   without PCEPS.  For successful TLS operations with PCEP, both PCEP
+   peers in the network would need to be upgraded to support this
+   document.
+
+   Note that, a PCEP implementation that support PCEPS would respond
+   with PCErr message with Error-Type set to [TBA2 by IANA] (PCEP
+   StartTLS failure) and Error-value set to 2 if any other message is
+   sent before StartTLS or Open.  If the sender of the invalid message
+   is a PCEP implementation that does not support PCEPS, it will not be
+   able to understand this error.  A PCEPS implementation could also
+   send the PCErr message as per [RFC5440] with Error-Type "PCEP session
+
+
+
+
+Lopez, et al.           Expires February 4, 2018               [Page 16]
+
+Internet-Draft          Secure Transport for PCEP            August 2017
+
+
+   establishment failure" and Error-value "reception of an invalid Open
+   message or a non Open message" before closing the session.
+
 6.  IANA Considerations
 
 6.1.  New PCEP Message
@@ -888,15 +910,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
       Value  Description                             Reference
        TBA1  The Start TLS Message (StartTLS)        This document
-
-
-
-
-
-Lopez, et al.           Expires February 4, 2018               [Page 16]
-
-Internet-Draft          Secure Transport for PCEP            August 2017
-
 
 6.2.  New Error-Values
 
@@ -933,6 +946,14 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    It may be advisable to apply additional protection measures, in
    particular in what relates to attacks specifically addressed to
    forging the TCP connection underpinning TLS, especially in the case
+
+
+
+Lopez, et al.           Expires February 4, 2018               [Page 17]
+
+Internet-Draft          Secure Transport for PCEP            August 2017
+
+
    of long-lived connections.  One of these measures is the application
    of TCP-AO (TCP Authentication Option [RFC5925]), which is fully
    compatible with and deemed as complementary to TLS.  The mechanisms
@@ -944,15 +965,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    ciphersuite are higher than unencrypted TCP, clients connecting to a
    PCEPS server can more easily create high load conditions and a
    malicious client might create a Denial-of-Service attack more easily.
-
-
-
-
-
-Lopez, et al.           Expires February 4, 2018               [Page 17]
-
-Internet-Draft          Secure Transport for PCEP            August 2017
-
 
    Some TLS ciphersuites only provide integrity validation of their
    payload, and provide no encryption, such ciphersuites SHOULD NOT be
@@ -970,6 +982,13 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    SHA-256 as defined by [SHS], but a later revision may demand support
    for stronger functions if suitable attacks on it are known.
 
+   PCEPS implementations that continue to accept connections without TLS
+   are susceptible to downgrade attacks as described in [RFC7457].  An
+   attacker could attempt to remove the use of StartTLS message that
+   request the use of TLS as it pass on the wire in clear, and further
+   inject a PCErr message that suggest to attempt PCEP connection
+   without TLS.
+
    The guidance given in [RFC7525] SHOULD be followed to avoid attacks
    on TLS.
 
@@ -979,6 +998,17 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    apply to PCEP protocol extensions defined in this document.  In
    addition, requirements and considerations listed in this section
    apply.
+
+
+
+
+
+
+
+Lopez, et al.           Expires February 4, 2018               [Page 18]
+
+Internet-Draft          Secure Transport for PCEP            August 2017
+
 
 8.1.  Control of Function and Policy
 
@@ -1001,15 +1031,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
    Further, the operator needs to develop suitable security policies
    around PCEP within his network.  Further the PCEP peers SHOULD
-
-
-
-
-Lopez, et al.           Expires February 4, 2018               [Page 18]
-
-Internet-Draft          Secure Transport for PCEP            August 2017
-
-
    provide ways for the operator to complete the following tasks in
    regards to a PCEP session:
 
@@ -1036,6 +1057,15 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    Further, to allow the operator to configure the PCEPS capability and
    various TLS related parameters as well as to view the current TLS
    status for a PCEP session, the PCEP YANG module
+
+
+
+
+Lopez, et al.           Expires February 4, 2018               [Page 19]
+
+Internet-Draft          Secure Transport for PCEP            August 2017
+
+
    [I-D.ietf-pce-pcep-yang] is extended to include TLS related
    information.
 
@@ -1055,16 +1085,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    Mechanisms defined in this document do not imply any new requirements
    on other protocols.  Note that, Section 4 list possible discovery
    mechanism for support of PCEPS.
-
-
-
-
-
-
-Lopez, et al.           Expires February 4, 2018               [Page 19]
-
-Internet-Draft          Secure Transport for PCEP            August 2017
-
 
 8.6.  Impact on Network Operation
 
@@ -1094,14 +1114,22 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
    Thanks to Dale Worley for the Gen-ART review and comments.
 
+
+
+
+Lopez, et al.           Expires February 4, 2018               [Page 20]
+
+Internet-Draft          Secure Transport for PCEP            August 2017
+
+
    Also thanks to Tianran Zhou for OPSDIR review.
 
    Thanks to Deborah Brungard for being the responsible AD and guiding
    the authors as needed.
 
    Thanks to Mirja Kuhlewind, Eric Rescorla, Warren Kumari, Kathleen
-   Moriarty, Suresh Krishnan and Ben Campbell for the IESG review and
-   comments.
+   Moriarty, Suresh Krishnan, Ben Campbell and Alexey Melnikov for the
+   IESG review and comments.
 
 10.  References
 
@@ -1111,16 +1139,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-
-Lopez, et al.           Expires February 4, 2018               [Page 20]
-
-Internet-Draft          Secure Transport for PCEP            August 2017
-
 
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
@@ -1150,6 +1168,16 @@ Internet-Draft          Secure Transport for PCEP            August 2017
               Security (TLS)", RFC 6125, DOI 10.17487/RFC6125, March
               2011, <http://www.rfc-editor.org/info/rfc6125>.
 
+
+
+
+
+
+Lopez, et al.           Expires February 4, 2018               [Page 21]
+
+Internet-Draft          Secure Transport for PCEP            August 2017
+
+
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, DOI 10.17487/RFC6698, August
@@ -1165,18 +1193,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
               Authentication of Named Entities (DANE) Protocol: Updates
               and Operational Guidance", RFC 7671, DOI 10.17487/RFC7671,
               October 2015, <http://www.rfc-editor.org/info/rfc7671>.
-
-
-
-
-
-
-
-
-Lopez, et al.           Expires February 4, 2018               [Page 21]
-
-Internet-Draft          Secure Transport for PCEP            August 2017
-
 
    [SHS]      National Institute of Standards and Technology, "Secure
               Hash Standard (SHS), FIPS PUB 180-4",
@@ -1211,6 +1227,13 @@ Internet-Draft          Secure Transport for PCEP            August 2017
               Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
               June 2010, <http://www.rfc-editor.org/info/rfc5925>.
 
+
+
+Lopez, et al.           Expires February 4, 2018               [Page 22]
+
+Internet-Draft          Secure Transport for PCEP            August 2017
+
+
    [RFC6460]  Salter, M. and R. Housley, "Suite B Profile for Transport
               Layer Security (TLS)", RFC 6460, DOI 10.17487/RFC6460,
               January 2012, <http://www.rfc-editor.org/info/rfc6460>.
@@ -1226,19 +1249,16 @@ Internet-Draft          Secure Transport for PCEP            August 2017
               Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,
               <http://www.rfc-editor.org/info/rfc6952>.
 
-
-
-
-Lopez, et al.           Expires February 4, 2018               [Page 22]
-
-Internet-Draft          Secure Transport for PCEP            August 2017
-
-
    [RFC7420]  Koushik, A., Stephan, E., Zhao, Q., King, D., and J.
               Hardwick, "Path Computation Element Communication Protocol
               (PCEP) Management Information Base (MIB) Module",
               RFC 7420, DOI 10.17487/RFC7420, December 2014,
               <http://www.rfc-editor.org/info/rfc7420>.
+
+   [RFC7457]  Sheffer, Y., Holz, R., and P. Saint-Andre, "Summarizing
+              Known Attacks on Transport Layer Security (TLS) and
+              Datagram TLS (DTLS)", RFC 7457, DOI 10.17487/RFC7457,
+              February 2015, <http://www.rfc-editor.org/info/rfc7457>.
 
    [I-D.ietf-pce-stateful-sync-optimizations]
               Crabbe, E., Minei, I., Medved, J., Varga, R., Zhang, X.,
@@ -1259,6 +1279,17 @@ Internet-Draft          Secure Transport for PCEP            August 2017
               Name System(DNS)", draft-wu-pce-dns-pce-discovery-10 (work
               in progress), March 2017.
 
+
+
+
+
+
+
+Lopez, et al.           Expires February 4, 2018               [Page 23]
+
+Internet-Draft          Secure Transport for PCEP            August 2017
+
+
    [I-D.wu-pce-discovery-pceps-support]
               Lopez, D., Wu, Q., Dhody, D., and D. King, "IGP extension
               for PCEP security capability support in the PCE
@@ -1275,19 +1306,6 @@ Authors' Addresses
 
    Phone: +34 913 129 041
    EMail: diego.r.lopez@telefonica.com
-
-
-
-
-
-
-
-
-
-
-Lopez, et al.           Expires February 4, 2018               [Page 23]
-
-Internet-Draft          Secure Transport for PCEP            August 2017
 
 
    Oscar Gonzalez de Dios
@@ -1316,24 +1334,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    India
 
    EMail: dhruv.ietf@gmail.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
