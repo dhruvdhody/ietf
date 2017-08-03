@@ -24,6 +24,7 @@
 <!ENTITY RFC6698 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
 <!ENTITY RFC7420 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7420.xml">
 <!ENTITY RFC7525 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7525.xml">
+<!ENTITY RFC7671 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7671.xml">
 <!ENTITY I-D.ietf-pce-stateful-sync-optimizations SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-pce-stateful-sync-optimizations.xml">
 <!ENTITY I-D.ietf-pce-pcep-yang SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang.xml">
 <!ENTITY I-D.wu-pce-dns-pce-discovery SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.wu-pce-dns-pce-discovery.xml">
@@ -156,7 +157,7 @@
    </list>
    </t>
    <t>This document uses the standard StartTLS procedure in PCEP, instead of using a different port for the secured session. This is done to avoid requesting allocation of 
-    another port number for the PCEPS. The StartTLS procedure makes more efficient use of scarce port numbers and allow simpler configuration. </t>
+    another port number for the PCEPS. The StartTLS procedure makes more efficient use of scarce port numbers and allow simpler configuration of PCEP. </t>
    <t>Implementations SHOULD follow the best practices and recommendations for using TLS, as per <xref target="RFC7525"/>. </t>
    <t>It should be noted that this procedure updates what is defined in section
    4.2.1 and section 6.7 of <xref target="RFC5440"/> regarding the initialization phase and the processing of messages prior to
@@ -213,12 +214,20 @@
     from either side) MUST treat it as an unexpected message and reply with a
     PCErr message with Error-Type set to [TBA2 by IANA] (PCEP StartTLS
     failure) and Error-value set to 1 (reception of StartTLS after any
-    PCEP exchange), and MUST close the TCP connection. A PCEP speaker receiving
-    any other message apart from  StartTLS, Open, or PCErr as the first message, 
+    PCEP exchange), and MUST close the TCP connection.</t> 
+    <t>Any message received prior to StartTLS or Open message MUST trigger a protocol
+   error condition causing a PCErr message to be sent with Error-Type
+    set to [TBA2 by IANA] (PCEP StartTLS failure) and
+    Error-value set to 2 (reception of a message apart from StartTLS or Open) 
+    and MUST close the TCP connection.</t>
+
+
+    	<!--A PCEP speaker receiving
+    any other message apart from  StartTLS or Open as the very first message, 
     MUST treat it as an unexpected message and reply with a PCErr message 
     with Error-Type set to [TBA2 by IANA] (PCEP StartTLS failure) and
     Error-value set to 2 (reception of any other message apart from 
-    StartTLS, Open, or PCErr message), and MUST close the TCP connection.</t>
+    StartTLS or Open message), and MUST close the TCP connection.</t>-->
 
     <t>If the PCEP speaker that does not support PCEPS, receives a StartTLS
     message, it will behave according to the existing error mechanism
@@ -232,12 +241,12 @@
     PCErr message with Error-Type set to 1 (PCEP session establishment failure) and
     Error-value set to 1 (reception of an invalid Open message or a non Open message), and MUST close the TCP connection.</t>
 
-    <t>If a PCC that supports PCEPS connection as well as allow non-PCEPS connection (as a local policy), 
+    <t>If a PCC supports PCEPS connections as well as allow non-PCEPS connection (as a local policy), 
       it MUST first try to establish PCEPS, by sending StartTLS message and in case it receives an PCErr from the PCE,
-      it MAY retry to establish connection without PCEPS by sending an Open message. If a PCE that supports 
-      PCEPS connection as well as allow non-PCEPS connection (as a local policy), it MUST wait to respond after TCP establishment, 
-      based on the message received from the PCC. In case of StartTLS message, PCE MUST responds with sending a StartTLS message and moving to TLS 
-      establishment procedures as described in this document. In case of Open message, PCE MUST responds with Open message and move to PCEP session establishment procedure as per <xref target="RFC5440"/>. If a PCE that supports PCEPS connection only (as a local policy), MAY send StartTLS message to PCC without waiting to receive a StartTLS message from PCC. </t>
+      it MAY retry to establish connection without PCEPS by sending an Open message. If a PCE supports 
+      PCEPS connections as well as allow non-PCEPS connection (as a local policy), it MUST wait to respond after TCP establishment, 
+      based on the message received from the PCC. In case of StartTLS message, PCE MUST respond with sending a StartTLS message and moving to TLS 
+      establishment procedures as described in this document. In case of Open message, PCE MUST respond with Open message and move to PCEP session establishment procedure as per <xref target="RFC5440"/>. If a PCE supports PCEPS connections only (as a local policy), it MAY send StartTLS message to PCC without waiting to receive a StartTLS message from PCC. </t>
 
     <t>After the exchange of StartTLS messages, if a PCEP speaker cannot establish a TLS connection
     for some reason (e.g. the required mechanisms for certificate revocation
@@ -251,9 +260,19 @@
 
       <t>4 (ok without TLS) if it is willing to exchange PCEP messages without
       the solicited TLS connection, and it MUST close the TCP session. The
-      receiver MAY choose to re-establish the PCEP session
-        without TLS next.</t>
+      receiver MAY choose to attempt to re-establish the PCEP session
+        without TLS next. The attempt to re-establish the PCEP session
+        without TLS SHOULD be limited to only once. 
+         </t>
     </list></t>
+
+    <t>Note that, the PCEP implementation MUST send the PCErr message once the TLS 
+    	connection has been closed i.e. the TLS close_notify <xref target="RFC5246"/> has been received from the peer. 
+    	As per <xref target="RFC5246"/>, if the data may be
+   carried over the underlying transport after the TLS connection is
+   closed, the TLS implementation must receive the responding
+   close_notify alert before indicating to the application layer that
+   the TLS connection has ended. </t>
 
     <t>If the PCEP speaker supports PCEPS and can establish a TLS connection it
     MUST start the TLS connection establishment steps described in
@@ -482,7 +501,7 @@
                 <t>Negotiation of a ciphersuite providing for integrity protection is REQUIRED.</t>
                 <t>Negotiation of a ciphersuite providing for confidentiality is RECOMMENDED.</t>
                 <t>Support for and negotiation of compression is OPTIONAL.</t>
-                <t>PCEPS implementations MUST, at a minimum, support negotiation of the TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, and SHOULD support TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 as well <xref target="RFC6460"/>. Implementations SHOULD support the NIST P-256 (secp256r1) curve <xref target="RFC4492"/>. In addition, PCEPS implementations MUST support negotiation of the mandatory-to-implement ciphersuites required by the versions of TLS that they support.</t>
+                <t>PCEPS implementations MUST, at a minimum, support negotiation of the TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 <xref target="RFC6460"/>, and SHOULD support TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 as well. Implementations SHOULD support the NIST P-256 (secp256r1) curve <xref target="RFC4492"/>. In addition, PCEPS implementations MUST support negotiation of the mandatory-to-implement ciphersuites required by the versions of TLS that they support.</t>
               </list></t>
             <t>Peer authentication can be performed in any of the following two REQUIRED operation models:
               <list style="symbols">
@@ -492,10 +511,11 @@
                     <t>Certificate validation MUST include the verification rules as per <xref target="RFC5280"/>.</t>
                     <t>PCEPS implementations SHOULD incorporate revocation methods (CRL downloading, OCSP...) according to the trusted CA policies.</t>
                     <t>Implementations SHOULD indicate their trusted CAs. For TLS 1.2, this is done using <xref target="RFC5246"/>, Section 7.4.4, "certificate_authorities" (server side) and <xref target="RFC6066"/>, Section 6 "Trusted CA Indication" (client side).</t>
-                    <t>Implementations MUST follow the rules and guidelines for peer validation as defined in <xref target="RFC6125"/>. They SHOULD include a check on whether the locally configured expected DNS name or IP address of the peer that is contacted matches its presented certificate. DNS names and IP addresses can be contained in the Common Name (CN) or subjectAltName entries.  For verification, only one of these entries is to be considered. The following precedence applies: for DNS name validation, subjectAltName:DNS has precedence over CN; for IP address validation, subjectAltName:iPAddr has precedence over CN.</t>
-                    <t>Implementations MAY allow the configuration of a set of additional properties of the certificate to check for a peer's authorization to communicate (e.g., a set of allowed values in subjectAltName:URI or a set of allowed X509v3 Certificate Policies)</t>
+                    <t>Implementations MUST follow the rules and guidelines for peer validation as defined in <xref target="RFC6125"/>. If an expected DNS name or IP address for the peer is configured, then the implementations MUST check them against the values in the presented certificate. 
+                    <!--They SHOULD include a check on whether the locally configured expected DNS name or IP address of the peer that is contacted matches its presented certificate.--> The DNS names and the IP addresses can be contained in the Common Name (CN) or the subjectAltName entries.  For verification, only one of these entries is considered. The following precedence applies: for DNS name validation, subjectAltName:DNS has precedence over CN; for IP address validation, subjectAltName:iPAddr has precedence over CN.</t>
+                    <t>Implementations MAY allow the configuration of a set of additional properties of the certificate to check for a peer's authorization to communicate (e.g., a set of allowed values in subjectAltName:URI or a set of allowed X509v3 Certificate Policies). The definition of these properties are out of scope of this document.</t>
                   </list></t>
-                <t>TLS with X.509 certificates using certificate fingerprints: Implementations MUST allow the configuration of a list of certificates that are trusted, identified via fingerprint of the Distinguished Encoding Rules (DER) encoded certificate octets. Implementations MUST support SHA-256 as defined by <xref target="SHS"/> as the hash algorithm for the fingerprint.</t>
+                <t>TLS with X.509 certificates using certificate fingerprints: Implementations MUST allow the configuration of a list of certificates that are trusted to identify peers, identified via fingerprint of the Distinguished Encoding Rules (DER) encoded certificate octets. Implementations MUST support SHA-256 as defined by <xref target="SHS"/> as the hash algorithm for the fingerprint.</t>
               </list></t>
             <t>Start exchanging PCEP messages.
             <list style="symbols">
@@ -505,7 +525,7 @@
    PCErr message and releases the TCP/TLS connection.</t>
             </list></t>    
           </list></t>
-        <t>To support TLS re-negotiation both peers MUST support the mechanism described in <xref target="RFC5746"/>. Any attempt to initiate a TLS handshake to establish new cryptographic parameters not aligned with <xref target="RFC5746"/> SHALL be considered a TLS negotiation failure.</t>
+        <!--<t>To support TLS re-negotiation both peers MUST support the mechanism described in <xref target="RFC5746"/>. Any attempt to initiate a TLS handshake to establish new cryptographic parameters not aligned with <xref target="RFC5746"/> SHALL be considered a TLS negotiation failure.</t>-->
       </section>
 
       
@@ -524,7 +544,7 @@
       
         <t>In TLS-X.509 mode using fingerprints, a peer is uniquely identified by the fingerprint of the presented certificate.</t>
       
-        <t>There are numerous trust models in PKIX environments, and it is beyond the scope of this document to define how a particular deployment determines whether a peer is trustworthy. Implementations that want to support a wide variety of trust models SHOULD expose as many details of the presented certificate to the administrator as possible so that the trust model can be implemented by the administrator. 
+        <t>There are numerous trust models in PKIX environments, and it is beyond the scope of this document to define how a particular deployment determines whether a peer is trustworthy. Implementations that want to support a wide variety of trust models should expose as many details of the presented certificate to the administrator as possible so that the trust model can be implemented by the administrator. 
         At least the following parameters of the X.509 certificate SHOULD be exposed:</t>
           <t><list style="symbols">
             <t>Peer's IP address</t>
@@ -538,14 +558,16 @@
           </list></t>
           <t>Note that the remote IP address used for the TCP session establishment is also exposed.</t>
         <t><xref target="I-D.ietf-pce-stateful-sync-optimizations"/> specify a Speaker Entity Identifier TLV (SPEAKER-ENTITY-ID), as an optional
-   TLV that MAY be included in the OPEN Object. It contains a unique identifier for the
+   TLV that is included in the OPEN Object. It contains a unique identifier for the
    node that does not change during the lifetime of the PCEP speaker. An implementation would thus expose the speaker entity identifier as part of the X509v3 certificate's subjectAltName:otherName, so that
    an implementation could use this identifier for the peer identification trust model.</t>
         <t>In addition, a PCC MAY apply the procedures described in <xref target="RFC6698"/> DNS-Based Authentication of Named Entities (DANE) to verify its peer identity when using DNS discovery. See section <xref target="DANE"/> for further details.</t>
       </section>
 
       <section title="Connection Establishment Failure">
-        <t>In case the initial TLS negotiation or the peer identity check fails, according to the procedures listed in this document, the peer MUST first send a PCErr message as per <xref target="init"/> and then terminate the session. It SHOULD follow the procedure listed in <xref target="RFC5440"/> to retry session setup along with an exponential back-off session establishment retry procedure.</t>
+        <t>In case the initial TLS negotiation or the peer identity check fails, according to the procedures listed in this document, the peer MUST first send a PCErr message as per <xref target="init"/> and then terminate the session. In case of PCErr with Error-Type set to [TBA2 by IANA] (PCEP StartTLS failure) and Error-value set to 4 (ok without TLS),
+        the receiver MAY choose to attempt to re-establish the PCEP session without TLS next.  This SHOULD be attempt only once.</t> 
+        <t>The initiator SHOULD follow the procedure listed in <xref target="RFC5440"/> to retry session setup as per the exponential back-off session establishment retry procedure.</t>
       </section>
 
     </section>
@@ -564,7 +586,7 @@
 </list></t>
 
       <section anchor="DANE" title="DANE Applicability">
-        <t>DANE <xref target="RFC6698"/> defines a secure method to associate the certificate that is obtained from a TLS server with a domain name using DNS, i.e., using the TLSA DNS resource record (RR) to associate a TLS server certificate or public key with the domain name where the record is found, thus forming a "TLSA certificate association". The DNS information needs to be protected by DNS Security (DNSSEC). A PCC willing to apply DANE to verify server identity MUST conform to the rules defined in section 4 of <xref target="RFC6698"/>. The server's domain name must be authorized separately, as TLSA does not provide any useful authorization guarantees.</t>
+        <t>DANE <xref target="RFC6698"/> defines a secure method to associate the certificate that is obtained from a TLS server with a domain name using DNS, i.e., using the TLSA DNS resource record (RR) to associate a TLS server certificate or public key with the domain name where the record is found, thus forming a "TLSA certificate association". The DNS information needs to be protected by DNS Security (DNSSEC). A PCC willing to apply DANE to verify server identity MUST conform to the rules defined in section 4 of <xref target="RFC6698"/>. The implementation MUST support Service certificate constraint (TLSA Certificate Usages type 1) with Matching type 2 (SHA2-256) as described in <xref target="RFC6698"/><xref target="RFC7671"/>. The server's domain name must be authorized separately, as TLSA does not provide any useful authorization guarantees.</t>
       </section>
 
     </section>
@@ -576,20 +598,26 @@
    (StartTLS) that does not interfere with PCEP speaker implementations
    not supporting it.</t>
    
-    <t>A PCEP speaker that does not support PCEPS, on TCP establishment it would send Open message to the peer and it it receives a 
-    StartTLS message, it would behave according to the existing error 
+    <t>A PCC that does not support PCEPS will send Open message as the first message on TCP establishment. A PCE that supports PCEPS only will send StartTLS message on TCP establishment.
+    On receiving StartTLS message, PCC would consider it as an error and behave according to the existing error 
     mechanism of <xref target="RFC5440"/> and send PCErr message with Error-Type 1 (PCEP session establishment failure) and Error-Value 1 (reception of an invalid Open message or
-    a non Open message) and close the session. 
-    If a StartTLS message is received any other time by a PCEP speaker that does not implement PCEPS, it would consider it as unknown message and would behave according to the existing error 
-    mechanism of <xref target="RFC5440"/> and send PCErr message with Error-Type 2 (Capability not supported) and close the session.
-    On receiving the error, based on the local policy, a peer could try to establishing PCEP session without TLS as per the procedures defined in <xref target="RFC5440"/>. For successful TLS operations with PCEP, both PCEP peers in the network would need to be
-   upgraded to support this document.</t>
-   <t>Note that, a PCEP implementation that support PCEPS would respond with PCErr message with Error-Type set to [TBA2 by IANA]
-   (PCEP StartTLS failure) and Error-value set to 2 in case it receives any
-   other message apart from StartTLS, Open, or PCErr message as the very first PCEP message. If the sender is a PCEP implementation that does not support PCEPS, it will not
-   be able to understand this error. </t>
+    a non Open message) and close the session.</t>
+    <t>A PCC that support PCEPS will send StartTLS message as the first message on TCP establishment. A PCE that does not supports PCEPS, would consider receiving StartTLS message as an error and respond with PCErr message (with Error-Type 1 and Error-Value 1) and close the session.</t> 
+    <t>If a StartTLS message is received, any other time by a PCEP speaker that does not implement PCEPS, it would consider it as an unknown message and would behave according to the existing error 
+    mechanism of <xref target="RFC5440"/> and send PCErr message with Error-Type 2 (Capability not supported) and close the session.</t>
+    
    <t>An existing PCEP session cannot be upgraded to PCEPS, the session needs to be terminated and reestablished as per the procedure described in 
    	this document. During the incremental upgrade, the PCEP speaker SHOULD allow session establishment with and without TLS. Once both PCEP speakers are upgraded to support PCEPS, the PCEP session is re-established with TLS, otherwise PCEP session without TLS is setup. A redundant PCE MAY also be used during the incremental deployment to take over the PCE undergoing upgrade. Once the upgrade is completed, support for unsecured version SHOULD be removed.</t>
+
+    <t>A PCE that accepts connections with or without PCEPS, it would respond based on the message received from PCC. A PCC that supports connection with or without PCEPS, it would
+    	first attempt to connect with PCEPS and in case of error, it MAY retry to establish connection without PCEPS. For successful TLS operations with PCEP, both PCEP peers in the network would need to be
+   upgraded to support this document.</t>
+
+   	   <t>Note that, a PCEP implementation that support PCEPS would respond with PCErr message with Error-Type set to [TBA2 by IANA]
+   (PCEP StartTLS failure) and Error-value set to 2  if any other message is sent before StartTLS or Open. If the sender of the invalid message is a PCEP implementation that does not support PCEPS, it will not
+   be able to understand this error. A PCEPS implementation could also send the PCErr message as per <xref target="RFC5440"/> with Error-Type
+   "PCEP session establishment failure" and Error-value "reception of an invalid Open message or a non Open message" before closing the session.</t>
+
   </section>
 
   <section anchor="IANA" title="IANA Considerations">
@@ -637,7 +665,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
   <section title="Security Considerations">
     <t>While the application of TLS satisfies the requirement on confidentiality as well as fine-grained, policy-based peer authentication, there are security threats that it cannot address.  It may be advisable to apply additional protection measures, in particular in what relates to attacks specifically addressed to forging the TCP connection underpinning TLS, especially in the case of long-lived connections. One of these measures is the application of TCP-AO (TCP Authentication Option <xref target="RFC5925"/>), which is fully compatible with and deemed as complementary to TLS. The mechanisms to configure the requirements to use TCP-AO and other lower-layer protection measures with a particular peer are outside the scope of this document.</t>
     <t>Since computational resources required by TLS handshake and ciphersuite are higher than unencrypted TCP, clients connecting to a PCEPS server can more easily create high load conditions and a malicious client might create a Denial-of-Service attack more easily.</t>
-    <t>Some TLS ciphersuites only provide integrity validation of their payload, and provide no encryption. This specification does not forbid the use of such ciphersuites, but administrators must weight carefully the risk of relevant internal data leakage that can occur in such a case, as explicitly stated by <xref target="RFC6952"/>.</t>
+    <t>Some TLS ciphersuites only provide integrity validation of their payload, and provide no encryption, such ciphersuites SHOULD NOT be used by default. Administrators MAY allow the usage of these ciphersuites after careful weighting of the risk of relevant internal data leakage, that can occur in such a case, as explicitly stated by <xref target="RFC6952"/>.</t>
     <t>When using certificate fingerprints to identify PCEPS peers, any two certificates that produce the same hash value will be considered the same peer. Therefore, it is important to make sure that the hash function used is cryptographically uncompromised so that attackers are very unlikely to be able to produce a hash collision with a certificate of their choice. This document mandates support for SHA-256 as defined by <xref target="SHS"/>, but a later revision may demand support for stronger functions if suitable attacks on it are known.</t>
     <t>The guidance given in <xref target="RFC7525"/> SHOULD be followed to avoid attacks on TLS.</t>
   </section>
@@ -702,7 +730,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
     <t>Also thanks to Tianran Zhou for OPSDIR review.</t>
     <t>Thanks to Deborah Brungard for being the responsible AD and guiding
    the authors as needed.</t>
-   <t>Thanks to Mirja Kuhlewind, Eric Rescorla, Warren Kumari and Kathleen Moriarty for IESG review and comments.</t>
+   <t>Thanks to Mirja Kuhlewind, Eric Rescorla, Warren Kumari, Kathleen Moriarty, Suresh Krishnan, Ben Campbell and Alexey Melnikov for the IESG review and comments.</t>
   </section>
   </middle>
 
@@ -714,12 +742,13 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
       &RFC5280;
       <!--&RFC5288;-->
       &RFC5440;
-      &RFC5746;
+      <!--&RFC5746;-->
       &RFC6066;
       &RFC6125;
       
       &RFC6698;
       &RFC7525;
+      &RFC7671;
       <reference anchor="SHS" target="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">
         <front>
           <title>Secure Hash Standard (SHS), FIPS PUB 180-4</title>
