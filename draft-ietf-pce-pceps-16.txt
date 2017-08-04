@@ -191,7 +191,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    2.  Initiating the TLS procedures by the StartTLS message from PCE to
        PCC and from PCC to PCE.
 
-   3.  Establishment of TLS connection.
+   3.  Negotiation and establishment of TLS connection.
 
    4.  Start exchanging PCEP messages as per [RFC5440].
 
@@ -227,7 +227,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
    which required the Open message to be the first PCEP message that is
-   exchanged.  In the case of a PCEP session using TLS the StartTLS
+   exchanged.  In the case of a PCEP session using TLS, the StartTLS
    message will be sent first.  Also a PCEP speaker that supports PCEPS
    MUST NOT start the OpenWait timer after the TCP establishment,
    instead it starts a StartTLSWait timer as described in Section 3.3.
@@ -252,8 +252,9 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
    Once the TCP connection has been successfully established, the first
    message sent by the PCC to the PCE and by the PCE to the PCC MUST be
-   a StartTLS message for the PCEPS.  Note this is a significant change
-   from [RFC5440] where the first PCEP message is the Open message.
+   a StartTLS message for the PCEPS.  Note that, this is a significant
+   change from [RFC5440], where the first PCEP message is the Open
+   message.
 
    A PCEP speaker receiving a StartTLS message, after any other PCEP
    exchange has taken place (by receiving or sending any other messages
@@ -276,7 +277,6 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-
 Lopez, et al.           Expires February 5, 2018                [Page 5]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
@@ -291,18 +291,18 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
    If a PCC supports PCEPS connections as well as allow non-PCEPS
    connection (as a local policy), it MUST first try to establish PCEPS,
-   by sending StartTLS message and in case it receives an PCErr from the
-   PCE, it MAY retry to establish connection without PCEPS by sending an
-   Open message.  If a PCE supports PCEPS connections as well as allow
-   non-PCEPS connection (as a local policy), it MUST wait to respond
-   after TCP establishment, based on the message received from the PCC.
-   In case of StartTLS message, PCE MUST respond with sending a StartTLS
-   message and moving to TLS establishment procedures as described in
-   this document.  In case of Open message, PCE MUST respond with Open
-   message and move to PCEP session establishment procedure as per
-   [RFC5440].  If a PCE supports PCEPS connections only (as a local
-   policy), it MAY send StartTLS message to PCC without waiting to
-   receive a StartTLS message from PCC.
+   by sending StartTLS message and in case it receives an PCErr message
+   from the PCE, it MAY retry to establish connection without PCEPS by
+   sending an Open message.  If a PCE supports PCEPS connections as well
+   as allow non-PCEPS connection (as a local policy), it MUST wait to
+   respond after TCP establishment, based on the message received from
+   the PCC.  In case of StartTLS message, PCE MUST respond with sending
+   a StartTLS message and moving to TLS establishment procedures as
+   described in this document.  In case of Open message, PCE MUST
+   respond with Open message and move to PCEP session establishment
+   procedure as per [RFC5440].  If a PCE supports PCEPS connections only
+   (as a local policy), it MAY send StartTLS message to PCC without
+   waiting to receive a StartTLS message from PCC.
 
    If a PCEP speaker that is unwilling or unable to negotiate TLS
    receives a StartTLS messages, it MUST return a PCErr message (in
@@ -320,9 +320,9 @@ Internet-Draft          Secure Transport for PCEP            August 2017
       PCEP session without TLS SHOULD be limited to only once.
 
    If the PCEP speaker supports PCEPS and can establish a TLS connection
-   it MUST start the TLS connection establishment steps described in
-   Section 3.4 before the PCEP initialization procedure (section 4.2.1
-   of [RFC5440]).
+   it MUST start the TLS connection negotiation and establishment steps
+   described in Section 3.4 before the PCEP initialization procedure
+   (section 4.2.1 of [RFC5440]).
 
    After the exchange of StartTLS messages, if the TLS negotiation fails
    for some reason (e.g. the required mechanisms for certificate
@@ -369,8 +369,8 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    StartTLS message to request negotiation and establishment of TLS
    connection for PCEP.  On receiving a StartTLS message from the PCEP
    peer (i.e.  when the PCEP speaker has sent and received StartTLS
-   message) it is ready to start TLS negotiation and establishment and
-   move to steps described in Section 3.4.
+   message) it is ready to start the negotiation and establishment of
+   TLS and move to steps described in Section 3.4.
 
    The collision resolution procedures described in [RFC5440] for the
    exchange of Open messages MUST be applied by the PCEP peers during
@@ -397,13 +397,13 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    Once the TCP connection has been successfully established, the PCEP
    speaker MUST start a timer called StartTLSWait timer, after the
    expiration of which, if neither StartTLS message has been received,
-   nor a PCErr/Open (in case of failure and PCEPS not supported by the
-   peer respectively), it MUST send a PCErr message with Error-Type set
-   to [TBA2 by IANA] and Error-value set to 5 (no StartTLS (nor PCErr/
-   Open) message received before the expiration of the StartTLSWait
-   timer) and it MUST release the TCP connection . A RECOMMENDED value
-   for StartTLSWait timer is 60 seconds.  The value of StartTLSWait
-   timer MUST NOT be less than OpenWait timer.
+   nor a PCErr/Open message (in case of failure and PCEPS not supported
+   by the peer, respectively), it MUST send a PCErr message with Error-
+   Type set to [TBA2 by IANA] and Error-value set to 5 (no StartTLS (nor
+   PCErr/Open) message received before the expiration of the
+   StartTLSWait timer) and it MUST release the TCP connection . A
+   RECOMMENDED value for StartTLSWait timer is 60 seconds.  The value of
+   StartTLSWait timer MUST NOT be less than OpenWait timer.
 
 
                   +-+-+                 +-+-+
@@ -803,12 +803,8 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 3.6.  Connection Establishment Failure
 
    In case the initial TLS negotiation or the peer identity check fails,
-   according to the procedures listed in this document, the peer MUST
-   first send a PCErr message as per Section 3.2 and then terminate the
-   session.  In case of PCErr with Error-Type set to [TBA2 by IANA]
-   (PCEP StartTLS failure) and Error-value set to 4 (ok without TLS),
-   the receiver MAY choose to attempt to re-establish the PCEP session
-   without TLS next.  This SHOULD be attempt only once.
+   according to the procedures listed in this document, both peers
+   SHOULD immediately close the connection.
 
    The initiator SHOULD follow the procedure listed in [RFC5440] to
    retry session setup as per the exponential back-off session
@@ -834,6 +830,10 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
    o  A PCE can advertise its capability to support PCEPS using the DNS
       [I-D.wu-pce-dns-pce-discovery] by identifying the support of TLS.
+
+
+
+
 
 
 
@@ -867,7 +867,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    not supporting it.
 
    A PCC that does not support PCEPS will send Open message as the first
-   message on TCP establishment.  A PCE that supports PCEPS only will
+   message on TCP establishment.  A PCE that supports PCEPS only, will
    send StartTLS message on TCP establishment.  On receiving StartTLS
    message, PCC would consider it as an error and behave according to
    the existing error mechanism of [RFC5440] and send PCErr message with
@@ -881,7 +881,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    with PCErr message (with Error-Type 1 and Error-Value 1) and close
    the session.
 
-   If a StartTLS message is received, any other time by a PCEP speaker
+   If a StartTLS message is received at any other time by a PCEP speaker
    that does not implement PCEPS, it would consider it as an unknown
    message and would behave according to the existing error mechanism of
    [RFC5440] and send PCErr message with Error-Type 2 (Capability not
@@ -1013,7 +1013,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    When using certificate fingerprints to identify PCEPS peers, any two
    certificates that produce the same hash value will be considered the
    same peer.  Therefore, it is important to make sure that the hash
-   function used is cryptographically uncompromised so that attackers
+   function used is cryptographically uncompromised, so that attackers
    are very unlikely to be able to produce a hash collision with a
    certificate of their choice.  This document mandates support for
    SHA-256 as defined by [SHS], but a later revision may demand support
@@ -1056,7 +1056,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    about the security implications of permitting unsecure connections.
 
    Further, the operator needs to develop suitable security policies
-   around PCEP within his network.  Further the PCEP peers SHOULD
+   around PCEP within his network.  The PCEP peers SHOULD provide ways
 
 
 
@@ -1066,8 +1066,8 @@ Lopez, et al.           Expires February 5, 2018               [Page 19]
 Internet-Draft          Secure Transport for PCEP            August 2017
 
 
-   provide ways for the operator to complete the following tasks in
-   regards to a PCEP session:
+   for the operator to complete the following tasks in regards to a PCEP
+   session:
 
    o  Determine if a session is protected via PCEPS.
 
@@ -1080,7 +1080,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    o  Inspect the certificate offered by the PCEP peer.
 
    o  Be warned if StartTLS procedure fails for the PCEP peers, that are
-      known to support PCEPS, via configurations or capability
+      known to support PCEPS via configurations or capability
       advertisements.
 
 8.2.  Information and Data Models
@@ -1136,7 +1136,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    command in [RFC4513].
 
    We would like to thank Joe Touch for his suggestions and support
-   regarding the TLS start mechanisms.
+   regarding the StartTLS mechanisms.
 
    Thanks to Daniel King for reminding the authors about manageability
    considerations.

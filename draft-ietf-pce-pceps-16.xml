@@ -125,7 +125,7 @@
     <abstract>
         <t>The Path Computation Element Communication Protocol (PCEP) defines the mechanisms for the communication between a Path Computation Client (PCC) and a Path Computation Element (PCE), or among PCEs. This document describes the usage of Transport Layer Security (TLS) to enhance PCEP security, hence the PCEPS acronym proposed for it. The additional security mechanisms are provided by the transport protocol supporting PCEP, and therefore they do not affect the flexibility and extensibility of PCEP.</t>
 
-        <t>This document updates RFC 5440 in regards to the PCEP initialization phase procedures.</t>
+        <t>This document updates RFC 5440 in regards to the PCEP initialization phase procedures. </t>
     </abstract>
   </front>
 
@@ -153,7 +153,7 @@
    <t>Establishment of a TCP connection.</t>
    <t>Initiating the TLS procedures by the StartTLS message from PCE to
    PCC and from PCC to PCE.</t>
-   <t>Establishment of TLS connection.</t>
+   <t>Negotiation and establishment of TLS connection.</t>
    <t>Start exchanging PCEP messages as per <xref target="RFC5440"/>.</t>
    </list>
    </t>
@@ -176,7 +176,7 @@
    Open message). This document thus updates
    <xref target="RFC5440"/>, which required the
     Open message to be the first PCEP message that is exchanged. In the case of a PCEP
-    session using TLS the StartTLS message will be sent first. Also 
+    session using TLS, the StartTLS message will be sent first. Also 
     a PCEP speaker that supports PCEPS MUST NOT start the OpenWait timer
     after the TCP establishment, instead it starts a StartTLSWait timer 
     as described in <xref target="start"/>. 
@@ -207,8 +207,8 @@
 
     <t>Once the TCP connection has been successfully established, the first
     message sent by the PCC to the PCE and by the PCE to the PCC MUST be
-    a StartTLS message for the PCEPS. Note this is a significant change
-    from <xref target="RFC5440"/> where the first PCEP message is the Open message.</t>
+    a StartTLS message for the PCEPS. Note that, this is a significant change
+    from <xref target="RFC5440"/>, where the first PCEP message is the Open message.</t>
 
     <t>A PCEP speaker receiving a StartTLS message, after any other PCEP
     exchange has taken place (by receiving or sending any other messages
@@ -243,7 +243,7 @@
     Error-value set to 1 (reception of an invalid Open message or a non Open message), and MUST close the TCP connection.</t>
 
     <t>If a PCC supports PCEPS connections as well as allow non-PCEPS connection (as a local policy), 
-      it MUST first try to establish PCEPS, by sending StartTLS message and in case it receives an PCErr from the PCE,
+      it MUST first try to establish PCEPS, by sending StartTLS message and in case it receives an PCErr message from the PCE,
       it MAY retry to establish connection without PCEPS by sending an Open message. If a PCE supports 
       PCEPS connections as well as allow non-PCEPS connection (as a local policy), it MUST wait to respond after TCP establishment, 
       based on the message received from the PCC. In case of StartTLS message, PCE MUST respond with sending a StartTLS message and moving to TLS 
@@ -292,7 +292,7 @@
     </list></t>
 
     <t>If the PCEP speaker supports PCEPS and can establish a TLS connection it
-    MUST start the TLS connection establishment steps described in
+    MUST start the TLS connection negotiation and establishment steps described in
     <xref target="Establishment"/> before the PCEP initialization procedure
     (section 4.2.1 of <xref target="RFC5440"/>).</t>
 
@@ -341,7 +341,7 @@
    StartTLS message to request negotiation and establishment of TLS
    connection for PCEP. On receiving a StartTLS message from the PCEP peer (i.e.
    when the PCEP speaker has sent and received StartTLS message) it is ready to
-   start TLS negotiation and establishment and move to steps described
+   start the negotiation and establishment of TLS and move to steps described
    in <xref target="Establishment"/>.
    </t>
    <t>The collision resolution procedures described in <xref target="RFC5440"/>
@@ -362,8 +362,8 @@
    <t>Once the TCP connection has been successfully established, the 
     PCEP speaker MUST start a timer called
    StartTLSWait timer, after the expiration of which, if neither StartTLS
-   message has been received, nor a PCErr/Open (in case of failure
-   and PCEPS not supported by the peer respectively), it MUST send a PCErr message with Error-Type set to [TBA2 by IANA] and Error-value
+   message has been received, nor a PCErr/Open message (in case of failure
+   and PCEPS not supported by the peer, respectively), it MUST send a PCErr message with Error-Type set to [TBA2 by IANA] and Error-value
    set to 5 (no StartTLS (nor PCErr/Open) message received before the expiration of the
    StartTLSWait timer) and it MUST release the
    TCP connection . A RECOMMENDED
