@@ -115,7 +115,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="03" month="August" year="2017"/>
+    <date day="04" month="August" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -249,7 +249,7 @@
       based on the message received from the PCC. In case of StartTLS message, PCE MUST respond with sending a StartTLS message and moving to TLS 
       establishment procedures as described in this document. In case of Open message, PCE MUST respond with Open message and move to PCEP session establishment procedure as per <xref target="RFC5440"/>. If a PCE supports PCEPS connections only (as a local policy), it MAY send StartTLS message to PCC without waiting to receive a StartTLS message from PCC. </t>
 
-    <t>After the exchange of StartTLS messages, if a PCEP speaker cannot establish a TLS connection
+    <!--<t>After the exchange of StartTLS messages, if a PCEP speaker cannot establish a TLS connection
     for some reason (e.g. the required mechanisms for certificate revocation
     checking are not available), it MUST return a PCErr message (in clear) with Error-Type
     set to [TBA2 by IANA] (PCEP StartTLS failure) and Error-value set to:</t>
@@ -265,7 +265,7 @@
         without TLS next. The attempt to re-establish the PCEP session
         without TLS SHOULD be limited to only once. 
          </t>
-    </list></t>
+    </list></t>    
 
     <t>Note that, the PCEP implementation MUST send the PCErr message once the TLS 
     	connection has been closed i.e. the TLS close_notify <xref target="RFC5246"/> has been received from the peer. 
@@ -273,29 +273,57 @@
    carried over the underlying transport after the TLS connection is
    closed, the TLS implementation must receive the responding
    close_notify alert before indicating to the application layer that
-   the TLS connection has ended. </t>
+   the TLS connection has ended. </t>-->
+
+   <t>If a PCEP speaker that is unwilling or unable to negotiate
+   TLS receives a StartTLS messages, it 
+   MUST return a PCErr message (in clear) with Error-Type set to [TBA2
+   by IANA] (PCEP StartTLS failure) and Error-value set to:
+   <list style="symbols">
+   <t>3 (not without TLS) if it is not willing to exchange PCEP messages
+      without the solicited TLS connection, and it MUST close the TCP
+      session.</t>
+
+   <t>4 (ok without TLS) if it is willing to exchange PCEP messages
+      without the solicited TLS connection, and it MUST close the TCP
+      session.  The receiver MAY choose to attempt to re-establish the
+      PCEP session without TLS next.  The attempt to re-establish the
+      PCEP session without TLS SHOULD be limited to only once.</t>
+    </list></t>
 
     <t>If the PCEP speaker supports PCEPS and can establish a TLS connection it
     MUST start the TLS connection establishment steps described in
     <xref target="Establishment"/> before the PCEP initialization procedure
     (section 4.2.1 of <xref target="RFC5440"/>).</t>
 
+   <t>After the exchange of StartTLS messages, if the TLS negotiation
+   fails for some reason (e.g. the required
+   mechanisms for certificate revocation checking are not available),
+   both peers SHOULD
+   immediately close the connection. Since the initiator has no way to know
+   if the peer is willing to accept PCEP connection without 
+   TLS, based on the local policy, it MAY attempt to re-establish 
+   the PCEP session without TLS. The attempt to re-establish the
+      PCEP session without TLS SHOULD be limited to only once.</t>
+
     <t>
     A PCEP speaker that does not support PCEPS sends the Open message
    directly, as per <xref target="RFC5440"/>. A PCEP speaker that 
-   supports PCEPS but has previously already learned the
-   peer willingness to reestablish session without TLS, MAY send the Open
-   message directly, as per <xref target="RFC5440"/>.
+   supports PCEPS, but has learned in the last exchange the
+   peer's willingness to reestablish session without TLS, MAY send the Open
+   message directly, as per <xref target="RFC5440"/>. The attempt to re-establish the PCEP session
+   without TLS SHOULD be limited to only once.
     </t>
 
-    <t>Given the asymmetric nature of TLS for connection establishment it is
+    <t>Given the asymmetric nature of TLS for connection establishment, it is
     relevant to identify the roles of each of the PCEP peers in it. The PCC
-    SHALL act as TLS client, and the PCE SHALL act as TLS server, according to
+    SHALL act as TLS client, and the PCE SHALL act as TLS server as per
     <xref target="RFC5246"/>.</t>
 
-    <t>These procedures minimize the impact of PCEPS support in PCEP
+    <!--<t>These procedures minimize the impact of PCEPS support in PCEP
     implementations without requiring additional dedicated ports for
-    running PCEP with TLS.</t>
+    running PCEP with TLS.</t>-->
+
     <t>As per the recommendation from <xref target="RFC7525"/> to avoid 
     downgrade attacks, PCEP peers that support PCEPS, SHOULD default to 
     strict TLS configuration i.e. do not allow non-TLS PCEP sessions to 
@@ -390,11 +418,9 @@
                  |        /            |
                  |<------              |
                  |:::::::::TLS:::::::::| TLS Establishment
-                 |:::::Establishment:::| Failure
-                 |                     |
-                 |<--------------------| Send Error-Type TBA2
-                 |      PCErr          | Error-Value 3/4
-                 |                     |
+                 |:::::Establishment:::| Failure, Both 
+                 |                     | peers close 
+                                         session
 
             ]]></artwork>
           </figure>          
@@ -464,8 +490,30 @@
             ]]></artwork>
           </figure>
 
-          <figure title="PCE supports PCEPS as well as without PCEPS, while PCC does not support PCEPS"
+          <figure title="Both PCEP Speaker supports PCEPS as well as without PCEPS, but PCE cannot start TLS negotiation"
              suppress-title="false" align="left" alt="" width="" height="" anchor="F5">
+            <artwork><![CDATA[
+
+               +-+-+                 +-+-+
+               |PCC|                 |PCE|
+               +-+-+                 +-+-+
+                 |                     |
+                 | StartTLS            |
+                 | msg                 | PCE waits 
+                 |-------------------->| for PCC 
+                 |               PCErr | 
+                 |<--------------------| Send Error
+                 |                     | (not without
+                 |                     |  TLS)
+                 |<--------------------|  
+                 |       Close         |
+
+                 
+            ]]></artwork>
+          </figure>
+
+          <figure title="PCE supports PCEPS as well as without PCEPS, while PCC does not support PCEPS"
+             suppress-title="false" align="left" alt="" width="" height="" anchor="F6">
             <artwork><![CDATA[
 
                +-+-+                 +-+-+
@@ -498,7 +546,7 @@
               <list style="symbols">
                 <t>Support for TLS v1.2 <xref target="RFC5246"/> or later is REQUIRED.</t>
                 <t>Support for certificate-based mutual authentication is REQUIRED.</t>
-                <t>Negotiation of mutual authentication is REQUIRED.</t>
+                <!--<t>Negotiation of mutual authentication is REQUIRED.</t>-->
                 <t>Negotiation of a ciphersuite providing for integrity protection is REQUIRED.</t>
                 <t>Negotiation of a ciphersuite providing for confidentiality is RECOMMENDED.</t>
                 <t>Support for and negotiation of compression is OPTIONAL.</t>
@@ -566,8 +614,9 @@
       </section>
 
       <section title="Connection Establishment Failure">
-        <t>In case the initial TLS negotiation or the peer identity check fails, according to the procedures listed in this document, the peer MUST first send a PCErr message as per <xref target="init"/> and then terminate the session. In case of PCErr with Error-Type set to [TBA2 by IANA] (PCEP StartTLS failure) and Error-value set to 4 (ok without TLS),
-        the receiver MAY choose to attempt to re-establish the PCEP session without TLS next.  This SHOULD be attempt only once.</t> 
+        <t>In case the initial TLS negotiation or the peer identity check fails, according to the procedures listed in this document, both peers SHOULD immediately
+   close the connection.<!--the peer MUST first send a PCErr message as per <xref target="init"/> and then terminate the session. In case of PCErr with Error-Type set to [TBA2 by IANA] (PCEP StartTLS failure) and Error-value set to 4 (ok without TLS),
+        the receiver MAY choose to attempt to re-establish the PCEP session without TLS next.  This SHOULD be attempt only once.--></t> 
         <t>The initiator SHOULD follow the procedure listed in <xref target="RFC5440"/> to retry session setup as per the exponential back-off session establishment retry procedure.</t>
       </section>
 
@@ -599,12 +648,12 @@
    (StartTLS) that does not interfere with PCEP speaker implementations
    not supporting it.</t>
    
-    <t>A PCC that does not support PCEPS will send Open message as the first message on TCP establishment. A PCE that supports PCEPS only will send StartTLS message on TCP establishment.
+    <t>A PCC that does not support PCEPS will send Open message as the first message on TCP establishment. A PCE that supports PCEPS only, will send StartTLS message on TCP establishment.
     On receiving StartTLS message, PCC would consider it as an error and behave according to the existing error 
     mechanism of <xref target="RFC5440"/> and send PCErr message with Error-Type 1 (PCEP session establishment failure) and Error-Value 1 (reception of an invalid Open message or
     a non Open message) and close the session.</t>
     <t>A PCC that support PCEPS will send StartTLS message as the first message on TCP establishment. A PCE that does not supports PCEPS, would consider receiving StartTLS message as an error and respond with PCErr message (with Error-Type 1 and Error-Value 1) and close the session.</t> 
-    <t>If a StartTLS message is received, any other time by a PCEP speaker that does not implement PCEPS, it would consider it as an unknown message and would behave according to the existing error 
+    <t>If a StartTLS message is received at any other time by a PCEP speaker that does not implement PCEPS, it would consider it as an unknown message and would behave according to the existing error 
     mechanism of <xref target="RFC5440"/> and send PCErr message with Error-Type 2 (Capability not supported) and close the session.</t>
     
    <t>An existing PCEP session cannot be upgraded to PCEPS, the session needs to be terminated and reestablished as per the procedure described in 
@@ -667,7 +716,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
     <t>While the application of TLS satisfies the requirement on confidentiality as well as fine-grained, policy-based peer authentication, there are security threats that it cannot address.  It may be advisable to apply additional protection measures, in particular in what relates to attacks specifically addressed to forging the TCP connection underpinning TLS, especially in the case of long-lived connections. One of these measures is the application of TCP-AO (TCP Authentication Option <xref target="RFC5925"/>), which is fully compatible with and deemed as complementary to TLS. The mechanisms to configure the requirements to use TCP-AO and other lower-layer protection measures with a particular peer are outside the scope of this document.</t>
     <t>Since computational resources required by TLS handshake and ciphersuite are higher than unencrypted TCP, clients connecting to a PCEPS server can more easily create high load conditions and a malicious client might create a Denial-of-Service attack more easily.</t>
     <t>Some TLS ciphersuites only provide integrity validation of their payload, and provide no encryption, such ciphersuites SHOULD NOT be used by default. Administrators MAY allow the usage of these ciphersuites after careful weighting of the risk of relevant internal data leakage, that can occur in such a case, as explicitly stated by <xref target="RFC6952"/>.</t>
-    <t>When using certificate fingerprints to identify PCEPS peers, any two certificates that produce the same hash value will be considered the same peer. Therefore, it is important to make sure that the hash function used is cryptographically uncompromised so that attackers are very unlikely to be able to produce a hash collision with a certificate of their choice. This document mandates support for SHA-256 as defined by <xref target="SHS"/>, but a later revision may demand support for stronger functions if suitable attacks on it are known.</t>
+    <t>When using certificate fingerprints to identify PCEPS peers, any two certificates that produce the same hash value will be considered the same peer. Therefore, it is important to make sure that the hash function used is cryptographically uncompromised, so that attackers are very unlikely to be able to produce a hash collision with a certificate of their choice. This document mandates support for SHA-256 as defined by <xref target="SHS"/>, but a later revision may demand support for stronger functions if suitable attacks on it are known.</t>
     <t>PCEPS implementations that continue to accept connections without TLS are susceptible to downgrade attacks as described in <xref target="RFC7457"/>. 
    An attacker could attempt to remove the use of StartTLS message 
    that request the use of TLS as it pass on the wire in clear, and further inject a PCErr message that suggest to attempt PCEP connection without TLS.
@@ -690,7 +739,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
    connections. Execution of this override SHOULD trigger a warning about
    the security implications of permitting unsecure connections.</t>
    <t>Further, the operator needs to develop suitable security policies 
-   around PCEP within his network. Further the PCEP peers SHOULD provide 
+   around PCEP within his network. The PCEP peers SHOULD provide 
    ways for the operator to complete the following tasks in regards to a PCEP session:
    <list style="symbols">
       <t>Determine if a session is protected via PCEPS.</t>
@@ -700,7 +749,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
       for this circumstance.</t>
       <t>Inspect the certificate offered by the PCEP peer.</t>
       <t>Be warned if StartTLS procedure fails for the PCEP peers, that are
-      known to support PCEPS, via configurations or capability 
+      known to support PCEPS via configurations or capability 
       advertisements.</t>
    </list></t>
 </section>
@@ -726,7 +775,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
     </section>
   <section title="Acknowledgements">
     <t>This specification relies on the analysis and profiling of TLS included in <xref target="RFC6614"/> and the procedures described for the STARTTLS command in <xref target="RFC4513"/>.</t>
-    <t>We would like to thank Joe Touch for his suggestions and support regarding the TLS start mechanisms.</t>
+    <t>We would like to thank Joe Touch for his suggestions and support regarding the StartTLS mechanisms.</t>
     <t>Thanks to Daniel King for reminding the authors about manageability considerations.</t>
     <t>Thanks to Cyril Margaria for shepherding this document.</t>
     <t>Thanks to David Mandelberg for early SECDIR review comments as well as re-reviewing during IETF last call.</t>
