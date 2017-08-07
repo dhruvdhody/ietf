@@ -6,9 +6,9 @@ PCE Working Group                                               D. Lopez
 Internet-Draft                                       O. Gonzalez de Dios
 Updates: 5440 (if approved)                               Telefonica I+D
 Intended status: Standards Track                                   Q. Wu
-Expires: February 5, 2018                                       D. Dhody
+Expires: February 8, 2018                                       D. Dhody
                                                                   Huawei
-                                                         August 04, 2017
+                                                         August 07, 2017
 
 
                        Secure Transport for PCEP
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 5, 2018.
+   This Internet-Draft will expire on February 8, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Lopez, et al.           Expires February 5, 2018                [Page 1]
+Lopez, et al.           Expires February 8, 2018                [Page 1]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Lopez, et al.           Expires February 5, 2018                [Page 2]
+Lopez, et al.           Expires February 8, 2018                [Page 2]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -165,7 +165,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018                [Page 3]
+Lopez, et al.           Expires February 8, 2018                [Page 3]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -177,8 +177,10 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 2.  Requirements Language
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in [RFC2119].
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
 3.  Applying PCEPS
 
@@ -216,16 +218,16 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    for a PCEP speaker to indicate whether it wants to set up a TLS
    connection or not.  For this purpose, this document specifies a new
    PCEP message called StartTLS.  Thus, the PCEP session is secured via
-   TLS from the start before exchange of any other PCEP message (that
-   includes the Open message).  This document thus updates [RFC5440],
 
 
 
-Lopez, et al.           Expires February 5, 2018                [Page 4]
+Lopez, et al.           Expires February 8, 2018                [Page 4]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
 
+   TLS from the start before exchange of any other PCEP message (that
+   includes the Open message).  This document thus updates [RFC5440],
    which required the Open message to be the first PCEP message that is
    exchanged.  In the case of a PCEP session using TLS, the StartTLS
    message will be sent first.  Also a PCEP speaker that supports PCEPS
@@ -272,15 +274,16 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    If the PCEP speaker that does not support PCEPS, receives a StartTLS
    message, it will behave according to the existing error mechanism
    described in section 6.2 of [RFC5440] (in case message is received
-   prior to an Open message) or section 6.9 of [RFC5440] (for the case
-   of reception of unknown message).  See Section 5 for more details.
 
 
 
-Lopez, et al.           Expires February 5, 2018                [Page 5]
+Lopez, et al.           Expires February 8, 2018                [Page 5]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
+
+   prior to an Open message) or section 6.9 of [RFC5440] (for the case
+   of reception of unknown message).  See Section 5 for more details.
 
    If the PCEP speaker that only supports PCEPS connection (as a local
    policy), receives an Open message, it MUST treat it as an unexpected
@@ -327,17 +330,17 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    After the exchange of StartTLS messages, if the TLS negotiation fails
    for some reason (e.g. the required mechanisms for certificate
    revocation checking are not available), both peers SHOULD immediately
-   close the connection.  Since the initiator has no way to know if the
-   peer is willing to accept PCEP connection without TLS, based on the
-   local policy, it MAY attempt to re-establish the PCEP session without
 
 
 
-Lopez, et al.           Expires February 5, 2018                [Page 6]
+Lopez, et al.           Expires February 8, 2018                [Page 6]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
 
+   close the connection.  Since the initiator has no way to know if the
+   peer is willing to accept PCEP connection without TLS, based on the
+   local policy, it MAY attempt to re-establish the PCEP session without
    TLS.  The attempt to re-establish the PCEP session without TLS SHOULD
    be limited to only once.
 
@@ -382,17 +385,17 @@ Internet-Draft          Secure Transport for PCEP            August 2017
       <StartTLS Message>::= <Common Header>
 
 
-   The StartTLS message MUST contain only the PCEP common header with
-   Message-Type field set to [TBA1 by IANA].
 
 
 
 
-
-Lopez, et al.           Expires February 5, 2018                [Page 7]
+Lopez, et al.           Expires February 8, 2018                [Page 7]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
+
+   The StartTLS message MUST contain only the PCEP common header with
+   Message-Type field set to [TBA1 by IANA].
 
    Once the TCP connection has been successfully established, the PCEP
    speaker MUST start a timer called StartTLSWait timer, after the
@@ -442,10 +445,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-
-
-
-Lopez, et al.           Expires February 5, 2018                [Page 8]
+Lopez, et al.           Expires February 8, 2018                [Page 8]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -501,7 +501,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018                [Page 9]
+Lopez, et al.           Expires February 8, 2018                [Page 9]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -523,7 +523,8 @@ Internet-Draft          Secure Transport for PCEP            August 2017
                     |<------              |
                     |                     |
                     |<--------------------| Send Error
-                    |       PCErr         | (non-Open message
+                    |       PCErr         | Type=1,Value=1
+                    |                     | (non-Open message
                     |<--------------------|  received)
                     |       Close         |
                     ///////// TCP /////////
@@ -556,8 +557,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-
-Lopez, et al.           Expires February 5, 2018               [Page 10]
+Lopez, et al.           Expires February 8, 2018               [Page 10]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -591,8 +591,8 @@ Internet-Draft          Secure Transport for PCEP            August 2017
                     |-------------------->| for PCC
                     |               PCErr |
                     |<--------------------| Send Error
-                    |                     | (not without
-                    |                     |  TLS)
+                    |                     | Type=TBA2,Value=3
+                    |                     | (not without TLS)
                     |<--------------------|
                     |       Close         |
 
@@ -613,7 +613,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 11]
+Lopez, et al.           Expires February 8, 2018               [Page 11]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -669,7 +669,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 12]
+Lopez, et al.           Expires February 8, 2018               [Page 12]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -698,17 +698,18 @@ Internet-Draft          Secure Transport for PCEP            August 2017
              DNS name or IP address for the peer is configured, then the
              implementations MUST check them against the values in the
              presented certificate.  The DNS names and the IP addresses
-             can be contained in the Common Name (CN) or the
-             subjectAltName entries.  For verification, only one of
-             these entries is considered.  The following precedence
-             applies: for DNS name validation, subjectAltName:DNS has
-             precedence over CN; for IP address validation,
-             subjectAltName:iPAddr has precedence over CN.
+             can be contained in the CN-ID [RFC6125] (Common Name
+             Identifier) or the subjectAltName entries.  For
+             verification, only one of these entries is considered.  The
+             following precedence applies: for DNS name validation, DNS-
+             ID [RFC6125] has precedence over CN-ID; for IP address
+             validation, subjectAltName:iPAddr has precedence over CN-
+             ID.
 
           +  Implementations MAY allow the configuration of a set of
              additional properties of the certificate to check for a
              peer's authorization to communicate (e.g., a set of allowed
-             values in subjectAltName:URI or a set of allowed X509v3
+             values in URI-ID [RFC6125] or a set of allowed X509v3
              Certificate Policies).  The definition of these properties
              are out of scope of this document.
 
@@ -724,8 +725,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-
-Lopez, et al.           Expires February 5, 2018               [Page 13]
+Lopez, et al.           Expires February 8, 2018               [Page 13]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -781,7 +781,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 14]
+Lopez, et al.           Expires February 8, 2018               [Page 14]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -837,7 +837,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 15]
+Lopez, et al.           Expires February 8, 2018               [Page 15]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -893,7 +893,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 16]
+Lopez, et al.           Expires February 8, 2018               [Page 16]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -949,7 +949,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 17]
+Lopez, et al.           Expires February 8, 2018               [Page 17]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1005,7 +1005,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 18]
+Lopez, et al.           Expires February 8, 2018               [Page 18]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1061,7 +1061,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 19]
+Lopez, et al.           Expires February 8, 2018               [Page 19]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1117,7 +1117,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 20]
+Lopez, et al.           Expires February 8, 2018               [Page 20]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 21]
+Lopez, et al.           Expires February 8, 2018               [Page 21]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1222,14 +1222,14 @@ Internet-Draft          Secure Transport for PCEP            August 2017
               and Operational Guidance", RFC 7671, DOI 10.17487/RFC7671,
               October 2015, <http://www.rfc-editor.org/info/rfc7671>.
 
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <http://www.rfc-editor.org/info/rfc8174>.
 
 
 
 
-
-
-
-Lopez, et al.           Expires February 5, 2018               [Page 22]
+Lopez, et al.           Expires February 8, 2018               [Page 22]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1285,7 +1285,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 23]
+Lopez, et al.           Expires February 8, 2018               [Page 23]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1341,7 +1341,7 @@ Authors' Addresses
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 24]
+Lopez, et al.           Expires February 8, 2018               [Page 24]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1397,4 +1397,4 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 5, 2018               [Page 25]
+Lopez, et al.           Expires February 8, 2018               [Page 25]

@@ -26,6 +26,7 @@
 <!ENTITY RFC7457 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7457.xml">
 <!ENTITY RFC7525 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7525.xml">
 <!ENTITY RFC7671 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7671.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY I-D.ietf-pce-stateful-sync-optimizations SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-pce-stateful-sync-optimizations.xml">
 <!ENTITY I-D.ietf-pce-pcep-yang SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang.xml">
 <!ENTITY I-D.wu-pce-dns-pce-discovery SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.wu-pce-dns-pce-discovery.xml">
@@ -115,7 +116,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="04" month="August" year="2017"/>
+    <date day="07" month="August" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -143,7 +144,11 @@
     </section>
 
   <section title="Requirements Language">
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.</t>
     </section>
 
     <section title="Applying PCEPS">
@@ -446,7 +451,8 @@
                  |<------              |
                  |                     |
                  |<--------------------| Send Error
-                 |       PCErr         | (non-Open message
+                 |       PCErr         | Type=1,Value=1
+                 |                     | (non-Open message
                  |<--------------------|  received)
                  |       Close         |
                  ///////// TCP /////////
@@ -503,8 +509,8 @@
                  |-------------------->| for PCC 
                  |               PCErr | 
                  |<--------------------| Send Error
-                 |                     | (not without
-                 |                     |  TLS)
+                 |                     | Type=TBA2,Value=3
+                 |                     | (not without TLS)
                  |<--------------------|  
                  |       Close         |
 
@@ -561,8 +567,8 @@
                     <t>PCEPS implementations SHOULD incorporate revocation methods (CRL downloading, OCSP...) according to the trusted CA policies.</t>
                     <t>Implementations SHOULD indicate their trusted CAs. For TLS 1.2, this is done using <xref target="RFC5246"/>, Section 7.4.4, "certificate_authorities" (server side) and <xref target="RFC6066"/>, Section 6 "Trusted CA Indication" (client side).</t>
                     <t>Implementations MUST follow the rules and guidelines for peer validation as defined in <xref target="RFC6125"/>. If an expected DNS name or IP address for the peer is configured, then the implementations MUST check them against the values in the presented certificate. 
-                    <!--They SHOULD include a check on whether the locally configured expected DNS name or IP address of the peer that is contacted matches its presented certificate.--> The DNS names and the IP addresses can be contained in the Common Name (CN) or the subjectAltName entries.  For verification, only one of these entries is considered. The following precedence applies: for DNS name validation, subjectAltName:DNS has precedence over CN; for IP address validation, subjectAltName:iPAddr has precedence over CN.</t>
-                    <t>Implementations MAY allow the configuration of a set of additional properties of the certificate to check for a peer's authorization to communicate (e.g., a set of allowed values in subjectAltName:URI or a set of allowed X509v3 Certificate Policies). The definition of these properties are out of scope of this document.</t>
+                    <!--They SHOULD include a check on whether the locally configured expected DNS name or IP address of the peer that is contacted matches its presented certificate.--> The DNS names and the IP addresses can be contained in the CN-ID <xref target="RFC6125"/> (Common Name Identifier) or the subjectAltName entries.  For verification, only one of these entries is considered. The following precedence applies: for DNS name validation, DNS-ID <xref target="RFC6125"/> has precedence over CN-ID; for IP address validation, subjectAltName:iPAddr has precedence over CN-ID.</t>
+                    <t>Implementations MAY allow the configuration of a set of additional properties of the certificate to check for a peer's authorization to communicate (e.g., a set of allowed values in URI-ID <xref target="RFC6125"/> or a set of allowed X509v3 Certificate Policies). The definition of these properties are out of scope of this document.</t>
                   </list></t>
                 <t>TLS with X.509 certificates using certificate fingerprints: Implementations MUST allow the configuration of a list of certificates that are trusted to identify peers, identified via fingerprint of the Distinguished Encoding Rules (DER) encoded certificate octets. Implementations MUST support SHA-256 as defined by <xref target="SHS"/> as the hash algorithm for the fingerprint.</t>
               </list></t>
@@ -803,6 +809,7 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
       &RFC6698;
       &RFC7525;
       &RFC7671;
+      &RFC8174;
       <reference anchor="SHS" target="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">
         <front>
           <title>Secure Hash Standard (SHS), FIPS PUB 180-4</title>
