@@ -116,7 +116,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="07" month="August" year="2017"/>
+    <date day="08" month="August" year="2017"/>
 
     <!-- Meta-data Declarations -->
     <area>Routing</area>
@@ -285,11 +285,11 @@
    MUST return a PCErr message (in clear) with Error-Type set to [TBA2
    by IANA] (PCEP StartTLS failure) and Error-value set to:
    <list style="symbols">
-   <t>3 (not without TLS) if it is not willing to exchange PCEP messages
+   <t>3 (Failure, connection without TLS is not possible) if it is not willing to exchange PCEP messages
       without the solicited TLS connection, and it MUST close the TCP
       session.</t>
 
-   <t>4 (ok without TLS) if it is willing to exchange PCEP messages
+   <t>4 (Failure, connection without TLS is possible) if it is willing to exchange PCEP messages
       without the solicited TLS connection, and it MUST close the TCP
       session.  The receiver MAY choose to attempt to re-establish the
       PCEP session without TLS next.  The attempt to re-establish the
@@ -510,9 +510,9 @@
                  |               PCErr | 
                  |<--------------------| Send Error
                  |                     | Type=TBA2,Value=3
-                 |                     | (not without TLS)
-                 |<--------------------|  
-                 |       Close         |
+                 |                     | (Failure, connection 
+                 |<--------------------|  without TLS is not 
+                 |       Close         |  possible)
 
                  
             ]]></artwork>
@@ -570,7 +570,7 @@
                     <!--They SHOULD include a check on whether the locally configured expected DNS name or IP address of the peer that is contacted matches its presented certificate.--> The DNS names and the IP addresses can be contained in the CN-ID <xref target="RFC6125"/> (Common Name Identifier) or the subjectAltName entries.  For verification, only one of these entries is considered. The following precedence applies: for DNS name validation, DNS-ID <xref target="RFC6125"/> has precedence over CN-ID; for IP address validation, subjectAltName:iPAddr has precedence over CN-ID.</t>
                     <t>Implementations MAY allow the configuration of a set of additional properties of the certificate to check for a peer's authorization to communicate (e.g., a set of allowed values in URI-ID <xref target="RFC6125"/> or a set of allowed X509v3 Certificate Policies). The definition of these properties are out of scope of this document.</t>
                   </list></t>
-                <t>TLS with X.509 certificates using certificate fingerprints: Implementations MUST allow the configuration of a list of certificates that are trusted to identify peers, identified via fingerprint of the Distinguished Encoding Rules (DER) encoded certificate octets. Implementations MUST support SHA-256 as defined by <xref target="SHS"/> as the hash algorithm for the fingerprint.</t>
+                <t>TLS with X.509 certificates using certificate fingerprints: Implementations MUST allow the configuration of a list of certificates that are trusted to identify peers, identified via fingerprint of the Distinguished Encoding Rules (DER) encoded certificate octets. Implementations MUST support SHA-256 as defined by <xref target="SHS"/> as the hash algorithm for the fingerprint, but a later revision may demand support for a stronger hash function.</t>
               </list></t>
             <t>Start exchanging PCEP messages.
             <list style="symbols">
@@ -705,10 +705,11 @@ TBA2    PCEP StartTLS         0:Unassigned            This document
                               apart from StartTLS,
                               Open or PCErr
                               3:Failure, connection   This document
-                              without TLS not
+                              without TLS is not
                               possible
                               4:Failure, connection   This document
-                              without TLS possible
+                              without TLS is 
+                              possible
                               5:No StartTLS message   This document
                               (nor PCErr/Open) 
                               before StartTLSWait

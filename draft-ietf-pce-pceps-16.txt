@@ -6,9 +6,9 @@ PCE Working Group                                               D. Lopez
 Internet-Draft                                       O. Gonzalez de Dios
 Updates: 5440 (if approved)                               Telefonica I+D
 Intended status: Standards Track                                   Q. Wu
-Expires: February 8, 2018                                       D. Dhody
+Expires: February 9, 2018                                       D. Dhody
                                                                   Huawei
-                                                         August 07, 2017
+                                                         August 08, 2017
 
 
                        Secure Transport for PCEP
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 8, 2018.
+   This Internet-Draft will expire on February 9, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Lopez, et al.           Expires February 8, 2018                [Page 1]
+Lopez, et al.           Expires February 9, 2018                [Page 1]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Lopez, et al.           Expires February 8, 2018                [Page 2]
+Lopez, et al.           Expires February 9, 2018                [Page 2]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -165,7 +165,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018                [Page 3]
+Lopez, et al.           Expires February 9, 2018                [Page 3]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -221,7 +221,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018                [Page 4]
+Lopez, et al.           Expires February 9, 2018                [Page 4]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -277,7 +277,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018                [Page 5]
+Lopez, et al.           Expires February 9, 2018                [Page 5]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -312,15 +312,16 @@ Internet-Draft          Secure Transport for PCEP            August 2017
    clear) with Error-Type set to [TBA2 by IANA] (PCEP StartTLS failure)
    and Error-value set to:
 
-   o  3 (not without TLS) if it is not willing to exchange PCEP messages
-      without the solicited TLS connection, and it MUST close the TCP
-      session.
+   o  3 (Failure, connection without TLS is not possible) if it is not
+      willing to exchange PCEP messages without the solicited TLS
+      connection, and it MUST close the TCP session.
 
-   o  4 (ok without TLS) if it is willing to exchange PCEP messages
-      without the solicited TLS connection, and it MUST close the TCP
-      session.  The receiver MAY choose to attempt to re-establish the
-      PCEP session without TLS next.  The attempt to re-establish the
-      PCEP session without TLS SHOULD be limited to only once.
+   o  4 (Failure, connection without TLS is possible) if it is willing
+      to exchange PCEP messages without the solicited TLS connection,
+      and it MUST close the TCP session.  The receiver MAY choose to
+      attempt to re-establish the PCEP session without TLS next.  The
+      attempt to re-establish the PCEP session without TLS SHOULD be
+      limited to only once.
 
    If the PCEP speaker supports PCEPS and can establish a TLS connection
    it MUST start the TLS connection negotiation and establishment steps
@@ -329,15 +330,15 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
    After the exchange of StartTLS messages, if the TLS negotiation fails
    for some reason (e.g. the required mechanisms for certificate
-   revocation checking are not available), both peers SHOULD immediately
 
 
 
-Lopez, et al.           Expires February 8, 2018                [Page 6]
+Lopez, et al.           Expires February 9, 2018                [Page 6]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
 
+   revocation checking are not available), both peers SHOULD immediately
    close the connection.  Since the initiator has no way to know if the
    peer is willing to accept PCEP connection without TLS, based on the
    local policy, it MAY attempt to re-establish the PCEP session without
@@ -388,8 +389,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-
-Lopez, et al.           Expires February 8, 2018                [Page 7]
+Lopez, et al.           Expires February 9, 2018                [Page 7]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -445,7 +445,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018                [Page 8]
+Lopez, et al.           Expires February 9, 2018                [Page 8]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -501,7 +501,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018                [Page 9]
+Lopez, et al.           Expires February 9, 2018                [Page 9]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -557,7 +557,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 10]
+Lopez, et al.           Expires February 9, 2018               [Page 10]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -592,9 +592,9 @@ Internet-Draft          Secure Transport for PCEP            August 2017
                     |               PCErr |
                     |<--------------------| Send Error
                     |                     | Type=TBA2,Value=3
-                    |                     | (not without TLS)
-                    |<--------------------|
-                    |       Close         |
+                    |                     | (Failure, connection
+                    |<--------------------|  without TLS is not
+                    |       Close         |  possible)
 
 
 
@@ -613,7 +613,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 11]
+Lopez, et al.           Expires February 9, 2018               [Page 11]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -669,7 +669,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 12]
+Lopez, et al.           Expires February 9, 2018               [Page 12]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -719,16 +719,18 @@ Internet-Draft          Secure Transport for PCEP            August 2017
           via fingerprint of the Distinguished Encoding Rules (DER)
           encoded certificate octets.  Implementations MUST support
           SHA-256 as defined by [SHS] as the hash algorithm for the
-          fingerprint.
-
-   3.  Start exchanging PCEP messages.
-
+          fingerprint, but a later revision may demand support for a
+          stronger hash function.
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 13]
+
+
+Lopez, et al.           Expires February 9, 2018               [Page 13]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
+
+   3.  Start exchanging PCEP messages.
 
        *  Once the TLS connection has been successfully established, the
           PCEP speaker MUST start the OpenWait timer [RFC5440], after
@@ -775,16 +777,17 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
    o  All X509v3 Certificate Policies
 
-   Note that the remote IP address used for the TCP session
-   establishment is also exposed.
 
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 14]
+Lopez, et al.           Expires February 9, 2018               [Page 14]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
+
+   Note that the remote IP address used for the TCP session
+   establishment is also exposed.
 
    [I-D.ietf-pce-stateful-sync-optimizations] specify a Speaker Entity
    Identifier TLV (SPEAKER-ENTITY-ID), as an optional TLV that is
@@ -834,10 +837,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-
-
-
-Lopez, et al.           Expires February 8, 2018               [Page 15]
+Lopez, et al.           Expires February 9, 2018               [Page 15]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -893,7 +893,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 16]
+Lopez, et al.           Expires February 9, 2018               [Page 16]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -949,7 +949,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 17]
+Lopez, et al.           Expires February 9, 2018               [Page 17]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -966,10 +966,11 @@ Internet-Draft          Secure Transport for PCEP            August 2017
                                  apart from StartTLS,
                                  Open or PCErr
                                  3:Failure, connection   This document
-                                 without TLS not
+                                 without TLS is not
                                  possible
                                  4:Failure, connection   This document
-                                 without TLS possible
+                                 without TLS is
+                                 possible
                                  5:No StartTLS message   This document
                                  (nor PCErr/Open)
                                  before StartTLSWait
@@ -1004,8 +1005,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-
-Lopez, et al.           Expires February 8, 2018               [Page 18]
+Lopez, et al.           Expires February 9, 2018               [Page 18]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1061,7 +1061,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 19]
+Lopez, et al.           Expires February 9, 2018               [Page 19]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1117,7 +1117,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 20]
+Lopez, et al.           Expires February 9, 2018               [Page 20]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 21]
+Lopez, et al.           Expires February 9, 2018               [Page 21]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1229,7 +1229,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 22]
+Lopez, et al.           Expires February 9, 2018               [Page 22]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1285,7 +1285,7 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 23]
+Lopez, et al.           Expires February 9, 2018               [Page 23]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1341,7 +1341,7 @@ Authors' Addresses
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 24]
+Lopez, et al.           Expires February 9, 2018               [Page 24]
 
 Internet-Draft          Secure Transport for PCEP            August 2017
 
@@ -1397,4 +1397,4 @@ Internet-Draft          Secure Transport for PCEP            August 2017
 
 
 
-Lopez, et al.           Expires February 8, 2018               [Page 25]
+Lopez, et al.           Expires February 9, 2018               [Page 25]
