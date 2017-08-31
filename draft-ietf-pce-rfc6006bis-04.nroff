@@ -1071,17 +1071,20 @@ As described in [RFC5862], P2MP path computation requests are more \%CPU-intensi
 
 .in 6
 .ti 3
-o  Securing the PCEP session requests and responses using TCP security techniques such as TCP Authentication Option (TCP-AO) [RFC5925] or using
+o  Securing the PCEP session requests and responses is RECOMMENDED using TCP security techniques such as TCP Authentication Option (TCP-AO) [RFC5925] or using
 Transport Layer Security (TLS) [I-D.ietf-pce-pceps], as per the recommendations and best current practices in [RFC7525].
 
 .ti 3
-o  Authenticating the PCEP requests and responses to ensure the message is intact and sent from an authorized node using TCP-AO or TLS.
+o  Authenticating the PCEP requests and responses to ensure the message is intact and sent from an authorized node using TCP-AO or TLS is RECOMMENDED.
 
 .ti 3
-o  Providing policy control by explicitly defining which PCCs, via IP \%access-lists, are allowed to send P2MP path requests to the PCE (Section 10.6 of [RFC5440]).
+o  Providing policy control by explicitly defining which PCCs, via IP \%access-lists, are allowed to send P2MP path requests to the PCE.
 
 .in 3
-PCEP operates over TCP, so it is also important to secure the PCE and PCC against TCP denial of service attacks.  Section 10.7.1 of [RFC5440] outlines a number of mechanisms for minimizing the risk of TCP based denial of service attacks against PCEs and PCCs.
+PCEP operates over TCP, so it is also important to secure the PCE and PCC against TCP denial of service attacks. 
+
+As stated in [RFC6952], PCEP implementations should support TCP-AO [RFC5925] and not use TCP-MD5 because of the known vulnerabilities and weakness.   
+
 
 .ti 0
 6.  IANA Considerations
@@ -1335,7 +1338,7 @@ Thanks to Fred Baker for OPSDIR review.
 Thanks to Deborah Brungard for being the responsible AD and guiding
 the authors.
 
-Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach, Benoit Claise and Suresh Krishnan for the IESG review and comments.
+Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach, Benoit Claise, Suresh Krishnan and Eric Rescorla for the IESG review and comments.
 
 
 .bp
@@ -1416,6 +1419,10 @@ Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach, Benoit Clais
 [RFC6006]   Zhao, Q., Ed., King, D., Ed., Verhaeghe, F., Takeda, T., Ali, Z., and J. Meuric, "Extensions to the Path Computation Element Communication Protocol (PCEP) for Point-to-Multipoint Traffic Engineering Label Switched Paths", RFC 6006, September 2010.
 
 .ti 3
+[RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of BGP, LDP, PCEP, and MSDP Issues According to the Keying and Authentication for Routing Protocols (KARP) Design
+Guide", RFC 6952, May 2013.
+
+.ti 3
 [RFC7420]   Koushik, K., Stephan, E., Zhao, Q., King D., and J. Hardwick "PCE communication protocol (PCEP) Management Information Base (MIB) Module", RFC 7420, December 2014.
 
 .ti 3
@@ -1452,6 +1459,8 @@ o Corrected the Error-Type in section 3.15 for fragmentation, as per the errata 
 o Updated the references for OSPF Router Information Link State Advertisement (LSA) [RFC7770] and PCEP-MIB [RFC7420]. 
 
 o Add updated information and references for PCEP YANG [I-D.ietf-pce-pcep-yang] and PCEPS [I-D.ietf-pce-pceps].
+
+o Updated security considerations to include TCP-AO and TLS.
 
 o Updated IANA considerations to mark code-point 0 as reserved for the object type defined in this document, as per the errata ID 4956. IANA references are also updated to point to this document. 
 

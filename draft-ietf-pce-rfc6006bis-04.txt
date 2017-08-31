@@ -1657,23 +1657,23 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    to minimize or negate unauthorized P2MP path computation requests and
    denial of service attacks.  These mechanisms include:
 
-   o  Securing the PCEP session requests and responses using TCP
-      security techniques such as TCP Authentication Option (TCP-AO)
-      [RFC5925] or using Transport Layer Security (TLS) [I-D.ietf-pce-
-      pceps], as per the recommendations and best current practices in
-      [RFC7525].
+   o  Securing the PCEP session requests and responses is RECOMMENDED
+      using TCP security techniques such as TCP Authentication Option
+      (TCP-AO) [RFC5925] or using Transport Layer Security (TLS) [I-
+      D.ietf-pce-pceps], as per the recommendations and best current
+      practices in [RFC7525].
 
    o  Authenticating the PCEP requests and responses to ensure the
       message is intact and sent from an authorized node using TCP-AO or
-      TLS.
+      TLS is RECOMMENDED.
 
    o  Providing policy control by explicitly defining which PCCs, via IP
-      access-lists, are allowed to send P2MP path requests to the PCE
-      (Section 10.6 of [RFC5440]).
+      access-lists, are allowed to send P2MP path requests to the PCE.
 
    PCEP operates over TCP, so it is also important to secure the PCE and
-   PCC against TCP denial of service attacks.  Section 10.7.1 of
-   [RFC5440] outlines a number of mechanisms for minimizing the risk of
+   PCC against TCP denial of service attacks. 
+
+   As stated in [RFC6952], PCEP implementations should support TCP-AO
  
 
 
@@ -1682,7 +1682,9 @@ Palleti.                   Expires March 2018                  [Page 30]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
-   TCP based denial of service attacks against PCEs and PCCs.
+   [RFC5925] and not use TCP-MD5 because of the known vulnerabilities
+   and weakness.   
+
 
 6.  IANA Considerations
 
@@ -1728,8 +1730,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    update the reference as follows to point to this document.
 
 
-
-      Code Point        Name        Reference
  
 
 
@@ -1737,6 +1737,8 @@ Palleti.                   Expires March 2018                  [Page 31]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
+
+      Code Point        Name        Reference
 
       7                 SPT         [This I-D]
       8                 MCT         [This I-D]
@@ -1784,8 +1786,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    Object-Type field are marked "Reserved" with reference to Errata ID
    4956. IANA is requested to update the reference to point to this
    document.
-
-      Object-Class Value    28
  
 
 
@@ -1794,6 +1794,7 @@ Palleti.                   Expires March 2018                  [Page 32]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
+      Object-Class Value    28
       Name                  UNREACH-DESTINATION
       Object-Type           0: Reserved
                             1: IPv4
@@ -1841,7 +1842,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
               Error-value=7:                                  [This I-D]
                 P2MP Path computation is not allowed
 
-      16    P2MP Capability Error
  
 
 
@@ -1850,6 +1850,7 @@ Palleti.                   Expires March 2018                  [Page 33]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
+      16    P2MP Capability Error
               Error-Value=0: Unassigned                       [This I-D]
               Error-Value=1:                                  [This I-D]
                 The PCE is not capable to satisfy the request
@@ -1897,7 +1898,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
 
    IANA has made an allocation from the PCEP "SVEC Object Flag Field"
    sub-registry, where RFC 6006 was the reference. IANA is requested to
-   update the reference as follows to point to this document.
  
 
 
@@ -1905,6 +1905,8 @@ Palleti.                   Expires March 2018                  [Page 34]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
+
+   update the reference as follows to point to this document.
 
       Bit      Description                              Reference
 
@@ -1952,8 +1954,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    the authors.
 
    Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach,
-   Benoit Claise and Suresh Krishnan for the IESG review and comments.
-
  
 
 
@@ -1962,8 +1962,8 @@ Palleti.                   Expires March 2018                  [Page 35]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
-
-
+   Benoit Claise, Suresh Krishnan and Eric Rescorla for the IESG review
+   and comments.
 
 
 
@@ -2107,6 +2107,11 @@ draft-ietf-pce-rfc6006bis                                    August 2017
                Point-to-Multipoint Traffic Engineering Label Switched
                Paths", RFC 6006, September 2010.
 
+   [RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of
+               BGP, LDP, PCEP, and MSDP Issues According to the Keying
+               and Authentication for Routing Protocols (KARP) Design
+               Guide", RFC 6952, May 2013.
+
    [RFC7420]   Koushik, K., Stephan, E., Zhao, Q., King D., and J.
                Hardwick "PCE communication protocol (PCEP) Management
                Information Base (MIB) Module", RFC 7420, December 2014.
@@ -2117,11 +2122,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
                (DTLS)", BCP 195, RFC 7525 May 2015.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-               2119 Key Words", BCP 14, RFC 8174, May 2017.
-
-   [I-D.ietf-pce-pcep-yang] 
-               Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
-               YANG Data Model for Path Computation Element
  
 
 
@@ -2130,6 +2130,11 @@ Palleti.                   Expires March 2018                  [Page 38]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
+               2119 Key Words", BCP 14, RFC 8174, May 2017.
+
+   [I-D.ietf-pce-pcep-yang] 
+               Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
+               YANG Data Model for Path Computation Element
                Communications Protocol (PCEP)", draft-ietf-pce-pcep-yang
                (work in progress), June 2017.
 
@@ -2137,11 +2142,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
                Lopez, D., Dios, O., Wu, W., and D. Dhody, "Secure
                Transport for PCEP", draft-ietf-pce-pceps (work in
                progress), August 2017.
-
-
-
-
-
 
 
 
@@ -2209,6 +2209,8 @@ Appendix A. Summary of the all Changes from RFC 6006
    o Add updated information and references for PCEP YANG [I-D.ietf-pce-
    pcep-yang] and PCEPS [I-D.ietf-pce-pceps].
 
+   o Updated security considerations to include TCP-AO and TLS.
+
    o Updated IANA considerations to mark code-point 0 as reserved for
    the object type defined in this document, as per the errata ID 4956.
    IANA references are also updated to point to this document. 
@@ -2232,8 +2234,6 @@ Appendix A.1 RBNF Changes from RFC 6006
       Route object (SRRO). This object was missed in [RFC6006].
 
       * Removed the BANDWIDTH Object followed by Record Route Object
-      (RRO) from <RRO-List>. As BANDWIDTH object doesn't need to follow
-      for each RRO in the <RRO-List>, there already exist BANDWIDTH
  
 
 
@@ -2242,6 +2242,8 @@ Palleti.                   Expires March 2018                  [Page 40]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
+      (RRO) from <RRO-List>. As BANDWIDTH object doesn't need to follow
+      for each RRO in the <RRO-List>, there already exist BANDWIDTH
       object follow <RRO-List> and is backward compatible with
       [RFC5440].
 
@@ -2288,8 +2290,6 @@ Contributors
    Orange
    2, Avenue Pierre-Marzin
    22307 Lannion Cedex
-   France
-   EMail: julien.meuric@orange.com
  
 
 
@@ -2297,6 +2297,9 @@ Palleti.                   Expires March 2018                  [Page 41]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
+
+   France
+   EMail: julien.meuric@orange.com
 
    Jean-Louis Le Roux
    Orange
@@ -2316,9 +2319,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    Bangalore, Karnataka  560066
    India
    EMail: udayasreereddy@gmail.com
-
-
-
 
 
 
