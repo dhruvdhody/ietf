@@ -150,10 +150,10 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    8.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 37
      8.1.  Normative References . . . . . . . . . . . . . . . . . . . 37
      8.2.  Informative References . . . . . . . . . . . . . . . . . . 38
-   Appendix A. Summary of the all Changes from RFC 6006 . . . . . . . 39
-   Appendix A.1 RBNF Changes from RFC 6006  . . . . . . . . . . . . . 39
-   Contributors . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 42
+   Appendix A. Summary of the all Changes from RFC 6006 . . . . . . . 40
+   Appendix A.1 RBNF Changes from RFC 6006  . . . . . . . . . . . . . 40
+   Contributors . . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 43
 
 
 
@@ -1653,17 +1653,19 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    an unauthorized P2MP path computation request, or a denial of service
    attack, the subsequent PCEP requests and processing may be disruptive
    to the network.  Consequently, it is important that implementations
-   conform to the relevant security requirements of [RFC5440] that
-   specifically help to minimize or negate unauthorized P2MP path
-   computation requests and denial of service attacks.  These mechanisms
-   include:
+   conform to the relevant security requirements that specifically help
+   to minimize or negate unauthorized P2MP path computation requests and
+   denial of service attacks.  These mechanisms include:
 
    o  Securing the PCEP session requests and responses using TCP
-      security techniques (Section 10.2 of [RFC5440]).
+      security techniques such as TCP Authentication Option (TCP-AO)
+      [RFC5925] or using Transport Layer Security (TLS) [I-D.ietf-pce-
+      pceps], as per the recommendations and best current practices in
+      [RFC7525].
 
    o  Authenticating the PCEP requests and responses to ensure the
-      message is intact and sent from an authorized node (Section 10.3
-      of [RFC5440]).
+      message is intact and sent from an authorized node using TCP-AO or
+      TLS.
 
    o  Providing policy control by explicitly defining which PCCs, via IP
       access-lists, are allowed to send P2MP path requests to the PCE
@@ -1672,8 +1674,6 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    PCEP operates over TCP, so it is also important to secure the PCE and
    PCC against TCP denial of service attacks.  Section 10.7.1 of
    [RFC5440] outlines a number of mechanisms for minimizing the risk of
-   TCP based denial of service attacks against PCEs and PCCs.
-
  
 
 
@@ -1682,8 +1682,7 @@ Palleti.                   Expires March 2018                  [Page 30]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
-   PCEP implementations SHOULD consider the additional security provided
-   by Transport Layer Security (TLS) [I-D.ietf-pce-pceps].
+   TCP based denial of service attacks against PCEs and PCCs.
 
 6.  IANA Considerations
 
@@ -1730,6 +1729,7 @@ draft-ietf-pce-rfc6006bis                                    August 2017
 
 
 
+      Code Point        Name        Reference
  
 
 
@@ -1737,8 +1737,6 @@ Palleti.                   Expires March 2018                  [Page 31]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
-
-      Code Point        Name        Reference
 
       7                 SPT         [This I-D]
       8                 MCT         [This I-D]
@@ -1786,6 +1784,8 @@ draft-ietf-pce-rfc6006bis                                    August 2017
    Object-Type field are marked "Reserved" with reference to Errata ID
    4956. IANA is requested to update the reference to point to this
    document.
+
+      Object-Class Value    28
  
 
 
@@ -1794,7 +1794,6 @@ Palleti.                   Expires March 2018                  [Page 32]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
-      Object-Class Value    28
       Name                  UNREACH-DESTINATION
       Object-Type           0: Reserved
                             1: IPv4
@@ -1842,6 +1841,7 @@ draft-ietf-pce-rfc6006bis                                    August 2017
               Error-value=7:                                  [This I-D]
                 P2MP Path computation is not allowed
 
+      16    P2MP Capability Error
  
 
 
@@ -1850,7 +1850,6 @@ Palleti.                   Expires March 2018                  [Page 33]
 draft-ietf-pce-rfc6006bis                                    August 2017
 
 
-      16    P2MP Capability Error
               Error-Value=0: Unassigned                       [This I-D]
               Error-Value=1:                                  [This I-D]
                 The PCE is not capable to satisfy the request
@@ -1898,6 +1897,7 @@ draft-ietf-pce-rfc6006bis                                    August 2017
 
    IANA has made an allocation from the PCEP "SVEC Object Flag Field"
    sub-registry, where RFC 6006 was the reference. IANA is requested to
+   update the reference as follows to point to this document.
  
 
 
@@ -1905,8 +1905,6 @@ Palleti.                   Expires March 2018                  [Page 34]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
-
-   update the reference as follows to point to this document.
 
       Bit      Description                              Reference
 
@@ -1946,13 +1944,15 @@ draft-ietf-pce-rfc6006bis                                    August 2017
 
    Thanks to Ben Niven-Jenkins for RTGDIR reviews.
 
-   Thanks to Roni Even for GENART reviews.  
+   Thanks to Roni Even for GENART reviews.
+
+   Thanks to Fred Baker for OPSDIR review.  
 
    Thanks to Deborah Brungard for being the responsible AD and guiding
    the authors.
 
-   Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach 
-   and for for the IESG review and comments.
+   Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach,
+   Benoit Claise and Suresh Krishnan for the IESG review and comments.
 
  
 
@@ -2097,6 +2097,10 @@ draft-ietf-pce-rfc6006bis                                    August 2017
                (PCC) - Path Computation Element (PCE) Requirements for
                Point-to-Multipoint MPLS-TE", RFC 5862, June 2010.
 
+   [RFC5925]  Touch, J., Mankin, A., and R. Bonica, "The TCP
+               Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
+               June 2010.
+
    [RFC6006]   Zhao, Q., Ed., King, D., Ed., Verhaeghe, F., Takeda, T.,
                Ali, Z., and J. Meuric, "Extensions to the Path
                Computation Element Communication Protocol (PCEP) for
@@ -2107,12 +2111,25 @@ draft-ietf-pce-rfc6006bis                                    August 2017
                Hardwick "PCE communication protocol (PCEP) Management
                Information Base (MIB) Module", RFC 7420, December 2014.
 
+   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
+               "Recommendations for Secure Use of Transport Layer
+               Security (TLS) and Datagram Transport Layer Security
+               (DTLS)", BCP 195, RFC 7525 May 2015.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
                2119 Key Words", BCP 14, RFC 8174, May 2017.
 
    [I-D.ietf-pce-pcep-yang] 
                Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
                YANG Data Model for Path Computation Element
+ 
+
+
+Palleti.                   Expires March 2018                  [Page 38]
+
+draft-ietf-pce-rfc6006bis                                    August 2017
+
+
                Communications Protocol (PCEP)", draft-ietf-pce-pcep-yang
                (work in progress), June 2017.
 
@@ -2122,10 +2139,49 @@ draft-ietf-pce-rfc6006bis                                    August 2017
                progress), August 2017.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 
-Palleti.                   Expires March 2018                  [Page 38]
+Palleti.                   Expires March 2018                  [Page 39]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
@@ -2181,7 +2237,7 @@ Appendix A.1 RBNF Changes from RFC 6006
  
 
 
-Palleti.                   Expires March 2018                  [Page 39]
+Palleti.                   Expires March 2018                  [Page 40]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
@@ -2237,7 +2293,7 @@ Contributors
  
 
 
-Palleti.                   Expires March 2018                  [Page 40]
+Palleti.                   Expires March 2018                  [Page 41]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
@@ -2293,7 +2349,7 @@ draft-ietf-pce-rfc6006bis                                    August 2017
  
 
 
-Palleti.                   Expires March 2018                  [Page 41]
+Palleti.                   Expires March 2018                  [Page 42]
 
 draft-ietf-pce-rfc6006bis                                    August 2017
 
@@ -2349,4 +2405,4 @@ Authors' Addresses
 
 
 
-Palleti.                   Expires March 2018                  [Page 42]
+Palleti.                   Expires March 2018                  [Page 43]

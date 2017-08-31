@@ -135,10 +135,10 @@ Table of Contents
    8.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 37
      8.1.  Normative References . . . . . . . . . . . . . . . . . . . 37
      8.2.  Informative References . . . . . . . . . . . . . . . . . . 38
-   Appendix A. Summary of the all Changes from RFC 6006 . . . . . . . 39
-   Appendix A.1 RBNF Changes from RFC 6006  . . . . . . . . . . . . . 39
-   Contributors . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 42
+   Appendix A. Summary of the all Changes from RFC 6006 . . . . . . . 40
+   Appendix A.1 RBNF Changes from RFC 6006  . . . . . . . . . . . . . 40
+   Contributors . . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 43
 .fi
 .in 3
 
@@ -1067,23 +1067,21 @@ It is expected that the use of PCEP extensions specified in this document will n
 .ti 0
 5.  Security Considerations
 
-As described in [RFC5862], P2MP path computation requests are more \%CPU-intensive and also utilize more link bandwidth.  In the event of an unauthorized P2MP path computation request, or a denial of service attack, the subsequent PCEP requests and processing may be disruptive to the network.  Consequently, it is important that implementations conform to the relevant security requirements of [RFC5440] that specifically help to minimize or negate unauthorized P2MP path computation requests and denial of service attacks.  These mechanisms include:
+As described in [RFC5862], P2MP path computation requests are more \%CPU-intensive and also utilize more link bandwidth.  In the event of an unauthorized P2MP path computation request, or a denial of service attack, the subsequent PCEP requests and processing may be disruptive to the network.  Consequently, it is important that implementations conform to the relevant security requirements that specifically help to minimize or negate unauthorized P2MP path computation requests and denial of service attacks.  These mechanisms include:
 
 .in 6
 .ti 3
-o  Securing the PCEP session requests and responses using TCP security techniques (Section 10.2 of [RFC5440]).
+o  Securing the PCEP session requests and responses using TCP security techniques such as TCP Authentication Option (TCP-AO) [RFC5925] or using
+Transport Layer Security (TLS) [I-D.ietf-pce-pceps], as per the recommendations and best current practices in [RFC7525].
 
 .ti 3
-o  Authenticating the PCEP requests and responses to ensure the message is intact and sent from an authorized node (Section 10.3 of [RFC5440]).
+o  Authenticating the PCEP requests and responses to ensure the message is intact and sent from an authorized node using TCP-AO or TLS.
 
 .ti 3
 o  Providing policy control by explicitly defining which PCCs, via IP \%access-lists, are allowed to send P2MP path requests to the PCE (Section 10.6 of [RFC5440]).
 
 .in 3
 PCEP operates over TCP, so it is also important to secure the PCE and PCC against TCP denial of service attacks.  Section 10.7.1 of [RFC5440] outlines a number of mechanisms for minimizing the risk of TCP based denial of service attacks against PCEs and PCCs.
-
-
-PCEP implementations SHOULD consider the additional security provided by Transport Layer Security (TLS) [I-D.ietf-pce-pceps].
 
 .ti 0
 6.  IANA Considerations
@@ -1330,12 +1328,14 @@ provide comments and guidance.
 
 Thanks to Ben Niven-Jenkins for RTGDIR reviews.
 
-Thanks to Roni Even for GENART reviews.  
+Thanks to Roni Even for GENART reviews.
+
+Thanks to Fred Baker for OPSDIR review.  
 
 Thanks to Deborah Brungard for being the responsible AD and guiding
 the authors.
 
-Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach  and for for the IESG review and comments.
+Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach, Benoit Claise and Suresh Krishnan for the IESG review and comments.
 
 
 .bp
@@ -1410,10 +1410,16 @@ Thanks to Mirja Kuhlewind, Alvaro Retana, Ben Campbell, Adam Roach  and for for 
 [RFC5862]   Yasukawa, S. and A. Farrel, "Path Computation Clients (PCC) - Path Computation Element (PCE) Requirements for \%Point-to-Multipoint MPLS-TE", RFC 5862, June 2010.
 
 .ti 3
+[RFC5925]  Touch, J., Mankin, A., and R. Bonica, "The TCP Authentication Option", RFC 5925, DOI 10.17487/RFC5925, June 2010.
+
+.ti 3
 [RFC6006]   Zhao, Q., Ed., King, D., Ed., Verhaeghe, F., Takeda, T., Ali, Z., and J. Meuric, "Extensions to the Path Computation Element Communication Protocol (PCEP) for Point-to-Multipoint Traffic Engineering Label Switched Paths", RFC 6006, September 2010.
 
 .ti 3
 [RFC7420]   Koushik, K., Stephan, E., Zhao, Q., King D., and J. Hardwick "PCE communication protocol (PCEP) Management Information Base (MIB) Module", RFC 7420, December 2014.
+
+.ti 3
+[RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre, "Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)", BCP 195, RFC 7525 May 2015.
 
 .ti 3
 [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, May 2017.
