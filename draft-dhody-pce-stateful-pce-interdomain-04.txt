@@ -5,7 +5,7 @@
 PCE Working Group                                               D. Dhody
 Internet-Draft                                                  X. Zhang
 Intended status: Informational                       Huawei Technologies
-Expires: September 13, 2017                               March 12, 2017
+Expires: March 22, 2018                               September 18, 2017
 
 
   Stateful Path Computation Element (PCE) Inter-domain Considerations
@@ -24,8 +24,7 @@ Abstract
    This document describes general considerations for the deployment of
    stateful PCE(s) in inter-domain scenarios including inter-area and
    inter-AS.  The inter-layer considerations will be described in a
-   separate document.  This document does not specify any extentions to
-   PCEP.
+   separate document.
 
 Status of This Memo
 
@@ -35,32 +34,31 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 13, 2017.
+   This Internet-Draft will expire on March 22, 2018.
 
 Copyright Notice
 
    Copyright (c) 2017 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
-
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 1]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 1]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
+
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -74,11 +72,11 @@ Table of Contents
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   3
      2.1.  LSP State Synchronization . . . . . . . . . . . . . . . .   4
    3.  Stateful PCE Deployments  . . . . . . . . . . . . . . . . . .   4
-     3.1.  Single Stateful PCE, Multiple Domains . . . . . . . . . .   5
+     3.1.  Single Stateful PCE, Multiple Domains . . . . . . . . . .   4
      3.2.  Multiple Stateful PCE, Multiple Domains . . . . . . . . .   5
        3.2.1.  Per Domain Path Computation . . . . . . . . . . . . .   6
        3.2.2.  Backward-Recursive PCE-based Computation  . . . . . .   7
-       3.2.3.  Hierarchical PCE  . . . . . . . . . . . . . . . . . .   8
+       3.2.3.  Hierarchical PCE  . . . . . . . . . . . . . . . . . .   7
    4.  Other Considerations  . . . . . . . . . . . . . . . . . . . .   8
      4.1.  Delegation  . . . . . . . . . . . . . . . . . . . . . . .   8
      4.2.  PCE-initiated LSP . . . . . . . . . . . . . . . . . . . .   9
@@ -86,15 +84,15 @@ Table of Contents
    6.  Manageability Considerations  . . . . . . . . . . . . . . . .   9
      6.1.  Control of Function and Policy  . . . . . . . . . . . . .   9
      6.2.  Information and Data Models . . . . . . . . . . . . . . .   9
-     6.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  10
-     6.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  10
+     6.3.  Liveness Detection and Monitoring . . . . . . . . . . . .   9
+     6.4.  Verify Correct Operations . . . . . . . . . . . . . . . .   9
      6.5.  Requirements On Other Protocols . . . . . . . . . . . . .  10
      6.6.  Impact On Network Operations  . . . . . . . . . . . . . .  10
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
    8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  10
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  11
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  10
    Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  13
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
@@ -105,18 +103,17 @@ Table of Contents
    computations in response to Path Computation Clients' (PCCs)
    requests.
 
-
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 2]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
    [RFC8051] describes general considerations for a stateful PCE
    deployment and examines its applicability and benefits, as well as
    its challenges and limitations through a number of use cases.
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 2]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
+
    [I-D.ietf-pce-stateful-pce] describes a set of extensions to PCEP to
    provide stateful control.  A stateful PCE has access to not only the
    information carried by the network's Interior Gateway Protocol (IGP),
@@ -162,16 +159,16 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
 
    o  a per-domain path computation technique [RFC5152];
 
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 3]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
    o  a Backward-Recursive PCE-based Computation (BRPC) mechanism
       [RFC5441];
+
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 3]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
 
    o  a Hierarchical PCE mechanism [RFC6805];
 
@@ -184,20 +181,10 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    (ingress LSR) is supported by the stateful PCE extensions defined in
    [I-D.ietf-pce-stateful-pce] , i.e., via LSP state report messages.
 
-   The inter-domain LSP state is synchronized to the ingress-PCE from
-   the ingress LSR (PCC), but this PCC cannot synchronize to other PCEs
+   The inter-domain LSP state is synchronised to the ingress-PCE from
+   the ingress LSR (PCC), but this PCC cannot synchronise to other PCEs
    (in transit or egress domains), thus other mechanism must be
    investigated for this purpose.
-
-   Either the boundary node of the other domains, would need to
-   synchronize the state of LSP passing though it to the PCE, or a
-   mechanism for synchronization of inter-domain LSPs between the PCEs
-   is required.  The former would require small change in the existing
-   state synchronization and reporting where a border node acts as a
-   PCC.  The later could use the mechanism described in
-   [I-D.litkowski-pce-state-sync] can be used between the PCEs to
-   synchronize the inter-domain LSP state between each other.  Further
-   section provide various considerations for this choice.
 
 3.  Stateful PCE Deployments
 
@@ -215,28 +202,29 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    This section describe stateful PCE considerations for each of these
    deployment models.
 
-
-
-
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 4]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
 3.1.  Single Stateful PCE, Multiple Domains
 
    In this model, inter-domain path computation is performed by a single
    stateful PCE that has topology visibility into all domains.  The
-   inter-domain LSP state is synchronized to the PCE from the ingress
+   inter-domain LSP state is synchronised to the PCE from the ingress
    LSR (PCC) itself.  The PCC may also choose to delegate control over
    this LSP to the PCE.  Thus this model is similar to a single domain
    in all aspects.
 
    Following figure show an example of inter-area case comprising of
    Area 0,1 and 2.  A single stateful PCE is deployed for all areas.
+
+
+
+
+
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 4]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
 
                                   *******
                                   * PCE *
@@ -264,29 +252,35 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
 
    In this model, there is at least one PCE per domain, and each PCE has
    topology (TED) visibility restricted to its own domain.  The inter-
-   domain LSP state is synchronized to the ingress-PCE from the ingress
-   LSR (PCC), but this PCC may not be able to synchronize to other PCEs
+   domain LSP state is synchronised to the ingress-PCE from the ingress
+   LSR (PCC), but this PCC may not be able to synchronise to other PCEs
    (in transit or egress domains).  This PCC may also choose to delegate
    control over this LSP to the Ingress-PCE, which may issue inter-
    domain path computation or re-optimization request to other PCEs.  An
-   inter-domain LSP that originates in a domain, is synchronized to the
+   inter-domain LSP that originates in a domain, is synchronised to the
    PCE in that domain.  A new procedure is needed to synchronize state
    of inter-domain LSP that do not originate in the domain.  In other
-   words, inter-domain LSP state should also be synchronized to transit
-
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 5]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
+   words, inter-domain LSP state should also be synchronised to transit
    and egress PCEs as the inter-domain LSP traverse through those
    domains.
 
    Following figure show an example of inter-AS case comprising of AS
    100 and AS 200.  A stateful PCE is deployed per AS.
+
+
+
+
+
+
+
+
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 5]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
 
                   ********                      ********
                   * PCE1 *                      * PCE2 *
@@ -318,26 +312,17 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    domain, or for requesting that a PCE for that domain computes that
    piece of the path.
 
-   The ingress LSR would synchronize the state to the ingress PCE,
+   The ingress LSR would synchronise the state to the ingress PCE,
    further the entry boundary nodes should also synchronize the state of
    inter-domain LSP to transit and egress PCEs.  Note that the BN on the
    path of an LSP can probably see the path (through the Record Route
    object in RSVP-TE signaling [RFC3209]) and knows the bandwidth
    reserved for the LSP.  Thus each entry BN along the path could be
-   made responsible to synchronize the LSP state to the transit/egress
+   made responsible to synchronise the LSP state to the transit/egress
    PCE(s).
 
    Since the stateful PCE(s) do not communicate during this inter-domain
    path computation technique and each entry BN would perform path
-
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 6]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
    computation via Path Computation Request (PCReq) and Reply (PCRep)
    messages, a passive stateful PCE is well suited for this case.
 
@@ -345,6 +330,14 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    would be capable of loose path computation only and make updates to
    the ingress LSR with this limited visibility.  The entry BN would
    perform path computation via Path Computation Request and Reply
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 6]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
+
    messages (and thus rely on the passive stateful mode).  Thus the
    inter-domain LSP is delegated only to the ingress PCE.
 
@@ -360,12 +353,12 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
 
    As described in Section 3.2.1, the entry boundary nodes may
    synchronize the state of inter-domain LSPs to transit and egress
-   PCEs.  An alternative approach may be for each PCE to synchronize the
+   PCEs.  An alternative approach may be for each PCE to synchronise the
    state along the path across domains, i.e., each PCE would report the
    state to the next PCE(s) in the adjacent domain along the domain
-   sequence of the inter-domain path.  A mechanism described in
-   [I-D.litkowski-pce-state-sync]  can be utilized to synchronize
-   between inter-domain PCEs.
+   sequence of the inter-domain path.  A mechanism similar to state-sync
+   described in [I-D.litkowski-pce-state-sync] may be utilized for this
+   purpose.
 
    Some path segment in the end to end path may also be hidden via path-
    key as per [RFC5520] during state synchronization.
@@ -386,14 +379,6 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    procedure, based on the result the ingress PCE would issue updates to
    the inter-domain LSP.
 
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 7]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
 3.2.3.  Hierarchical PCE
 
    In H-PCE [RFC6805] architecture, the parent PCE is used to compute a
@@ -401,19 +386,25 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    parent PCE may be requested to provide a end-to-end path or only the
    sequence of domains.
 
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 7]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
+
    As described in Section 3.2.1 and Section 3.2.2, the entry boundary
    nodes may synchronize the state of inter-domain LSP to transit and
    egress child PCEs.  In this case, it might not be possible to
    synchronize state to the parent PCE.  If the parent PCE provides the
    sequence of domains and BRPC procedure is used to get the E2E path,
-   each PCE may be responsible to synchronize the state along the path
+   each PCE may be responsible to synchronise the state along the path
    across domains similar to Section 3.2.2.  An alternative approach may
-   be for ingress PCE to synchronize LSP state with the Parent PCE and
-   it may further synchronize the state to the child PCE(s) along the
+   be for ingress PCE to synchronise LSP state with the Parent PCE and
+   it may further synchronise the state to the child PCE(s) along the
    path across domains, i.e. parent PCE would report the state to the
-   child PCE(s) along the domain sequence.  A mechanism described in
-   [I-D.litkowski-pce-state-sync]  can be utilized to synchronize
-   between the child and the parent PCE.
+   child PCE(s) along the domain sequence.
 
    Some path segment in the end to end path may also be hidden via path-
    key as per [RFC5520] during state synchronization.
@@ -425,7 +416,7 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
 
    In case of delegation to the ingress PCE (active stateful PCE), the
    ingress child PCE may further delegate to parent PCE.  See
-   [I-D.dhodylee-pce-stateful-hpce] for details.
+   [I-D.ietf-pce-stateful-hpce] for details.
 
 4.  Other Considerations
 
@@ -442,14 +433,6 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    These interaction between PCEs for the inter-domain path computation
    are done using PCReq/PCRep messages (i.e., in a passive mode).
 
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 8]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
    The transit/egress PCE cannot update any attribute of the inter-
    domain LSP on its own as it may not have any interaction with the
    ingress LSR.  A mechanism may be developed for transit/egress PCE to
@@ -458,6 +441,14 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    PCE may use combination of local information and events along with
    some external mechanism (management / monitoring interface) to
    trigger E2E path re-optimization.
+
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 8]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
 
    Though ingress PCE can recommend update for path segments in other
    domains, the entry boundary node of that domain can apply policy
@@ -495,17 +486,6 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    [RFC7420] describes the PCEP MIB, there are no new MIB Objects for
    this document.
 
-
-
-
-
-
-
-Dhody & Zhang          Expires September 13, 2017               [Page 9]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
-
 6.3.  Liveness Detection and Monitoring
 
    Mechanisms defined in this document do not imply any new liveness
@@ -517,6 +497,14 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    Mechanisms defined in this document do not imply any new operation
    verification requirements in addition to those already listed in
    [RFC5440].
+
+
+
+
+Dhody & Zhang            Expires March 22, 2018                 [Page 9]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
 
 6.5.  Requirements On Other Protocols
 
@@ -544,108 +532,109 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
               DOI 10.17487/RFC5440, March 2009,
-              <http://www.rfc-editor.org/info/rfc5440>.
+              <https://www.rfc-editor.org/info/rfc5440>.
 
    [I-D.ietf-pce-stateful-pce]
               Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP
               Extensions for Stateful PCE", draft-ietf-pce-stateful-
-              pce-18 (work in progress), December 2016.
-
-
-
-
-
-
-
-Dhody & Zhang          Expires September 13, 2017              [Page 10]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
+              pce-21 (work in progress), June 2017.
 
 9.2.  Informative References
 
    [RFC3209]  Awduche, D., Berger, L., Gan, D., Li, T., Srinivasan, V.,
               and G. Swallow, "RSVP-TE: Extensions to RSVP for LSP
               Tunnels", RFC 3209, DOI 10.17487/RFC3209, December 2001,
-              <http://www.rfc-editor.org/info/rfc3209>.
+              <https://www.rfc-editor.org/info/rfc3209>.
 
    [RFC4105]  Le Roux, J., Ed., Vasseur, J., Ed., and J. Boyle, Ed.,
               "Requirements for Inter-Area MPLS Traffic Engineering",
               RFC 4105, DOI 10.17487/RFC4105, June 2005,
-              <http://www.rfc-editor.org/info/rfc4105>.
+              <https://www.rfc-editor.org/info/rfc4105>.
+
+
+
+
+
+
+
+Dhody & Zhang            Expires March 22, 2018                [Page 10]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
 
    [RFC4216]  Zhang, R., Ed. and J. Vasseur, Ed., "MPLS Inter-Autonomous
               System (AS) Traffic Engineering (TE) Requirements",
               RFC 4216, DOI 10.17487/RFC4216, November 2005,
-              <http://www.rfc-editor.org/info/rfc4216>.
+              <https://www.rfc-editor.org/info/rfc4216>.
 
    [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
               Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
-              <http://www.rfc-editor.org/info/rfc4655>.
+              <https://www.rfc-editor.org/info/rfc4655>.
 
    [RFC5152]  Vasseur, JP., Ed., Ayyangar, A., Ed., and R. Zhang, "A
               Per-Domain Path Computation Method for Establishing Inter-
               Domain Traffic Engineering (TE) Label Switched Paths
               (LSPs)", RFC 5152, DOI 10.17487/RFC5152, February 2008,
-              <http://www.rfc-editor.org/info/rfc5152>.
+              <https://www.rfc-editor.org/info/rfc5152>.
 
    [RFC5441]  Vasseur, JP., Ed., Zhang, R., Bitar, N., and JL. Le Roux,
               "A Backward-Recursive PCE-Based Computation (BRPC)
               Procedure to Compute Shortest Constrained Inter-Domain
               Traffic Engineering Label Switched Paths", RFC 5441,
               DOI 10.17487/RFC5441, April 2009,
-              <http://www.rfc-editor.org/info/rfc5441>.
+              <https://www.rfc-editor.org/info/rfc5441>.
 
    [RFC5520]  Bradford, R., Ed., Vasseur, JP., and A. Farrel,
               "Preserving Topology Confidentiality in Inter-Domain Path
               Computation Using a Path-Key-Based Mechanism", RFC 5520,
               DOI 10.17487/RFC5520, April 2009,
-              <http://www.rfc-editor.org/info/rfc5520>.
+              <https://www.rfc-editor.org/info/rfc5520>.
 
    [RFC6805]  King, D., Ed. and A. Farrel, Ed., "The Application of the
               Path Computation Element Architecture to the Determination
               of a Sequence of Domains in MPLS and GMPLS", RFC 6805,
               DOI 10.17487/RFC6805, November 2012,
-              <http://www.rfc-editor.org/info/rfc6805>.
-
-
-
-
-
-Dhody & Zhang          Expires September 13, 2017              [Page 11]
-
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
-
+              <https://www.rfc-editor.org/info/rfc6805>.
 
    [RFC7420]  Koushik, A., Stephan, E., Zhao, Q., King, D., and J.
               Hardwick, "Path Computation Element Communication Protocol
               (PCEP) Management Information Base (MIB) Module",
               RFC 7420, DOI 10.17487/RFC7420, December 2014,
-              <http://www.rfc-editor.org/info/rfc7420>.
+              <https://www.rfc-editor.org/info/rfc7420>.
 
    [RFC8051]  Zhang, X., Ed. and I. Minei, Ed., "Applicability of a
               Stateful Path Computation Element (PCE)", RFC 8051,
               DOI 10.17487/RFC8051, January 2017,
-              <http://www.rfc-editor.org/info/rfc8051>.
+              <https://www.rfc-editor.org/info/rfc8051>.
+
+
+
+
+
+
+Dhody & Zhang            Expires March 22, 2018                [Page 11]
+
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
+
 
    [I-D.ietf-pce-pce-initiated-lsp]
               Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP
               Extensions for PCE-initiated LSP Setup in a Stateful PCE
-              Model", draft-ietf-pce-pce-initiated-lsp-09 (work in
-              progress), March 2017.
+              Model", draft-ietf-pce-pce-initiated-lsp-10 (work in
+              progress), June 2017.
+
+   [I-D.ietf-pce-stateful-hpce]
+              Dhody, D., Lee, Y., Ceccarelli, D., Shin, J., King, D.,
+              and O. Dios, "Hierarchical Stateful Path Computation
+              Element (PCE).", draft-ietf-pce-stateful-hpce-01 (work in
+              progress), June 2017.
 
    [I-D.litkowski-pce-state-sync]
               Litkowski, S., Sivabalan, S., and D. Dhody, "Inter
               Stateful Path Computation Element communication
-              procedures", draft-litkowski-pce-state-sync-01 (work in
-              progress), February 2017.
-
-   [I-D.dhodylee-pce-stateful-hpce]
-              Dhody, D., Lee, Y., Ceccarelli, D., Shin, J., King, D.,
-              and O. Dios, "Hierarchical Stateful Path Computation
-              Element (PCE).", draft-dhodylee-pce-stateful-hpce-02 (work
-              in progress), October 2016.
+              procedures", draft-litkowski-pce-state-sync-02 (work in
+              progress), August 2017.
 
 
 
@@ -669,9 +658,20 @@ Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
 
 
 
-Dhody & Zhang          Expires September 13, 2017              [Page 12]
+
+
+
+
+
+
+
+
+
+
+
+Dhody & Zhang            Expires March 22, 2018                [Page 12]
 
-Internet-Draft            STATEFUL-INTERDOMAIN                March 2017
+Internet-Draft            STATEFUL-INTERDOMAIN            September 2017
 
 
 Appendix A.  Contributor Addresses
@@ -682,7 +682,7 @@ Appendix A.  Contributor Addresses
    Bangalore, Karnataka  560066
    India
 
-   EMail: udayasree.palle@huawei.com
+   EMail: udayasreereddy@gmail.com
 
 
    Avantika
@@ -691,7 +691,7 @@ Appendix A.  Contributor Addresses
    Bangalore, Karnataka  560066
    India
 
-   EMail: avantika.sushilkumar@huawei.com
+   EMail: s.avantika.avantika@gmail.com
 
 
 
@@ -725,4 +725,4 @@ Authors' Addresses
 
 
 
-Dhody & Zhang          Expires September 13, 2017              [Page 13]
+Dhody & Zhang            Expires March 22, 2018                [Page 13]

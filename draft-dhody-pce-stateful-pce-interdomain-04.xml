@@ -56,7 +56,7 @@
    
    <t>This document describes general considerations for the deployment of stateful PCE(s) 
      in inter-domain scenarios including inter-area and inter-AS. The inter-layer considerations
-     will be described in a separate document. This document does not specify any extentions to PCEP.</t>
+     will be described in a separate document.</t>
    </abstract>
   </front>
   <middle>
@@ -127,18 +127,10 @@
    (ingress LSR) is supported by the stateful PCE extensions defined in
    <xref target="I-D.ietf-pce-stateful-pce"/> , i.e., via LSP state 
    report messages.</t>
-   <t>The inter-domain LSP state is synchronized to the ingress-PCE from 
-     the ingress LSR (PCC), but this PCC cannot synchronize to other PCEs
+   <t>The inter-domain LSP state is synchronised to the ingress-PCE from 
+     the ingress LSR (PCC), but this PCC cannot synchronise to other PCEs
      (in transit or egress domains), thus other mechanism must be investigated for
      this purpose.</t>
-
-   <t>Either the boundary node of the other domains, would need to synchronize the state of 
-   	LSP passing though it to the PCE, or a mechanism for synchronization of inter-domain 
-   	LSPs between the PCEs is required. The former would require small change in the 
-   	existing state synchronization and reporting where a border node acts as a PCC. 
-   	The later could use the mechanism described in <xref target="I-D.litkowski-pce-state-sync"/> 
-   can be used between the PCEs to synchronize the inter-domain LSP state between each
-   other. Further section provide various considerations for this choice. </t>  
    </section>
     </section>
     
@@ -159,7 +151,7 @@
      <section title="Single Stateful PCE, Multiple Domains" toc="default">
      <t>In this model, inter-domain path computation is 
      performed by a single stateful PCE that has topology visibility into all 
-     domains. The inter-domain LSP state is synchronized to the PCE from 
+     domains. The inter-domain LSP state is synchronised to the PCE from 
      the ingress LSR (PCC) itself. The PCC may also choose to delegate 
      control over this LSP to the PCE. Thus this model is similar to a 
      single domain in all aspects.</t>
@@ -194,17 +186,17 @@ J----K----L----ABR3----M----N----O----ABR4----P----Q----R
      <section title="Multiple Stateful PCE, Multiple Domains" toc="default">
      <t>In this model, there is at least one PCE per domain, 
      and each PCE has topology (TED) visibility restricted to its own domain.
-     The inter-domain LSP state is synchronized to the ingress-PCE from 
-     the ingress LSR (PCC), but this PCC may not be able to synchronize 
+     The inter-domain LSP state is synchronised to the ingress-PCE from 
+     the ingress LSR (PCC), but this PCC may not be able to synchronise 
      to other PCEs
      (in transit or egress domains). This PCC may also choose to delegate 
      control over this LSP to the Ingress-PCE, which may issue 
      inter-domain path computation or re-optimization request to
      other PCEs. An inter-domain LSP that originates in a domain, is 
-     synchronized to the PCE in that domain. A new procedure is needed
+     synchronised to the PCE in that domain. A new procedure is needed
      to synchronize state of inter-domain LSP that do not originate in 
      the domain. In other words, inter-domain LSP state should also be
-     synchronized to transit and egress PCEs as the inter-domain LSP 
+     synchronised to transit and egress PCEs as the inter-domain LSP 
      traverse through those domains.</t>
      <t>Following figure show an example of inter-AS case comprising
      of AS 100 and AS 200. A stateful PCE is deployed per AS.
@@ -239,13 +231,13 @@ G----H----I----ASBR3------ASBR4----J----K----L
     for performing the path computation for the section of the LSP that crosses 
     the domain, or for requesting that a PCE for that domain computes that piece 
     of the path.</t>
-    <t>The ingress LSR would synchronize the state to the ingress 
+    <t>The ingress LSR would synchronise the state to the ingress 
     PCE, further the entry boundary nodes should also synchronize the state of 
     inter-domain LSP to transit and egress PCEs. Note that the BN on the 
     path of an LSP can probably see the path (through the Record 
     Route object in RSVP-TE signaling <xref target="RFC3209"/>) and 
     knows the bandwidth reserved for the LSP. Thus each
-    entry BN along the path could be made responsible to synchronize 
+    entry BN along the path could be made responsible to synchronise 
     the LSP state to the transit/egress PCE(s).</t>
     <t>Since the stateful PCE(s) do not communicate during this 
     inter-domain path computation technique and each entry BN would perform
@@ -270,12 +262,12 @@ G----H----I----ASBR3------ASBR4----J----K----L
    domain path is unknown and determined during path computation.</t>
    <t>As described in <xref target="SEC_PD"/>, the entry boundary nodes 
    may synchronize the state of inter-domain LSPs to transit and egress 
-   PCEs. An alternative approach may be for each PCE to synchronize the state 
+   PCEs. An alternative approach may be for each PCE to synchronise the state 
    along the path across domains, i.e., each PCE would report the
    state to the next PCE(s) in the adjacent domain along the domain 
-   sequence of the inter-domain path. A mechanism described in 
-   <xref target="I-D.litkowski-pce-state-sync"/>  can be 
-   utilized to synchronize between inter-domain PCEs.</t> 
+   sequence of the inter-domain path. A mechanism similar to state-sync
+   described in <xref target='I-D.litkowski-pce-state-sync'/> may be 
+   utilized for this purpose.</t> 
    <t>Some path segment in the end to end path may also be 
     hidden via path-key as per <xref target="RFC5520"/> during state 
 	synchronization.</t>
@@ -307,15 +299,13 @@ G----H----I----ASBR3------ASBR4----J----K----L
    child PCEs. In this case, it might not be possible to synchronize state to the
    parent PCE. 
    If the parent PCE provides the sequence of domains and BRPC 
-   procedure is used to get the E2E path, each PCE may be responsible to synchronize the state 
+   procedure is used to get the E2E path, each PCE may be responsible to synchronise the state 
    along the path across domains similar to <xref target="SEC_BRPC"/>. 
-   An alternative approach may be for ingress PCE to synchronize
-   LSP state with the Parent PCE and it may further synchronize the state 
+   An alternative approach may be for ingress PCE to synchronise
+   LSP state with the Parent PCE and it may further synchronise the state 
    to the child PCE(s) along the path across domains, i.e. parent PCE would report the
    state to the child PCE(s) along the domain 
-   sequence. A mechanism described in 
-   <xref target="I-D.litkowski-pce-state-sync"/>  can be 
-   utilized to synchronize between the child and the parent PCE.</t>
+   sequence.</t>
 <t>Some path segment  in the end to end path may also be 
     hidden via path-key as per <xref target="RFC5520"/> during state synchronization.</t>
    <t>In case of passive path computation request to the ingress PCE 
@@ -323,9 +313,8 @@ G----H----I----ASBR3------ASBR4----J----K----L
    to compute sequence of domains or end-to-end path by using PCReq and 
    PCRep messages among stateful PCE(s) in passive mode. </t>
    <t>In case of delegation to the ingress PCE (active stateful PCE), the
-   ingress child PCE may further delegate to parent PCE. See <xref target='I-D.dhodylee-pce-stateful-hpce'/> for 
-   details. </t>  
-   
+   ingress child PCE may further delegate to parent PCE. See <xref target='I-D.ietf-pce-stateful-hpce'/> for 
+   details. </t>    
         </section>  
      </section>  
     </section>  
@@ -430,8 +419,8 @@ G----H----I----ASBR3------ASBR4----J----K----L
       <?rfc include="reference.RFC.7420.xml" ?>
       <?rfc include="reference.RFC.8051.xml" ?>
       <?rfc include="reference.I-D.ietf-pce-pce-initiated-lsp"?>
+      <?rfc include="reference.I-D.ietf-pce-stateful-hpce"?>
       <?rfc include="reference.I-D.litkowski-pce-state-sync"?>
-      <?rfc include="reference.I-D.dhodylee-pce-stateful-hpce"?>
       
 
     </references>
@@ -445,7 +434,7 @@ Divyasree Techno Park, Whitefield
 Bangalore, Karnataka  560066
 India
 
-EMail: udayasree.palle@huawei.com
+EMail: udayasreereddy@gmail.com
 
              
 Avantika
@@ -454,7 +443,7 @@ Divyasree Techno Park, Whitefield
 Bangalore, Karnataka  560066
 India
 
-EMail: avantika.sushilkumar@huawei.com
+EMail: s.avantika.avantika@gmail.com
 
 
         ]]></artwork>
