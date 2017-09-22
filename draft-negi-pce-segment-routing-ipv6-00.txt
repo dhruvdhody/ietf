@@ -3,9 +3,10 @@
 
 
 PCE Working Group                                                M. Negi
-Internet-Draft                                                  D. Dhody
-Intended status: Standards Track                     Huawei Technologies
-Expires: March 24, 2018                               September 20, 2017
+Internet-Draft                                             P. Kaladharan
+Intended status: Standards Track                                D. Dhody
+Expires: March 26, 2018                              Huawei Technologies
+                                                      September 22, 2017
 
 
    PCEP Extensions for Segment Routing leveraging the IPv6 data plane
@@ -52,8 +53,7 @@ Status of This Memo
 
 
 
-
-Negi & Dhody             Expires March 24, 2018                 [Page 1]
+Negi, et al.             Expires March 26, 2018                 [Page 1]
 
 Internet-Draft          PCEP Extensions for SRv6          September 2017
 
@@ -63,7 +63,7 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 24, 2018.
+   This Internet-Draft will expire on March 26, 2018.
 
 Copyright Notice
 
@@ -92,30 +92,30 @@ Table of Contents
          3.3.1.1.  The SRv6 PCE Capability TLV . . . . . . . . . . .   6
          3.3.1.2.  Exchanging SRv6 Capability  . . . . . . . . . . .   7
        3.3.2.  The RP/SRP Object . . . . . . . . . . . . . . . . . .   7
-       3.3.3.  ERO Object  . . . . . . . . . . . . . . . . . . . . .   7
-         3.3.3.1.  SR-ERO Subobject  . . . . . . . . . . . . . . . .   7
-         3.3.3.2.  ERO Processing  . . . . . . . . . . . . . . . . .   8
-       3.3.4.  RRO Object  . . . . . . . . . . . . . . . . . . . . .   9
-         3.3.4.1.  SR-RRO Subobject  . . . . . . . . . . . . . . . .   9
-     3.4.  Security Considerations . . . . . . . . . . . . . . . . .  10
-     3.5.  IANA Considerations . . . . . . . . . . . . . . . . . . .  10
-       3.5.1.  PCEP Objects  . . . . . . . . . . . . . . . . . . . .  10
-         3.5.1.1.  ERROR Objects . . . . . . . . . . . . . . . . . .  10
-         3.5.1.2.  TLV Type Indicators . . . . . . . . . . . . . . .  10
-         3.5.1.3.  New Path Setup Type . . . . . . . . . . . . . . .  10
-   4.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
-     4.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
-     4.2.  Informative References  . . . . . . . . . . . . . . . . .  12
+       3.3.3.  ERO Object  . . . . . . . . . . . . . . . . . . . . .   8
+         3.3.3.1.  SR-ERO Subobject  . . . . . . . . . . . . . . . .   8
+         3.3.3.2.  ERO Processing  . . . . . . . . . . . . . . . . .   9
+       3.3.4.  RRO Object  . . . . . . . . . . . . . . . . . . . . .  10
+         3.3.4.1.  SR-RRO Subobject  . . . . . . . . . . . . . . . .  10
+     3.4.  Security Considerations . . . . . . . . . . . . . . . . .  11
+     3.5.  IANA Considerations . . . . . . . . . . . . . . . . . . .  11
+       3.5.1.  PCEP Objects  . . . . . . . . . . . . . . . . . . . .  11
+         3.5.1.1.  ERROR Objects . . . . . . . . . . . . . . . . . .  11
+         3.5.1.2.  TLV Type Indicators . . . . . . . . . . . . . . .  12
+         3.5.1.3.  New Path Setup Type . . . . . . . . . . . . . . .  12
+   4.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     4.1.  Normative References  . . . . . . . . . . . . . . . . . .  12
+     4.2.  Informative References  . . . . . . . . . . . . . . . . .  13
 
 
 
-Negi & Dhody             Expires March 24, 2018                 [Page 2]
+Negi, et al.             Expires March 26, 2018                 [Page 2]
 
 Internet-Draft          PCEP Extensions for SRv6          September 2017
 
 
-   Appendix A.  Contributor  . . . . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
+   Appendix A.  Contributor  . . . . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -161,24 +161,24 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
    Computation Element (PCE) or between one a pair of PCEs.  A PCE or a
    PCC operating as a PCE (in hierarchical PCE environment) computes
    paths for MPLS Traffic Engineering LSPs (MPLS-TE LSPs) based on
-   various constraints and optimization criteria.
+   various constraints and optimization criteria.  [RFC8231] specifies
 
 
 
-Negi & Dhody             Expires March 24, 2018                 [Page 3]
+Negi, et al.             Expires March 26, 2018                 [Page 3]
 
 Internet-Draft          PCEP Extensions for SRv6          September 2017
 
 
-   [I-D.ietf-pce-stateful-pce] specifies extensions to PCEP that allow a
-   stateful PCE to compute and recommend network paths in compliance
-   with [RFC4657] and defines objects and TLVs for MPLS-TE LSPs.
-   Stateful PCEP extensions provide synchronization of LSP state between
-   a PCC and a PCE or between a pair of PCEs, delegation of LSP control,
-   reporting of LSP state from a PCC to a PCE, controlling the setup and
-   path routing of an LSP from a PCE to a PCC.  Stateful PCEP extensions
-   are intended for an operational model in which LSPs are configured on
-   the PCC, and control over them is delegated to the PCE.
+   extensions to PCEP that allow a stateful PCE to compute and recommend
+   network paths in compliance with [RFC4657] and defines objects and
+   TLVs for MPLS-TE LSPs.  Stateful PCEP extensions provide
+   synchronization of LSP state between a PCC and a PCE or between a
+   pair of PCEs, delegation of LSP control, reporting of LSP state from
+   a PCC to a PCE, controlling the setup and path routing of an LSP from
+   a PCE to a PCC.  Stateful PCEP extensions are intended for an
+   operational model in which LSPs are configured on the PCC, and
+   control over them is delegated to the PCE.
 
    A mechanism to dynamically initiate LSPs on a PCC based on the
    requests from a stateful PCE or a controller using stateful PCE is
@@ -221,7 +221,7 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
 
 
 
-Negi & Dhody             Expires March 24, 2018                 [Page 4]
+Negi, et al.             Expires March 26, 2018                 [Page 4]
 
 Internet-Draft          PCEP Extensions for SRv6          September 2017
 
@@ -250,7 +250,7 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
    the PCEP LSP Initiate Request message (PCInitiate) defined in
    [I-D.ietf-pce-pce-initiated-lsp], as well as in the PCEP LSP Update
    Request (PCUpd) and PCEP LSP State Report (PCRpt) messages defined in
-   defined in [I-D.ietf-pce-stateful-pce].
+   defined in [RFC8231].
 
    This document extends the "SR-ERO subobject" defined in
    [I-D.ietf-pce-segment-routing] to carry IPv6 SID(s) (IPv6 Addresses).
@@ -277,7 +277,7 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
 
 
 
-Negi & Dhody             Expires March 24, 2018                 [Page 5]
+Negi, et al.             Expires March 26, 2018                 [Page 5]
 
 Internet-Draft          PCEP Extensions for SRv6          September 2017
 
@@ -308,11 +308,11 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
    optional objects.  This document does not require any changes in the
    format of PCReq and PCRep messages specified in [RFC5440], PCInitiate
    message specified in [I-D.ietf-pce-pce-initiated-lsp], and PCRpt and
-   PCUpd messages specified in [I-D.ietf-pce-stateful-pce].  However,
-   PCEP messages pertaining to SRv6 MUST include PATH-SETUP-TYPE TLV in
-   the RP or SRP object to clearly identify that SRv6 is intended.  In
-   other words, a PCEP speaker MUST NOT infer whether or not a PCEP
-   message pertains to SRv6 from any other object or TLV.
+   PCUpd messages specified in [RFC8231].  However, PCEP messages
+   pertaining to SRv6 MUST include PATH-SETUP-TYPE TLV in the RP or SRP
+   object to clearly identify that SRv6 is intended.  In other words, a
+   PCEP speaker MUST NOT infer whether or not a PCEP message pertains to
+   SRv6 from any other object or TLV.
 
 3.3.  Object Formats
 
@@ -333,7 +333,7 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
 
 
 
-Negi & Dhody             Expires March 24, 2018                 [Page 6]
+Negi, et al.             Expires March 26, 2018                 [Page 6]
 
 Internet-Draft          PCEP Extensions for SRv6          September 2017
 
@@ -343,7 +343,7 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |            Type=TBD1          |            Length=4           |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |          Reserved             |             Flags             |
+       |      max-SL   |  Reserved     |             Flags             |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -352,9 +352,20 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
    The code point for the TLV type is to be defined by IANA.  The TLV
    length is 4 octets.
 
-   [Editor's Note: Do we need to account for the maximum number of SRv6
-   segments that a node can handle in the IPv6 data plane (based on max
-   SRH size, Similar to MSD)?]
+   The 4-octet value comprise of -
+
+      max-SL: 1 octet, this field specifies the maximum value of the
+      "Segments Left (SL)" in the SRH
+      [I-D.ietf-6man-segment-routing-header].
+
+      Reserved: 1 octet, this field MUST be set to 0 on transmission,
+      and ignored on receipt.
+
+      Flags: 2 octet, no flags are currently defined in this document.
+
+   [Editor's Note - draft-bashandy-isis-srv6-extensions defines other
+   fields like Max-End-Pop-SRH, Max-T-Ins-SRH, Max-T-Encap-SRH, max-End-
+   D-SRH - should we follow the same?]
 
 3.3.1.2.  Exchanging SRv6 Capability
 
@@ -372,146 +383,208 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
 
    o PST = TBD2: Path is setup using SRv6 technique.
 
+
+
+
+
+
+
+Negi, et al.             Expires March 26, 2018                 [Page 7]
+
+Internet-Draft          PCEP Extensions for SRv6          September 2017
+
+
 3.3.3.  ERO Object
 
-   In order to support SRv6, the SR-ERO subobject is modified
+   In order to support SRv6, the SR-ERO subobject is used
    [I-D.ietf-pce-segment-routing].  All other processing rules remains
    the same.
 
 3.3.3.1.  SR-ERO Subobject
 
-   For supporting IPv6 SID(s) for SRv6, a new bit (I) is defined in
-   existing SR-ERO sub object.  If the I bit is set then SR-ERO sub
-   object represent a SRv6 segment encoded via the NAI.  The 32 bit SID
-   MUST be set to zero on transit and ignored on receipt.  The format of
-   SR-ERO subobject is reproduced with the I flag as shown below:
+   For supporting SRv6, a new SID Type (ST) is defined, the format of
+   SR-ERO sub object remains the same as defined in
+   [I-D.ietf-pce-segment-routing].
 
-
-
-
-Negi & Dhody             Expires March 24, 2018                 [Page 7]
-
-Internet-Draft          PCEP Extensions for SRv6          September 2017
+   When the SID Type (ST) indicates SRv6, then the SR-ERO subobject
+   represent a SRv6 segment and include a field SRv6I (SRv6 Identifier)
+   in place of NAI (Node or Adjacency Identifier) defined in
+   [I-D.ietf-pce-segment-routing].  The 32 bit SID MUST be set to zero
+   on transit and ignored on receipt.  The format of SR-ERO subobject is
+   reproduced with the SRv6I field as shown below:
 
 
         0                   1                   2                   3
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |L|    Type     |     Length    |  ST   |     Flags   |I|F|S|C|M|
+       |L|    Type     |     Length    |  ST   |     Flags     |F|S|C|M|
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |                              SID                              |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       //                        NAI (variable)                       //
+       //                     SRv6I (variable)                        //
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
                      Figure 2: SR-ERO Subobject Format
 
-   A following new flag is added:
-
-   * I: When this bit is set, the SR-ERO sub-object represents a SRv6
-   segment.
-
-   The description of all other bits and fields is as per
+   The description of all the flags and fields is as per
    [I-D.ietf-pce-segment-routing].
 
-   For SRv6 segments, the ST (SID Type) values as 2 or 4 is used for
-   'IPv6 Node ID' or 'IPv6 Adjacency' respectively.
+   For SRv6 segments, a new ST (SID Type) is assigned by IANA as TBD.
 
-   [Editor's Note - More ST values can be defined in a future document
-   update, matching with other functions as described in
-   [I-D.filsfils-spring-srv6-network-programming].  More discussions are
-   needed here.]
-
-   For SRv6 segments (when I flag is set), M and C flag MUST NOT be set.
+   For SRv6 segments (when ST is TBD), M and C flag MUST NOT be set.
    The S flag MUST be set and SID field MUST be set to 0.  The F bit
-   MUST NOT be set.  The NAI, depending on ST, could be of format 'IPv6
-   Node ID' or 'IPv6 Adjacency' as described in
-   [I-D.ietf-pce-segment-routing].
+   MUST NOT be set.  The Length is 28.
+
+   The SRv6I format is as shown below:
+
+
+
+
+
+
+
+
+Negi, et al.             Expires March 26, 2018                 [Page 8]
+
+Internet-Draft          PCEP Extensions for SRv6          September 2017
+
+
+         0                   1                   2                   3
+         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                                                               |
+      |                      SRv6 Identifier                          |
+      |                         (128-bit)                             |
+      |                                                               |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |          Flags                  |       Function Code         |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+                 Figure 3: SR-ERO Subobject's SRv6I Format
+
+      SRv6 Identifier is the 128 bit IPv6 addresses representing SRv6
+      segment.
+
+      Flags is the 16 bit field, no flag bits are currently defined in
+      this document.
+
+      Function Code is is the 16 bit field representing supported
+      functions.  associated with SRv6 SIDs.  See
+      [I-D.filsfils-spring-srv6-network-programming].
+
+   Following function codes are currently defined-
+
+      0: Reserved
+
+      1: End Function
+
+      2: End.DX6 Function
+
+      3: End.DT6 Function
+
+      4: End.X Function
 
 3.3.3.2.  ERO Processing
 
    The ERO and SR-ERO subobject processing remains as per [RFC5440] and
    [I-D.ietf-pce-segment-routing].
 
-   The I flag MUST only be set, if the SRv6-PCE-CAPABILITY TLV is
-   exchanged with the PCEP peer.  In case a PCEP speaker receives the
-   SR-ERO subobject with I flag set, when the SRv6-PCE-CAPABILITY TLV
-   was not exchanged, it MUST send a PCErr message with Error-Type = 19
-   ("Invalid Operation") and Error-Value = TBD3 ("Attempted SRv6 when
-   the capability was not advertised").  A PCEP speaker that does not
-   recognize the I flag, it would ignore it, and parse the SR-ERO
-   subobject as per [I-D.ietf-pce-segment-routing].
+   The ST MUST only be TDB, if the SRv6-PCE-CAPABILITY TLV is exchanged
+   with the PCEP peer.  In case a PCEP speaker receives the SR-ERO
+   subobject with ST indicating SRv6 segment, when the SRv6-PCE-
+   CAPABILITY TLV was not exchanged, it MUST send a PCErr message with
+   Error-Type = 19 ("Invalid Operation") and Error-Value = TBD3
+   ("Attempted SRv6 when the capability was not advertised").  A PCEP
 
 
 
-Negi & Dhody             Expires March 24, 2018                 [Page 8]
+
+Negi, et al.             Expires March 26, 2018                 [Page 9]
 
 Internet-Draft          PCEP Extensions for SRv6          September 2017
 
 
-   When a PCEP speaker receives an SR-ERO subobject for SRv6 segment in
-   which I flag is set, M, C and F flag MUST NOT be set and S flag MUST
-   be set.  Otherwise, it MUST consider the entire ERO object invalid
-   and send a PCErr message with Error-Type = 10 ("Reception of an
-   invalid object") and Error-Value = TBD ("Malformed object") as per
+   speaker that does not recognize the ST value, it would behave as per
+   [I-D.ietf-pce-segment-routing].
+
+   [Editor's Note - this is missing from
+   [I-D.ietf-pce-segment-routing].]
+
+   If a PCC receives a list of SRv6 segments, and the number of SRv6
+   segments exceeds the max-SL that the PCC can impose on the packet
+   (SRH), it MAY send a PCErr message with Error-Type = 10 ("Reception
+   of an invalid object") and Error-Value = TBD ("Unsupported number of
+   Segment ERO subobjects") as per [I-D.ietf-pce-segment-routing].
+
+   When a PCEP speaker detects that all subobjects of ERO are not
+   identical to SRv6, and if it does not handle such ERO, it MUST send a
+   PCErr message with Error-Type = 10 ("Reception of an invalid object")
+   and Error-Value = TBD ("Non-identical ERO subobjects")as per
+   [I-D.ietf-pce-segment-routing].
+
+   When a PCEP speaker receives an SR-ERO subobject for SRv6 segment, M,
+   C and F flag MUST NOT be set and S flag MUST be set.  Otherwise, it
+   MUST consider the entire ERO object invalid and send a PCErr message
+   with Error-Type = 10 ("Reception of an invalid object") and Error-
+   Value = TBD ("Malformed object") as per
    [I-D.ietf-pce-segment-routing].  The PCEP speaker MAY include the
-   malformed SR-ERO object in the PCErr message as well.  In case ST
-   value, other than those used for SRv6 is received with I flag set,
-   the PCEP speaker MUST send a PCErr message with Error-Type = 10
-   ("Reception of an invalid object") and Error-Value = TBD4 ("Bad SID
-   Type").
+   malformed SR-ERO object in the PCErr message as well.
 
 3.3.4.  RRO Object
 
-   In order to support SRv6, the SR-ERO Subobject is modified
+   In order to support SRv6, the SR-ERO Subobject is used
    [I-D.ietf-pce-segment-routing].  All other processing rules remains
    the same.
 
 3.3.4.1.  SR-RRO Subobject
 
-   For supporting IPv6 SID(s) for SRv6, a new bit (I) is defined in
-   existing SR-RRO sub object.  If the I bit is set then SR-RRO sub
-   object represent a SRv6 segment encoded via the NAI.  The 32 bit SID
-   MUST be set to zero on transit and ignored on receipt.  The format of
-   SR-RRO subobject is reproduced with the I flag as shown below:
+   For SRv6 segments, a new ST (SID Type) is assigned by IANA as TBD,
+   the format of SR-ERO sub object remains the same as defined in
+   [I-D.ietf-pce-segment-routing].
+
+   When the SID Type (ST) indicates SRv6, then the SR-RRO subobject
+   represent a SRv6 segment and include a field SRv6I (SRv6 Identifier)
+   in place of NAI (Node or Adjacency Identifier) defined in
+   [I-D.ietf-pce-segment-routing].  The 32 bit SID MUST be set to zero
+   on transit and ignored on receipt.  The format of SR-RRO subobject is
+   reproduced with the SRv6I field as shown below:
+
+
+
+
+
+
+
+Negi, et al.             Expires March 26, 2018                [Page 10]
+
+Internet-Draft          PCEP Extensions for SRv6          September 2017
 
 
         0                   1                   2                   3
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |L|    Type     |     Length    |  ST   |     Flags   |I|F|S|C|M|
+       |L|    Type     |     Length    |  ST   |     Flags     |F|S|C|M|
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |                              SID                              |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       //                        NAI (variable)                       //
+       //                     SRv6I (variable)                        //
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-                     Figure 3: SR-RRO Subobject Format
+                     Figure 4: SR-RRO Subobject Format
 
    The description of all fields and flags is as per SR-ERO subobject.
 
    Processing rules of SR-RRO subobject are identical to those of SR-ERO
    subobject.
 
-
-
-
-
-
-
-Negi & Dhody             Expires March 24, 2018                 [Page 9]
-
-Internet-Draft          PCEP Extensions for SRv6          September 2017
-
-
 3.4.  Security Considerations
 
-   The security considerations described in [RFC5440],
-   [I-D.ietf-pce-stateful-pce] and [I-D.ietf-pce-pce-initiated-lsp] are
-   applicable to this specification.  No additional security measure is
-   required.
+   The security considerations described in [RFC5440], [RFC8231] and
+   [I-D.ietf-pce-pce-initiated-lsp] are applicable to this
+   specification.  No additional security measure is required.
 
 3.5.  IANA Considerations
 
@@ -531,11 +604,19 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
       19           Invalid Operation
                    Error-value = TBD3 (Attempted SRv6 when the
                    capability was not advertised)
-      10           Reception of an invalid object.
-                   Error-value = TBD4 (Bad SID Type)
 
 
-                      Figure 4: ERROR Objects SRIPv6
+
+
+
+
+
+
+
+Negi, et al.             Expires March 26, 2018                [Page 11]
+
+Internet-Draft          PCEP Extensions for SRv6          September 2017
+
 
 3.5.1.2.  TLV Type Indicators
 
@@ -555,20 +636,11 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
    follows:
 
 
-
-
-Negi & Dhody             Expires March 24, 2018                [Page 10]
-
-Internet-Draft          PCEP Extensions for SRv6          September 2017
-
-
    Value                     Description                  Reference
    ------------------------- ---------------------------- --------------
    TBD2                      SRv6 (SRH) technique         This Document
 
 
-
-                       Figure 5: Path Setup Type TLV
 
 4.  References
 
@@ -593,30 +665,31 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+
+
+
+
+Negi, et al.             Expires March 26, 2018                [Page 12]
+
+Internet-Draft          PCEP Extensions for SRv6          September 2017
+
+
+   [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for Stateful PCE", RFC 8231,
+              DOI 10.17487/RFC8231, September 2017,
+              <https://www.rfc-editor.org/info/rfc8231>.
+
    [I-D.ietf-pce-segment-routing]
               Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,
               and J. Hardwick, "PCEP Extensions for Segment Routing",
               draft-ietf-pce-segment-routing-09 (work in progress),
               April 2017.
 
-   [I-D.ietf-pce-stateful-pce]
-              Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP
-              Extensions for Stateful PCE", draft-ietf-pce-stateful-
-              pce-21 (work in progress), June 2017.
-
    [I-D.ietf-spring-segment-routing]
               Filsfils, C., Previdi, S., Decraene, B., Litkowski, S.,
               and R. Shakir, "Segment Routing Architecture", draft-ietf-
               spring-segment-routing-12 (work in progress), June 2017.
-
-
-
-
-
-Negi & Dhody             Expires March 24, 2018                [Page 11]
-
-Internet-Draft          PCEP Extensions for SRv6          September 2017
-
 
    [I-D.ietf-pce-pce-initiated-lsp]
               Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP
@@ -648,6 +721,15 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
               DOI 10.17487/RFC8051, January 2017,
               <https://www.rfc-editor.org/info/rfc8051>.
 
+
+
+
+
+Negi, et al.             Expires March 26, 2018                [Page 13]
+
+Internet-Draft          PCEP Extensions for SRv6          September 2017
+
+
    [I-D.ietf-6man-segment-routing-header]
               Previdi, S., Filsfils, C., Raza, K., Leddy, J., Field, B.,
               daniel.voyer@bell.ca, d., daniel.bernier@bell.ca, d.,
@@ -660,19 +742,6 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
               Brzozowski, J., Leddy, J., Filsfils, C., Maglione, R., and
               M. Townsley, "IPv6 SPRING Use Cases", draft-ietf-spring-
               ipv6-use-cases-11 (work in progress), June 2017.
-
-
-
-
-
-
-
-
-
-Negi & Dhody             Expires March 24, 2018                [Page 12]
-
-Internet-Draft          PCEP Extensions for SRv6          September 2017
-
 
    [I-D.ietf-isis-segment-routing-extensions]
               Previdi, S., Filsfils, C., Bashandy, A., Gredler, H.,
@@ -712,20 +781,7 @@ Internet-Draft          PCEP Extensions for SRv6          September 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Negi & Dhody             Expires March 24, 2018                [Page 13]
+Negi, et al.             Expires March 26, 2018                [Page 14]
 
 Internet-Draft          PCEP Extensions for SRv6          September 2017
 
@@ -734,12 +790,13 @@ Appendix A.  Contributor
 
    The following persons contributed to this document:
 
-   Prejeeth Kaladharan
-   Huawei Technology
-   Divyashree Techno Park, Whitefield
-   Bangalore, Karnataka 560037
-   India
-   Email: prejeeth.k@huawei.com
+   Huang Wumin
+   Huawei Technologies
+   Huawei Building, No. 156 Beiqing Rd.
+   Beijing  100095
+   China
+
+   Email: huangwumin@huawei.com
 
 Authors' Addresses
 
@@ -750,6 +807,15 @@ Authors' Addresses
    India
 
    EMail: mahendrasingh@huawei.com
+
+
+   Prejeeth Kaladharan
+   Huawei Technologies
+   Divyashree Techno Park, Whitefield
+   Bangalore, Karnataka  560066
+   India
+
+   EMail: prejeeth.k@huawei.com
 
 
    Dhruv Dhody
@@ -771,14 +837,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-Negi & Dhody             Expires March 24, 2018                [Page 14]
+Negi, et al.             Expires March 26, 2018                [Page 15]
