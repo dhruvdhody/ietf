@@ -122,7 +122,7 @@ PCEP extension to associate two or more LSPs to provide end-to-end path protecti
 <t> <xref target="RFC5440"/> describes PCEP for communication between a Path Computation Client (PCC) and a PCE or 
 between one a pair of PCEs as per <xref target="RFC4655"/>.  A PCE computes paths for MPLS-TE LSPs based on various constraints and optimization criteria. </t>
 
- <t> Stateful pce <xref target="I-D.ietf-pce-stateful-pce"/> specifies a set of extensions to PCEP to enable 
+ <t> Stateful pce <xref target="RFC8231"/> specifies a set of extensions to PCEP to enable 
 stateful control of paths such as MPLS TE LSPs between and across PCEP sessions in compliance with <xref target="RFC4657"/>. 
 It includes mechanisms to effect LSP state synchronization between PCCs and PCEs, delegation of control of LSPs 
 to PCEs, and PCE control of timing and sequence of path computations within and across PCEP sessions and focuses 
@@ -204,7 +204,7 @@ All LSPs join a PPAG individually. PPAG is based on the generic Association obje
 or more LSPs specified in <xref target='I-D.ietf-pce-association-group'></xref>. A member of a PPAG can 
 take the role of working or protection LSP. This document defines a new association type called 
 "Path Protection Association Type" of value TBD1. A PPAG can have one working LSP and/or one or more
-protection LSPs. The source, destination and tunnel-id of all LSPs within a PPAG MUST be the same.</t>
+protection LSPs. The source, destination and Tunnel ID (as carried in LSP-IDENTIFIERS TLV <xref target="RFC8231"/>, with description as per <xref target="RFC3209"/>) of all LSPs within a PPAG MUST be the same. As per <xref target="RFC3209"/>, TE tunnel is used to associate a set of LSPs during reroute or to spread a traffic trunk over multiple paths.</t>
 
 <t>The format of the Association object used for PPAG is specified in 
 <xref target='I-D.ietf-pce-association-group'></xref> and
@@ -257,7 +257,7 @@ and <xref target="PPAG-IPv6-Association-Object-Fmt"></xref>.</t>
        </t> 
    
    <t>This Association-Type is dynamic in nature and created by the PCC or PCE for
-   the LSPs belonging to the same tunnel originating at the same head node and terminating at the same destination. 
+   the LSPs belonging to the same TE tunnel (as described in <xref target="RFC3209"/>) originating at the same head node and terminating at the same destination. 
    These associations are
    conveyed via PCEP messages to the PCEP peer.  Operator-configured
    Association Range SHOULD NOT be set for this association-type and
@@ -348,7 +348,7 @@ flag option. </t>
    information.  When a PCEP
    session is terminated, after expiry of State Timeout Interval at PCC,
    the LSP state associated with that PCEP session is reverted to
-   operator-defined default parameters or behaviors as per <xref target='I-D.ietf-pce-stateful-pce'></xref>.  Same procedure is
+   operator-defined default parameters or behaviors as per <xref target='RFC8231'></xref>.  Same procedure is
    also followed for the association information.  On session
    termination at the PCE, when the LSP state reported by PCC is
    cleared, the association information is also cleared.  Where there
@@ -359,10 +359,10 @@ flag option. </t>
 
 <section anchor="Operation-Error-Handling" title="Error Handling"> 
 
-  <t>All LSPs (working or protection) within a PPAG MUST belong to the same tunnel and have the same source and destination. 
-  If a PCE attempts to add an LSP to a PPAG and the tunnel or source or destination of the LSP is different from 
+  <t>All LSPs (working or protection) within a PPAG MUST belong to the same TE Tunnel (as described in <xref target="RFC3209"/>) and have the same source and destination. 
+  If a PCE attempts to add an LSP to a PPAG and the Tunnel ID (as carried in LSP-IDENTIFIERS TLV <xref target="RFC8231"/>, with description as per <xref target="RFC3209"/>) or source or destination of the LSP is different from 
   the LSP(s) in the PPAG, the PCC MUST send PCErr with Error-Type= TBD (Association Error) <xref target='I-D.ietf-pce-association-group'></xref>
-  and Error-Value = TBD3 (Tunnel or End points mismatch for Path Protection Association).</t>
+  and Error-Value = TBD3 (Tunnel ID or End points mismatch for Path Protection Association).</t>
   <t> There MUST be only one working LSP within a PPAG. If a PCEP Speaker attempts to add another working LSP,
   the PCEP peer MUST send PCErr with Error-Type=TBD (Association Error) <xref target='I-D.ietf-pce-association-group'></xref> 
   and Error-Value = TBD4
@@ -442,7 +442,7 @@ is created within the "Path Computation
           <texttable>
            <ttcol> Error-Type </ttcol><ttcol> Meaning </ttcol><ttcol> Reference </ttcol>
            <c> TBD </c> <c> Association error</c> <c><xref target='I-D.ietf-pce-association-group'></xref></c>
-           <c></c><c> Error-value=TBD3: Tunnel or End points mismatch for Path Protection Association</c> <c> This document</c>
+           <c></c><c> Error-value=TBD3: Tunnel ID or End points mismatch for Path Protection Association</c> <c> This document</c>
            <c></c><c> Error-value=TBD4: Attempt to add another working LSP for Path Protection Association</c> <c> This document</c>
           </texttable>
 
@@ -452,7 +452,7 @@ is created within the "Path Computation
 
     <section title="Security Considerations">
         <t>
-               The security considerations described in <xref target="I-D.ietf-pce-stateful-pce"/>, 
+               The security considerations described in <xref target="RFC8231"/>, 
                <xref target="I-D.ietf-pce-pce-initiated-lsp"/>, and <xref target="RFC5440"/> 
                apply to the extensions described in this document as
    well.  Additional considerations related to associations where 
@@ -468,7 +468,7 @@ is created within the "Path Computation
       <section title="Control of Function and Policy" toc="default">
         <t>Mechanisms defined in this document do not imply any control or policy 
             requirements in addition to those already listed in
-        <xref target="RFC5440"/>, <xref target="I-D.ietf-pce-stateful-pce"/>, and 
+        <xref target="RFC5440"/>, <xref target="RFC8231"/>, and 
         <xref target="I-D.ietf-pce-pce-initiated-lsp"/>.</t>
       </section>
       <section title="Information and Data Models" toc="default">
@@ -480,13 +480,13 @@ is created within the "Path Computation
       <section title="Liveness Detection and Monitoring" toc="default">
         <t>Mechanisms defined in this document do not imply any new liveness detection
         and monitoring requirements in addition to those already listed in
-        <xref target="RFC5440"/>, <xref target="I-D.ietf-pce-stateful-pce"/>, and 
+        <xref target="RFC5440"/>, <xref target="RFC8231"/>, and 
         <xref target="I-D.ietf-pce-pce-initiated-lsp"/>.</t>
       </section>
       <section title="Verify Correct Operations" toc="default">
         <t>Mechanisms defined in this document do not imply any new operation
         verification requirements in addition to those already listed in
-        <xref target="RFC5440"/>, <xref target="I-D.ietf-pce-stateful-pce"/>, and 
+        <xref target="RFC5440"/>, <xref target="RFC8231"/>, and 
         <xref target="I-D.ietf-pce-pce-initiated-lsp"/>.</t>
       </section>
       <section title="Requirements On Other Protocols" toc="default">
@@ -496,7 +496,7 @@ is created within the "Path Computation
       <section title="Impact On Network Operations" toc="default">
         <t>Mechanisms defined in this document do not have any impact on
         network operations in addition to those already listed in
-        <xref target="RFC5440"/>, <xref target="I-D.ietf-pce-stateful-pce"/>, and 
+        <xref target="RFC5440"/>, <xref target="RFC8231"/>, and 
         <xref target="I-D.ietf-pce-pce-initiated-lsp"/>.</t>
       </section>
     </section>
@@ -508,10 +508,11 @@ is created within the "Path Computation
     <references title="Normative References">
     
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3209"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8126"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174"?>
-        <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-stateful-pce"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8231"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pce-initiated-lsp"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-association-group"?>        
     </references>

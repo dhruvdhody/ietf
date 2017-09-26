@@ -5,7 +5,7 @@
 PCE Working Group                                     H. Ananthakrishnan
 Internet-Draft                                             Packet Design
 Intended status: Standards Track                            S. Sivabalan
-Expires: March 22, 2018                                            Cisco
+Expires: March 29, 2018                                            Cisco
                                                                 C. Barth
                                                                 R. Torvi
                                                         Juniper Networks
@@ -15,7 +15,7 @@ Expires: March 22, 2018                                            Cisco
                                                   Individual Contributor
                                                                 D. Dhody
                                                      Huawei Technologies
-                                                      September 18, 2017
+                                                      September 25, 2017
 
 
    PCEP Extensions for MPSL-TE LSP Path Protection with stateful PCE
@@ -46,14 +46,14 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 22, 2018.
+   This Internet-Draft will expire on March 29, 2018.
 
 
 
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 1]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 1]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -101,15 +101,15 @@ Table of Contents
      8.5.  Requirements On Other Protocols . . . . . . . . . . . . .  11
      8.6.  Impact On Network Operations  . . . . . . . . . . . . . .  11
    9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  11
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     10.2.  Information References . . . . . . . . . . . . . . . . .  12
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
+     10.2.  Information References . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 2]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 2]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -121,17 +121,17 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
    [RFC4655].  A PCE computes paths for MPLS-TE LSPs based on various
    constraints and optimization criteria.
 
-   Stateful pce [I-D.ietf-pce-stateful-pce] specifies a set of
-   extensions to PCEP to enable stateful control of paths such as MPLS
-   TE LSPs between and across PCEP sessions in compliance with
-   [RFC4657].  It includes mechanisms to effect LSP state
-   synchronization between PCCs and PCEs, delegation of control of LSPs
-   to PCEs, and PCE control of timing and sequence of path computations
-   within and across PCEP sessions and focuses on a model where LSPs are
-   configured on the PCC and control over them is delegated to the PCE.
-   Furthermore, a mechanism to dynamically instantiate LSPs on a PCC
-   based on the requests from a stateful PCE or a controller using
-   stateful PCE, is specified in [I-D.ietf-pce-pce-initiated-lsp].
+   Stateful pce [RFC8231] specifies a set of extensions to PCEP to
+   enable stateful control of paths such as MPLS TE LSPs between and
+   across PCEP sessions in compliance with [RFC4657].  It includes
+   mechanisms to effect LSP state synchronization between PCCs and PCEs,
+   delegation of control of LSPs to PCEs, and PCE control of timing and
+   sequence of path computations within and across PCEP sessions and
+   focuses on a model where LSPs are configured on the PCC and control
+   over them is delegated to the PCE.  Furthermore, a mechanism to
+   dynamically instantiate LSPs on a PCC based on the requests from a
+   stateful PCE or a controller using stateful PCE, is specified in
+   [I-D.ietf-pce-pce-initiated-lsp].
 
    Path protection refers to a paradigm in which the working LSP is
    protected by one or more protection LSP(s).  When the working LSP
@@ -165,7 +165,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 3]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 3]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -221,7 +221,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 4]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 4]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -237,8 +237,11 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
    can take the role of working or protection LSP.  This document
    defines a new association type called "Path Protection Association
    Type" of value TBD1.  A PPAG can have one working LSP and/or one or
-   more protection LSPs.  The source, destination and tunnel-id of all
-   LSPs within a PPAG MUST be the same.
+   more protection LSPs.  The source, destination and Tunnel ID (as
+   carried in LSP-IDENTIFIERS TLV [RFC8231], with description as per
+   [RFC3209]) of all LSPs within a PPAG MUST be the same.  As per
+   [RFC3209], TE tunnel is used to associate a set of LSPs during
+   reroute or to spread a traffic trunk over multiple paths.
 
    The format of the Association object used for PPAG is specified in
    [I-D.ietf-pce-association-group] and reproduced in this document for
@@ -274,10 +277,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-
-
-
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 5]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 5]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -304,11 +304,11 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
    Association type, value will be assigned by IANA (TBD1).
 
    This Association-Type is dynamic in nature and created by the PCC or
-   PCE for the LSPs belonging to the same tunnel originating at the same
-   head node and terminating at the same destination.  These
-   associations are conveyed via PCEP messages to the PCEP peer.
-   Operator-configured Association Range SHOULD NOT be set for this
-   association-type and MUST be ignored.
+   PCE for the LSPs belonging to the same TE tunnel (as described in
+   [RFC3209]) originating at the same head node and terminating at the
+   same destination.  These associations are conveyed via PCEP messages
+   to the PCEP peer.  Operator-configured Association Range SHOULD NOT
+   be set for this association-type and MUST be ignored.
 
 3.2.  Path Protection Association TLV
 
@@ -333,7 +333,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 6]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 6]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -389,7 +389,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 7]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 7]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -410,22 +410,24 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
    is cleared along with the LSP state information.  When a PCEP session
    is terminated, after expiry of State Timeout Interval at PCC, the LSP
    state associated with that PCEP session is reverted to operator-
-   defined default parameters or behaviors as per
-   [I-D.ietf-pce-stateful-pce].  Same procedure is also followed for the
-   association information.  On session termination at the PCE, when the
-   LSP state reported by PCC is cleared, the association information is
-   also cleared.  Where there are no LSPs in a association group, the
-   association is considered to be deleted..
+   defined default parameters or behaviors as per [RFC8231].  Same
+   procedure is also followed for the association information.  On
+   session termination at the PCE, when the LSP state reported by PCC is
+   cleared, the association information is also cleared.  Where there
+   are no LSPs in a association group, the association is considered to
+   be deleted..
 
 4.5.  Error Handling
 
    All LSPs (working or protection) within a PPAG MUST belong to the
-   same tunnel and have the same source and destination.  If a PCE
-   attempts to add an LSP to a PPAG and the tunnel or source or
-   destination of the LSP is different from the LSP(s) in the PPAG, the
-   PCC MUST send PCErr with Error-Type= TBD (Association Error)
-   [I-D.ietf-pce-association-group] and Error-Value = TBD3 (Tunnel or
-   End points mismatch for Path Protection Association).
+   same TE Tunnel (as described in [RFC3209]) and have the same source
+   and destination.  If a PCE attempts to add an LSP to a PPAG and the
+   Tunnel ID (as carried in LSP-IDENTIFIERS TLV [RFC8231], with
+   description as per [RFC3209]) or source or destination of the LSP is
+   different from the LSP(s) in the PPAG, the PCC MUST send PCErr with
+   Error-Type= TBD (Association Error) [I-D.ietf-pce-association-group]
+   and Error-Value = TBD3 (Tunnel ID or End points mismatch for Path
+   Protection Association).
 
    There MUST be only one working LSP within a PPAG.  If a PCEP Speaker
    attempts to add another working LSP, the PCEP peer MUST send PCErr
@@ -443,9 +445,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-
-
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 8]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 8]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -501,7 +501,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                 [Page 9]
+Ananthakrishnan, et al.  Expires March 29, 2018                 [Page 9]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -527,7 +527,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
    +------------+-------------------+----------------------------------+
    | TBD        | Association error | [I-D.ietf-pce-association-group] |
    |            | Error-value=TBD3: | This document                    |
-   |            | Tunnel or End     |                                  |
+   |            | Tunnel ID or End  |                                  |
    |            | points mismatch   |                                  |
    |            | for Path          |                                  |
    |            | Protection        |                                  |
@@ -542,7 +542,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 7.  Security Considerations
 
-   The security considerations described in [I-D.ietf-pce-stateful-pce],
+   The security considerations described in [RFC8231],
    [I-D.ietf-pce-pce-initiated-lsp], and [RFC5440] apply to the
    extensions described in this document as well.  Additional
    considerations related to associations where a malicious PCEP speaker
@@ -557,7 +557,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                [Page 10]
+Ananthakrishnan, et al.  Expires March 29, 2018                [Page 10]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -568,7 +568,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
    Mechanisms defined in this document do not imply any control or
    policy requirements in addition to those already listed in [RFC5440],
-   [I-D.ietf-pce-stateful-pce], and [I-D.ietf-pce-pce-initiated-lsp].
+   [RFC8231], and [I-D.ietf-pce-pce-initiated-lsp].
 
 8.2.  Information and Data Models
 
@@ -581,15 +581,13 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
    Mechanisms defined in this document do not imply any new liveness
    detection and monitoring requirements in addition to those already
-   listed in [RFC5440], [I-D.ietf-pce-stateful-pce], and
-   [I-D.ietf-pce-pce-initiated-lsp].
+   listed in [RFC5440], [RFC8231], and [I-D.ietf-pce-pce-initiated-lsp].
 
 8.4.  Verify Correct Operations
 
    Mechanisms defined in this document do not imply any new operation
    verification requirements in addition to those already listed in
-   [RFC5440], [I-D.ietf-pce-stateful-pce], and
-   [I-D.ietf-pce-pce-initiated-lsp].
+   [RFC5440], [RFC8231], and [I-D.ietf-pce-pce-initiated-lsp].
 
 8.5.  Requirements On Other Protocols
 
@@ -600,25 +598,25 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
    Mechanisms defined in this document do not have any impact on network
    operations in addition to those already listed in [RFC5440],
-   [I-D.ietf-pce-stateful-pce], and [I-D.ietf-pce-pce-initiated-lsp].
+   [RFC8231], and [I-D.ietf-pce-pce-initiated-lsp].
 
 9.  Acknowledgments
 
    We would like to thank Jeff Tantsura and Xian Zhang for their
    contributions to this document.
 
+10.  References
 
 
 
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                [Page 11]
+
+Ananthakrishnan, et al.  Expires March 29, 2018                [Page 11]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
-
-10.  References
 
 10.1.  Normative References
 
@@ -626,6 +624,11 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC3209]  Awduche, D., Berger, L., Gan, D., Li, T., Srinivasan, V.,
+              and G. Swallow, "RSVP-TE: Extensions to RSVP for LSP
+              Tunnels", RFC 3209, DOI 10.17487/RFC3209, December 2001,
+              <https://www.rfc-editor.org/info/rfc3209>.
 
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
@@ -641,10 +644,11 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-   [I-D.ietf-pce-stateful-pce]
-              Crabbe, E., Minei, I., Medved, J., and R. Varga, "PCEP
-              Extensions for Stateful PCE", draft-ietf-pce-stateful-
-              pce-21 (work in progress), June 2017.
+   [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for Stateful PCE", RFC 8231,
+              DOI 10.17487/RFC8231, September 2017,
+              <https://www.rfc-editor.org/info/rfc8231>.
 
    [I-D.ietf-pce-pce-initiated-lsp]
               Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP
@@ -659,20 +663,23 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
               ietf-pce-association-group-04 (work in progress), August
               2017.
 
+
+
+
+
+
+
+Ananthakrishnan, et al.  Expires March 29, 2018                [Page 12]
+
+Internet-Draft      Stateful PCE LSP Path Protection      September 2017
+
+
 10.2.  Information References
 
    [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
               Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
               <https://www.rfc-editor.org/info/rfc4655>.
-
-
-
-
-Ananthakrishnan, et al.  Expires March 22, 2018                [Page 12]
-
-Internet-Draft      Stateful PCE LSP Path Protection      September 2017
-
 
    [RFC4657]  Ash, J., Ed. and J. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol Generic
@@ -714,21 +721,16 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
               association-diversity-02 (work in progress), September
               2017.
 
-Authors' Addresses
 
 
 
 
-
-
-
-
-
-
-Ananthakrishnan, et al.  Expires March 22, 2018                [Page 13]
+Ananthakrishnan, et al.  Expires March 29, 2018                [Page 13]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
+
+Authors' Addresses
 
    Hariharan Ananthakrishnan
    Packet Design
@@ -779,9 +781,7 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-
-
-Ananthakrishnan, et al.  Expires March 22, 2018                [Page 14]
+Ananthakrishnan, et al.  Expires March 29, 2018                [Page 14]
 
 Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
@@ -837,4 +837,4 @@ Internet-Draft      Stateful PCE LSP Path Protection      September 2017
 
 
 
-Ananthakrishnan, et al.  Expires March 22, 2018                [Page 15]
+Ananthakrishnan, et al.  Expires March 29, 2018                [Page 15]
