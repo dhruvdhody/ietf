@@ -152,8 +152,7 @@
       Label Switching (MPLS) Traffic Engineering Label Switched Path (TE
       LSP).</t>
 
-      <t>Further, in order to support use cases described in [I-D.ietf-pce-
-      stateful-pce-app], [RFC8231] specifies a set of extensions to PCEP to
+      <t>Further, in order to support use cases described in [RFC8231] specifies a set of extensions to PCEP to
       enable stateful control of MPLS-TE and GMPLS LSPs via PCEP.</t>
 
       <t>Traditionally, the usage and allocation of network resources,
@@ -173,7 +172,7 @@
       scheduled bulk data replication between data centers. It enables the
       activation of bandwidth usage at the time the service really being used
       while letting other services obtain it in spare time. The requirement of
-      scheduled LSP provision is mentioned in [I-D.ietf-pce-stateful-pce-app]
+      scheduled LSP provision is mentioned in [RFC8231]
       and [RFC7399], so as to provide more efficient network resource usage
       for traffic engineering, which hasn't been solved yet. Also, for
       deterministic networks, the scheduled LSP can provide a better network
@@ -191,17 +190,26 @@
     </section>
 
     <section title="Conventions used in this document">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref
-      target="RFC2119">RFC2119</xref>.</t>
+      <t>
+      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref
+      target="RFC2119">RFC2119</xref> <xref
+      target="RFC8174">RFC8174</xref> when, and only when, they
+      appear in all capitals, as shown here.
+    </t>
 
       <section title="Terminology">
         <t>The following terminologies are re-used from existing PCE
         documents.<list style="symbols">
             <t>Active Stateful PCE [RFC8231];</t>
 
-            <t>Delegation [I-D.ietf-pce-pce-initiated-lsp];</t>
+            <t>Passive Stateful PCE [RFC8231];</t>
+
+            <t>Delegation [RFC8231];</t>
+
+            <t>PCE-Initiated LSP [I-D.ietf-pce-pce-initiated-lsp];</t>
 
             <t>PCC [RFC5440], [RFC8231];</t>
 
@@ -211,7 +219,7 @@
 
             <t>TED [RFC5440], [RFC8231];</t>
 
-            <t>LSP DB [RFC5440], [RFC8231];</t>
+            <t>LSP DB [RFC8231];</t>
           </list>In addition, this document defines the following
         terminologies.<list style="hanging">
             <t hangText="Scheduled TE LSP:">a LSP with the scheduling
@@ -250,8 +258,7 @@
       trigger signaling for the LSP setup/tear-down at the correct time.</t>
 
       <t>Note that existing configuration tools can be used for LSP
-      scheduling, but as highlighted in section 3.1.3 of [I-D.ietf-pce-
-      stateful-pce] as well as discussions in
+      scheduling, but as highlighted in section 3.1.3 of [RFC8231] as well as discussions in
       [I-D.ietf-teas-scheduled-resources], doing this as a part of PCEP in a
       centralized manner, has obvious advantages.</t>
 
@@ -281,15 +288,33 @@
         TED should be maintained by all PCEs within the network
         environment.</t>
 
-        <t>In case of implementing PCC-initiated scheduled LSPs, a PCC can
+        <!--<t>In case of implementing PCC-initiated scheduled LSPs, a PCC can
         request a path computation with LSP information of its scheduling
         parameters, including the starting time and the duration. Upon
         receiving the request with the scheduled LSP delegation, a stateful
         PCE SHALL check the scheduled TED for the network resource
         availability on network nodes and computes a path for the LSP with the
-        scheduling information.</t>
+        scheduling information.</t>-->
 
-        <t>For a multiple PCE environment, in order to coordinate the
+        <t>In case of implementing PCC-initiated scheduled LSPs, before a PCC delegates a scheduled LSP, it MAY
+        use the PCReq/PCRep messages to learn the path for the scheduled LSP. 
+        A PCC MUST delegate a scheduled LSP with information of its scheduling
+        parameters, including the starting time and the duration using PCRpt message. 
+        Since the LSP is not yet signaled, at the time of delegation the LSP would be in down state. 
+        Upon
+        receiving the delegation of the scheduled LSP, a stateful
+        PCE SHALL check the scheduled TED for the network resource
+        availability on network nodes and computes a path for the LSP with the
+        scheduling information and update to the PCC as per the active stateful 
+        PCE techniques [RFC8231].</t>        
+
+        <t>Note that the active stateful PCE can update to the PCC with the path for the
+        scheduled LSP at any time. However, the
+        PCC should not signal the LSP over the path once receiving these
+        messages since the path is not activated yet until its starting
+        time.</t>
+
+        <!--<t>For a multiple PCE environment, in order to coordinate the
         scheduling request of the LSP path over the network, the PCE needs to
         send a request message with the path information as well as the
         scheduled resource for the scheduled LSP to other PCEs within the
@@ -300,23 +325,38 @@
         carrying the scheduled LSP and update their scheduled LSP DBs and
         scheduled TEDs. After the requesting PCE confirms with all PCEs, the
         PCE SHALL add the scheduled LSP into its scheduled LSP Database and
-        update its scheduled TED.</t>
+        update its scheduled TED.</t>-->
 
-        <t>Then the stateful PCE can response to the PCC with the path for the
-        scheduled LSP to notify the result of the computation. However, the
-        PCC should not signal the LSP over the path once receiving these
-        messages since the path is not activated yet until its starting
-        time.</t>
+        <t>For a multiple PCE environment, in order to synchronize the 
+          scheduled LSP DB, the mechanism as described in <xref target="I-D.litkowski-pce-state-sync"/> 
+          are used to synchronize between PCEs. The scheduled TED is determined from the synchronized SLSP-DB. 
+          The PCE with delegation for the scheduled LSP would report the scheduled LSP to other PCEs, any future 
+          update to the scheduled LSP is also updated to other PCEs. This way the state of all scheduled LSPs 
+          are synchronized among the PCEs. [RFC7399] discusses some synchronization issues and considerations, 
+          that are also applicable to the scheduled databases. </t>
 
-        <t>Alternatively, the service can also be initiated by PCE itself. In
+        <t>The scheduled LSP can also be initiated by PCE itself. In
         case of implementing PCE-initiated scheduled LSP, the stateful PCE
         shall check the network resource availability for the traffic and
-        computes a path for the scheduled LSP per request in the same way as
-        in PCC- Initiated mode and then for a multiple PCE network
-        environment, coordinate the scheduled LSP with other PCEs in the
-        network in the same way as in the PCC-Initiated mode.</t>
+        computes a path for the scheduled LSP and initiate a scheduled LSP 
+        at the PCC and synchronize the scheduled LSP to
+        other PCEs. Note that, the PCC could be notified immediately or at the 
+        starting time of the scheduled LSP based on the local policy. In case of 
+        former SCHED-LSP-ATTRIBUTE MUST be included in the message where as for 
+        the latter SCHED-LSP-ATTRIBUTE SHOULD NOT be included. 
+       </t>
 
-        <t>In both modes, for activation of scheduled LSPs, the stateful PCE
+        <t>In both modes, for activation of scheduled LSPs, the PCC could 
+          initiate the setup of scheduled LSP at the start time by itself or wait for the PCE
+          to update the PCC to initiate the setup of LSP. Similarly on the 
+          scheduling usage expires, the PCC could initiate the removal by itself or wait for 
+          the PCE to request the removal of the LSP. This is based on the Flag 
+          set in SCHED-LSP-ATTRIBUTE TLV. The state of the scheduled LSP is synchronized to other PCEs 
+          using the existing mechanism in [RFC8231] and <xref target="I-D.litkowski-pce-state-sync"/>.</t> 
+
+
+
+          <!--the stateful PCE
         can send a path computation LSP Initiate (PCInitiate message) with LSP
         information at its starting time to the PCC for signaling the LSP over
         the network nodes as defined in [I-D.ietf-pce-pce- initiated-lsp].
@@ -325,7 +365,7 @@
         starting time as well. When the scheduling usage expires, active
         stateful PCE SHALL remove the LSP from the network , as well as notify
         other PCEs to delete the scheduled LSP from the scheduled LSP
-        database.</t>
+        database.</t>-->
       </section>
 
       <section title="Support of LSP Scheduling">
@@ -421,17 +461,167 @@
           </section>
         </section>
 
-        <section title="Stateful PCE Capability TLV">
+        
+      </section>
+
+      <section title="Scheduled LSP creation">
+        <t>In order to realize PCC-Initiated scheduled LSP in a centralized
+        network environment, a PCC has to separate the setup of a LSP into two
+        steps. The first step is to request/delegate and get a LSP but not signal it
+        over the network. The second step is to signal the scheduled LSP over
+        the LSRs (Labeled switched Router) at its starting time.</t>
+
+        <t>For PCC-Initiated scheduled LSPs, a PCC can delegate the scheduled LSP by sending a path computation
+        report (PCRpt) message by including its demanded
+        resources with the scheduling information to a stateful
+        PCE. Note the PCC MAY use the PCReq/PCRep with scheduling information before delegating.</t>
+
+        <t>Upon receiving the delegation via PCRpt message, the stateful PCE
+        computes the path for the scheduled LSP per its starting time and
+        duration based on the network resource availability stored in
+        scheduled TED (see section 4.1).</t>
+
+        <!--<t>If a resultant path is found, the stateful PCE will send a PCRpt
+        message with the path information as well as the scheduled resource
+        information for the scheduled LSP to other PCEs within the network if
+        there is any, so as to keep their scheduling information
+        synchronized.</t>
+
+        <t>Once other PCEs receive the PCRpt message with the scheduled LSP,
+        if not conflicts with their scheduled LSP DBs, they will update their
+        scheduled LSP DBs and scheduled TEDs. After the requesting PCE
+        confirms with all PCEs, the PCE SHALL add the scheduled LSP into its
+        scheduled LSP DB and update its scheduled TED. If conflicts happen or
+        no path available is found, the requesting PCE SHALL return a PCRep
+        message with NO PATH back to the PCC. Otherwise, the stateful PCE will
+        send a PCRep message with the path information back to the PCC as
+        confirmation.</t>-->
+
+        <t>The stateful PCE will send a PCUpd
+        message with the scheduled path information as well as the scheduled resource
+        information for the scheduled LSP to the PCC. The PCE SHOULD add the scheduled LSP into its
+        scheduled LSP DB and update its scheduled TED. The PCE SHOULD also synchronize to other PCEs within the network if
+        there is any, so as to keep their scheduling information
+        synchronized as per <xref target="I-D.litkowski-pce-state-sync"/>. </t> 
+
+        <t>For PCE-Initiated Scheduled LSP, the stateful PCE can compute a
+        path for the scheduled LSP per requests from network management
+        systems automatically based on the network resource availability in
+        the scheduled TED, send a PCInitiate message with the
+        path information back to the PCC. Based on the local policy, the PCInitiate message
+        could be send immediately to ask PCC to create a scheduled LSP (as per this document) or the PCInitiate message
+        could be sent at the start time to the PCC to create a normal LSP (as per [I-D.ietf-pce-pce-initiated-lsp]). </t>
+
+        <t>In both modes:<list style="symbols">
+            <t>The stateful PCE is required to update its local scheduled LSP
+            DB and scheduled TED with the scheduled LSP. Besides, it shall
+            send a PCRpt message with the scheduled LSP to other PCEs within
+            the network, so as to achieve the scheduling traffic engineering
+            information synchronization as per <xref target="I-D.litkowski-pce-state-sync"/>.</t>
+
+            <t>Upon receiving the PCUpd message or PCInitiate message for the scheduled
+            LSP from PCEs with a found path, the PCC knows that it is a
+            scheduled path for the LSP and does not trigger signaling for the LSP
+            setup on LSRs.</t>
+
+            <t>The stateful PCE can update the Scheduled LSP
+            parameters on any network events using the PCUpd message to PCC. These
+            changes are also synchronized to other PCEs as per <xref target="I-D.litkowski-pce-state-sync"/>.</t>
+
+            <t>Based on the configuration (and the C flag in scheduled TLVs), when it is time (i.e., at the start time) for the LSP to be set
+            up, either the PCC triggers the LSP to be signaled or the delegated PCE sends a PCUpd message to the head
+            end LSR providing the updated path to be signaled (with A flag set to indicate LSP activation).</t>
+          </list></t>
+
+
+        </section>
+        <section title="Scheduled LSP Modifications">
+        <t>After a scheduled LSP is configured, a user may change its
+        parameters including the requested time as well as the bandwidth.</t>
+
+        <t>In PCC-Initiated case, the PCC can send a PCRpt message for the
+        scheduled LSP with updated parameters as well as scheduled information
+        included in the SCHED-LSP-ATTRIBUTE TLV (see <xref target="SCHED-LSP-ATTRIBUTE"/>) or
+        SCHED-PD-LSP-ATTRIBUTE TLV (see <xref target="SCHED-PD-LSP-ATTRIBUTE"/>) carried in the LSP Object. The PCE would
+        take the updated resources and schedule into considerations and 
+        update the new path for the scheduled LSP to the PCC as well as
+        synchronize to other PCEs in the network. In case path cannot be 
+        set based on new requirements the same should be conveyed by the
+        use of empty ERO in the PCEP messages.</t>
+
+        <t>In PCE-Initiated case, the Stateful PCE would recompute the path based on 
+         updated parameters as well as scheduled information. In case it has 
+         already conveyed to the PCC this information by sending a PCInitiate 
+         message, it should update the path and other scheduling and resource 
+         information by sending a PCUpd message.</t>
+
+         <t> In any case, the scheduled databases SHALL be updated and the PCE 
+         MUST synchronize this information to other PCEs as per <xref target="I-D.litkowski-pce-state-sync"/>.</t>
+
+         <!-- original:
+            After a scheduled LSP is configured, a user may change its parameters
+   including the requested time as well as the bandwidth.
+
+   In PCC-Initiated case, the PCC can send a PCRpt message for the
+   scheduled LSP with updated bandwidth as well as scheduled information
+   included in the SCHED-LSP-ATTRIBUTE TLV (see section 4.3.4.1) or
+   SCHED-PD-LSP-ATTRIBUTE TLV carried in the LSP Object.  The PCE should
+   calculate the updated resources and synchronized with other PCEs.  If
+   the updates can be satisfied, PCE shall return a PCUpd message to PCC
+   as described in section 4.3.3.  If the requested updates cannot be
+   met, PCE shall return a PCUpd message with the original reserved
+   attributes carried in the LSP Object.
+
+   The stateful PCE can update the Scheduled LSP parameters to other
+   PCEs via PCRpt message and the requested PCC via PCUpd message at any
+   time based on any network events including SCHED-LSP-ATTRIBUTE TLV or
+   SCHED-PD-LSP-ATTRIBUTE TLV in the LSP Object body.-->
+
+      </section>
+
+      <section title="Scheduled LSP activation and deletion">
+        <t>In PCC-Initiated case, based on the configuration (and the C flag in scheduled TLVs), when it is time (i.e., at the start time) for the LSP to be set
+            up, either the PCC triggers the LSP to be signaled or the delegated PCE sends a PCUpd message to the head
+            end LSR providing the updated path to be signaled (with A flag set to indicate LSP activation). 
+            The PCC would report the status of the active LSP as per the procedures in [RFC8231] and at this time the LSP MUST be considered as part of the LSP-DB. 
+            The A flag MUST be set in the scheduled TLVs to indicate that the LSP is active now. After the scheduled duration expires, based on the C flag, the PCC triggers the 
+            LSP deletion on it self or the delegated PCE sends a PCUpd message to the PCC to delete the LSP as per the procedures in [RFC8231]. 
+            </t>
+
+<t>In PCE-Initiated case, based on the local policy, if the scheduled LSP is already conveyed to the PCC at the time of creation, the handling of LSP activation and deletion
+  is handled in the same way as PCC-Initiated case as per the setting of C flag. In other case, the PCE would send the PCInitiate message 
+        at the start time to the PCC to create a normal LSP without the scheduled TLVs and remove the LSP after the duration expires as per [I-D.ietf-pce-pce-initiated-lsp].</t>
+            
+
+            <t>Additionally, the scheduled databases SHALL be updated and synchronization to other PCEs MUST be done as per <xref target="I-D.litkowski-pce-state-sync"/>.</t>
+
+        <!--<t>In PCC-Initiated LSP scheduling, the PCC itself MAY activate the
+        scheduled LSP at the starting time. Alternatively, in PCE-Initiated
+        case, the stateful PCE MAY activate the scheduled LSP at its scheduled
+        time by sending a PCInitiated message. </t>
+
+        <t>After the scheduled duration expires, the PCE shall send a PCUpd
+        message with R flag set to the PCC to delete the LSP over the path, as
+        well as to other PCEs to remove the scheduled LSP in the databases.
+        Additionally, it shall update its scheduled LSP DB and scheduled
+        TED.</t>
+
+        <t>Note that, the stateful PCE can update the Scheduled LSP parameters
+        at any time based on any network events using the PCUpd message
+        including SCHED-LSP-ATTRIBUTE TLV in the LSP Object body.</t>-->
+      </section>
+    </section>
+        <section title="PCEP Objects and TLVs">
+          <section title="Stateful PCE Capability TLV">
           <t>After a TCP connection for a PCEP session has been established, a
           PCC and a PCE indicates its ability to support LSP scheduling during
           the PCEP session establishment phase. For a multiple-PCE
           environment, the PCEs should also establish PCEP session and
           indicate its ability to support LSP scheduling among PCEP peers. The
           Open Object in the Open message contains the STATEFUL-PCE-CAPABILITY
-          TLV defined in [I- D.ietf-pce-stateful-pce]. Note that the STATEFUL-
-          PCE-CAPABILITY TLV is defined in [I-D.ietf-pce-stateful- pce] and
-          updated in [I-D.ietf-pce-pce-initiated-lsp] and [I-D.ietf-
-          pce-stateful-sync-optimizations]. In this document, we define a new
+          TLV defined in [RFC8231]. Note that the STATEFUL-
+          PCE-CAPABILITY TLV is defined in [RFC8231] and
+          updated in [I-D.ietf-pce-pce-initiated-lsp] and [RFC8232]. In this document, we define a new
           flag bit B (SCHED-LSP-CAPABLITY) flag for the STATEFUL-
           PCE-CAPABILITY TLV to indicate the support of LSP scheduling and
           another flag bit PD (PD-LSP-CAPABLITY) to indicate the support of
@@ -453,136 +643,6 @@
               scheduling for path computation.</t>
             </list></t>
         </section>
-      </section>
-
-      <section title="Scheduled LSP creation">
-        <t>In order to realize PCC-Initiated scheduled LSP in a centralized
-        network environment, a PCC has to separate the setup of a LSP into two
-        steps. The first step is to request and get a LSP but not signal it
-        over the network. The second step is to signal the scheduled LSP over
-        the LSRs (Labeled switched Router) at its starting time.</t>
-
-        <t>For PCC-Initiated scheduled LSPs, a PCC can send a path computation
-        request (PCReq) message (see section 4.3.1) including its demanded
-        resources with the scheduling information and delegation to a stateful
-        PCE.</t>
-
-        <t>Upon receiving the delegation via PCReq message, the stateful PCE
-        computes the path for the scheduled LSP per its starting time and
-        duration based on the network resource availability stored in
-        scheduled TED (see section 4.1).</t>
-
-        <t>If a resultant path is found, the stateful PCE will send a PCRpt
-        message with the path information as well as the scheduled resource
-        information for the scheduled LSP to other PCEs within the network if
-        there is any, so as to keep their scheduling information
-        synchronized.</t>
-
-        <t>Once other PCEs receive the PCRpt message with the scheduled LSP,
-        if not conflicts with their scheduled LSP DBs, they will update their
-        scheduled LSP DBs and scheduled TEDs. After the requesting PCE
-        confirms with all PCEs, the PCE SHALL add the scheduled LSP into its
-        scheduled LSP DB and update its scheduled TED. If conflicts happen or
-        no path available is found, the requesting PCE SHALL return a PCRep
-        message with NO PATH back to the PCC. Otherwise, the stateful PCE will
-        send a PCRep message with the path information back to the PCC as
-        confirmation.</t>
-
-        <t>For PCE-Initiated Scheduled LSP, the stateful PCE can compute a
-        path for the scheduled LSP per requests from network management
-        systems automatically based on the network resource availability in
-        the scheduled TED, send a PCUpd message (see section 4.3.3) with the
-        path information back to the PCC as confirmation and coordinate with
-        other PCEs on the scheduled LSP in the same way as in the PCC-
-        Initiated mode.</t>
-
-        <t>In both modes:<list style="symbols">
-            <t>The stateful PCE is required to update its local scheduled LSP
-            DB and scheduled TED with the scheduled LSP. Besides, it shall
-            send a PCRpt message with the scheduled LSP to other PCEs within
-            the network, so as to achieve the scheduling traffic engineering
-            information synchronization.</t>
-
-            <t>Upon receiving the PCRep message or PCUpd message for scheduled
-            LSP from PCEs with a found path, the PCC knows that it gets a
-            scheduled path for the LSP but not trigger signaling for the LSP
-            setup on LSRs.</t>
-
-            <t>In any case, stateful PCE can update the Scheduled LSP
-            parameters on any network events using the PCUpd message to PCC or
-            using PCRpt other PCEs.</t>
-
-            <t>When it is time (i.e., at the start time) for the LSP to be set
-            up, the delegated PCE sends a PCEP Initiate request to the head
-            end LSR providing the path to be signaled.</t>
-          </list></t>
-
-        <section title="The PCReq message and PCRpt Message">
-          <t>After scheduled LSP capability negotiation, for PCC-Initiated
-          mode, a PCC can send a PCReq message including the
-          SCHED-LSP-ATTRIBUTE TLV (see section 4.3.4.1) or
-          SCHED-PD-LSP-ATTRIBUTE TLV (see section 4.3.4.2) carried in the LSP
-          Object (see section 4.3.4) body to indicate the requested LSP
-          scheduling parameters for a customer's traffic service with the
-          delegation bit set to 1 in LSP Object. The value of requested
-          bandwidth is taken via the existing 'Requested Bandwidth with
-          BANDWIDTH Object- Type as 1' defined in [RFC5440].</t>
-
-          <t>Meanwhile, for both modes (PCC-Initiated and PCE-Initiated), the
-          delegated PCE shall distribute the scheduling information to other
-          PCEs in the environment by sending a PCRpt message with the
-          SCHED-LSP-ATTRIBUTE TLV or SCHED-PD-LSP-ATTRIBUTE TLV, as well as
-          the Bandwith Object and RRO for the found path.</t>
-
-          <t>The definition of the PCReq message and PCRpt message to carry
-          LSP objects (see [I- D.ietf-pce-stateful-pce]) remains
-          unchanged.</t>
-        </section>
-
-        <section title="The PCRep Message">
-          <t>To provide scheduled LSP for TE-LSPs, the stateful PCE SHALL
-          compute the path for the scheduled LSP carried on PCReq message
-          based on network resource availability recorded in scheduled TED
-          which is generated from the scheduled LSP-DB and TED and also
-          synchronize the scheduling with other PCEs in the environment by
-          using PCRpt message with path and resource information for the
-          scheduled LSP.</t>
-
-          <t>If no conflict exists, other PCEs SHALL update their scheduled
-          LSP DBs and scheduled TED.</t>
-
-          <t>If the LSP request can be satisfied and an available path is
-          found, the stateful PCE SHALL send a PCRep Message including the
-          SCHED- LSP-ATTRIBUTE TLV or SCHED-PD-LSP-ATTRIBUTE TLV in the LSP
-          Object body, as well as the Bandwith Object and RRO for the found
-          path back to the PCC as a successful acknowledge.</t>
-
-          <t>If conflicts happen or no path available is found, the requesting
-          PCE SHALL return a PCRep message with NO PATH back to the PCC.</t>
-        </section>
-
-        <section title="The PCUpd Message">
-          <t>To provide scheduled LSP for TE-LSPs, the stateful PCE SHALL
-          compute the path for the scheduled LSP based on network resource
-          availability recorded in scheduled TED which is generated from the
-          scheduled LSP-DB, LSP DB and TED.</t>
-
-          <t>If the request can be satisfied and an available path is found,
-          the stateful PCE SHALL send a PCUpd Message including the SCHED-
-          LSP-ATTRIBUTE TLV or SCHED-PD-LSP-ATTRIBUTE TLV in the LSP Object
-          body to the PCC Note that, the stateful PCE can update the Scheduled
-          LSP parameters later as well based on any network events using the
-          same PCUpd message.</t>
-
-          <t>If conflicts happen or no path available is found, the requesting
-          PCE SHALL return a PCUpd message with ERO empty.</t>
-
-          <!-- removed by dhruv, as this is incorrect
-          <t>If no path is found, the stateful PCE sends a PCUpd message with
-          the NO Path Object. The definition of the PCUpd message to carry LSP
-          objects(see [RFC8231]) is unchanged. </t> -->
-        </section>
-
         <section title="LSP Object">
           <t>The LSP object is defined in [RFC8231]. This document add an
           optional SCHED-LSP-ATTRIBUTE TLV for normal LSP scheduling and an
@@ -593,11 +653,10 @@
           indicates that this LSP is requesting scheduled parameters while the
           SCHED-PD-LSP-ATTRIBUTE TLV indicates that this scheduled LSP is
           periodical. The scheduled LSP attribute TLV MUST be present in LSP
-          Object for each scheduled LSP carried in the PCReq message, the
-          PCRpt message and the PCUpd message. For periodical LSPs, the
-          SCHED-PD-LSP-ATTRIBUTE TLV can be used in LSP Object.</t>
+          Object for each scheduled LSP carried in the PCEP messages. For periodical LSPs, the
+          SCHED-PD-LSP-ATTRIBUTE TLV can be used in LSP Object for each periodic scheduled LSP carried in the PCEP messages.</t>
 
-          <section title="SCHED-LSP-ATTRIBUTE TLV">
+          <section title="SCHED-LSP-ATTRIBUTE TLV" anchor="SCHED-LSP-ATTRIBUTE">
             <t>The SCHED-LSP-ATTRIBUTE TLV can be included as an optional TLV
             within the LSP object for LSP scheduling for the requesting
             traffic service.</t>
@@ -614,9 +673,9 @@
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|             Type (TBD)         |         Length               |
+|             Type (TBD)        |          Length               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|R|                       Reserved (0)                          |
+|R|C|A|  Flags  |               Reserved (0)                    |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       Start-Time                              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -632,12 +691,25 @@
             20 octets.</t>
 
             <t>The fields in the format are:<list style="hanging">
-                <t hangText="R (1 bit):">Set to 1 to indicate the the
+                <t hangText="Flags (8 bits):">Flowing flags are
+                  defined in this document 
+                  <list style="hanging">
+                <t hangText="R (1 bit):">Set to 1 to indicate the 
                 Start-Time is a relative time, which is relative to the
                 current time; set to 0 to indicate the the Start-Time is an
                 absolute time. <vspace blankLines="1"/></t>
 
-                <t hangText="Reserved (31 bits):">This field MUST be set to
+                <t hangText="C (1 bit):">Set to 1 to indicate the 
+                PCC is responsible to setup and remove the scheduled LSP based on the 
+                Start-Time and duration. <vspace blankLines="1"/></t>
+                
+                <t hangText="A (1 bit):">Set to 1 to indicate the 
+                scheduled LSP has been activated and should be considered
+                as part of LSP-DB (instead of Scheduled LSP-DB). <vspace blankLines="1"/></t>
+
+              </list></t>
+
+                <t hangText="Reserved (24 bits):">This field MUST be set to
                 zero on transmission and MUST be ignored on receipt. <vspace
                 blankLines="1"/></t>
 
@@ -646,7 +718,7 @@
                 the corresponding LSP must be setup and activated. <vspace
                 blankLines="1"/></t>
 
-                <t hangText="Duration (31 bits):">The value in seconds,
+                <t hangText="Duration (32 bits):">The value in seconds,
                 indicates the duration that the LSP is undertaken by a traffic
                 flow and the corresponding LSP must be up to carry traffic. At
                 the expiry of this duration, the LSP is tear down and deleted.
@@ -679,7 +751,7 @@
               </list></t>
           </section>
 
-          <section title="SCHED-PD-LSP-ATTRIBUTE TLV">
+          <section title="SCHED-PD-LSP-ATTRIBUTE TLV" anchor="SCHED-PD-LSP-ATTRIBUTE">
             <t>The periodical LSP is a special case of LSP scheduling. The
             traffic service happens in a series of repeated time intervals.
             The SCHED- PD-LSP-ATTRIBUTE TLV can be included as an optional TLV
@@ -696,7 +768,7 @@
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
      |            Type (TBD)         |         Length                |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |R| Options |       Number-repeats        |    Reserved (0)     |
+     |R|C|A|  Flags  | Opt   |  NR   |        Reserved (0)           |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
      |                           Start-Time                          |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -712,10 +784,13 @@
               </figure></t>
 
             <t>The type of the TLV is [TBD] and the TLV has a fixed length of
-            24 octets.</t>
+            24 octets. The description, format and meaning of the Flags (R, C and A bit), 
+            Start-Time, Duration, GrB, GrA, Elastic-Lower-Bound and Elastic-Upper-Bound 
+            fields remains same as SCHED-LSP-ATTRIBUTE TLV.</t>
 
-            <t>The fields in the format are:<list style="hanging">
-                <t hangText="Start-Time (32 bits):">This value in seconds,
+            <t>The following fields are new :<list style="hanging">
+
+                <!--<t hangText="Start-Time (32 bits):">This value in seconds,
                 indicates the time when the scheduled LSP is used to carry
                 traffic and the corresponding LSP must be setup and
                 activated.</t>
@@ -728,9 +803,11 @@
                 <t hangText="R (1 bit):">Set to 1 to indicate the the
                 Start-Time is a relative time, which is relative to the
                 current time; set to 0 to indicate the the Start-Time is an
-                absolute time.</t>
+                absolute time.</t>-->
 
-                <t hangText="Options: (5 bits)">Indicates a way to
+
+
+                <t hangText="Opt: (4 bits)">Indicates options to
                 repeat.<list>
                     <t>Options = 1: repeat every day;</t>
 
@@ -742,67 +819,158 @@
 
                     <t>Options = 5: repeat every Repeat-time-length.</t>
                   </list></t>
+                <t hangText="NR:(4 bits)">The number of repeats.
+                In each of repeats, LSP carries traffic. If value is
+                set to 0xFFFF, it indicates forever.</t> 
+
+                
+                <t hangText="Reserved (16 bits):">This field MUST be set to
+                zero on transmission and MUST be ignored on receipt. <vspace
+                blankLines="1"/></t>
+                
 
                 <t hangText="Repeat-time-length:(32 bits)">The time length in
                 seconds after which LSP starts to carry traffic again for the
-                Duration.</t>
+                Duration.</t></list></t>
 
-                <t hangText="Number-repeats:(16 bits)">The number of repeats.
-                In each of repeats, LSP carries traffic.</t>
 
-                <t hangText=" Reserved (10 bits):">This field MUST be set to
-                zero on transmission and MUST be ignored on receipt. </t>
-              </list></t>
-
-            <t>The fields R, GrB, GrA, Elastic-Lower-Bound and
-            Elastic-Upper-Bound are the same as those in the
-            SCHED-LSP-ATTRIBUTE TLV.</t>
           </section>
         </section>
       </section>
 
-      <section title="Scheduled LSP Updates">
-        <t>After a scheduled LSP is configured, a user may change its
-        parameters including the requested time as well as the bandwidth.</t>
+      
+    
+    <section title="The PCEP Messages">
+    <section title="The PCRpt Message">
+      <t>Path Computation State Report (PCRpt) is a PCEP message sent by a PCC
+      to a PCE to report the status of one or more LSPs as per [RFC8231].  Each LSP State
+      Report in a PCRpt message MAY contain the actual LSP's path,
+      bandwidth, operational and administrative status, etc.  An LSP
+      Status Report carried on a PCRpt message is also used in
+      delegation or revocation of control of an LSP to/from a PCE.  In case of 
+      scheduled LSP, the scheduled TLVs MUST be carried in the LSP
+      object and the ERO conveys the intended path for the scheduled LSP. The scheduled LSP 
+      MUST be delegated to a PCE. This message is also 
+      used to synchronize the scheduled LSPs to other PCE as described in <xref target="I-D.litkowski-pce-state-sync"/>. </t>
+        </section>
+        <section title="The PCUpd Message">
+          <t>Path Computation Update Request (PCUpd) is a PCEP message sent by a
+      PCE to a PCC to update LSP parameters, on one or more LSPs as per [RFC8231]. Each
+      LSP Update Request on a PCUpd message MUST contain all LSP
+      parameters that a PCE wishes to be set for a given LSP. In case of 
+      scheduled LSP, the scheduled TLVs MUST be carried in the LSP
+      object and the ERO conveys the intended path for the scheduled LSP. In case
+      no path can be found, an empty ERO is used. The A bit is used in PCUpd message to indicate the activation of the scheduled LSP in 
+      case the PCE is responsible for the activation (as per the C bit).
+      This message is also 
+      used to synchronize the scheduled LSPs to other PCE as described in <xref target="I-D.litkowski-pce-state-sync"/>.</t>
+          <!--<t>To provide scheduled LSP for TE-LSPs, the stateful PCE SHALL
+          compute the path for the scheduled LSP based on network resource
+          availability recorded in scheduled TED which is generated from the
+          scheduled LSP-DB, LSP DB and TED.</t>
 
-        <t>In PCC-Initiated case, the PCC can send a PCRpt message for the
-        scheduled LSP with updated bandwidth as well as scheduled information
-        included in the SCHED-LSP-ATTRIBUTE TLV (see section 4.3.4.1) or
-        SCHED-PD-LSP-ATTRIBUTE TLV carried in the LSP Object. The PCE should
-        calculate the updated resources and synchronized with other PCEs. If
-        the updates can be satisfied, PCE shall return a PCUpd message to PCC
-        as described in section 4.3.3. If the requested updates cannot be met,
-        PCE shall return a PCUpd message with the original reserved attributes
-        carried in the LSP Object.</t>
+          <t>If the request can be satisfied and an available path is found,
+          the stateful PCE SHALL send a PCUpd Message including the SCHED-
+          LSP-ATTRIBUTE TLV or SCHED-PD-LSP-ATTRIBUTE TLV in the LSP Object
+          body to the PCC. Note that, the stateful PCE can update the Scheduled
+          LSP parameters later as well based on any network events using the
+          same PCUpd message.</t>
 
-        <t>The stateful PCE can update the Scheduled LSP parameters to other
-        PCEs via PCRpt message and the requested PCC via PCUpd message at any
-        time based on any network events including SCHED-LSP-ATTRIBUTE TLV or
-        SCHED-PD-LSP-ATTRIBUTE TLV in the LSP Object body. </t>
+          <t>If conflicts happen or no path available is found, the requesting
+          PCE SHALL return a PCUpd message with empty ERO as described in [RFC8231].</t>-->
+
+          <!-- removed by dhruv, as this is incorrect
+          <t>If no path is found, the stateful PCE sends a PCUpd message with
+          the NO Path Object. The definition of the PCUpd message to carry LSP
+          objects(see [RFC8231]) is unchanged. </t> -->
+        </section>
+        <section title="The PCInitiate Message">
+          <t>An LSP Initiate Request (PCInitiate) message is a PCEP message sent
+          by a PCE to a PCC to trigger LSP instantiation or deletion as per [I-D.ietf-pce-pce-initiated-lsp]. 
+          In case of scheduled LSP, based on the local policy, PCE MAY convey the scheduled LSP to the PCC by including 
+          the scheduled TLVs in the LSP object. Or the PCE would initiate the LSP only at the start time of the
+          scheduled LSP as per the [I-D.ietf-pce-pce-initiated-lsp] without the use of scheduled TLVs.</t>
+
+        </section>
+        <section title="The PCReq message">
+          <t>The Path Computation Request (PCReq) message is a PCEP message sent 
+            by a PCC to a PCE to request a path computation [RFC5440] and it MAY 
+            contain the LSP object to identify the LSP for which the path 
+            computation is requested. In case of scheduled LSP, the scheduled TLVs 
+            MUST be carried in the LSP object in PCReq message to request the 
+            path computation based on scheduled TED and LSP-DB. A PCC MAY use
+            PCReq message to obtain the scheduled path before delegating the 
+            LSP.</t>
+
+          <!--<t>After scheduled LSP capability negotiation, for PCC-Initiated
+          mode, a PCC can send a PCReq message including the
+          SCHED-LSP-ATTRIBUTE TLV (see section 4.3.4.1) or
+          SCHED-PD-LSP-ATTRIBUTE TLV (see section 4.3.4.2) carried in the LSP
+          Object (see section 4.3.4) body to indicate the requested LSP
+          scheduling parameters for a customer's traffic service with the
+          delegation bit set to 1 in LSP Object. The value of requested
+          bandwidth is taken via the existing 'Requested Bandwidth with
+          BANDWIDTH Object- Type as 1' defined in [RFC5440].</t>
+
+          <t>Meanwhile, for both modes (PCC-Initiated and PCE-Initiated), the
+          delegated PCE shall distribute the scheduling information to other
+          PCEs in the environment by sending a PCRpt message with the
+          SCHED-LSP-ATTRIBUTE TLV or SCHED-PD-LSP-ATTRIBUTE TLV, as well as
+          the Bandwith Object and RRO for the found path.</t>
+
+          <t>The definition of the PCReq message and PCRpt message to carry
+          LSP objects (see [I- D.ietf-pce-stateful-pce]) remains
+          unchanged.</t>-->
+        </section>
+
+        <section title="The PCRep Message">
+          <t>The Path Computation Reply (PCRep) message is a PCEP message sent by a PCE to a PCC in reply to a path
+      computation request [RFC5440].  A PCRep message can contain either a set of
+      computed paths if the request can be satisfied, or a negative
+      reply if not.  The negative reply may indicate the reason why no
+      path could be found. In case of scheduled LSP, the scheduled TLVs 
+            MUST be carried in the LSP object in PCRep message to indicate the 
+            path computation based on scheduled TED and LSP-DB. A PCC and PCE MAY use
+            PCReq and PCRep message to obtain the scheduled path before delegating the 
+            LSP.</t>
+          <!--<t>To provide scheduled LSP for TE-LSPs, the stateful PCE SHALL
+          compute the path for the scheduled LSP carried on PCReq message
+          based on network resource availability recorded in scheduled TED
+          which is generated from the scheduled LSP-DB and TED and also
+          synchronize the scheduling with other PCEs in the environment by
+          using PCRpt message with path and resource information for the
+          scheduled LSP.</t>
+
+          <t>If no conflict exists, other PCEs SHALL update their scheduled
+          LSP DBs and scheduled TED.</t>
+
+          <t>If the LSP request can be satisfied and an available path is
+          found, the stateful PCE SHALL send a PCRep Message including the
+          SCHED- LSP-ATTRIBUTE TLV or SCHED-PD-LSP-ATTRIBUTE TLV in the LSP
+          Object body, as well as the Bandwith Object and RRO for the found
+          path back to the PCC as a successful acknowledge.</t>
+
+          <t>If conflicts happen or no path available is found, the requesting
+          PCE SHALL return a PCRep message with NO PATH back to the PCC.</t>-->
+        </section>
+        <section title="The PCErr Message">
+          <t>[Editor's Note - Error Handling will be taken up in the next revision
+            of the draft]</t>
+        </section>
       </section>
-
-      <section title="Scheduled LSP activation and deletion">
-        <t>In PCC-Initiated LSP scheduling, the PCC itself MAY activate the
-        scheduled LSP at the starting time. Alternatively, in PCE-Initiated
-        case, the stateful PCE MAY activate the scheduled LSP at its scheduled
-        time by sending a PCInitiated message. </t>
-
-        <t>After the scheduled duration expires, the PCE shall send a PCUpd
-        message with R flag set to the PCC to delete the LSP over the path, as
-        well as to other PCEs to remove the scheduled LSP in the databases.
-        Additionally, it shall update its scheduled LSP DB and scheduled
-        TED.</t>
-
-        <t>Note that, the stateful PCE can update the Scheduled LSP parameters
-        at any time based on any network events using the PCUpd message
-        including SCHED-LSP-ATTRIBUTE TLV in the LSP Object body.</t>
-      </section>
-    </section>
 
     <section title="Security Considerations">
       <t>This document defines LSP-SCHEDULING-CAPABILITY TLV and SCHED-
       LSP-ATTRIBUTE TLV which does not add any new security concerns beyond
-      those discussed in [RFC5440] and [RFC8231].</t>
+      those discussed in [RFC5440] and [RFC8231]. But in some deployments
+      the scheduling information could provide details about the network
+      operations that could be deemed as extra sensitive.  Additionally, snooping of PCEP messages
+   with such data or using PCEP messages for network reconnaissance may
+   give an attacker sensitive information about the operations of the
+   network.  Thus, such deployment should employ suitable PCEP security mechanisms like TCP Authentication Option (TCP-AO) [RFC5925] or
+   [I-D.ietf-pce-pceps].  The procedure based on Transport Layer Security (TLS) in
+   [I-D.ietf-pce-pceps] is considered a security enhancement and thus is much better
+   suited for the sensitive service-aware information.</t>
     </section>
 
     <section title="Manageability Consideration">
@@ -844,38 +1012,54 @@
 
     <section title="IANA Considerations">
       <section title="PCEP TLV Type Indicators">
-        <t>This document defines the following new PCEP TLV; IANA is requested
-        to make the following allocations from this registry. <figure>
+        <t>This document defines the following new PCEP TLV. IANA 
+        maintains a sub-registry "PCEP TLV Type Indicators" in the
+        "Path Computation Element Protocol (PCEP) Numbers" registry. IANA is requested
+        to make the following allocations from this sub-registry. <figure>
             <artwork>Value     Meaning                         Reference
  TBD  SCHED-LSP-ATTRIBUTE            This document
  TBD  SCHED-PD-LSP-ATTRIBUTE         This document</artwork>
           </figure></t>
       </section>
 
-      <section title="LSP-SCHEDULING-CAPABLITY">
-        <t>This document requests that a registry is created to manage the
-        Flags field in the STATEFUL-PCE-CAPABILITY TLV in the OPEN object. New
-        values are to be assigned by Standards Action [RFC5226]. Each bit
-        should be tracked with the following qualities: <list style="symbols">
-            <t>Bit number (counting from bit 0 as the most significant
-            bit)</t>
-
-            <t>Capability description</t>
-
-            <t>Defining RFC</t>
-          </list></t>
+      <section title="STATEFUL-PCE-CAPABILITY TLV Flag field">
+        <t>This document defines new bits in the Flags field in the 
+          STATEFUL-PCE-CAPABILITY TLV in the OPEN object. IANA 
+        maintains a sub-registry "STATEFUL-PCE-CAPABILITY TLV Flag Field" in the
+        "Path Computation Element Protocol (PCEP) Numbers" registry. IANA is requested
+        to make the following allocations from this sub-registry.</t> 
 
         <t>The following values are defined in this document:<figure>
             <artwork>Bit    Description                                    Reference
- 28    LSP-SCHEDULING-CAPABILITY (B-bit)          This document
- 29    PD-LSP-CAPABLITY (PD-bit)                  This document</artwork>
+ TBD    LSP-SCHEDULING-CAPABILITY (B-bit)          This document
+ TBD    PD-LSP-CAPABLITY (PD-bit)                  This document</artwork>
           </figure></t>
       </section>
-    </section>
+      <section title="Schedule TLVs Flag Field">
+      <t>IANA is requested to create a new subregistry, named "Schedule TLVs Flag Field",
+   within the "Path Computation Element Protocol (PCEP)
+   Numbers" registry to manage the Flag field in the SCHED-LSP-ATTRIBUTE and SCHED-PD-LSP-ATTRIBUTE TLVs.
+   New values are
+   assigned by Standards Action [RFC8126].  Each bit should be tracked
+   with the following qualities:
+   <list style="symbols">
+   <t>Bit number (counting from bit 0 as the most significant bit)</t>
+   <t>Capability description</t>
+   <t>Defining RFC</t></list>
+   </t>
+
+   <t>The following values are defined in this document:<figure>
+            <artwork>
+Bit    Description                                    Reference
+0      R-bit                                          This document
+1      C-bit                                          This document
+1      A-bit                                          This document</artwork>
+          </figure></t>
+    </section></section>
 
     <section title="Acknowledgments">
       <t>The authors of this document would also like to thank Rafal
-      Szarecki,Adrian Farrel, Cyril Margaria for the review and comments.</t>
+      Szarecki, Adrian Farrel, Cyril Margaria for the review and comments.</t>
     </section>
   </middle>
 
@@ -884,10 +1068,13 @@
       <?rfc include='reference.RFC.2119'?>
 
       <?rfc include='reference.RFC.5440'?>
-
+      
+      <?rfc include="reference.RFC.8126"?>
+      <?rfc include="reference.RFC.8174"?>
       <?rfc include="reference.RFC.8231"?>
+      <?rfc include="reference.RFC.8232"?>
 
-      <?rfc include="reference.I-D.ietf-pce-stateful-sync-optimizations"?>
+      <!--<?rfc include="reference.I-D.ietf-pce-stateful-sync-optimizations"?>-->
 
       <?rfc include="reference.I-D.ietf-pce-pce-initiated-lsp"?>
 
@@ -899,9 +1086,13 @@
     <!-- Normative -->
 
     <references title="Informative References">
-      <?rfc include="reference.I-D.ietf-pce-stateful-pce-app"?>
+      <!--<?rfc include="reference.I-D.ietf-pce-stateful-pce-app"?>-->
+      <?rfc include="reference.I-D.litkowski-pce-state-sync"?>
+      <?rfc include="reference.I-D.ietf-pce-pceps"?>
 
       <?rfc include='reference.RFC.5226'?>
+      
+      <?rfc include='reference.RFC.7399'?>
 
       <?rfc include='reference.RFC.7420'?>
     </references>
@@ -917,12 +1108,10 @@
       LSP information.</t>
 
       <t>The information of SLSP-DB MUST be shared and synchronized among all
-      PCEs within the centralized network by using PCRpt message with
-      scheduled LSP information. In order to synchronize the scheduled LSP
-      information in SLSP-DB among PCEs, the PCRpt Message is used as
-      described in section 4.3.1. </t>
+      PCEs within the centralized network by using PCRpt and PCUpd message with
+      scheduled LSP information as per the mechanism described in [I-D.litkowski-pce-state-sync]. </t>
 
-      <t>To achieve the synchronization, the PCE should generate and maintain
+      <t>The PCE should generate and maintain
       a scheduled TED based on LSP DB, scheduled LSP DB and TED, which is used
       to indicate the network resource availability on network nodes for LSP
       path computation.</t>
