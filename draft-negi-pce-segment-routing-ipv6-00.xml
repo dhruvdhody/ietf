@@ -56,6 +56,19 @@
         <email>dhruv.ietf@gmail.com</email>
       </address>
     </author>
+    <author initials="S" surname="Sivabalan" fullname="Siva Sivabalan">
+      <organization>Cisco Systems</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>msiva@cisco.com</email>
+      </address>
+    </author>
     <date year="2017" />
     <area>Routing</area>
     <workgroup>PCE Working Group</workgroup>
@@ -317,7 +330,7 @@
           flag:</t>
           <t>o L-flag: A PCC sets this flag to 1 to indicate that
           it does not impose any limit on MSD.</t>-->
-          <t>[Editor's Note - draft-bashandy-isis-srv6-extensions defines other fields like Max-End-Pop-SRH, Max-T-Ins-SRH, Max-T-Encap-SRH, max-End-D-SRH - should we follow the same?]</t>
+          <!--<t>[Editor's Note - draft-bashandy-isis-srv6-extensions defines other fields like Max-End-Pop-SRH, Max-T-Ins-SRH, Max-T-Encap-SRH, max-End-D-SRH - should we follow the same?]</t>-->
         </section>
         <!-- SR PCE Capability TLV -->
         <section anchor="Exchanging-SRv6-Capability"
@@ -393,18 +406,19 @@
    |                         (128-bit)                             |
    |                                                               | 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |          Flags                  |       Function Code         |
+   | SRv6ST|         Flags           |       Function Code         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   //                        NAI (variable)                       //
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+      
      ]]>
 </artwork>
           </figure>
           <t><list>
           <t>SRv6 Identifier is the 128 bit IPv6 addresses representing SRv6 segment.</t>
-          <t>Flags is the 16 bit field, no flag bits are currently defined in this document.</t>
+          <t>SRv6ST is the SRv6 SID Type which indicates the interpretation for NAI (Node or Adjacency Identifier) as per <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+          <t>Flags is the 12 bit field, no flag bits are currently defined in this document.</t>
           <t>Function Code is is the 16 bit field representing supported functions.
-          associated with SRv6 SIDs. See <xref target='I-D.filsfils-spring-srv6-network-programming'/>.</t>
-        </list></t>
-        <t>Following function codes are currently defined-
+          associated with SRv6 SIDs. See <xref target='I-D.filsfils-spring-srv6-network-programming'/>. Following function codes are currently defined -
           <list>
             <t>0: Reserved</t>
             <t>1: End Function</t>
@@ -412,6 +426,17 @@
             <t>3: End.DT6 Function</t>
             <t>4: End.X Function</t>
           </list></t>
+          
+              <t>NAI field <xref target='I-D.ietf-pce-segment-routing'/> contains the NAI associated with the SRv6 Identifier.  Depending on the value of SRv6ST, 
+                the NAI can have different formats. 
+                <list>
+                  <t>When SRv6ST value is 1, the NAI is as per the 'IPv6 Node ID' format defined in <xref target='I-D.ietf-pce-segment-routing'/>, which specify an IPv6 address. This is used to
+                  identify the owner of the SRv6 Identifier.</t>
+                  <t>When SRv6ST value is 2, the NAI is as per the 'IPv6 Adjacency' format defined in <xref target='I-D.ietf-pce-segment-routing'/>, which specify a pair of IPv6 addresses. This is used to
+                  identify the IPv6 Adjacency and used with the SRv6 Adj-SID.</t>
+                  <t>Note that when SRv6ST value is 0, NAI is not included and MUST be NULL. </t>
+                </list></t>
+            </list></t>
 
       <!--If M bit is set I bit MUST not be set and vice-versa, 
       otherwise PCEP speaker MUST send a PCErr message with 
