@@ -53,11 +53,11 @@
 
 	<date year="2017"/>
 	<abstract><t>
-   This document describes the extensions to the PCEP to notify BFD
-   parameters for LSPs from PCE to PCC for PCE-initiated LSP.  The
+   This document describes the extensions to the Path Computation Element 
+   (PCE) Communication Protocol (PCEP) to notify Bidirectional Forwarding Detection (BFD)
+   parameters for Label Switched Paths (LSPs) from PCE to Path Computation Client (PCC) for PCE-initiated LSP.  The
    extensions include BFD protocol parameters and allow PCC to support
-   BFD for PCE-Initiated LSP whose BFD session is a bi-directional co-
-   routed channel.</t>
+   BFD for PCE-Initiated LSP. Further, support for bi-directional co-routed BFD channel is provided.</t>
 
 	</abstract>
 	<note title="Requirements Language">
@@ -72,42 +72,62 @@
 
 	<middle>
 	<section title="Introduction" anchor="section-1"><t>
-   RFC 5884 <xref target="RFC5884"/> describes the applicability of BFD in relation to
-   LSP Ping for detecting rapidly a Multiprotocol Label Switching (MPLS)
-   Label Switched Path (LSP) data plane failure.  It also describes
-   procedures for using BFD in MPLS environment.  The LSP BFD detecting
-   can be bidirectional LSP or unidirectional LSP(so long as there is
-   some return path).  If the path from ingress LSR to egress LSR is not
+   <xref target="RFC5884"/> describes the applicability of Bidirectional Forwarding Detection (BFD) in relation to
+   Label Switched Path (LSP) Ping for detecting rapidly a Multiprotocol Label Switching (MPLS)
+   LSP data plane failure.  It also describes
+   procedures for using BFD in MPLS environment.  The LSP (for which BFD is used to detect failure)
+   can be a bidirectional LSP or an unidirectional LSP (so long as there is
+   some return path).  In case of bidirectional LSP, it should be noted that, if the path from ingress LSR to egress LSR is not
    co-routed with the path from egress LSR to ingress LSR, the failure
    to deliver BFD control packets from egress LSR to ingress LSR can
    lead to false negatives, making ingress LSR deduces that the LSP has
-   failed.</t>
+   failed. <xref target="I-D.ietf-mpls-bfd-directed"/> proposes a solution to instruct the
+   egress to use an explicit path for its BFD control packets
+   associated with a particular BFD session.</t>
+
+   <t>The Path Computation Element Communication Protocol (PCEP) <xref target="RFC5440"/>
+   defines the mechanisms for the communication between a Path
+   Computation Client (PCC) and a Path Computation Element (PCE), or
+   between two PCEs. <xref target="RFC8231"/> describes a set of extensions to PCEP to provide stateful
+   control for stateful PCE. </t>
 
 	<t>
-   I-D.ietf-pce-pce-initiated-lsp <xref target="I-D.ietf-pce-pce-initiated-lsp"/>
+   <xref target="I-D.ietf-pce-pce-initiated-lsp"/>
    introduces the procedure of PCE-initiated LSPs under the stateful PCE
-   model.  PCC will automatically set up the MPLS RSVP-TE LSP according
-   to the explicit path PCE provides.  BFD session for the PCE-initiated
-   LSP can also be created dynamically and the return path is implicitly
-   the shortest path.  Such BFD session whose forward and reverse paths
-   are possibly not co-routed has the same problem as mentioned above.</t>
+   model where the setup and teardown is initiated by the PCE, without the need for local configuration
+   on the PCC, thus allowing for a dynamic network.
+   The PCC creates the LSP using the attributes
+   communicated by the PCE (and local values for any unspecified
+   parameters) and initiate setup of the LSP. 
+   <!--PCC will automatically set up the MPLS RSVP-TE LSP according
+   to the explicit path PCE provides.-->  BFD session for the PCE-initiated
+   LSP can also be created dynamically based on the BFD parameters set by the 
+   PCE at the same time as LSP creation without a need for local configuration on the PCC. 
+   Note that for the explicitly routed LSP, it is likely that the
+   shortest return path to the ingress would not follow the
+   same path as the LSP in the forward direction and is thus
+   would face false positive. As discussed earlier, <xref target="I-D.ietf-mpls-bfd-directed"/> defines
+   a mechanism to form bi-directional co-routed associated channel for BFD sessions.</t>
 
 	<t>
-   This document describes the extensions to the PCEP to notify BFD
-   parameters for LSPs from PCE to PCC for PCE-initiated LSP.  The
-   extensions allow PCC to set up BFD session for PCE-Initiated LSP.</t>
+   This document describes the extensions to the PCEP to include BFD
+   parameters for LSPs from PCE to PCC for PCE-initiated LSP.  The PCC would further set up BFD session for the PCE-Initiated LSP. 
+   Apart for setup, PCE could also modify or remove BFD session for PCE-Initiated LSP.</t>
 
-	<t>
+	<!--<t>
    The BFD control packets can be exchanged over a bi-directional co-
-   routed channel.</t>
+   routed channel.</t>-->
 
 	<t>
-   The BFD protocol parameters such as detection time multiplier,
+   The PCE could set the BFD protocol parameters, such as detection time multiplier,
    desired Min TX Interval, required Min RX Interval for PCE-initiated
-   LSP come from the public template or global configuration on PCC.
-   The extensions of PCEP include generic BFD protocol parameters too.
+   LSP. In case PCE does not explicitly set these, then the PCC could set these values from a local template or configuration (at PCC).
+   <!--The extensions of PCEP include generic BFD protocol parameters too.
    It can be used to notify PCC by PCE to adjust these parameters for
-   special LSP.</t>
+   special LSP.--> 
+
+   </t>
+   <t>This document proposes two modes to bootstrap BFD session for PCE-Initiated LSP, one without the use of LSP-ping where the PCE sets the BFD Discriminators for the forward and reverse LSPs. The second involves the use of LSP Ping by Ingress as usual.</t>
 
 	</section>
 
@@ -118,67 +138,90 @@
    LSP: Label Switching Path</t>
 
 	<t>
-   This document uses the following terms defined in RFC 5440 <xref target="RFC5440"/>:
+   This document uses the following terms defined in <xref target="RFC5440"/>:
    PCC, PCE, PCEP.</t>
 
-	<t>
-   The following term is defined in I-D.ietf-pce-pce-initiated-lsp
-   <xref target="I-D.ietf-pce-pce-initiated-lsp"/>:</t>
+   <t>
+   This document uses the following terms defined in <xref target="RFC8231"/>:
+   Stateful PCE, delegation.</t>
+
 
 	<t>
+   The following term is defined in <xref target="I-D.ietf-pce-pce-initiated-lsp"/>:
    PCE-initiated LSP: LSP that is instantiated as a result of a request
    from the PCE.</t>
 
 	</section>
 
-	<section title="Bootstrapping Bi-directional Co-routed BFD Session" anchor="section-3"><t>
-   PCE computes the path for one LSP from the ingress LSR to egress LSR
+	<section title="Bootstrapping BFD Session" anchor="section-3"><t>
+   <!--PCE computes the path for one LSP from the ingress LSR to egress LSR
    and initiates the creation of this LSP on ingress LSR.  The LSP is
    called as LSP1.  PCE can initiate the creation of LSP on egress LSR
    according to the co-routed path from egress LSR to ingress LSR.  The
-   LSP is called as LSP2.</t>
+   LSP is called as LSP2.-->
+   At the time of PCE-initiation of the LSP, PCE could also request the
+   setup of the BFD session for the LSP to monitor the data plane. 
+   The LSP could be uni-directional or bi-directional. In case of 
+   bi-directional LSP, a co-routed bi-directional BFD session is 
+   setup.    
+   </t>
 
-	<t>
+	<!--<t>
    To make the BFD session for LSP1 over the co-routed path to avoid the
-   false detection there are two solutions as below:</t>
+   false detection there are two solutions as below:</t>-->
 
 	<section title="Bootstrapping BFD session without LSP Ping" anchor="section-3.1"><t>
-   BFD for MPLS LSP uses LSP Ping carrying local descriminator to
-   bootstrapping BFD session in order to associate the FEC representing
-   the LSP with the BFD session indicated by descriminators.  But PCE
-   knows the two co-routed LSPs and can allocate the pair of
-   descriminators for the co-routed LSPs.</t>
+   BFD for MPLS LSP uses LSP Ping to carry the local discriminators to
+   bootstrap the BFD session in order to associate the FEC representing
+   the LSP with the BFD session indicated by the discriminators.  But the PCE could 
+   also be used to allocate and set the pair of discriminators at the Ingress and Egress, in which case the initial LSP Ping is not needed. 
+   This mode is applicable only for the double-sided bi-directional LSP that are initiated at the Ingress PCC and the Egress PCC, explicitly by the PCE.
+   </t>
 
-	<t>
-   PCE notify ingress LSR and egress LSR to set up BFD session for LSP1
-   by the BFD extensions of PCEP the pair of descriminators and notify
-   PCC not necessary to send LSP ping message and directly to set up BFD
-   session.  My descriminator in BFD control packets along LSP1 is your
-   descriminator in BFD control packets along LSP2 and vice versa.</t>
+	<t>Consider, the forward LSP from the ingress LSR to egress LSR is
+   called LSP1. The PCE initiates LSP1 at the Ingress. Further PCE also initiates the creation of reverse LSP on egress LSR
+   according to the co-routed path from egress LSR to ingress LSR.  The
+   LSP is called as LSP2.</t>
+   <t>
+   PCE also updates to the ingress LSR and egress LSR to set up BFD session for LSP1 and LSP2
+   by the PCEP extension (as per this document), by setting the pair of BFD discriminators at the ingress and egress
+   PCCs. Thus, it is not necessary to send LSP ping to bootstrap the BFD
+   session.  The 'my discriminator' in BFD control packets along LSP1 is 'your
+   discriminator' in BFD control packets along LSP2 and vice versa.</t>
 
 	<t>
    By this method the same BFD session is set up not only for LSP1 but
    also LSP2.</t>
 
-	<t>
-   How to guarantee the descriminators allocated by PCE and PCC are not
-   the same is out of scope of this document.</t>
+	<t>The mechanism by which a PCE allocates the BFD discriminator is out of scope of this document.</t>
 
 	</section>
 
-	<section title="Bootstrapping BFD session with LSP Ping" anchor="section-3.2"><t>
-   I-D.ietf-mpls-bfd-directed <xref target="I-D.ietf-mpls-bfd-directed"/> defines the
-   BFD Reverse Path TLV as an extension to LSP Ping RFC 4379 <xref target="RFC4379"/>
+	<section title="Bootstrapping BFD session with LSP Ping" anchor="section-3.2">
+   <t>As per <xref target="RFC5884"/>, a BFD session is bootstrapped using LSP Ping. To establish a BFD session, an LSP Ping
+   Echo request message carry the local discriminator assigned by
+   the ingress LSR for the BFD session. The egress LSR respond with an LSP Ping Echo
+   reply message that carries the local discriminator assigned by it for
+   the BFD session. The BFD control packet uses the discriminator as exchanges via the LSP Ping Echo request and Echo reply messages.</t>
+
+   <t>During the LSP initiation, PCE can also update the BFD parameters, the BFD discriminators are allocated by LSR and not set by the PCE.</t>
+
+   <dhruv>
+
+      <t>
+      <xref target="I-D.ietf-mpls-bfd-directed"/> defines the
+   BFD Reverse Path TLV as an extension to LSP Ping <xref target="RFC8029"/>
    and proposes that it to be used to instruct the egress BFD peer to
    use specified path for its BFD control packets associated with the
-   particular BFD session.</t>
+   particular BFD session. In this way the forward and reverse directions of the BFD session can form a
+   bi-directional co-routed associated channel.</t>
 
-	<t>
+	<!--<t>
    After PCE initiates PCC to set up the LSP PCC delegates the MPLS
    RSVP-LSP with LSP-IDENTIFIERS TLV including FEC information to PCE.
    Therefore after ingress LSR and egress LSR set up the LSP1 and LSP2
    independently they will delegate the LSP1 and LSP2 FEC information to
-   PCE independently.</t>
+   PCE independently.</t>-->
 
 	<t>
    PCE notify ingress LSR to set up BFD session for LSP1 carrying the
