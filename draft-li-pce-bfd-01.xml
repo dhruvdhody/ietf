@@ -3,11 +3,13 @@
 <!ENTITY I-D.ietf-mpls-bfd-directed SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-mpls-bfd-directed-07.xml">
 <!ENTITY I-D.ietf-pce-pce-initiated-lsp SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-pce-pce-initiated-lsp-11.xml">
 <!ENTITY RFC2119 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC4379 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4379.xml">
 <!ENTITY RFC5440 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5440.xml">
 <!ENTITY RFC5880 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5880.xml">
 <!ENTITY RFC5884 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5884.xml">
+<!ENTITY RFC5886 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5886.xml">
+<!ENTITY RFC8029 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8029.xml">
 <!ENTITY RFC8174 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
+<!ENTITY RFC8231 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8231.xml">
 ]>
 <rfc submissionType="IETF" docName="draft-li-pce-bfd-01" category="std" ipr="trust200902"><?rfc compact="yes"?>
 	<?rfc text-list-symbols="o*+-"?>
@@ -204,11 +206,10 @@
    reply message that carries the local discriminator assigned by it for
    the BFD session. The BFD control packet uses the discriminator as exchanges via the LSP Ping Echo request and Echo reply messages.</t>
 
-   <t>During the LSP initiation, PCE can also update the BFD parameters, the BFD discriminators are allocated by LSR and not set by the PCE.</t>
+   <t>During the LSP initiation, PCE can also update the BFD parameters to the ingress. Note that in this mode, the BFD discriminators are allocated by LSRs and not set by the PCE.</t>
 
-   <dhruv>
-
-      <t>
+   <t>As per the mechanism defined in <xref target="RFC5884"/> and <xref target="RFC5886"/>, the reverse direction of the BFD session 
+   would follow the shortest path route and that might lead to the problem in detecting failures. 
       <xref target="I-D.ietf-mpls-bfd-directed"/> defines the
    BFD Reverse Path TLV as an extension to LSP Ping <xref target="RFC8029"/>
    and proposes that it to be used to instruct the egress BFD peer to
@@ -223,91 +224,136 @@
    independently they will delegate the LSP1 and LSP2 FEC information to
    PCE independently.</t>-->
 
-	<t>
+  <t>BFD Reverse Path TLV contains the target FEC to identify the specified reverse path
+      that the BFD control packets is required to follow. For PCE-Initiated LSPs, the PCE can also 
+      provide this information along with other BFD parameters.</t> 
+      <t>In case of double-sided bi-directional LSP, the PCE MUST
+      first initiate the LSPs - LSP1 in forward and LSP2 in reverse direction. The Ingress 
+      and Egress PCC would report the status of the LSP as well as the parameters to identify the FEC. The PCE SHOULD
+      then use the FEC as part of BFD Reverse Path TLV along with other BFD parameters as part of PCUpd message for LSP1 and LSP2. 
+      The PCC would then follow the procedure in <xref target="I-D.ietf-mpls-bfd-directed"/>
+      to set up a bi-directional co-routed BFD channel. Two BFD sessions are set up for LSP1 and LSP2
+      independently.</t>
+
+
+	<!--<t>
    PCE notify ingress LSR to set up BFD session for LSP1 carrying the
    FEC information about the reverse LSP, LSP2.  The information
    received by ingress LSR via PCEP can be set to the BFD Reverse Path
    TLV in the LSP Ping message.  Following the procedure defined in
    [draft-ietf-mpls-bfd-directed-02] the BFD session would be a bi-
    directional co-routed channel and no false detection would be
-   notified.</t>
+   notified.</t>-->
 
-	<t>
+	<!--<t>
    PCE notify Egress LSR to set up BFD session for LSP2 following the
    same process above.</t>
 
 	<t>
    By this method two BFD sessions are set up for LSP1 and LSP2
-   independently.</t>
+   independently.</t>-->
 
 	</section>
 
 	</section>
 
-	<section title="TLVs of PCEP Extensions for BFD" anchor="section-4"><section title="BFD Reverse Path TLV" anchor="section-4.1"><t>
-   The BFD Reverse Path TLV provides BFD parameters used to indicate the
-   reverse path for BFD session.</t>
-
-	<t>
-   This is an optional TLV defined for the LSPA Object.  This TLV is
-   included in the LSPA Object with PCUpd message.</t>
-
-	<t>
-   The format of the BFD Reverse Path TLV is shown in the following
-   figure:</t>
-
-	<figure><artwork><![CDATA[
-     0                   1                   2                   3
-     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |   BFD Reverse Path TLV Type   |          Length               |
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                        Reverse Path                           |
-    ~                                                               ~
-    |                                                               |
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                      BFD Reverse Path TLV
-]]></artwork>
-	</figure>
-	<t>
-   BFD Reverse Path TLV Type is 2 octets in length and the value is to
-   be assigned by IANA.</t>
-
-	<t>
-   Length is 2 octets in length and defines the length in octets of the
-   Reverse Path field.</t>
-
-	<t>
-   Reverse Path refers to Reverse Path defined in BFD Reverse Path TLV
-   in I-D.ietf-mpls-bfd-directed <xref target="I-D.ietf-mpls-bfd-directed"/>.</t>
-
-	</section>
-
-	<section title="BFD Generic TLV" anchor="section-4.2"><t>
-   The BFD Generic TLV provides BFD generic parameters of BFD session.</t>
-
-	<t>
-   This is an optional TLV defined for the LSPA Object.  This TLV is
-   included in the LSPA Object with PCInitiate or PCUpd message.</t>
-
-	<t><list style="hanging" hangIndent="-1"><t hangText="The format of the BFD Generic TLV is shown in the following figure:">
-	<vspace blankLines="0"/>
-	</t>
-
-	</list>
-	</t>
-
-	<figure><artwork><![CDATA[
+	<section title="TLVs of PCEP Extensions for BFD" anchor="section-4">
+  <section title="BFD-Capability TLV" ><t>
+    The BFD-Capability TLV is an optional TLV for use in the
+   OPEN Object for BFD capability
+   advertisement.  Its format is shown in the following figure:
+  </t>
+     <figure title="The BFD-Capability TLV format"><artwork><![CDATA[
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   BFD Generic TLV Type        |           Length              |
+   |               Type=TBD1       |            Length=4           |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Detect Mult  |                 Reserved                      |
+   |                             Flags                             |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                       My Discriminator                        |
+]]></artwork>
+  </figure>
+  <t>The Type of the TLV is (TBD1) and it has a fixed Length of 4 octets.</t>
+
+   <t>The value comprises a single field - Flags (32 bits).  No flags are
+   defined for this TLV in this document.</t>
+
+   <t>Unassigned bits are considered reserved.  They MUST be set to 0 on
+   transmission and MUST be ignored on receipt.</t>
+
+   <t>Advertisement of the BFD-Capability TLV implies support of
+   BFD for PCE-initiated LSP, as well as the TLVs, sub-TLVs and
+   procedures defined in this document.</t>
+  </section>
+	<section title="BFD TLV" anchor="section-4.1"><t>
+   The BFD TLV provides the BFD parameters of the BFD session. This is an optional TLV for the LSPA Object.
+   This TLV is included in the LSPA Object with the PCInitiate or the PCUpd message. The presence of this TLV 
+   indicates that the PCE has requested the BFD session to be set for the LSP.</t>
+
+   <t>The format of the BFD TLV is shown in the
+   following figure:</t>
+   <figure title="The BFD TLV format"><artwork><![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                      Your Discriminator                       |
+   |           Type=TBD2           |           Length              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |R|   Flag      | Mode  |              Reserved                 |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   //                            sub-TLVs                          //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+  </figure>
+                    
+   <t>
+   BFD TLV Type is 2 octets in length and the value (TBD2) is to
+   be assigned by IANA.</t>
+
+   <t>
+   Length is 2 octets in length and defines the variable length. The value part consist of - 
+   <list style="symbols">
+   <t>The 8 bit Flag field with one bit defined - 
+    <list style="symbols">
+      <t>R bit: The Remove bit is set to indicate removal of the BFD session for the 
+   the associated LSP.  If the bit is clear, the BFD session parameters 
+   is being added or modified.</t>
+    </list>
+   </t>
+   <t>The 4-bit Mode field, indicates the BFD session mode. Currently following modes are defined - 
+    <list style="symbols">
+      <t>1 - Bootstrapping BFD session without LSP Ping</t>
+      <t>2 - Bootstrapping BFD session with LSP Ping</t>
+    </list>
+   </t>
+
+   <t>The reserved field
+   field MUST be set to zero on transmission and MUST be ignored on receipt.</t>
+
+   <t>Following optional sub-TLVs are currently defined in this document:
+    <list style="symbols">
+      <t>1: BFD-Parameters sub-TLV</t>
+      <t>2: BFD-Discriminator sub-TLV</t>
+      <t>3: BFD-Authentication sub-TLV</t>
+      <t>4: BFD-Reverse-Path sub-TLV</t>
+    </list>
+   </t>
+ </list></t>
+
+  <section title="BFD-Parameters TLV" anchor="section-4.1.1">
+  <t>The optional BFD-Parameters sub-TLV specifies the various BFD parameters as set
+  by the PCE.</t>  
+	<t>The format of the BFD-Parameters sub-TLV is shown in the following figure:
+	</t>
+
+	<figure title="BFD-Parameters sub-TLV"><artwork><![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |            Type=1             |           Length              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                 Reserved                      |  Detect Mult  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                    Desired Min TX Interval                    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -315,46 +361,71 @@
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                 Required Min Echo RX Interval                 |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                        BFD Generic TLV
+                        
 ]]></artwork>
 	</figure>
-	<t>
-   BFD Generic Path TLV Type is 2 octets in length and the value is to
-   be assigned by IANA.</t>
+	<t>The Type is 1, Length is 16 octets, and the value comprises of -
+    <list style="symbols">
+  <t>The reserved field
+   field MUST be set to zero on transmission and MUST be ignored on receipt.</t>
+	<t>For the meaning and description of the other fields in the value part of the sub-TLV, please refer to the BFD Control Packet Format in <xref target="RFC5880"/>. </t> 
+ </list>
+   </t>
 
-	<t>
-   Length is 2 octets in length and defines the fixed length 20.</t>
-
-	<t>
-   The value of TLV refers to Generic BFD Control Packet Format in RFC
-   5880 <xref target="RFC5880"/>.</t>
+   <t>The PCE MUST set the value for the field as zero when it does not want to set the value and wants the PCC to pick a local values.
+   In absence of this sub-TLV in the BFD TLV, the PCC can choose local values.</t>
 
 	</section>
-
-	<section title="BFD Authentication TLV" anchor="section-4.3"><t>
-   The BFD Authentication TLV provides BFD authentication parameters of
-   BFD session.</t>
-
-	<t>
-   This is an optional TLV defined for the LSPA Object.  This TLV is
-   included in the LSPA Object with PCInitiate or PCUpd message.</t>
-
-	<t>
-   The format of the BFD Generic Path TLV is shown in the following
-   figure:</t>
-
-	<figure><artwork><![CDATA[
+  <section title="BFD-Discriminator TLV" anchor="section-4.1.2">
+  <t>The optional BFD-Discriminator sub-TLV specifies the BFD discriminator as set
+  by the PCE for the 'Bootstrapping BFD session without LSP Ping' mode (=1) in which case 
+  PCE allocates and specify the discriminator to be used by the LSR.</t>  
+  <t>The format of the BFD-Discriminator sub-TLV is shown in the following figure:
+  </t>    
+  <figure title="BFD-Discriminator sub-TLV"><artwork><![CDATA[
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   BFD Authentication TLV Type |          Length               |
+   |            Type=2             |           Length              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       My Discriminator                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      Your Discriminator                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                        
+]]></artwork>
+  </figure>
+  <t>The Type is 2, Length is 8 octets, and the value comprises of -
+    <list>
+  <t>My Discriminator and Your Discriminator field; please refer to the BFD Control Packet Format in <xref target="RFC5880"/> for the meaning and description of these fields.</t> 
+ </list>
+   </t>
+
+   <t>This sub-TLV MUST be used when BFD mode=1 ('Bootstrapping BFD session without LSP Ping').</t>
+
+  </section>
+
+	<section title="BFD-Authentication sub-TLV" anchor="section-4.1.3"><t>
+   The optional BFD-Authentication sub-TLV provides BFD authentication parameters of
+   BFD session.</t>
+
+	<t>
+   The format of the BFD-Authentication sub-TLV is shown in the following
+   figure:</t>
+
+	<figure title="BFD-Authentication sub-TLV"><artwork><![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |            Type=3             |           Length              |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |   Auth Type   |   Auth Len    |    Authentication Data...     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                      BFD Authentication TLV
+                      
 ]]></artwork>
 	</figure>
-	<t>
+  <t>The Type is 3, Length is variable, and the value is as per the Authentication Section of BFD Control Packet Format in <xref target="RFC5880"/>.</t>
+	<!--<t>
    BFD Authentication TLV Type is 2 octets in length and the value is to
    be assigned by IANA.</t>
 
@@ -364,35 +435,95 @@
 
 	<t>
    The value of TLV refers to the optional Authentication Section in RFC
-   5880 <xref target="RFC5880"/>.</t>
+   5880 <xref target="RFC5880"/>.</t>-->
 
 	</section>
+  <section title="BFD-Reverse-Path sub-TLV" anchor="section-4.1.4"><t>
+   The optional BFD-Reverse-Path sub-TLV provides the
+   reverse path for BFD session.</t>
+
+  <!--<t>
+   This is an optional TLV defined for the LSPA Object.  This TLV is
+   included in the LSPA Object with PCUpd message.</t>-->
+
+  <t>
+   The format of the BFD-Reverse-Path sub-TLV is shown in the following
+   figure:</t>
+
+  <figure title="BFD-Reverse-Path sub-TLV"><artwork><![CDATA[
+     0                   1                   2                   3
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |            Type=4             |           Length              |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                        Reverse Path                           |
+    ~                                                               ~
+    |                                                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                      
+]]></artwork>
+  </figure>
+  <t>The Type is 4, Length is variable, and the value is as per the BFD Reverse Path TLV in <xref target="I-D.ietf-mpls-bfd-directed"/>, where the 
+  Reverse Path field contains any Target FEC sub-TLV (MPLS LSP Ping Parameters registry). None, one or more sub-TLVs MAY be included in the BFD Reverse
+   Path TLV.</t>
+
+
+
+    <!--Authentication Section of BFD Control Packet Format in <xref target="RFC5880"/>.</t>
+  <t>
+   BFD Reverse Path TLV Type is 2 octets in length and the value is to
+   be assigned by IANA.</t>
+
+  <t>
+   Length is 2 octets in length and defines the length in octets of the
+   Reverse Path field.</t>
+
+  <t>
+   Reverse Path refers to Reverse Path defined in BFD Reverse Path TLV
+   in I-D.ietf-mpls-bfd-directed <xref target="I-D.ietf-mpls-bfd-directed"/>.</t>-->
+
+  </section>
 
 	</section>
+<section title="Error Handling">
+  <t>TBD</t>
+</section>
+<section title="Backward Compatibility">
+  <t>TBD</t>
+</section>
+
+
+</section>
 
 	<section title="IANA Considerations" anchor="section-5"><t>
-   TBD.</t>
+   TBD</t>
 
 	</section>
 
 	<section title="Security Considerations" anchor="section-6"><t>
-   TBD.</t>
+   TBD</t>
 
 	</section>
 
 	</middle>
 
 	<back>
+   
 	<references title="Normative References">
 	&I-D.ietf-mpls-bfd-directed;
 	&I-D.ietf-pce-pce-initiated-lsp;
 	&RFC2119;
-	&RFC4379;
 	&RFC5440;
 	&RFC5880;
 	&RFC5884;
    &RFC8174;
+   &RFC8231;
 	</references>
+  <references title="Informative References">
+    &RFC5886;
+    &RFC8029;
+  </references>
+
 	</back>
 
 	</rfc>

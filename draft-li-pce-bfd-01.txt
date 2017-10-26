@@ -5,8 +5,8 @@
 Network Working Group                                              Z. Li
 Internet-Draft                                                   X. Chen
 Intended status: Standards Track                                D. Dhody
-Expires: April 26, 2018                              Huawei Technologies
-                                                        October 23, 2017
+Expires: April 28, 2018                              Huawei Technologies
+                                                        October 25, 2017
 
 
       PCEP Extensions for Bidirectional Forwarding Detection (BFD)
@@ -14,11 +14,13 @@ Expires: April 26, 2018                              Huawei Technologies
 
 Abstract
 
-   This document describes the extensions to the PCEP to notify BFD
-   parameters for LSPs from PCE to PCC for PCE-initiated LSP.  The
+   This document describes the extensions to the Path Computation
+   Element (PCE) Communication Protocol (PCEP) to notify Bidirectional
+   Forwarding Detection (BFD) parameters for Label Switched Paths (LSPs)
+   from PCE to Path Computation Client (PCC) for PCE-initiated LSP.  The
    extensions include BFD protocol parameters and allow PCC to support
-   BFD for PCE-Initiated LSP whose BFD session is a bi-directional co-
-   routed channel.
+   BFD for PCE-Initiated LSP.  Further, support for bi-directional co-
+   routed BFD channel is provided.
 
 Requirements Language
 
@@ -43,20 +45,23 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 26, 2018.
+   This Internet-Draft will expire on April 28, 2018.
+
+
+
+
+
+
+
+Li, et al.               Expires April 28, 2018                 [Page 1]
+
+Internet-Draft           PCEP Extensions for BFD            October 2017
+
 
 Copyright Notice
 
    Copyright (c) 2017 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
-
-
-
-
-Li, et al.               Expires April 26, 2018                 [Page 1]
-
-Internet-Draft           PCEP Extensions for BFD            October 2017
-
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
@@ -71,62 +76,99 @@ Internet-Draft           PCEP Extensions for BFD            October 2017
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Bootstrapping Bi-directional Co-routed BFD Session  . . . . .   3
-     3.1.  Bootstrapping BFD session without LSP Ping  . . . . . . .   3
-     3.2.  Bootstrapping BFD session with LSP Ping . . . . . . . . .   4
-   4.  TLVs of PCEP Extensions for BFD . . . . . . . . . . . . . . .   4
-     4.1.  BFD Reverse Path TLV  . . . . . . . . . . . . . . . . . .   4
-     4.2.  BFD Generic TLV . . . . . . . . . . . . . . . . . . . . .   5
-     4.3.  BFD Authentication TLV  . . . . . . . . . . . . . . . . .   6
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   7.  Normative References  . . . . . . . . . . . . . . . . . . . .   7
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  Bootstrapping BFD Session . . . . . . . . . . . . . . . . . .   4
+     3.1.  Bootstrapping BFD session without LSP Ping  . . . . . . .   4
+     3.2.  Bootstrapping BFD session with LSP Ping . . . . . . . . .   5
+   4.  TLVs of PCEP Extensions for BFD . . . . . . . . . . . . . . .   6
+     4.1.  BFD-Capability TLV  . . . . . . . . . . . . . . . . . . .   6
+     4.2.  BFD TLV . . . . . . . . . . . . . . . . . . . . . . . . .   6
+       4.2.1.  BFD-Parameters TLV  . . . . . . . . . . . . . . . . .   8
+       4.2.2.  BFD-Discriminator TLV . . . . . . . . . . . . . . . .   8
+       4.2.3.  BFD-Authentication sub-TLV  . . . . . . . . . . . . .   9
+       4.2.4.  BFD-Reverse-Path sub-TLV  . . . . . . . . . . . . . .  10
+     4.3.  Error Handling  . . . . . . . . . . . . . . . . . . . . .  10
+     4.4.  Backward Compatibility  . . . . . . . . . . . . . . . . .  10
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
-   RFC 5884 [RFC5884] describes the applicability of BFD in relation to
-   LSP Ping for detecting rapidly a Multiprotocol Label Switching (MPLS)
-   Label Switched Path (LSP) data plane failure.  It also describes
-   procedures for using BFD in MPLS environment.  The LSP BFD detecting
-   can be bidirectional LSP or unidirectional LSP(so long as there is
-   some return path).  If the path from ingress LSR to egress LSR is not
-   co-routed with the path from egress LSR to ingress LSR, the failure
-   to deliver BFD control packets from egress LSR to ingress LSR can
-   lead to false negatives, making ingress LSR deduces that the LSP has
-   failed.
-
-   I-D.ietf-pce-pce-initiated-lsp [I-D.ietf-pce-pce-initiated-lsp]
-   introduces the procedure of PCE-initiated LSPs under the stateful PCE
-   model.  PCC will automatically set up the MPLS RSVP-TE LSP according
-   to the explicit path PCE provides.  BFD session for the PCE-initiated
-   LSP can also be created dynamically and the return path is implicitly
-   the shortest path.  Such BFD session whose forward and reverse paths
-   are possibly not co-routed has the same problem as mentioned above.
+   [RFC5884] describes the applicability of Bidirectional Forwarding
+   Detection (BFD) in relation to Label Switched Path (LSP) Ping for
+   detecting rapidly a Multiprotocol Label Switching (MPLS) LSP data
+   plane failure.  It also describes procedures for using BFD in MPLS
+   environment.  The LSP (for which BFD is used to detect failure) can
+   be a bidirectional LSP or an unidirectional LSP (so long as there is
+   some return path).  In case of bidirectional LSP, it should be noted
+   that, if the path from ingress LSR to egress LSR is not co-routed
 
 
 
-
-
-Li, et al.               Expires April 26, 2018                 [Page 2]
+Li, et al.               Expires April 28, 2018                 [Page 2]
 
 Internet-Draft           PCEP Extensions for BFD            October 2017
 
 
-   This document describes the extensions to the PCEP to notify BFD
-   parameters for LSPs from PCE to PCC for PCE-initiated LSP.  The
-   extensions allow PCC to set up BFD session for PCE-Initiated LSP.
+   with the path from egress LSR to ingress LSR, the failure to deliver
+   BFD control packets from egress LSR to ingress LSR can lead to false
+   negatives, making ingress LSR deduces that the LSP has failed.
+   [I-D.ietf-mpls-bfd-directed] proposes a solution to instruct the
+   egress to use an explicit path for its BFD control packets associated
+   with a particular BFD session.
 
-   The BFD control packets can be exchanged over a bi-directional co-
-   routed channel.
+   The Path Computation Element Communication Protocol (PCEP) [RFC5440]
+   defines the mechanisms for the communication between a Path
+   Computation Client (PCC) and a Path Computation Element (PCE), or
+   between two PCEs.  [RFC8231] describes a set of extensions to PCEP to
+   provide stateful control for stateful PCE.
 
-   The BFD protocol parameters such as detection time multiplier,
-   desired Min TX Interval, required Min RX Interval for PCE-initiated
-   LSP come from the public template or global configuration on PCC.
-   The extensions of PCEP include generic BFD protocol parameters too.
-   It can be used to notify PCC by PCE to adjust these parameters for
-   special LSP.
+   [I-D.ietf-pce-pce-initiated-lsp] introduces the procedure of PCE-
+   initiated LSPs under the stateful PCE model where the setup and
+   teardown is initiated by the PCE, without the need for local
+   configuration on the PCC, thus allowing for a dynamic network.  The
+   PCC creates the LSP using the attributes communicated by the PCE (and
+   local values for any unspecified parameters) and initiate setup of
+   the LSP.  BFD session for the PCE-initiated LSP can also be created
+   dynamically based on the BFD parameters set by the PCE at the same
+   time as LSP creation without a need for local configuration on the
+   PCC.  Note that for the explicitly routed LSP, it is likely that the
+   shortest return path to the ingress would not follow the same path as
+   the LSP in the forward direction and is thus would face false
+   positive.  As discussed earlier, [I-D.ietf-mpls-bfd-directed] defines
+   a mechanism to form bi-directional co-routed associated channel for
+   BFD sessions.
+
+   This document describes the extensions to the PCEP to include BFD
+   parameters for LSPs from PCE to PCC for PCE-initiated LSP.  The PCC
+   would further set up BFD session for the PCE-Initiated LSP.  Apart
+   for setup, PCE could also modify or remove BFD session for PCE-
+   Initiated LSP.
+
+   The PCE could set the BFD protocol parameters, such as detection time
+   multiplier, desired Min TX Interval, required Min RX Interval for
+   PCE-initiated LSP.  In case PCE does not explicitly set these, then
+   the PCC could set these values from a local template or configuration
+   (at PCC).
+
+   This document proposes two modes to bootstrap BFD session for PCE-
+   Initiated LSP, one without the use of LSP-ping where the PCE sets the
+   BFD Discriminators for the forward and reverse LSPs.  The second
+   involves the use of LSP Ping by Ingress as usual.
+
+
+
+
+
+
+Li, et al.               Expires April 28, 2018                 [Page 3]
+
+Internet-Draft           PCEP Extensions for BFD            October 2017
+
 
 2.  Terminology
 
@@ -134,139 +176,151 @@ Internet-Draft           PCEP Extensions for BFD            October 2017
 
    LSP: Label Switching Path
 
-   This document uses the following terms defined in RFC 5440 [RFC5440]:
-   PCC, PCE, PCEP.
+   This document uses the following terms defined in [RFC5440]: PCC,
+   PCE, PCEP.
 
-   The following term is defined in I-D.ietf-pce-pce-initiated-lsp
-   [I-D.ietf-pce-pce-initiated-lsp]:
+   This document uses the following terms defined in [RFC8231]: Stateful
+   PCE, delegation.
 
+   The following term is defined in [I-D.ietf-pce-pce-initiated-lsp]:
    PCE-initiated LSP: LSP that is instantiated as a result of a request
    from the PCE.
 
-3.  Bootstrapping Bi-directional Co-routed BFD Session
+3.  Bootstrapping BFD Session
 
-   PCE computes the path for one LSP from the ingress LSR to egress LSR
-   and initiates the creation of this LSP on ingress LSR.  The LSP is
-   called as LSP1.  PCE can initiate the creation of LSP on egress LSR
-   according to the co-routed path from egress LSR to ingress LSR.  The
-   LSP is called as LSP2.
-
-   To make the BFD session for LSP1 over the co-routed path to avoid the
-   false detection there are two solutions as below:
+   At the time of PCE-initiation of the LSP, PCE could also request the
+   setup of the BFD session for the LSP to monitor the data plane.  The
+   LSP could be uni-directional or bi-directional.  In case of bi-
+   directional LSP, a co-routed bi-directional BFD session is setup.
 
 3.1.  Bootstrapping BFD session without LSP Ping
 
-   BFD for MPLS LSP uses LSP Ping carrying local descriminator to
-   bootstrapping BFD session in order to associate the FEC representing
-   the LSP with the BFD session indicated by descriminators.  But PCE
-   knows the two co-routed LSPs and can allocate the pair of
-   descriminators for the co-routed LSPs.
+   BFD for MPLS LSP uses LSP Ping to carry the local discriminators to
+   bootstrap the BFD session in order to associate the FEC representing
+   the LSP with the BFD session indicated by the discriminators.  But
+   the PCE could also be used to allocate and set the pair of
+   discriminators at the Ingress and Egress, in which case the initial
+   LSP Ping is not needed.  This mode is applicable only for the double-
+   sided bi-directional LSP that are initiated at the Ingress PCC and
+   the Egress PCC, explicitly by the PCE.
+
+   Consider, the forward LSP from the ingress LSR to egress LSR is
+   called LSP1.  The PCE initiates LSP1 at the Ingress.  Further PCE
+   also initiates the creation of reverse LSP on egress LSR according to
+   the co-routed path from egress LSR to ingress LSR.  The LSP is called
+   as LSP2.
+
+   PCE also updates to the ingress LSR and egress LSR to set up BFD
+   session for LSP1 and LSP2 by the PCEP extension (as per this
+   document), by setting the pair of BFD discriminators at the ingress
+   and egress PCCs.  Thus, it is not necessary to send LSP ping to
+   bootstrap the BFD session.  The 'my discriminator' in BFD control
+   packets along LSP1 is 'your discriminator' in BFD control packets
+   along LSP2 and vice versa.
 
 
 
 
-Li, et al.               Expires April 26, 2018                 [Page 3]
+Li, et al.               Expires April 28, 2018                 [Page 4]
 
 Internet-Draft           PCEP Extensions for BFD            October 2017
 
-
-   PCE notify ingress LSR and egress LSR to set up BFD session for LSP1
-   by the BFD extensions of PCEP the pair of descriminators and notify
-   PCC not necessary to send LSP ping message and directly to set up BFD
-   session.  My descriminator in BFD control packets along LSP1 is your
-   descriminator in BFD control packets along LSP2 and vice versa.
 
    By this method the same BFD session is set up not only for LSP1 but
    also LSP2.
 
-   How to guarantee the descriminators allocated by PCE and PCC are not
-   the same is out of scope of this document.
+   The mechanism by which a PCE allocates the BFD discriminator is out
+   of scope of this document.
 
 3.2.  Bootstrapping BFD session with LSP Ping
 
-   I-D.ietf-mpls-bfd-directed [I-D.ietf-mpls-bfd-directed] defines the
-   BFD Reverse Path TLV as an extension to LSP Ping RFC 4379 [RFC4379]
-   and proposes that it to be used to instruct the egress BFD peer to
-   use specified path for its BFD control packets associated with the
-   particular BFD session.
+   As per [RFC5884], a BFD session is bootstrapped using LSP Ping.  To
+   establish a BFD session, an LSP Ping Echo request message carry the
+   local discriminator assigned by the ingress LSR for the BFD session.
+   The egress LSR respond with an LSP Ping Echo reply message that
+   carries the local discriminator assigned by it for the BFD session.
+   The BFD control packet uses the discriminator as exchanges via the
+   LSP Ping Echo request and Echo reply messages.
 
-   After PCE initiates PCC to set up the LSP PCC delegates the MPLS
-   RSVP-LSP with LSP-IDENTIFIERS TLV including FEC information to PCE.
-   Therefore after ingress LSR and egress LSR set up the LSP1 and LSP2
-   independently they will delegate the LSP1 and LSP2 FEC information to
-   PCE independently.
+   During the LSP initiation, PCE can also update the BFD parameters to
+   the ingress.  Note that in this mode, the BFD discriminators are
+   allocated by LSRs and not set by the PCE.
 
-   PCE notify ingress LSR to set up BFD session for LSP1 carrying the
-   FEC information about the reverse LSP, LSP2.  The information
-   received by ingress LSR via PCEP can be set to the BFD Reverse Path
-   TLV in the LSP Ping message.  Following the procedure defined in
-   [draft-ietf-mpls-bfd-directed-02] the BFD session would be a bi-
-   directional co-routed channel and no false detection would be
-   notified.
+   As per the mechanism defined in [RFC5884] and [RFC5886], the reverse
+   direction of the BFD session would follow the shortest path route and
+   that might lead to the problem in detecting failures.
+   [I-D.ietf-mpls-bfd-directed] defines the BFD Reverse Path TLV as an
+   extension to LSP Ping [RFC8029] and proposes that it to be used to
+   instruct the egress BFD peer to use specified path for its BFD
+   control packets associated with the particular BFD session.  In this
+   way the forward and reverse directions of the BFD session can form a
+   bi-directional co-routed associated channel.
 
-   PCE notify Egress LSR to set up BFD session for LSP2 following the
-   same process above.
+   BFD Reverse Path TLV contains the target FEC to identify the
+   specified reverse path that the BFD control packets is required to
+   follow.  For PCE-Initiated LSPs, the PCE can also provide this
+   information along with other BFD parameters.
 
-   By this method two BFD sessions are set up for LSP1 and LSP2
-   independently.
-
-4.  TLVs of PCEP Extensions for BFD
-
-4.1.  BFD Reverse Path TLV
-
-   The BFD Reverse Path TLV provides BFD parameters used to indicate the
-   reverse path for BFD session.
-
-
+   In case of double-sided bi-directional LSP, the PCE MUST first
+   initiate the LSPs - LSP1 in forward and LSP2 in reverse direction.
+   The Ingress and Egress PCC would report the status of the LSP as well
+   as the parameters to identify the FEC.  The PCE SHOULD then use the
+   FEC as part of BFD Reverse Path TLV along with other BFD parameters
+   as part of PCUpd message for LSP1 and LSP2.  The PCC would then
+   follow the procedure in [I-D.ietf-mpls-bfd-directed] to set up a bi-
+   directional co-routed BFD channel.  Two BFD sessions are set up for
+   LSP1 and LSP2 independently.
 
 
 
-Li, et al.               Expires April 26, 2018                 [Page 4]
+
+
+
+
+Li, et al.               Expires April 28, 2018                 [Page 5]
 
 Internet-Draft           PCEP Extensions for BFD            October 2017
 
 
-   This is an optional TLV defined for the LSPA Object.  This TLV is
-   included in the LSPA Object with PCUpd message.
+4.  TLVs of PCEP Extensions for BFD
 
-   The format of the BFD Reverse Path TLV is shown in the following
-   figure:
+4.1.  BFD-Capability TLV
 
-        0                   1                   2                   3
-        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |   BFD Reverse Path TLV Type   |          Length               |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                        Reverse Path                           |
-       ~                                                               ~
-       |                                                               |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                         BFD Reverse Path TLV
+   The BFD-Capability TLV is an optional TLV for use in the OPEN Object
+   for BFD capability advertisement.  Its format is shown in the
+   following figure:
 
-   BFD Reverse Path TLV Type is 2 octets in length and the value is to
-   be assigned by IANA.
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |               Type=TBD1       |            Length=4           |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                             Flags                             |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   Length is 2 octets in length and defines the length in octets of the
-   Reverse Path field.
+                       The BFD-Capability TLV format
 
-   Reverse Path refers to Reverse Path defined in BFD Reverse Path TLV
-   in I-D.ietf-mpls-bfd-directed [I-D.ietf-mpls-bfd-directed].
+   The Type of the TLV is (TBD1) and it has a fixed Length of 4 octets.
 
-4.2.  BFD Generic TLV
+   The value comprises a single field - Flags (32 bits).  No flags are
+   defined for this TLV in this document.
 
-   The BFD Generic TLV provides BFD generic parameters of BFD session.
+   Unassigned bits are considered reserved.  They MUST be set to 0 on
+   transmission and MUST be ignored on receipt.
 
-   This is an optional TLV defined for the LSPA Object.  This TLV is
-   included in the LSPA Object with PCInitiate or PCUpd message.
+   Advertisement of the BFD-Capability TLV implies support of BFD for
+   PCE-initiated LSP, as well as the TLVs, sub-TLVs and procedures
+   defined in this document.
 
-   The format of the BFD Generic TLV is shown in the following figure:
+4.2.  BFD TLV
 
+   The BFD TLV provides the BFD parameters of the BFD session.  This is
+   an optional TLV for the LSPA Object.  This TLV is included in the
+   LSPA Object with the PCInitiate or the PCUpd message.  The presence
+   of this TLV indicates that the PCE has requested the BFD session to
+   be set for the LSP.
 
-
-
-
-
-
+   The format of the BFD TLV is shown in the following figure:
 
 
 
@@ -277,7 +331,9 @@ Internet-Draft           PCEP Extensions for BFD            October 2017
 
 
 
-Li, et al.               Expires April 26, 2018                 [Page 5]
+
+
+Li, et al.               Expires April 28, 2018                 [Page 6]
 
 Internet-Draft           PCEP Extensions for BFD            October 2017
 
@@ -285,13 +341,73 @@ Internet-Draft           PCEP Extensions for BFD            October 2017
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |   BFD Generic TLV Type        |           Length              |
+      |           Type=TBD2           |           Length              |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |  Detect Mult  |                 Reserved                      |
+      |R|   Flag      | Mode  |              Reserved                 |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                       My Discriminator                        |
+      |                                                               |
+      //                            sub-TLVs                          //
+      |                                                               |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                      Your Discriminator                       |
+
+                            The BFD TLV format
+
+   BFD TLV Type is 2 octets in length and the value (TBD2) is to be
+   assigned by IANA.
+
+   Length is 2 octets in length and defines the variable length.  The
+   value part consist of -
+
+   o  The 8 bit Flag field with one bit defined -
+
+      *  R bit: The Remove bit is set to indicate removal of the BFD
+         session for the the associated LSP.  If the bit is clear, the
+         BFD session parameters is being added or modified.
+
+   o  The 4-bit Mode field, indicates the BFD session mode.  Currently
+      following modes are defined -
+
+      *  1 - Bootstrapping BFD session without LSP Ping
+
+      *  2 - Bootstrapping BFD session with LSP Ping
+
+   o  The reserved field field MUST be set to zero on transmission and
+      MUST be ignored on receipt.
+
+   o  Following optional sub-TLVs are currently defined in this
+      document:
+
+      *  1: BFD-Parameters sub-TLV
+
+      *  2: BFD-Discriminator sub-TLV
+
+      *  3: BFD-Authentication sub-TLV
+
+      *  4: BFD-Reverse-Path sub-TLV
+
+
+
+
+
+Li, et al.               Expires April 28, 2018                 [Page 7]
+
+Internet-Draft           PCEP Extensions for BFD            October 2017
+
+
+4.2.1.  BFD-Parameters TLV
+
+   The optional BFD-Parameters sub-TLV specifies the various BFD
+   parameters as set by the PCE.
+
+   The format of the BFD-Parameters sub-TLV is shown in the following
+   figure:
+
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |            Type=1             |           Length              |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                 Reserved                      |  Detect Mult  |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       |                    Desired Min TX Interval                    |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -299,63 +415,154 @@ Internet-Draft           PCEP Extensions for BFD            October 2017
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       |                 Required Min Echo RX Interval                 |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                           BFD Generic TLV
 
-   BFD Generic Path TLV Type is 2 octets in length and the value is to
-   be assigned by IANA.
 
-   Length is 2 octets in length and defines the fixed length 20.
+                          BFD-Parameters sub-TLV
 
-   The value of TLV refers to Generic BFD Control Packet Format in RFC
-   5880 [RFC5880].
+   The Type is 1, Length is 16 octets, and the value comprises of -
 
-4.3.  BFD Authentication TLV
+   o  The reserved field field MUST be set to zero on transmission and
+      MUST be ignored on receipt.
 
-   The BFD Authentication TLV provides BFD authentication parameters of
-   BFD session.
+   o  For the meaning and description of the other fields in the value
+      part of the sub-TLV, please refer to the BFD Control Packet Format
+      in [RFC5880].
 
-   This is an optional TLV defined for the LSPA Object.  This TLV is
-   included in the LSPA Object with PCInitiate or PCUpd message.
+   The PCE MUST set the value for the field as zero when it does not
+   want to set the value and wants the PCC to pick a local values.  In
+   absence of this sub-TLV in the BFD TLV, the PCC can choose local
+   values.
 
-   The format of the BFD Generic Path TLV is shown in the following
+4.2.2.  BFD-Discriminator TLV
+
+   The optional BFD-Discriminator sub-TLV specifies the BFD
+   discriminator as set by the PCE for the 'Bootstrapping BFD session
+   without LSP Ping' mode (=1) in which case PCE allocates and specify
+   the discriminator to be used by the LSR.
+
+   The format of the BFD-Discriminator sub-TLV is shown in the following
    figure:
 
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |   BFD Authentication TLV Type |          Length               |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |   Auth Type   |   Auth Len    |    Authentication Data...     |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                         BFD Authentication TLV
 
 
-
-
-
-Li, et al.               Expires April 26, 2018                 [Page 6]
+Li, et al.               Expires April 28, 2018                 [Page 8]
 
 Internet-Draft           PCEP Extensions for BFD            October 2017
 
 
-   BFD Authentication TLV Type is 2 octets in length and the value is to
-   be assigned by IANA.
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |            Type=2             |           Length              |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                       My Discriminator                        |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                      Your Discriminator                       |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   Length is 2 octets in length and defines the length in octets of the
-   value of BFD Authentication TLV.
 
-   The value of TLV refers to the optional Authentication Section in RFC
-   5880 [RFC5880].
+                         BFD-Discriminator sub-TLV
+
+   The Type is 2, Length is 8 octets, and the value comprises of -
+
+      My Discriminator and Your Discriminator field; please refer to the
+      BFD Control Packet Format in [RFC5880] for the meaning and
+      description of these fields.
+
+   This sub-TLV MUST be used when BFD mode=1 ('Bootstrapping BFD session
+   without LSP Ping').
+
+4.2.3.  BFD-Authentication sub-TLV
+
+   The optional BFD-Authentication sub-TLV provides BFD authentication
+   parameters of BFD session.
+
+   The format of the BFD-Authentication sub-TLV is shown in the
+   following figure:
+
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |            Type=3             |           Length              |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |   Auth Type   |   Auth Len    |    Authentication Data...     |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+                        BFD-Authentication sub-TLV
+
+   The Type is 3, Length is variable, and the value is as per the
+   Authentication Section of BFD Control Packet Format in [RFC5880].
+
+
+
+
+
+
+
+
+Li, et al.               Expires April 28, 2018                 [Page 9]
+
+Internet-Draft           PCEP Extensions for BFD            October 2017
+
+
+4.2.4.  BFD-Reverse-Path sub-TLV
+
+   The optional BFD-Reverse-Path sub-TLV provides the reverse path for
+   BFD session.
+
+   The format of the BFD-Reverse-Path sub-TLV is shown in the following
+   figure:
+
+        0                   1                   2                   3
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |            Type=4             |           Length              |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                        Reverse Path                           |
+       ~                                                               ~
+       |                                                               |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+                         BFD-Reverse-Path sub-TLV
+
+   The Type is 4, Length is variable, and the value is as per the BFD
+   Reverse Path TLV in [I-D.ietf-mpls-bfd-directed], where the Reverse
+   Path field contains any Target FEC sub-TLV (MPLS LSP Ping Parameters
+   registry).  None, one or more sub-TLVs MAY be included in the BFD
+   Reverse Path TLV.
+
+4.3.  Error Handling
+
+   TBD
+
+4.4.  Backward Compatibility
+
+   TBD
 
 5.  IANA Considerations
 
-   TBD.
+   TBD
 
 6.  Security Considerations
 
-   TBD.
+   TBD
 
-7.  Normative References
+7.  References
+
+
+
+
+
+
+
+Li, et al.               Expires April 28, 2018                [Page 10]
+
+Internet-Draft           PCEP Extensions for BFD            October 2017
+
+
+7.1.  Normative References
 
    [I-D.ietf-mpls-bfd-directed]
               Mirsky, G., Tantsura, J., Varlashkin, I., and M. Chen,
@@ -374,25 +581,10 @@ Internet-Draft           PCEP Extensions for BFD            October 2017
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC4379]  Kompella, K. and G. Swallow, "Detecting Multi-Protocol
-              Label Switched (MPLS) Data Plane Failures", RFC 4379,
-              DOI 10.17487/RFC4379, February 2006,
-              <https://www.rfc-editor.org/info/rfc4379>.
-
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
               DOI 10.17487/RFC5440, March 2009,
               <https://www.rfc-editor.org/info/rfc5440>.
-
-
-
-
-
-
-Li, et al.               Expires April 26, 2018                 [Page 7]
-
-Internet-Draft           PCEP Extensions for BFD            October 2017
-
 
    [RFC5880]  Katz, D. and D. Ward, "Bidirectional Forwarding Detection
               (BFD)", RFC 5880, DOI 10.17487/RFC5880, June 2010,
@@ -406,6 +598,36 @@ Internet-Draft           PCEP Extensions for BFD            October 2017
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for Stateful PCE", RFC 8231,
+              DOI 10.17487/RFC8231, September 2017,
+              <https://www.rfc-editor.org/info/rfc8231>.
+
+7.2.  Informative References
+
+
+
+
+
+
+
+Li, et al.               Expires April 28, 2018                [Page 11]
+
+Internet-Draft           PCEP Extensions for BFD            October 2017
+
+
+   [RFC5886]  Vasseur, JP., Ed., Le Roux, JL., and Y. Ikejiri, "A Set of
+              Monitoring Tools for Path Computation Element (PCE)-Based
+              Architecture", RFC 5886, DOI 10.17487/RFC5886, June 2010,
+              <https://www.rfc-editor.org/info/rfc5886>.
+
+   [RFC8029]  Kompella, K., Swallow, G., Pignataro, C., Ed., Kumar, N.,
+              Aldrin, S., and M. Chen, "Detecting Multiprotocol Label
+              Switched (MPLS) Data-Plane Failures", RFC 8029,
+              DOI 10.17487/RFC8029, March 2017,
+              <https://www.rfc-editor.org/info/rfc8029>.
 
 Authors' Addresses
 
@@ -445,4 +667,6 @@ Authors' Addresses
 
 
 
-Li, et al.               Expires April 26, 2018                 [Page 8]
+
+
+Li, et al.               Expires April 28, 2018                [Page 12]
