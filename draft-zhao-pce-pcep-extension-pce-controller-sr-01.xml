@@ -1,0 +1,1023 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"
+[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902"
+     category="std"
+     docName="draft-zhao-pce-pcep-extension-pce-controller-sr-00"
+     obsoletes=""
+     updates=""
+     submissionType="IETF"
+     xml:lang="en">
+  <front>
+    <title abbrev="PCECC">PCEP Procedures and Protocol Extensions for
+    Using PCE as a Central Controller (PCECC) of SR-LSPs</title>
+    <author initials="Q"
+            surname="Zhao"
+            fullname="Quintin Zhao">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>125 Nagog Technology Park</street>
+          <city>Acton</city>
+          <region>MA</region>
+          <code>01719</code>
+          <country>USA</country>
+        </postal>
+        <email>quintin.zhao@huawei.com</email>
+      </address>
+    </author>
+    <author initials="Z"
+            surname="Li"
+            fullname="Zhenbin Li">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Huawei Bld., No.156 Beiqing Rd.</street>
+          <city>Beijing  </city>
+          <region></region>
+          <code>100095</code>
+          <country>China</country>
+        </postal>
+        <email>lizhenbin@huawei.com</email>
+      </address>
+    </author>
+    <author fullname="Dhruv Dhody"
+            initials="D"
+            surname="Dhody">
+      <organization abbrev="Huawei Technologies">Huawei
+      Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+    <author initials="S" surname="Karunanithi" fullname="Satish Karunanithi">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>satishk@huawei.com</email>
+      </address>
+    </author>
+    
+    <author initials="A"
+            surname="Farrel"
+            fullname="Adrian Farrel">
+      <organization>Juniper Networks, Inc</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country>UK</country>
+        </postal>
+        <email>adrian@olddog.co.uk</email>
+      </address>
+    </author>
+    
+    <author initials="C"
+            surname="Zhou"
+            fullname="Chao Zhou">
+      <organization>Cisco Systems</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>choa.zhou@cisco.com</email>
+      </address>
+    </author>
+    <date month="June" year="2017" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+   <t>In certain networks deployment scenarios, service providers would
+   like to keep all the existing MPLS functionalities in both MPLS and
+   GMPLS while removing the complexity of existing signalling protocols
+   such as LDP and RSVP-TE.  PCE has been proposed to be used as a
+   central controller (PCECC) so that LSP can be
+   calculated/setup/initiated and label forwarding entries are
+   downloaded through a centralized PCE server to each network devices
+   along the path while leveraging the existing PCE technologies as
+   much as possible.</t>
+
+   <t>This document specifies the procedures and PCEP protocol extensions when 
+   the PCE functions as one of the central controller components 
+   in Segment Routing(SR).
+   </t>
+
+   </abstract>
+  </front>
+  <middle>
+    <section title="Introduction"
+             toc="default">
+
+   <t>The Path Computation Element communication Protocol (PCEP) provides
+   mechanisms for Path Computation Elements (PCEs) to perform route
+   computations in response to Path Computation Clients (PCCs) requests.
+   PCEP Extensions for PCE-initiated LSP Setup in a Stateful PCE Model
+   <xref target='I-D.ietf-pce-stateful-pce'/> describes a set of extensions to PCEP to
+   enable active control of MPLS-TE and GMPLS tunnels.</t>
+
+   <t><xref target='I-D.ietf-pce-pce-initiated-lsp'/> describes the setup and tear down of
+   PCE-initiated LSPs under the active stateful PCE model, without the
+   need for local configuration on the PCC, thus allowing for a dynamic
+   MPLS network that is centrally controlled and deployed.</t>
+   
+   <t><xref target='I-D.ietf-teas-pce-central-control'/> introduces the architecture for
+   PCE as a central controller, examines the motivations and applicability
+   for PCEP as a southbound interface, and introduces the implications for the
+   protocol. <xref target='I-D.ietf-teas-pcecc-use-cases'/> describes the use cases for
+   the PCECC architecture.</t>
+   
+   <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> specify the PCEP extention 
+   for the PCE as the central controller (PCECC). This document extends 
+   the PCECC procedures for Segment Routing (SR).</t>
+   
+   <t>Segment Routing (SR) technology leverage the source routing and
+   tunnelling paradigms.  A source node can choose a path without
+   relying on hop-by-hop signalling protocols such as LDP or RSVP-TE.
+   Each path is specified as a set of "segments" advertised by link-
+   state routing protocols (IS-IS or OSPF).</t>
+   
+   <t><xref target='I-D.ietf-spring-segment-routing'/> provides an introduction to SR
+   technology.  The corresponding IS-IS and OSPF extensions are
+   specified in <xref target='I-D.ietf-isis-segment-routing-extensions'/> and
+   <xref target='I-D.ietf-ospf-segment-routing-extensions'/> , respectively.</t>
+
+   <t>A Segment Routed path (SR path) can be derived from an IGP Shortest
+   Path Tree (SPT).  Segment Routed Traffic Engineering paths (SR-TE
+   paths) may not follow IGP SPT.  Such paths may be chosen by a
+   suitable network planning tool and provisioned on the source node of
+   the SR-TE path.</t>
+
+   <t>It is possible to use a stateful PCE for computing one or more SR-TE
+   paths taking into account various constraints and objective
+   functions.  Once a path is chosen, the stateful PCE can instantiate
+   an SR-TE path on a PCC using PCEP extensions specified in
+   <xref target='I-D.ietf-pce-pce-initiated-lsp'/> using the SR specific PCEP
+   extensions described in <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+
+   <t>PCECC may further use PCEP protocol for SR label distribution instead
+   of IGP extensions with some benefits.</t>
+
+   <t>The <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>, 
+   specifies the procedures and PCEP protocol extensions for
+   using the PCE as one of the the central controller components 
+   and user cases where LSPs are calculated/setup/initiated and label 
+   forwarding entries are downloaded on each hop along the path, through extending the existing 
+   PCE architectures and PCEP.</t>
+
+   <t>This draft specify the procedures and PCEP protocol extensions for
+   using the PCE as the central controller for SR label distribution
+   and user cases where SR LSPs are calculated/setup/initiated/downloaded
+   through extending the existing PCE architectures and PCEP.</t>
+
+      <section title="Requirements Language"
+               toc="default">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
+        and "OPTIONAL" in this document are to be interpreted as
+        described in
+        <xref target="RFC2119" />.</t>
+      </section>
+    </section>
+    
+    <section title="Terminology"
+             toc="default">
+      <t>Terminologies used in this document is same as described in the draft 
+       <xref target='I-D.ietf-teas-pcecc-use-cases'/>.</t>      
+    </section>
+    
+    <section title="PCECC SR"
+             toc="default"
+             anchor="SEC_M">
+
+    <t><xref target='I-D.ietf-pce-segment-routing'/> specifies extensions to 
+    PCEP that allow a stateful PCE to
+   compute, update or initiate SR-TE paths. An ingress node of an SR-TE path appends
+   all outgoing packets with a list of MPLS labels (SIDs). This is encoded in
+   SR-ERO subobject, capable of carrying a label (SID) as well as the identity of the
+   node/adjacency label (SID).</t>         
+   
+   <t>The notion of segment and SID is defined in
+   <xref target='I-D.ietf-spring-segment-routing'/>, which fits the MPLS architecture
+   <xref target='RFC3031'/> as the label which
+   is managed by a local allocation process of LSR (similarly to
+   other MPLS signaling protocols) <xref target='I-D.ietf-spring-segment-routing-mpls'/>. 
+   The SR information such as node/adjacency label (SID) is flooded via IGP as specified in <xref target='I-D.ietf-isis-segment-routing-extensions'/> and
+   <xref target='I-D.ietf-ospf-segment-routing-extensions'/>.</t> 
+
+   <t>As per <xref target='I-D.ietf-teas-pce-central-control'/>, 
+   PCE as a central controller can allocate and provision the node/adjacency label (SID) via PCEP.</t> 
+   <t>Rest of the
+   processing is similar to existing stateful PCE with SR mechanism.</t>
+   <t>For the purpose
+   of this document, it is assumed that label range to be used by a PCE
+   is set on both PCEP peers. Further, a global label range is assumed to be 
+   set on all PCEP peers in the SR domain. </t>
+   </section>
+   
+    <section title="PCEP Requirements"
+             toc="default"
+             anchor="SEC_R">
+   <t>Following key requirements for PCECC-SR should be considered when`
+   designing the PCECC based solution:</t>
+      <t>
+        <list style="symbols">
+   <t>PCEP speaker supporting this draft MUST have the capability to
+       advertise its PCECC-SR capability to its peers.</t>
+
+
+   <t>PCEP speaker not supporting this draft MUST be able to reject
+       PCECC-SR related message with a reason code that indicates no
+       support for PCECC.</t>
+
+   <t>PCEP SHOULD provide a means to update (or cleanup) the label-
+       map entry to the PCC.</t>
+
+   <t>PCEP SHOULD provide a means to synchronize the SR labels between
+       PCE to PCC in PCEP messages.</t>
+
+        </list>
+      </t>
+    </section>
+    
+    
+    <section title="Procedures for Using the PCE as the Central Controller (PCECC) in Segment Routing"
+             toc="default">
+             
+    <section title="Stateful PCE Model"
+             toc="default">
+    <t>Active stateful PCE is described in <xref target='I-D.ietf-pce-stateful-pce'/>. PCE
+    as a central controller (PCECC) reuses existing Active stateful PCE
+    mechanism as much as possible to control the LSP.</t>
+    </section>
+    
+    <section title="New LSP Functions"
+             toc="default">
+   <t>This document uses the same PCEP messages and its extenstions which
+   are described in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> for
+   PCECC-SR as well.</t>
+   
+   <t>PCEP messages PCRpt, PCInitiate, PCUpd are also used to send
+   PCECC-SR Reports, LSP setup and LSP update respectively.</t> 
+   
+   <t>PCLabelUpd message described in
+   <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> is used to download
+   or cleanup SR Label entry.</t>
+   
+   <t>PCLabelRpt message described in
+   <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> is also used to report
+   the set of SR Label entries from PCC to PCE for which explicit action
+   is required from PCE (update or cleanup or do nothing for these
+   Label entries).</t>
+    </section>
+    
+    <section title="PCECC Capability Advertisement"
+             toc="default">
+   <t>During PCEP Initialization Phase, PCEP Speakers (PCE or PCC)
+   advertise their support of PCECC extensions.  A PCEP Speaker includes
+   the "PCECC Capability" TLV, described in 
+   <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>.</t>
+
+   <t>A new S-bit is added in PCECC-CAPABILITY TLV to indicate support for 
+   PCECC-SR.  A PCC MUST set S-bit in PCECC-CAPABILITY TLV and include 
+   SR-PCE-CAPABILITY TLV (<xref target='I-D.ietf-pce-segment-routing'/>) in OPEN Object 
+   to support the PCECC SR extensions defined in this document.  If
+   S-bit is set in PCECC-CAPABILITY TLV and SR-PCE-CAPABILITY TLV is not
+   advertised in OPEN Object, PCE SHOULD send a PCErr message with
+   Error-Type=19 (Invalid Operation) and Error-value=TBD(SR capability
+   was not advertised) and terminate the session.</t>
+   </section>
+   
+   <section title="PCEP session IP address and TEDB Router ID"
+             toc="default" anchor="SEC_SESSION">
+   <t>PCE may construct its TEDB by participating in the IGP (<xref target="RFC3630" />
+   and <xref target="RFC5305" /> for MPLS-TE; <xref target="RFC4203" /> and <xref target="RFC5307" /> for GMPLS).  An
+   alternative is offered by BGP-LS <xref target='RFC7752'/> and
+   <xref target='I-D.dhodylee-pce-pcep-ls'/>.</t>
+
+   <t>PCEP <xref target="RFC5440" /> speaker MAY use any IP address while creating a TCP
+   session.  It is important to link the session IP address with the
+   Router ID in TEDB for successful PCECC operations.</t>
+
+   <t>During PCEP Initialization Phase, PCC SHOULD advertise the TE mapping
+   information.  Thus a PCC includes the "Node Attributes TLV"
+   <xref target='I-D.dhodylee-pce-pcep-ls'/> with "IPv4/IPv6 Router-ID of Local Node",
+   in the OPEN Object for this purpose.  <xref target='RFC7752'/>
+   describes the usage as auxiliary Router-IDs that the IGP might be
+   using, e.g., for TE purposes.  If there are more than one auxiliary
+   Router-ID of a given type, then multiple TLVs are used to encode
+   them.</t>
+
+   <t>If "IPv4/IPv6 Router-ID" TLV is not present, the TCP session IP
+   address is directly used for the mapping purpose.</t>
+   </section>
+
+   
+    <section title="LSP Operations"
+             toc="default">
+    <t> The PCEP messages pertaining to PCECC-SR MUST include PATH-SETUP-TYPE
+   TLV <xref target='I-D.ietf-pce-lsp-setup-type'/> in the SRP object
+   to clearly identify the PCECC-SR LSP is intended.</t>
+   
+    <section title="PCECC Segment Routing (SR)"
+             toc="default"
+             anchor="SEC_SR_SETUP">
+   <t>Segment Routing (SR) as described in
+   <xref target='I-D.ietf-spring-segment-routing'/> depends on "segments" that are
+   advertised by Interior Gateway Protocols (IGPs).  The SR-node
+   allocates and advertises the SID (node, adj etc) and flood via the
+   IGP.  This document proposes a new mechanism where PCE allocates the
+   SID (label) centrally and uses PCEP to advertise the SID.  In some
+   deployments PCE (and PCEP) are better suited than IGP because of
+   centralized nature of PCE and direct TCP based PCEP session to the
+   node.</t>
+   
+       <section title="PCECC SR Node/Prefix Label allocation"
+             toc="default"
+             anchor="SEC_NODE_ALLOC">
+        <t>Each node (PCC) is allocated a node-SID (label) by the PCECC.  The
+         PCECC sends PCLabelUpd to update the label map of each node to all
+         the nodes in the domain.  The TE router ID is determined from the
+         TEDB or from "IPv4/IPv6 Router-ID" Sub-TLV
+         <xref target='I-D.dhodylee-pce-pcep-ls'/>, in the OPEN Object <xref target="SEC_SESSION"/>.</t>
+
+        <t>It is RECOMMENDED that PCEP session with PCECC SR capability to use a
+         different session IP address during TCP session establishment than
+         the node Router ID in TEDB, to make sure that the PCEP session does
+         not get impacted by the SR Node/Prefix Label maps (<xref target="SEC_SESSION"/>).</t>
+
+         <t>If a node (PCC) receives a PCLabelUpd message with a Label, out
+      of the range set aside for the global label, it MUST send a PCErr message with Error-type=TBD
+   (label download failure) and Error-value=TBD (Label out of range) and MUST include the
+   SRP object to specify the error is for the corresponding label update <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>.</t>
+
+        <t>On receiving the label map, each node (PCC) uses the local
+         information to determine the next-hop and download the label
+         forwarding instructions accordingly.  The PCLabelUpd message in this
+         case MUST NOT have LSP object but uses new FEC object.</t>
+         
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG1">
+         <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[    
+               +---------+                           +-------+
+               |PCC      |                           |  PCE  |
+               |192.0.2.3|                           +-------+
+        +------|         |                               |
+        | PCC  +---------+                               |
+        | 192.0.2.2| |                                   |
+ +------|          | |                                   |
+ |PCC   +----------+ |                                   |
+ |192.0.2.1| |       |                                   |
+ +---------+ |       |                                   |
+     |       |       |                                   |
+     |<------- PCLabelUpd, FEC=192.0.2.1---------------- | Label Map
+     |       |       |      Label=X                      | update
+     |Find   |       |                                   |
+     |Nexthop|<------- PCLabelUpd, FEC=192.0.2.1-------- | Label Map
+     |locally|       |             Label=X               | update
+     |       |       |                                   |
+     |       |       |<--- PCLabelUpd, FEC=192.0.2.1---- | Label Map
+     |       |       |                 Label=X           | update
+     |       |       |                                   |
+]]>
+        </artwork>
+        </figure>
+
+        <t>The forwarding behaviour and the end result is similar to IGP based
+        "Node-SID" in SR.  Thus, from anywhere in the domain, it enforces the
+        ECMP-aware shortest-path forwarding of the packet towards the related
+        node.</t>
+
+        <t>PCE relies on the Node/Prefix Label cleanup using the same PCLabelUpd
+        message.</t>             
+       </section>
+       
+       <section title="PCECC SR Adjacency Label allocation"
+             toc="default"
+             anchor="SEC_ADJ_ALLOC">
+             
+        <t><xref target='I-D.ietf-pce-segment-routing'/> extends PCEP to allow a stateful PCE
+        to compute and initiate SR-TE paths, as well as a PCC to request a
+        path subject to certain constraint(s) and optimization criteria in SR
+        networks.</t>
+
+        <t>For PCECC SR, apart from node-SID, Adj-SID is used where each adjacency
+         is allocated an Adj-SID (label) by the PCECC.  The PCECC sends
+         PCLabelUpd to update the label map of each Adj to the corresponding
+         nodes in the domain.  Each node (PCC) download the label forwarding
+         instructions accordingly.  Similar to SR Node/Prefix Label allocation, the
+         PCLabelUpd message in this case MUST NOT have LSP object but uses
+         new FEC object.</t>
+
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG2">
+         <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[         
+                 +---------+                         +-------+
+                 |PCC      |                         |  PCE  |
+                 |192.0.2.3|                         +-------+
+          +------|         |                             |
+          | PCC  +---------+                             |
+          | 192.0.2.2| |                                 |
+   +------|          | |                                 |
+   |PCC   +----------+ |                                 |
+   |192.0.2.1|  |      |                                 |
+   +---------+  |      |                                 |
+       |        |      |                                 |
+       |<------ PCLabelUpd, FEC=192.0.2.1 / ------------ | Label Map
+       |        |      |          192.0.2.2              | update
+       |        |      |      Label=A                    |
+       |        |      |                                 |
+       |        |<----- PCLabelUpd, FEC=192.0.2.2------- | Label Map
+       |        |      |                 192.0.2.1       | update
+       |        |      |             Label=B             |
+       |        |      |                                 |
+]]>
+        </artwork>
+        </figure>
+        
+        <t>The forwarding behavior and the end result is similar to IGP based
+        "Adj-SID" in SR.</t>
+
+        <t>The Path Setup Type for segment routing MUST be set for PCECC SR
+         (see <xref target="SEC_PATH"/>).  All PCEP procedures and mechanism are similar to
+        <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+
+        <t>PCE relies on the Adj label cleanup using the same PCLabelUpd
+        message.</t>
+       </section>
+
+        <section title="Redundant PCEs "
+             toc="default"
+             anchor="SEC_REDUND">
+
+       <t><xref target='I-D.litkowski-pce-state-sync'/> describes synchronization
+       mechanism between the stateful PCEs. The SR Labels allocated by a PCE should also be 
+       synchronized among PCEs for PCECC SR state synchronization. Note that the SR labels
+       are downloaded independent to the PCECC LSP, and remains intact till any topology 
+       change. The redundant PCEs MUST have a common view of all SR labels allocated in the
+       domain.
+     </t>
+    
+       <t>Incase the session to the PCE that allocated the SR labels is down, similar 
+        to the LSP re-delegation mechanims, the SR labels are re-delegated to a 
+        redundant PCE using the PCLabelRpt message. This is done so that the SR labels
+        remains intact and cosntant in case of session disconnect. </t>             
+       </section>     
+       
+       <section title="Session Termination "
+             toc="default"
+             anchor="SEC_SES_TERMIN">
+        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> describes the action
+        needed for label provisioned for the Basic PCECC LSP on this terminated
+        session. Similarly actions should be applied for SR Labels as well.</t>
+   
+        <t>Additionally, if PCC has any alternate PCEP session with another PCE, then
+         PCC MUST deligate the SR labels of this session to this alternate PCE in a
+         sequence of PCLabelRpt message. PCE can accept it and can send PCLabelUpd
+         message to update or clean the label.</t>
+
+        <t>Extensions for PCLabelUpd and PCLabelRpt message for SR label are described
+         in <xref target="SEC_LabelOp"/>.</t>             
+       </section>
+
+       <section title="LABEL-DB Synchronization"
+             toc="default"
+             anchor="SEC_DB_SYNC">
+        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> describes LABEL-DB
+        Synchronization procedures needed for the labels provisioned for the
+        Basic PCECC LSP. Same procedures should be applied for SR labels as well.</t>             
+       </section>       
+       
+       </section>
+    </section>
+    </section>
+
+    
+    <section title="PCEP messages"
+             toc="default">
+    <t>As defined in <xref target="RFC5440" />, a PCEP message consists of a common header
+   followed by a variable-length body made of a set of objects that can
+   be either mandatory or optional.  An object is said to be mandatory
+   in a PCEP message when the object must be included for the message to
+   be considered valid.  For each PCEP message type, a set of rules is
+   defined that specify the set of objects that the message can carry.
+   An implementation MUST form the PCEP messages using the object
+   ordering specified in this document.</t>
+   
+    <section title="Label Operations"
+             toc="default"
+             anchor="SEC_LabelOp"> 
+             
+    <section title="The PCLabelUpd message"
+             toc="default"
+             anchor="SEC_PCLabelUpd">
+        <t>Label Update Message (PCLabelUpd) defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>
+        is extended to update the label map at the PCC.</t>
+        <t>The format of the extended PCLabelUpd message is as follows:</t>
+<figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG3">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+   <PCLabelUpd Message> ::= <Common Header>
+                            <pce-label-update-list>
+   Where:
+   <pce-label-update-list> ::= <pce-label-update>
+                      [<pce-label-update-list>]
+
+   <pce-label-update> ::= (<pce-label-download>|<pce-label-map>)
+
+   Where:
+   
+   <pce-label-map> ::= <SRP>
+                       <LABEL>
+                       <FEC>
+   
+   <pce-label-download> is defined in 
+   [I-D.zhao-pce-pcep-extension-for-pce-controller].
+]]>
+        </artwork>
+        </figure>
+   
+        <t>The FEC object is defined in  <xref target="SEC_FEC"/>. Either FEC object or LSP object
+        defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> is mandatory in
+        PCLabelUpd message.  The FEC object encodes the Node and Adjacency
+        information of the Label Map.</t>
+    </section>
+    
+    <section title="The PCLabelRpt message"
+             toc="default"
+             anchor="SEC_PCLabelRpt">
+       <t>Label Report Message (PCLabelRpt) defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>
+        is extended to report or delegate the label map to PCE.</t>
+   
+       <t>The format of the PCLabelRpt message is as follows:</t>
+<figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIGRPT">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+   <PCLabelRpt Message> ::= <Common Header>
+                            <pce-label-report-list>
+   Where:
+   <pce-label-report-list> ::= <pce-label-report>
+                      [<pce-label-report-list>]
+
+   <pce-label-report> ::= (<pce-label-delegate>|<pce-label-map>)
+
+   Where:
+   
+   <pce-label-map> ::= <SRP>
+                       <LABEL>
+                       <FEC>
+   
+   <pce-label-delegate> is defined in
+ ]]>
+
+        </artwork>
+        </figure>
+ 
+        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>.</t>
+        <t>The FEC object is defined in  <xref target="SEC_FEC"/>. Either FEC object or LSP object
+        defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> is mandatory in
+        PCLabelRpt message.  The FEC object encodes the Node and Adjacency
+        information of the Label Map. </t>
+   </section>    
+   </section>
+    </section>
+
+    
+    <section title="PCEP Objects"
+             toc="default">
+
+    <section title="OPEN Object"
+             toc="default">
+
+    <section title="PCECC Capability TLV"
+             toc="default"
+             anchor="SEC_PCECC_CAP_TLV">
+    <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defined
+    the PCECC-CAPABILITY TLV.</t>
+    <t>A new S-bit is defined in PCECC-CAPABILITY TLV for PCECC-SR:</t>
+<figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_CAP">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |               Type=TBD        |            Length=4           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             Flags                           |S|
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]>
+        </artwork>
+        </figure>
+
+    <t>S (PCECC-SR-CAPABILITY - 1 bit):  If set to 1 by a PCEP speaker, it
+      indicates that the PCEP speaker is capable for PCECC-SR capability
+      and PCE would allocate node and Adj label on this session.</t>
+    </section>
+
+    </section>
+    
+    <section title="PATH-SETUP-TYPE TLV"
+             toc="default"
+             anchor="SEC_PATH">
+             
+    <t>The PATH-SETUP-TYPE TLV is defined in <xref target='I-D.ietf-pce-lsp-setup-type'/>.
+   PST = 1 (defined in <xref target='I-D.ietf-pce-segment-routing'/>) can be reused
+   when Path is setup via PCECC SR mode.</t>
+
+   <t>On a PCRpt/PCUpd/PCInitiate message, the PST=1 indicates that this 
+   LSP was setup via a SR based mechanism where either the labels are 
+   allocated by PCE via PCECC mechanism or advertised by IGP.</t>
+    </section>
+    
+    <section title="FEC Object"
+             toc="default"
+             anchor="SEC_FEC">
+    <t>The FEC Object is used to specify the FEC information and MAY be
+   carried within PCLabelUpd message.</t>
+    <t>FEC Object-Class is TBD.</t>
+    <t>FEC Object-Type is 1 'IPv4 Node ID'.</t>
+
+   <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FEC_OBJ">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+   FEC Object-Type is 1 'IPv4 Node ID'.
+   
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      IPv4 Node ID                             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   FEC Object-Type is 2 'IPv6 Node ID'.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   //                      IPv6 Node ID (16 bytes)                //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   FEC Object-Type is 3 'IPv4 Adjacency'.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      Local IPv4 address                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                     Remote IPv4 address                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   FEC Object-Type is 4 'IPv6 Adjacency'.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   //               Local IPv6 address (16 bytes)                 //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   //               Remote IPv6 address (16 bytes)                //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   FEC Object-Type is 5 'Unnumbered Adjacency with IPv4 NodeIDs'.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      Local Node-ID                            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Local Interface ID                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      Remote Node-ID                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                   Remote Interface ID                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]>
+        </artwork>
+        </figure>
+    <t>The FEC objects are as follows:</t>
+    <t>IPv4 Node ID:  where IPv4 Node ID is specified as an IPv4 address of
+      the Node.  FEC Object-type is 1, and the Object-Length is 4 in
+      this case.</t>
+
+    <t>IPv6 Node ID:  where IPv6 Node ID is specified as an IPv6 address of
+      the Node.  FEC Object-type is 2, and the Object-Length is 16 in
+      this case.</t>
+
+    <t>IPv4 Adjacency:  where Local and Remote IPv4 address is specified as
+      pair of IPv4 address of the adjacency.  FEC Object-type is 3, and
+      the Object-Length is 8 in this case.</t>
+
+    <t>IPv6 Adjacency:  where Local and Remote IPv6 address is specified as
+      pair of IPv6 address of the adjacency.  FEC Object-type is 4, and
+      the Object-Length is 32 in this case.</t>
+
+    <t>Unnumbered Adjacency with IPv4 NodeID:  where a pair of Node ID /
+      Interface ID tuples is used.  FEC Object-type is 5, and the
+      Object-Length is 16 in this case.</t>
+
+    </section>
+    </section>    
+
+  
+    <section title="Security Considerations"
+             toc="default">
+    <t>The security considerations described in 
+     <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> apply to the
+     extensions described in this document.</t>
+    </section>
+    
+    <section title="Manageability Considerations"
+             toc="default">
+      <section title="Control of Function and Policy"
+               toc="default">
+        <t> A PCE or PCC implementation SHOULD allow to configure to
+   enable/disable PCECC SR capability as a global configuration.</t>
+      </section>
+      <section title="Information and Data Models"
+               toc="default">
+        <t><xref target="RFC7420"/> describes the PCEP MIB, this MIB can be extended to get the
+           PCECC SR capability status.</t>
+   
+        <t>The PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> could be extended
+           to enable/disable PCECC SR capability.</t>
+      </section>
+      <section title="Liveness Detection and Monitoring"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new liveness
+           detection and monitoring requirements in addition to those already
+           listed in <xref target="RFC5440"/>.</t>
+      </section>
+      <section title="Verify Correct Operations"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new operation
+   verification requirements in addition to those already listed in
+   <xref target="RFC5440"/> and <xref target="I-D.ietf-pce-stateful-pce"/>.</t>
+      </section>
+      <section title="Requirements On Other Protocols"
+               toc="default">
+        <t>PCEP extensions defined in this document do not put new requirements
+   on other protocols.</t>
+      </section>
+      <section title="Impact On Network Operations"
+               toc="default">
+        <t>PCEP implementation SHOULD allow a limit to be placed on the rate
+   of PCLabelUpd messages sent by PCE and processed by PCC.
+   It SHOULD also allow sending a notification when a rate threshold is
+   reached.</t>
+      </section>
+    </section>
+
+    
+    <section title="IANA Considerations"
+             toc="default">
+
+      <section title="PCECC-CAPABILITY TLV" toc="default">
+      <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines the
+      PCECC-CAPABILITY TLV and requests that IANA creates a registry to
+      manage the value of the PCECC-CAPABILITY TLV's Flag field.  IANA
+      is requested to allocate a new bit in the PCECC-CAPABILITY TLV Flag
+      Field registry, as follows:</t>
+     <texttable anchor="CAP-TLV" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Bit</ttcol>
+      <ttcol align="left" width="30%">Description</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>31</c>
+       <c>S((PCECC-SR-CAPABILITY))</c>
+       <c>This document</c>
+     </texttable>         
+      </section>
+
+      <section title="PCEP Object" toc="default">
+        <t>IANA is requested to allocate new registry for FEC PCEP object.</t>
+     <texttable anchor="PCEP-OBJECT" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Object-Class Value</ttcol>
+      <ttcol align="left" width="30%">Name</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>TBD</c>
+       <c>FEC </c>
+       <c>This document</c>
+       <c> </c>
+       <c>Object-Type : 1</c>
+       <c>IPv4 Node ID</c>  
+       <c> </c>
+       <c>Object-Type : 2</c>
+       <c>IPv6 Node ID</c> 
+       <c> </c>
+       <c>Object-Type : 3</c>
+       <c>IPv4 Adjacency</c> 
+       <c> </c>
+       <c>Object-Type : 4</c>
+       <c>IPv6 Adjacency</c>       
+       <c> </c>
+       <c>Object-Type : 5</c>
+       <c>Unnumbered Adjacency</c> 
+       <c> </c>
+       <c> </c>
+       <c>with IPv4 NodeID</c>       
+     </texttable>            
+      </section>
+      
+      <section title="PCEP-Error Object" toc="default">
+      <t>IANA is requested to allocate new error types and error values within
+        the "PCEP-ERROR Object Error Types and Values" sub-registry of the
+        PCEP Numbers registry for the following errors:
+
+        <vspace blankLines="1" /> 
+        
+        <?rfc subcompact="yes"?>
+
+        <list style="hanging" hangIndent="13">
+
+          <t hangText="Error-Type">Meaning</t>
+          <t hangText="----------   -------"></t>
+          <t hangText="19">Invalid operation.
+          <list style="hanging" hangIndent="37">
+            <t hangText=" Error-value = TBD :">SR capability was not advertised</t>
+          </list>
+          </t>   
+        </list>
+        </t>         
+      </section>      
+      
+    </section>
+
+
+    
+    <section title="Acknowledgments"
+             toc="default">
+      <t>We would like to thank Robert Tao, Changjing Yan, Tieying Huang and Avantika for
+   their useful comments and suggestions.</t>
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119.xml" ?>
+      <?rfc include="reference.RFC.5440.xml" ?>
+      <?rfc include="reference.RFC.7420.xml" ?>
+      <?rfc include="reference.RFC.5305.xml" ?>
+      <?rfc include="reference.RFC.5307.xml" ?>
+      <?rfc include="reference.RFC.4203.xml" ?>
+      <?rfc include="reference.RFC.3630.xml" ?>
+      <?rfc include="reference.RFC.7752.xml" ?>
+      <?rfc include="reference.I-D.ietf-pce-stateful-pce"?>
+      <?rfc include="reference.I-D.ietf-pce-pce-initiated-lsp"?>
+
+      </references>
+
+    <references title="Informative References">
+    <?rfc include="reference.RFC.3031.xml" ?>
+    <?rfc include="reference.I-D.ietf-teas-pce-central-control"?>
+    <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>
+    <?rfc include="reference.I-D.ietf-pce-lsp-setup-type"?>
+    <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
+    <?rfc include="reference.I-D.zhao-pce-pcep-extension-for-pce-controller"?>
+    <?rfc include="reference.I-D.ietf-pce-segment-routing"?>
+    <?rfc include="reference.I-D.ietf-isis-segment-routing-extensions"?>
+    <?rfc include="reference.I-D.ietf-ospf-segment-routing-extensions"?>
+    <?rfc include="reference.I-D.litkowski-pce-state-sync"?>
+    <?rfc include="reference.I-D.dhodylee-pce-pcep-ls"?>
+    <?rfc include="reference.I-D.ietf-spring-segment-routing"?>
+    <?rfc include="reference.I-D.ietf-spring-segment-routing-mpls"?>
+
+      </references>
+<section title="Contributor Addresses" toc="default">
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+       <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Udayasree Palle
+Huawei Technologies
+Divyashree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: udayasreereddy@gmail.com
+
+Katherine Zhao
+Huawei Technologies
+2330 Central Expressway
+Santa Clara, CA  95050
+USA
+
+EMail: katherine.zhao@huawei.com
+
+Boris Zhang
+Telus Ltd.
+Toronto
+Canada
+
+EMail: boris.zhang@telus.com
+      
+        ]]></artwork>
+        </figure>
+      </t>
+    </section>
+
+  </back>
+</rfc>
+
