@@ -14,7 +14,7 @@
 <?rfc strict="no" ?>
 <rfc ipr="trust200902"
      category="std"
-     docName="draft-zhao-pce-pcep-extension-pce-controller-sr-00"
+     docName="draft-zhao-pce-pcep-extension-pce-controller-sr-01"
      obsoletes=""
      updates=""
      submissionType="IETF"
@@ -113,13 +113,13 @@
         <email>choa.zhou@cisco.com</email>
       </address>
     </author>
-    <date month="June" year="2017" />
+    <date month="October" year="2017" />
     <area>Routing</area>
     <workgroup>PCE Working Group</workgroup>
     <abstract>
    <t>In certain networks deployment scenarios, service providers would
    like to keep all the existing MPLS functionalities in both MPLS and
-   GMPLS while removing the complexity of existing signalling protocols
+   GMPLS while removing the complexity of existing signaling protocols
    such as LDP and RSVP-TE.  PCE has been proposed to be used as a
    central controller (PCECC) so that LSP can be
    calculated/setup/initiated and label forwarding entries are
@@ -142,7 +142,7 @@
    mechanisms for Path Computation Elements (PCEs) to perform route
    computations in response to Path Computation Clients (PCCs) requests.
    PCEP Extensions for PCE-initiated LSP Setup in a Stateful PCE Model
-   <xref target='I-D.ietf-pce-stateful-pce'/> describes a set of extensions to PCEP to
+   <xref target='RFC8231'/> describes a set of extensions to PCEP to
    enable active control of MPLS-TE and GMPLS tunnels.</t>
 
    <t><xref target='I-D.ietf-pce-pce-initiated-lsp'/> describes the setup and tear down of
@@ -156,13 +156,13 @@
    protocol. <xref target='I-D.ietf-teas-pcecc-use-cases'/> describes the use cases for
    the PCECC architecture.</t>
    
-   <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> specify the PCEP extention 
+   <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> specify the PCEP extension 
    for the PCE as the central controller (PCECC). This document extends 
    the PCECC procedures for Segment Routing (SR).</t>
    
    <t>Segment Routing (SR) technology leverage the source routing and
-   tunnelling paradigms.  A source node can choose a path without
-   relying on hop-by-hop signalling protocols such as LDP or RSVP-TE.
+   tunneling paradigms.  A source node can choose a path without
+   relying on hop-by-hop signaling protocols such as LDP or RSVP-TE.
    Each path is specified as a set of "segments" advertised by link-
    state routing protocols (IS-IS or OSPF).</t>
    
@@ -201,11 +201,11 @@
 
       <section title="Requirements Language"
                toc="default">
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
-        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
-        and "OPTIONAL" in this document are to be interpreted as
-        described in
-        <xref target="RFC2119" />.</t>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.</t>
       </section>
     </section>
     
@@ -275,7 +275,7 @@
              
     <section title="Stateful PCE Model"
              toc="default">
-    <t>Active stateful PCE is described in <xref target='I-D.ietf-pce-stateful-pce'/>. PCE
+    <t>Active stateful PCE is described in <xref target='RFC8231'/>. PCE
     as a central controller (PCECC) reuses existing Active stateful PCE
     mechanism as much as possible to control the LSP.</t>
     </section>
@@ -298,6 +298,15 @@
    the set of SR Label entries from PCC to PCE for which explicit action
    is required from PCE (update or cleanup or do nothing for these
    Label entries).</t>
+
+    <t>[Editor's Note: <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
+      PCLabelRpt. Questions where raised on the need for the new messages. Further 
+      the document also includes an appendix 
+      on how the existing messages can be extended 
+      to add this functionality. WG needs to decide the final direction i.e. new specific messages 
+      are needed or existing PCEP messages can be extended. See See <xref target="appendix"/> 
+      to see the extension of existing message for PCECC-SR functionality.]</t>
+
     </section>
     
     <section title="PCECC Capability Advertisement"
@@ -538,7 +547,8 @@
              anchor="SEC_DB_SYNC">
         <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> describes LABEL-DB
         Synchronization procedures needed for the labels provisioned for the
-        Basic PCECC LSP. Same procedures should be applied for SR labels as well.</t>             
+        Basic PCECC LSP. Same procedures should be applied for SR labels as well.</t>    
+        <t>See <xref target="I-D.palle-pce-controller-labeldb-sync"/> for the optimizations for LABEL-DB synchronization procedure.</t>          
        </section>       
        
        </section>
@@ -560,7 +570,13 @@
     <section title="Label Operations"
              toc="default"
              anchor="SEC_LabelOp"> 
-             
+    <t>[Editor's Note: <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
+      PCLabelRpt. Questions where raised on the need for the new messages. Further 
+      the document also includes an appendix 
+      on how the existing messages can be extended 
+      to add this functionality. WG needs to decide the final direction i.e. new specific messages 
+      are needed or existing PCEP messages can be extended. See See <xref target="appendix"/> 
+      to see the extension of existing message for PCECC-SR functionality.]</t>             
     <section title="The PCLabelUpd message"
              toc="default"
              anchor="SEC_PCLabelUpd">
@@ -857,7 +873,7 @@
                toc="default">
         <t>Mechanisms defined in this document do not imply any new operation
    verification requirements in addition to those already listed in
-   <xref target="RFC5440"/> and <xref target="I-D.ietf-pce-stateful-pce"/>.</t>
+   <xref target="RFC5440"/> and <xref target="RFC8231"/>.</t>
       </section>
       <section title="Requirements On Other Protocols"
                toc="default">
@@ -965,7 +981,8 @@
       <?rfc include="reference.RFC.4203.xml" ?>
       <?rfc include="reference.RFC.3630.xml" ?>
       <?rfc include="reference.RFC.7752.xml" ?>
-      <?rfc include="reference.I-D.ietf-pce-stateful-pce"?>
+      <?rfc include="reference.RFC.8174.xml"?>
+      <?rfc include="reference.RFC.8231.xml"?>
       <?rfc include="reference.I-D.ietf-pce-pce-initiated-lsp"?>
 
       </references>
@@ -984,8 +1001,97 @@
     <?rfc include="reference.I-D.dhodylee-pce-pcep-ls"?>
     <?rfc include="reference.I-D.ietf-spring-segment-routing"?>
     <?rfc include="reference.I-D.ietf-spring-segment-routing-mpls"?>
+    <?rfc include="reference.I-D.palle-pce-controller-labeldb-sync"?>
 
       </references>
+<section title="Using existing PCEP message" toc="default" anchor="appendix">
+  <t>This is a temporary section added to this document, till the 
+    time a decision on the use of new messages v/s extending existing message is resolved. This section should be removed before the final publication of the document.</t>
+    <t>The PCInitiate message can be used to download or remove the labels - 
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+       <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+     <PCInitiate Message> ::= <Common Header>
+                              <PCE-initiated-lsp-list>
+  Where:
+     <Common Header> is defined in [RFC5440]
+
+     <PCE-initiated-lsp-list> ::= <PCE-initiated-lsp-request>
+                                  [<PCE-initiated-lsp-list>]
+
+     <PCE-initiated-lsp-request> ::= 
+                          (<PCE-initiated-lsp-instantiation>|
+                           <PCE-initiated-lsp-deletion>|
+                           <PCE-initiated-lsp-label-download>|
+                           <PCE-initiated-label-map>)
+
+     <PCE-initiated-lsp-label-download> ::= <SRP>
+                                            <LSP>
+                                            <label-list>
+
+     <label-list> ::=  <LABEL>
+                       [<label-list>]
+
+    <PCE-initiated-label-map> ::= <SRP>
+                                  <LABEL>
+                                  <FEC>                       
+
+  Where:
+      <PCE-initiated-lsp-instantiation> and 
+      <PCE-initiated-lsp-deletion> are as per 
+      [I-D.ietf-pce-pce-initiated-lsp]. 
+
+     The LSP and SRP object is defined in [RFC8231].          
+
+]]></artwork>
+        </figure>
+      </t>
+
+   <t>The PCRpt message can be used to report the labels that were allocated by the PCE, to be used during the state synchronization phase.
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+       <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+
+The format of the PCRpt message is as follows:
+
+      <PCRpt Message> ::= <Common Header>
+                          <state-report-list>
+   Where:
+
+      <state-report-list> ::= <state-report>[<state-report-list>]
+
+      <state-report> ::= (<lsp-state-report>|
+                          <pce-label-report>) 
+
+      <lsp-state-report> ::= [<SRP>]
+                             <LSP>
+                             <path>
+
+      <pce-label-report> ::= (<pce-label-delegate>|
+                              <pce-label-map>)
+
+      <pce-label-delegate> ::= <SRP>
+                               <LSP>
+                               <label-list>
+
+      <label-list> ::=  <LABEL>
+                        [<label-list>]                  
+
+      <pce-label-map> ::= <SRP>
+                          <LABEL>
+                          <FEC>
+
+
+    Where:
+      <path> is as per [RFC8231] and the LSP and SRP object are 
+      also defined in [RFC8231].
+]]></artwork>
+        </figure>
+   </t>
+
+   <t>The procedure for LSP-DB synchronization would also change, in-case we use the existing message. It will be the PCCs that would first report all the 
+    labels downloaded by the PCE during the state synchronization from PCC towards PCE, and then in case of any discrepancies PCE would use the PCInitiate
+    message to add/remove labels.</t>
+
+</section>       
 <section title="Contributor Addresses" toc="default">
     <t>
     <figure title="" suppress-title="false" align="left" alt="" width="" height="">

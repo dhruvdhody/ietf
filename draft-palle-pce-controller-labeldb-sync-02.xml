@@ -11,7 +11,7 @@
 <?rfc compact="yes" ?>
 <?rfc iprnotified="Yes" ?>
 <?rfc strict="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-palle-pce-controller-labeldb-sync-01" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-palle-pce-controller-labeldb-sync-02" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
   <front>
     <title abbrev="LABEL-DB-SYNC">LABEL-DB Synchronization Procedures for a PCE as a central controller(PCECC)</title>
     <author initials="U" surname="Palle" fullname="Udayasree Palle">
@@ -53,7 +53,7 @@
         <email>satishk@huawei.com</email>
       </address>
     </author>
-    <date month="June" year="2017" />
+    <date month="October" year="2017" />
     <area>Routing</area>
     <workgroup>PCE Working Group</workgroup>
     <abstract>
@@ -80,7 +80,7 @@
    PCE architectures and PCEP.</t>
 
     <t><xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
-   <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/> specifies 
+   <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> specifies 
    reliable synchronization mechanism between the path computation
    clients (PCCs) and the PCECC.</t>
    
@@ -88,11 +88,11 @@
    the corresponding PCEP procedures and extensions.</t>
    <section title="Requirements Language"
                toc="default">
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
-        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
-        and "OPTIONAL" in this document are to be interpreted as
-        described in
-        <xref target="RFC2119" />.</t>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.</t>
       </section>
     </section>
 
@@ -102,13 +102,13 @@
 		The purpose of LABEL-DB synchronization is to make sure that the
 		PCECC's view of LABEL-DB matches with the PCC's LABEL-DB. The LABEL-DB
 		synchronization MUST be performed from PCECC to PCC immediately after the LSP state synchronization.
-		<xref target="I-D.ietf-pce-stateful-pce"/> describes the basic
-		mechanism for LSP state synchronization. <xref target="I-D.ietf-pce-stateful-sync-optimizations"/> describes the optimizations for LSP state synchronization.</t>
+		<xref target="RFC8231"/> describes the basic
+		mechanism for LSP state synchronization. <xref target="RFC8233"/> describes the optimizations for LSP state synchronization.</t>
 
 		<t>Full LABEL-DB synchronization performed from PCECC to PCC on Initial
         session UP or every session flap is described in
         <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
-        <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>.</t>
+        <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
 
 		<t>Providing an Optimizations for LABEL-DB synchronization can result
          in significant savings in both control-plane data exchanges and the
@@ -117,6 +117,15 @@
 		<t>Optimizations for LABEL-DB synchronization describes the need that both PCEP
 		speakers support label database version capability and maintain
 		label database version for each session. See <xref target="SEC_OPT_LABEL_DB"/> for detail procedures.</t>
+
+
+    <t>[Editor's Note: <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
+      PCLabelRpt. Questions where raised on the need for the new messages. Further 
+      appendix in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> and <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>
+      describes how the existing messages can be extended 
+      to add this functionality. WG needs to decide the final direction i.e. new specific messages 
+      are needed or existing PCEP messages can be extended. The optimization procedure
+      would need to be modified based on the above decision.]</t>
 
 	</section>    
 
@@ -147,7 +156,7 @@ synchronization. By default, the full LABEL-DB synchronization is performed.</t>
    <t>LABEL-DB synchronization avoidance is advertised on a PCEP session
    during session startup using the INCLUDE-LABEL-DB-VERSION (I) bit in the
    PCECC capability TLV (see <xref target="SEC_PCECC_CAP"/>).
-   The PCEP peer MAY include the SPEAKER-ENTITY-ID TLV described in <xref target="I-D.ietf-pce-stateful-sync-optimizations"/>
+   The PCEP peer MAY include the SPEAKER-ENTITY-ID TLV described in <xref target="RFC8233"/>
    in the OPEN message to identify the peer in case of IP address change.</t>
 
    <t>If both PCEP speakers set the I flag in the OPEN object's PCECC Capability TLV
@@ -174,7 +183,7 @@ synchronization. By default, the full LABEL-DB synchronization is performed.</t>
    Object and the TLV values match, the PCECC MAY skip LABEL-DB
    synchronization.  Otherwise, the PCECC MUST perform full LABEL-DB
    synchronization (<xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
-   <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>) or incremental LABEL-DB synchronization
+   <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>) or incremental LABEL-DB synchronization
    (see <xref target="SEC_OPT_LABEL_DB_INC"/>) to the PCC,  Incase, the PCECC attempts to skip LABEL-DB synchronization,
    by setting the SYNC Flag to 0 on the first Label Update
    from the PCECC, the PCC MUST send back a PCErr with Error-type TBD1
@@ -325,7 +334,7 @@ synchronization. By default, the full LABEL-DB synchronization is performed.</t>
    and I flags setting by PCC and PCECC result in full LABEL-DB
    synchronization procedure as described in
    <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
-   <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>.  The PCECC MAY force a full LABEL-DB
+   <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.  The PCECC MAY force a full LABEL-DB
    synchronization by setting the D flag to zero in the OPEN message.</t>
    <t>
            <figure title="Incremental Synchronization Procedure" suppress-title="false" align="center" alt="" width="" height="" anchor="SEC_INC_LABEL-DB_FIG">
@@ -392,7 +401,7 @@ Sync starts) |            .                |
 
    <t>The other procedures and error checks remain unchanged from the default
    LABEL-DB synchronization defined in <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and 
-   <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>.</t>
+   <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
     </section>
 </section>
 
@@ -483,7 +492,7 @@ Sync starts) |            .                |
 	  <section title="PCECC-CAPABILITY TLV" toc="default">
 	  <t><xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> defines the
         PCECC-CAPABILITY TLV and 
-        <xref target="I-D.zhao-pce-pcep-extension-for-sr-pce-controller"/>
+        <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>
         extends this TLV to add PCECC-SR-CAPABILITY.</t>
 	 <t>Requests that IANA creates a registry to manage the value of the new
    PCECC-CAPABILITY TLV's Flag field.  IANA is requested to allocate a
@@ -507,7 +516,7 @@ Sync starts) |            .                |
 <section title="Manageability Considerations" toc="default">
  <t>
   All manageability requirements and considerations listed in <xref target="RFC5440" pageno="false" format="default" />, 
-   <xref target="I-D.ietf-pce-stateful-pce" pageno="false" format="default" /> and <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>
+   <xref target="RFC8231" pageno="false" format="default" /> and <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>
   apply to PCEP protocol extensions defined in this document. In addition, requirements and considerations listed in this section apply. 
   </t>
  <section title="Control of Function and Policy" toc="default">
@@ -526,16 +535,16 @@ Sync starts) |            .                |
  
  <section anchor="Security" title="Security Considerations" toc="default">
  <t>
-  The security considerations listed in <xref target="I-D.ietf-pce-stateful-pce" pageno="false" format="default" /> and <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller" pageno="false" format="default" />
+  The security considerations listed in <xref target="RFC8231" pageno="false" format="default" /> and <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller" pageno="false" format="default" />
   apply to this document as well. 
     Securing the PCEP session using <!--[Stephen Farrell IESG comment] mechanism like TCP Authentication Option (TCP-AO) <xref target="RFC5925"/> or--> Transport Layer Security (TLS) 
-  <xref target="I-D.ietf-pce-pceps"/>, as per the recommendations and best current practices in <xref target="RFC7525"/>, is RECOMMENDED. 
+  <xref target="RFC8253"/>, as per the recommendations and best current practices in <xref target="RFC7525"/>, is RECOMMENDED. 
   </t>
   </section> 
 	
     <section title="Acknowledgements" toc="default">
     <t>This document borrows some of the structure and text from
-    <xref target="I-D.ietf-pce-stateful-sync-optimizations"/>, and
+    <xref target="RFC8253"/>, and
     would like to thanks the authors and contributors of the document.
     </t>
     </section>
@@ -544,47 +553,18 @@ Sync starts) |            .                |
     <references title="Normative References">
     <?rfc include="reference.RFC.2119.xml" ?>
     <?rfc include="reference.RFC.5440.xml" ?>
-    <?rfc include="reference.I-D.ietf-pce-stateful-pce"?>
+    <?rfc include="reference.RFC.8174.xml"?>
+    <?rfc include="reference.RFC.8231.xml"?>
 
 
     <?rfc include="reference.I-D.zhao-pce-pcep-extension-for-pce-controller"?>
     </references>
     <references title="Informative References">
     <?rfc include="reference.RFC.7525.xml" ?>
-    <?rfc include="reference.I-D.ietf-pce-pceps"?>
+    <?rfc include="reference.RFC.8233.xml"?>
+    <?rfc include="reference.RFC.8253.xml"?>
     <?rfc include="reference.I-D.ietf-teas-pce-central-control"?>
-    <?rfc include="reference.I-D.ietf-pce-stateful-sync-optimizations"?>
-
-<reference anchor="I-D.zhao-pce-pcep-extension-for-sr-pce-controller">
-<front>
-<title>
-PCEP Procedures and Protocol Extensions for Using PCE as a Central Controller (PCECC) of LSPs
-</title>
-<author initials="Q" surname="Zhao" fullname="Quintin Zhao">
-<organization/>
-</author>
-<author initials="Z" surname="Li" fullname="Zhenbin Li">
-<organization/>
-</author>
-<author initials="D" surname="Dhody" fullname="Dhruv Dhody">
-<organization/>
-</author>
-<author initials="S" surname="Karunanithi" fullname="Satish Karunanithi">
-<organization/>
-</author>
-<author initials="A" surname="Farrel" fullname="Adrian Farrel">
-<organization/>
-</author>
-<author initials="C" surname="Zhou" fullname="Chao Zhou">
-<organization/>
-</author>
-
-
-<date month="June" day="29" year="2017"/>
-</front>
-<seriesInfo name="Internet-Draft" value="draft-zhao-pce-pcep-extension-for-sr-pce-controller-00"/>
-<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-zhao-pce-pcep-extension-for-sr-pce-controller-00.txt"/>
-</reference>    
+    <?rfc include="reference.I-D.zhao-pce-pcep-extension-pce-controller-sr"?>
     </references>
 
   </back>

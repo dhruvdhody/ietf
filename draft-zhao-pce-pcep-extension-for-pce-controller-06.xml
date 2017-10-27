@@ -119,7 +119,7 @@
     <abstract>
    <t>In certain networks deployment scenarios, service providers would
    like to keep all the existing MPLS functionalities in both MPLS and
-   GMPLS while removing the complexity of existing signalling protocols
+   GMPLS while removing the complexity of existing signaling protocols
    such as LDP and RSVP-TE.  PCE has been proposed to be used as a
    central controller (PCECC) so that LSP can be
    calculated/setup/initiated and label forwarding entries are
@@ -288,9 +288,7 @@
     <t>[Editor's Note: This document defines new messages PCLabelUpd and 
       PCLabelRpt. Questions where raised on the need for the new messages.
       See <xref target="appendix"/> on how the existing messages can be extended 
-      to add this functionality. The editor's preference is for new messages, but
-      some co-authors believe in adding this feature to existing message.
-      WG needs to decide the final direction i.e. new specific messages 
+      to add this functionality. WG needs to decide the final direction i.e. new specific messages 
       are needed or existing PCEP messages can be extended.]</t>
 
     <t>The new LSP functions defined in this document are mapped onto the messages as
@@ -801,9 +799,7 @@
     <t>[Editor's Note: This document defines new messages PCLabelUpd and 
       PCLabelRpt. Questions where raised on the need for the new messages.
       See <xref target="appendix"/> on how the existing messages can be extended 
-      to add this functionality. The editor's preference is for new messages, but
-      some co-authors believe in adding this feature to existing message.
-      WG needs to decide the final direction i.e. new specific messages 
+      to add this functionality. WG needs to decide the final direction i.e. new specific messages 
       are needed or existing PCEP messages can be extended.]</t>
 
     <section title="The PCLabelUpd message"
@@ -1415,16 +1411,81 @@ and extended in <xref target="I-D.ietf-pce-pce-initiated-lsp"/>.
 
 
       </references>
-<section title="Using existing PCEP message" toc="default">
+<section title="Using existing PCEP message" toc="default" anchor="appendix">
   <t>This is a temporary section added to this document, till the 
     time a decision on the use of new messages v/s extending existing message is resolved. This section should be removed before the final publication of the document.</t>
-    <t>The PCInitiate message can be used to download or remove the labels
+    <t>The PCInitiate message can be used to download or remove the labels - 
     <figure title="" suppress-title="false" align="left" alt="" width="" height="">
        <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
 
-        ]]></artwork>
+     <PCInitiate Message> ::= <Common Header>
+                              <PCE-initiated-lsp-list>
+  Where:
+     <Common Header> is defined in [RFC5440]
+
+     <PCE-initiated-lsp-list> ::= <PCE-initiated-lsp-request>
+                                  [<PCE-initiated-lsp-list>]
+
+     <PCE-initiated-lsp-request> ::= 
+                            (<PCE-initiated-lsp-instantiation>|
+                             <PCE-initiated-lsp-deletion>|
+                             <PCE-initiated-lsp-label-download>)
+
+     <PCE-initiated-lsp-label-download> ::= <SRP>
+                                            <LSP>
+                                            <label-list>
+
+     <label-list> ::=  <LABEL>
+                       [<label-list>]
+
+  Where:
+     <PCE-initiated-lsp-instantiation> and 
+     <PCE-initiated-lsp-deletion> are as per 
+      [I-D.ietf-pce-pce-initiated-lsp]. 
+
+     The LSP and SRP object is defined in [RFC8231].        
+
+]]></artwork>
         </figure>
       </t>
+
+   <t>The PCRpt message can be used to report the labels that were allocated by the PCE, to be used during the state synchronization phase.
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+       <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+
+      <PCRpt Message> ::= <Common Header>
+                          <state-report-list>
+   Where:
+
+      <state-report-list> ::= <state-report>[<state-report-list>]
+
+      <state-report> ::= (<lsp-state-report>|
+                          <pce-label-report>) 
+
+      <lsp-state-report> ::= [<SRP>]
+                             <LSP>
+                             <path>
+
+      <pce-label-report> ::= <pce-label-delegate>
+
+      <pce-label-delegate> ::= <SRP>
+                               <LSP>
+                               <label-list>
+
+      <label-list> ::=  <LABEL>
+                        [<label-list>]                  
+
+    Where:
+      <path> is as per [RFC8231] and the LSP and SRP object are 
+      also defined in [RFC8231].
+]]></artwork>
+        </figure>
+   </t>
+
+   <t>The procedure for LSP-DB synchronization would also change, in-case we use the existing message. It will be the PCCs that would first report all the 
+    labels downloaded by the PCE during the state synchronization from PCC towards PCE, and then in case of any discrepancies PCE would use the PCInitiate
+    message to add/remove labels.</t>
+
 </section>      
 <section title="Contributor Addresses" toc="default">
     <t>

@@ -1,0 +1,760 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0030)https://tools.ietf.org/rfcdiff -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+   
+  <meta http-equiv="Content-Style-Type" content="text/css"> 
+  <title>Diff: draft-zhao-pce-pcep-extension-pce-controller-sr-00.txt - draft-zhao-pce-pcep-extension-pce-controller-sr-01.txt</title> 
+  <style type="text/css"> 
+    body    { margin: 0.4ex; margin-right: auto; } 
+    tr      { } 
+    td      { white-space: pre; font-family: monospace; vertical-align: top; font-size: 0.86em;} 
+    th      { font-size: 0.86em; } 
+    .small  { font-size: 0.6em; font-style: italic; font-family: Verdana, Helvetica, sans-serif; } 
+    .left   { background-color: #EEE; } 
+    .right  { background-color: #FFF; } 
+    .diff   { background-color: #CCF; } 
+    .lblock { background-color: #BFB; } 
+    .rblock { background-color: #FF8; } 
+    .insert { background-color: #8FF; } 
+    .delete { background-color: #ACF; } 
+    .void   { background-color: #FFB; } 
+    .cont   { background-color: #EEE; } 
+    .linebr { background-color: #AAA; } 
+    .lineno { color: red; background-color: #FFF; font-size: 0.7em; text-align: right; padding: 0 2px; } 
+    .elipsis{ background-color: #AAA; } 
+    .left .cont { background-color: #DDD; } 
+    .right .cont { background-color: #EEE; } 
+    .lblock .cont { background-color: #9D9; } 
+    .rblock .cont { background-color: #DD6; } 
+    .insert .cont { background-color: #0DD; } 
+    .delete .cont { background-color: #8AD; } 
+    .stats, .stats td, .stats th { background-color: #EEE; padding: 2px 0; } 
+    span.hide { display: none; color: #aaa;}    a:hover span { display: inline; }    tr.change { background-color: gray; } 
+    tr.change a { text-decoration: none; color: black } 
+  </style> 
+     <script>
+var chunk_index = 0;
+var old_chunk = null;
+
+function format_chunk(index) {
+    var prefix = "diff";
+    var str = index.toString();
+    for (x=0; x<(4-str.length); ++x) {
+        prefix+='0';
+    }
+    return prefix + str;
+}
+
+function find_chunk(n){
+    return document.querySelector('tr[id$="' + n + '"]');
+}
+
+function change_chunk(offset) {
+    var index = chunk_index + offset;
+    var new_str;
+    var new_chunk;
+
+    new_str = format_chunk(index);
+    new_chunk = find_chunk(new_str);
+    if (!new_chunk) {
+        return;
+    }
+    if (old_chunk) {
+        old_chunk.style.outline = "";
+    }
+    old_chunk = new_chunk;
+    old_chunk.style.outline = "1px solid red";
+    window.location.replace("#" + new_str)
+    window.scrollBy(0,-100);
+    chunk_index = index;
+}
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+    case 78:
+        change_chunk(1);
+        break;
+    case 80:
+        change_chunk(-1);
+        break;
+    }
+};
+   </script> 
+<style type="text/css" id="GINGER_SOFTWARE_style">.GINGER_SOFTWARE_noMark { background : transparent; }  .GINGER_SOFTWARE_wrapper{ position: absolute; overflow: hidden; margin: 0px; padding: 0px; border: 0px solid transparent } .GINGER_SOFTWARE_contour { position : absolute; margin: 0px; }  .GINGER_SOFTWARE_richText { margin : 0px; padding-bottom: 3px; border-width: 0px; border-color: transparent; display: block; color: transparent; -webkit-text-fill-color: transparent; overflow: hidden; white-space: pre-wrap;}  .GINGER_SOFTWARE_inputWrapper .GINGER_SOFTWARE_richText {position: absolute;}  .GINGER_SOFTWARE_canvas { display:none; background-repeat:no-repeat;}  .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark {border-top-left-radius:2px; border-top-right-radius:2px; border-bottom-right-radius:2px; border-bottom-left-radius:2px;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjhFQ0Y2OENGMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjhFQ0Y2OEQwMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OEVDRjY4Q0QzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OEVDRjY4Q0UzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5RRxRxAAAAD0lEQVR42mK48+w7QIABAAVbAroowN08AAAAAElFTkSuQmCC)!important;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling.GINGER_SOFTWARE_synonym, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark.GINGER_SOFTWARE_synonym {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAABJJREFUeNpi+P9gEwAAAP//AwAFcwKS3d7BnwAAAABJRU5ErkJggg==)!important;} .GINGER_SOFTWARE_control .GINGER_SOFTWARE_correct.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_SpellingCorrect.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_spelling.GINGER_SOFTWARE_noSuggestion, .GINGER_SOFTWARE_control .GINGER_SOFTWARE_mark.GINGER_SOFTWARE_noSuggestion {background-image:url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjhFQ0Y2OENGMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjhFQ0Y2OEQwMzE5OTExRTI4NjMxOTExNTUyMDhEMDMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OEVDRjY4Q0QzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OEVDRjY4Q0UzMTk5MTFFMjg2MzE5MTE1NTIwOEQwMzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5RRxRxAAAAD0lEQVR42mK48+w7QIABAAVbAroowN08AAAAAElFTkSuQmCC)!important;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_correct, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_SpellingCorrect, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_spelling, .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_mark {position:relative; background-image:none!important;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightLeft { position : absolute; left:-2px; top:0px; bottom:0px; width:2px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightRight { position : absolute; right:-2px; top:0px; bottom:0px; width:2px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightTop { position : absolute; left:0px; right:0px; top:-2px; height:3px;} .GINGER_SOFTWARE_richText .GINGER_SOFTWARE_markHighlightBottom { position : absolute; left:0px; right:0px; bottom:-2px; height:3px;}</style></head> 
+<body ginger_software_stylesheet="true" ginger_software_doc="true"> 
+  <table border="0" cellpadding="0" cellspacing="0"> 
+  <tbody><tr id="part-1" bgcolor="orange"><th></th><th><a href="https://tools.ietf.org/rfcdiff?url2=draft-zhao-pce-pcep-extension-pce-controller-sr-00.txt" style="color:#008; text-decoration:none;">&lt;</a>&nbsp;<a href="https://tools.ietf.org/html/draft-zhao-pce-pcep-extension-pce-controller-sr-00.txt" style="color:#008">draft-zhao-pce-pcep-extension-pce-controller-sr-00.txt</a>&nbsp;</th><th> </th><th>&nbsp;<a href="https://tools.ietf.org/html/draft-zhao-pce-pcep-extension-pce-controller-sr-01.txt" style="color:#008">draft-zhao-pce-pcep-extension-pce-controller-sr-01.txt</a>&nbsp;<a href="https://tools.ietf.org/rfcdiff?url1=draft-zhao-pce-pcep-extension-pce-controller-sr-01.txt" style="color:#008; text-decoration:none;">&gt;</a></th><th></th></tr> 
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">PCE Working Group                                                Q. Zhao</td><td> </td><td class="right">PCE Working Group                                                Q. Zhao</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Internet-Draft                                                     Z. Li</td><td> </td><td class="right">Internet-Draft                                                     Z. Li</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Intended status: Standards Track                                D. Dhody</td><td> </td><td class="right">Intended status: Standards Track                                D. Dhody</td><td class="lineno"></td></tr>
+      <tr id="diff0001"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">Expires: <span class="delete">January 1, 2018</span>                                  S. Karunanithi</td><td> </td><td class="rblock">Expires: <span class="insert">April 29, 2018 </span>                                  S. Karunanithi</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                     Huawei Technologies</td><td> </td><td class="right">                                                     Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                               A. Farrel</td><td> </td><td class="right">                                                               A. Farrel</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                   Juniper Networks, Inc</td><td> </td><td class="right">                                                   Juniper Networks, Inc</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                                 C. Zhou</td><td> </td><td class="right">                                                                 C. Zhou</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                           Cisco Systems</td><td> </td><td class="right">                                                           Cisco Systems</td><td class="lineno"></td></tr>
+      <tr id="diff0002"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                                        <span class="delete">   June 30</span>, 2017</td><td> </td><td class="rblock">                                                        <span class="insert">October 26</span>, 2017</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP Procedures and Protocol Extensions for Using PCE as a Central</td><td> </td><td class="right">   PCEP Procedures and Protocol Extensions for Using PCE as a Central</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                     Controller (PCECC) of SR-LSPs</td><td> </td><td class="right">                     Controller (PCECC) of SR-LSPs</td><td class="lineno"></td></tr>
+      <tr id="diff0003"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">           draft-zhao-pce-pcep-extension-pce-controller-sr-0<span class="delete">0</span></td><td> </td><td class="rblock">           draft-zhao-pce-pcep-extension-pce-controller-sr-0<span class="insert">1</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Abstract</td><td> </td><td class="right">Abstract</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   In certain networks deployment scenarios, service providers would</td><td> </td><td class="right">   In certain networks deployment scenarios, service providers would</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   like to keep all the existing MPLS functionalities in both MPLS and</td><td> </td><td class="right">   like to keep all the existing MPLS functionalities in both MPLS and</td><td class="lineno"></td></tr>
+      <tr id="diff0004"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   GMPLS while removing the complexity of existing signal<span class="delete">l</span>ing protocols</td><td> </td><td class="rblock">   GMPLS while removing the complexity of existing signaling protocols</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   such as LDP and RSVP-TE.  PCE has been proposed to be used as a</td><td> </td><td class="right">   such as LDP and RSVP-TE.  PCE has been proposed to be used as a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   central controller (PCECC) so that LSP can be calculated/setup/</td><td> </td><td class="right">   central controller (PCECC) so that LSP can be calculated/setup/</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   initiated and label forwarding entries are downloaded through a</td><td> </td><td class="right">   initiated and label forwarding entries are downloaded through a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   centralized PCE server to each network devices along the path while</td><td> </td><td class="right">   centralized PCE server to each network devices along the path while</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   leveraging the existing PCE technologies as much as possible.</td><td> </td><td class="right">   leveraging the existing PCE technologies as much as possible.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document specifies the procedures and PCEP protocol extensions</td><td> </td><td class="right">   This document specifies the procedures and PCEP protocol extensions</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   when the PCE functions as one of the central controller components in</td><td> </td><td class="right">   when the PCE functions as one of the central controller components in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Segment Routing(SR).</td><td> </td><td class="right">   Segment Routing(SR).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Status of This Memo</td><td> </td><td class="right">Status of This Memo</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This Internet-Draft is submitted in full conformance with the</td><td> </td><td class="right">   This Internet-Draft is submitted in full conformance with the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   provisions of BCP 78 and BCP 79.</td><td> </td><td class="right">   provisions of BCP 78 and BCP 79.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are working documents of the Internet Engineering</td><td> </td><td class="right">   Internet-Drafts are working documents of the Internet Engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Task Force (IETF).  Note that other groups may also distribute</td><td> </td><td class="right">   Task Force (IETF).  Note that other groups may also distribute</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   working documents as Internet-Drafts.  The list of current Internet-</td><td> </td><td class="right">   working documents as Internet-Drafts.  The list of current Internet-</td><td class="lineno"></td></tr>
+      <tr id="diff0005"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Drafts is at http://datatracker.ietf.org/drafts/current/.</td><td> </td><td class="rblock">   Drafts is at http<span class="insert">s</span>://datatracker.ietf.org/drafts/current/.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are draft documents valid for a maximum of six months</td><td> </td><td class="right">   Internet-Drafts are draft documents valid for a maximum of six months</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and may be updated, replaced, or obsoleted by other documents at any</td><td> </td><td class="right">   and may be updated, replaced, or obsoleted by other documents at any</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   time.  It is inappropriate to use Internet-Drafts as reference</td><td> </td><td class="right">   time.  It is inappropriate to use Internet-Drafts as reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   material or to cite them other than as "work in progress."</td><td> </td><td class="right">   material or to cite them other than as "work in progress."</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0006"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   This Internet-Draft will expire on <span class="delete">January 1</span>, 2018.</td><td> </td><td class="rblock">   This Internet-Draft will expire on <span class="insert">April 29</span>, 2018.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Copyright Notice</td><td> </td><td class="right">Copyright Notice</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Copyright (c) 2017 IETF Trust and the persons identified as the</td><td> </td><td class="right">   Copyright (c) 2017 IETF Trust and the persons identified as the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document authors.  All rights reserved.</td><td> </td><td class="right">   document authors.  All rights reserved.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td> </td><td class="right">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Provisions Relating to IETF Documents</td><td> </td><td class="right">   Provisions Relating to IETF Documents</td><td class="lineno"></td></tr>
+      <tr id="diff0007"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   (http://trustee.ietf.org/license-info) in effect on the date of</td><td> </td><td class="rblock">   (http<span class="insert">s</span>://trustee.ietf.org/license-info) in effect on the date of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   publication of this document.  Please review these documents</td><td> </td><td class="right">   publication of this document.  Please review these documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   carefully, as they describe your rights and restrictions with respect</td><td> </td><td class="right">   carefully, as they describe your rights and restrictions with respect</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   to this document.  Code Components extracted from this document must</td><td> </td><td class="right">   to this document.  Code Components extracted from this document must</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   include Simplified BSD License text as described in Section 4.e of</td><td> </td><td class="right">   include Simplified BSD License text as described in Section 4.e of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the Trust Legal Provisions and are provided without warranty as</td><td> </td><td class="right">   the Trust Legal Provisions and are provided without warranty as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   described in the Simplified BSD License.</td><td> </td><td class="right">   described in the Simplified BSD License.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Table of Contents</td><td> </td><td class="right">Table of Contents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td> </td><td class="right">   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   4</td><td> </td><td class="right">     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4</td><td> </td><td class="right">   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4</td><td class="lineno"></td></tr>
+      <tr id="diff0008"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   3.  PCECC SR  . . . . . . . . . . . . . . . . . . . . . . . . . .   <span class="delete">4</span></td><td> </td><td class="rblock">   3.  PCECC SR  . . . . . . . . . . . . . . . . . . . . . . . . . .   <span class="insert">5</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   4.  PCEP Requirements . . . . . . . . . . . . . . . . . . . . . .   5</td><td> </td><td class="right">   4.  PCEP Requirements . . . . . . . . . . . . . . . . . . . . . .   5</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   5.  Procedures for Using the PCE as the Central Controller</td><td> </td><td class="right">   5.  Procedures for Using the PCE as the Central Controller</td><td class="lineno"></td></tr>
+      <tr id="diff0009"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">       (PCECC) in Segment Routing  . . . . . . . . . . . . . . . . .   <span class="delete">5</span></td><td> </td><td class="rblock">       (PCECC) in Segment Routing  . . . . . . . . . . . . . . . . .   <span class="insert">6</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     5.1.  Stateful PCE Model  . . . . . . . . . . . . . . . . . . .   6</td><td> </td><td class="right">     5.1.  Stateful PCE Model  . . . . . . . . . . . . . . . . . . .   6</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     5.2.  New LSP Functions . . . . . . . . . . . . . . . . . . . .   6</td><td> </td><td class="right">     5.2.  New LSP Functions . . . . . . . . . . . . . . . . . . . .   6</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     5.3.  PCECC Capability Advertisement  . . . . . . . . . . . . .   6</td><td> </td><td class="right">     5.3.  PCECC Capability Advertisement  . . . . . . . . . . . . .   6</td><td class="lineno"></td></tr>
+      <tr id="diff0010"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     5.4.  PCEP session IP address and TEDB Router ID  . . . . . . .   <span class="delete">6</span></td><td> </td><td class="rblock">     5.4.  PCEP session IP address and TEDB Router ID  . . . . . . .   <span class="insert">7</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     5.5.  LSP Operations  . . . . . . . . . . . . . . . . . . . . .   7</td><td> </td><td class="right">     5.5.  LSP Operations  . . . . . . . . . . . . . . . . . . . . .   7</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       5.5.1.  PCECC Segment Routing (SR)  . . . . . . . . . . . . .   7</td><td> </td><td class="right">       5.5.1.  PCECC Segment Routing (SR)  . . . . . . . . . . . . .   7</td><td class="lineno"></td></tr>
+      <tr id="diff0011"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">         5.5.1.1.  PCECC SR Node/Prefix Label allocation . . . . . .   <span class="delete">7</span></td><td> </td><td class="rblock">         5.5.1.1.  PCECC SR Node/Prefix Label allocation . . . . . .   <span class="insert">8</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">         5.5.1.2.  PCECC SR Adjacency Label allocation . . . . . . .   <span class="delete">8</span></td><td> </td><td class="rblock">         5.5.1.2.  PCECC SR Adjacency Label allocation . . . . . . .   <span class="insert">9</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">         5.5.1.3.  Redundant PCEs  . . . . . . . . . . . . . . . . .   <span class="delete">9</span></td><td> </td><td class="rblock">         5.5.1.3.  Redundant PCEs  . . . . . . . . . . . . . . . . .  <span class="insert">10</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">         5.5.1.4.  Session Termination . . . . . . . . . . . . . . .  10</td><td> </td><td class="right">         5.5.1.4.  Session Termination . . . . . . . . . . . . . . .  10</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">         5.5.1.5.  LABEL-DB Synchronization  . . . . . . . . . . . .  10</td><td> </td><td class="right">         5.5.1.5.  LABEL-DB Synchronization  . . . . . . . . . . . .  10</td><td class="lineno"></td></tr>
+      <tr id="diff0012"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">10</span></td><td> </td><td class="rblock">   6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">11</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     6.1.  Label Operations  . . . . . . . . . . . . . . . . . . . .  <span class="delete">10</span></td><td> </td><td class="rblock">     6.1.  Label Operations  . . . . . . . . . . . . . . . . . . . .  <span class="insert">11</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">       6.1.1.  The PCLabelUpd message  . . . . . . . . . . . . . . .  <span class="delete">10</span></td><td> </td><td class="rblock">       6.1.1.  The PCLabelUpd message  . . . . . . . . . . . . . . .  <span class="insert">11</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">       6.1.2.  The PCLabelRpt message  . . . . . . . . . . . . . . .  <span class="delete">11</span></td><td> </td><td class="rblock">       6.1.2.  The PCLabelRpt message  . . . . . . . . . . . . . . .  <span class="insert">12</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  12</td><td> </td><td class="right">   7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  12</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .  12</td><td> </td><td class="right">     7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .  12</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       7.1.1.  PCECC Capability TLV  . . . . . . . . . . . . . . . .  12</td><td> </td><td class="right">       7.1.1.  PCECC Capability TLV  . . . . . . . . . . . . . . . .  12</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  13</td><td> </td><td class="right">     7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  13</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     7.3.  FEC Object  . . . . . . . . . . . . . . . . . . . . . . .  13</td><td> </td><td class="right">     7.3.  FEC Object  . . . . . . . . . . . . . . . . . . . . . . .  13</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  15</td><td> </td><td class="right">   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  15</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  15</td><td> </td><td class="right">   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  15</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     9.1.  Control of Function and Policy  . . . . . . . . . . . . .  15</td><td> </td><td class="right">     9.1.  Control of Function and Policy  . . . . . . . . . . . . .  15</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     9.2.  Information and Data Models . . . . . . . . . . . . . . .  15</td><td> </td><td class="right">     9.2.  Information and Data Models . . . . . . . . . . . . . . .  15</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  15</td><td> </td><td class="right">     9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  15</td><td class="lineno"></td></tr>
+      <tr id="diff0013"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock">     9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     9.5.  Requirements On Other Protocols . . . . . . . . . . . . .  <span class="delete">15</span></td><td> </td><td class="rblock">     9.5.  Requirements On Other Protocols . . . . . . . . . . . . .  <span class="insert">16</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     9.6.  Impact On Network Operations  . . . . . . . . . . . . . .  16</td><td> </td><td class="right">     9.6.  Impact On Network Operations  . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     10.1.  PCECC-CAPABILITY TLV . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">     10.1.  PCECC-CAPABILITY TLV . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     10.2.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">     10.2.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     10.3.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">     10.3.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  17</td><td> </td><td class="right">   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  17</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17</td><td> </td><td class="right">   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     12.1.  Normative References . . . . . . . . . . . . . . . . . .  17</td><td> </td><td class="right">     12.1.  Normative References . . . . . . . . . . . . . . . . . .  17</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     12.2.  Informative References . . . . . . . . . . . . . . . . .  18</td><td> </td><td class="right">     12.2.  Informative References . . . . . . . . . . . . . . . . .  18</td><td class="lineno"></td></tr>
+      <tr id="diff0014"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  <span class="delete">20</span></td><td> </td><td class="rblock">   Appendix A.  <span class="insert">Using existing PCEP message  . . . . . . . . . . . .  21</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <span class="delete">20</span></td><td> </td><td class="rblock"><span class="insert">   Appendix B.</span>  Contributor Addresses  . . . . . . . . . . . . . . .  <span class="insert">22</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <span class="insert">23</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">1.  Introduction</td><td> </td><td class="right">1.  Introduction</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The Path Computation Element communication Protocol (PCEP) provides</td><td> </td><td class="right">   The Path Computation Element communication Protocol (PCEP) provides</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   mechanisms for Path Computation Elements (PCEs) to perform route</td><td> </td><td class="right">   mechanisms for Path Computation Elements (PCEs) to perform route</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   computations in response to Path Computation Clients (PCCs) requests.</td><td> </td><td class="right">   computations in response to Path Computation Clients (PCCs) requests.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP Extensions for PCE-initiated LSP Setup in a Stateful PCE Model</td><td> </td><td class="right">   PCEP Extensions for PCE-initiated LSP Setup in a Stateful PCE Model</td><td class="lineno"></td></tr>
+      <tr id="diff0015"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.ietf-pce-stateful-pce]</span> describes a set of extensions to PCEP to</td><td> </td><td class="rblock">   <span class="insert">[RFC8231]</span> describes a set of extensions to PCEP to enable active</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   enable active control of MPLS-TE and GMPLS tunnels.</td><td> </td><td class="rblock">   control of MPLS-TE and GMPLS tunnels.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pce-initiated-lsp] describes the setup and tear down of</td><td> </td><td class="right">   [I-D.ietf-pce-pce-initiated-lsp] describes the setup and tear down of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCE-initiated LSPs under the active stateful PCE model, without the</td><td> </td><td class="right">   PCE-initiated LSPs under the active stateful PCE model, without the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   need for local configuration on the PCC, thus allowing for a dynamic</td><td> </td><td class="right">   need for local configuration on the PCC, thus allowing for a dynamic</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   MPLS network that is centrally controlled and deployed.</td><td> </td><td class="right">   MPLS network that is centrally controlled and deployed.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-teas-pce-central-control] introduces the architecture for</td><td> </td><td class="right">   [I-D.ietf-teas-pce-central-control] introduces the architecture for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCE as a central controller, examines the motivations and</td><td> </td><td class="right">   PCE as a central controller, examines the motivations and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   applicability for PCEP as a southbound interface, and introduces the</td><td> </td><td class="right">   applicability for PCEP as a southbound interface, and introduces the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   implications for the protocol.  [I-D.ietf-teas-pcecc-use-cases]</td><td> </td><td class="right">   implications for the protocol.  [I-D.ietf-teas-pcecc-use-cases]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   describes the use cases for the PCECC architecture.</td><td> </td><td class="right">   describes the use cases for the PCECC architecture.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.zhao-pce-pcep-extension-for-pce-controller] specify the PCEP</td><td> </td><td class="right">   [I-D.zhao-pce-pcep-extension-for-pce-controller] specify the PCEP</td><td class="lineno"></td></tr>
+      <tr id="diff0016"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   exten<span class="delete">t</span>ion for the PCE as the central controller (PCECC).  This</td><td> </td><td class="rblock">   exten<span class="insert">s</span>ion for the PCE as the central controller (PCECC).  This</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document extends the PCECC procedures for Segment Routing (SR).</td><td> </td><td class="right">   document extends the PCECC procedures for Segment Routing (SR).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Segment Routing (SR) technology leverage the source routing and</td><td> </td><td class="right">   Segment Routing (SR) technology leverage the source routing and</td><td class="lineno"></td></tr>
+      <tr id="diff0017"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">tunnelling</span> paradigms.  A source node can choose a path without</td><td> </td><td class="rblock">   <span class="insert">tunneling</span> paradigms.  A source node can choose a path without relying</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   relying on hop-by-hop <span class="delete">signalling</span> protocols such as LDP or RSVP-TE.</td><td> </td><td class="rblock">   on hop-by-hop <span class="insert">signaling</span> protocols such as LDP or RSVP-TE.  Each path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Each path is specified as a set of "segments" advertised by link-</td><td> </td><td class="rblock">   is specified as a set of "segments" advertised by link- state routing</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   state routing protocols (IS-IS or OSPF).</td><td> </td><td class="rblock">   protocols (IS-IS or OSPF).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-spring-segment-routing] provides an introduction to SR</td><td> </td><td class="right">   [I-D.ietf-spring-segment-routing] provides an introduction to SR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   technology.  The corresponding IS-IS and OSPF extensions are</td><td> </td><td class="right">   technology.  The corresponding IS-IS and OSPF extensions are</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   specified in [I-D.ietf-isis-segment-routing-extensions] and</td><td> </td><td class="right">   specified in [I-D.ietf-isis-segment-routing-extensions] and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-ospf-segment-routing-extensions] , respectively.</td><td> </td><td class="right">   [I-D.ietf-ospf-segment-routing-extensions] , respectively.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A Segment Routed path (SR path) can be derived from an IGP Shortest</td><td> </td><td class="right">   A Segment Routed path (SR path) can be derived from an IGP Shortest</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Path Tree (SPT).  Segment Routed Traffic Engineering paths (SR-TE</td><td> </td><td class="right">   Path Tree (SPT).  Segment Routed Traffic Engineering paths (SR-TE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   paths) may not follow IGP SPT.  Such paths may be chosen by a</td><td> </td><td class="right">   paths) may not follow IGP SPT.  Such paths may be chosen by a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   suitable network planning tool and provisioned on the source node of</td><td> </td><td class="right">   suitable network planning tool and provisioned on the source node of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-2" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-2"><em> page 4, line 38<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-2"><em> page 4, line 38<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCE architectures and PCEP.</td><td> </td><td class="right">   PCE architectures and PCEP.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This draft specify the procedures and PCEP protocol extensions for</td><td> </td><td class="right">   This draft specify the procedures and PCEP protocol extensions for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   using the PCE as the central controller for SR label distribution and</td><td> </td><td class="right">   using the PCE as the central controller for SR label distribution and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   user cases where SR LSPs are calculated/setup/initiated/downloaded</td><td> </td><td class="right">   user cases where SR LSPs are calculated/setup/initiated/downloaded</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   through extending the existing PCE architectures and PCEP.</td><td> </td><td class="right">   through extending the existing PCE architectures and PCEP.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">1.1.  Requirements Language</td><td> </td><td class="right">1.1.  Requirements Language</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",</td><td> </td><td class="right">   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",</td><td class="lineno"></td></tr>
+      <tr id="diff0018"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this</td><td> </td><td class="rblock">   "SHOULD", "SHOULD NOT", "RECOMMENDED", <span class="insert">"NOT RECOMMENDED",</span> "MAY", and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   document are to be interpreted as described in <span class="delete">[RFC2119].</span></td><td> </td><td class="rblock">   "OPTIONAL" in this document are to be interpreted as described in <span class="insert">BCP</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   14 [RFC2119] [RFC8174] when, and only when, they appear in all</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   capitals, as shown here.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">2.  Terminology</td><td> </td><td class="right">2.  Terminology</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Terminologies used in this document is same as described in the draft</td><td> </td><td class="right">   Terminologies used in this document is same as described in the draft</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-teas-pcecc-use-cases].</td><td> </td><td class="right">   [I-D.ietf-teas-pcecc-use-cases].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">3.  PCECC SR</td><td> </td><td class="right">3.  PCECC SR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-segment-routing] specifies extensions to PCEP that</td><td> </td><td class="right">   [I-D.ietf-pce-segment-routing] specifies extensions to PCEP that</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   allow a stateful PCE to compute, update or initiate SR-TE paths.  An</td><td> </td><td class="right">   allow a stateful PCE to compute, update or initiate SR-TE paths.  An</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-3" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-3"><em> page 6, line 7<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-3"><em> page 6, line 10<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">      entry to the PCC.</td><td> </td><td class="right">      entry to the PCC.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  PCEP SHOULD provide a means to synchronize the SR labels between</td><td> </td><td class="right">   o  PCEP SHOULD provide a means to synchronize the SR labels between</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      PCE to PCC in PCEP messages.</td><td> </td><td class="right">      PCE to PCC in PCEP messages.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.  Procedures for Using the PCE as the Central Controller (PCECC) in</td><td> </td><td class="right">5.  Procedures for Using the PCE as the Central Controller (PCECC) in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">    Segment Routing</td><td> </td><td class="right">    Segment Routing</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.1.  Stateful PCE Model</td><td> </td><td class="right">5.1.  Stateful PCE Model</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0019"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Active stateful PCE is described in <span class="delete">[I-D.ietf-pce-stateful-pce].</span>  PCE</td><td> </td><td class="rblock">   Active stateful PCE is described in <span class="insert">[RFC8231].</span>  PCE as a central</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   as a central controller (PCECC) reuses existing Active stateful PCE</td><td> </td><td class="rblock">   controller (PCECC) reuses existing Active stateful PCE mechanism as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   mechanism as much as possible to control the LSP.</td><td> </td><td class="rblock">   much as possible to control the LSP.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.2.  New LSP Functions</td><td> </td><td class="right">5.2.  New LSP Functions</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document uses the same PCEP messages and its extenstions which</td><td> </td><td class="right">   This document uses the same PCEP messages and its extenstions which</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   are described in [I-D.zhao-pce-pcep-extension-for-pce-controller] for</td><td> </td><td class="right">   are described in [I-D.zhao-pce-pcep-extension-for-pce-controller] for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCECC-SR as well.</td><td> </td><td class="right">   PCECC-SR as well.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP messages PCRpt, PCInitiate, PCUpd are also used to send PCECC-SR</td><td> </td><td class="right">   PCEP messages PCRpt, PCInitiate, PCUpd are also used to send PCECC-SR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Reports, LSP setup and LSP update respectively.</td><td> </td><td class="right">   Reports, LSP setup and LSP update respectively.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCLabelUpd message described in</td><td> </td><td class="right">   PCLabelUpd message described in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.zhao-pce-pcep-extension-for-pce-controller] is used to download</td><td> </td><td class="right">   [I-D.zhao-pce-pcep-extension-for-pce-controller] is used to download</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   or cleanup SR Label entry.</td><td> </td><td class="right">   or cleanup SR Label entry.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCLabelRpt message described in</td><td> </td><td class="right">   PCLabelRpt message described in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.zhao-pce-pcep-extension-for-pce-controller] is also used to</td><td> </td><td class="right">   [I-D.zhao-pce-pcep-extension-for-pce-controller] is also used to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   report the set of SR Label entries from PCC to PCE for which explicit</td><td> </td><td class="right">   report the set of SR Label entries from PCC to PCE for which explicit</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   action is required from PCE (update or cleanup or do nothing for</td><td> </td><td class="right">   action is required from PCE (update or cleanup or do nothing for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   these Label entries).</td><td> </td><td class="right">   these Label entries).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0020"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">[Editor's Note: [I-D.zhao-pce-pcep-extension-for-pce-controller]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   defines new messages PCLabelUpd and PCLabelRpt.  Questions where</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   raised on the need for the new messages.  Further the document also</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   includes an appendix on how the existing messages can be extended to</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   add this functionality.  WG needs to decide the final direction i.e.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   new specific messages are needed or existing PCEP messages can be</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   extended.  See See Appendix A to see the extension of existing</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   message for PCECC-SR functionality.]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.3.  PCECC Capability Advertisement</td><td> </td><td class="right">5.3.  PCECC Capability Advertisement</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   During PCEP Initialization Phase, PCEP Speakers (PCE or PCC)</td><td> </td><td class="right">   During PCEP Initialization Phase, PCEP Speakers (PCE or PCC)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   advertise their support of PCECC extensions.  A PCEP Speaker includes</td><td> </td><td class="right">   advertise their support of PCECC extensions.  A PCEP Speaker includes</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the "PCECC Capability" TLV, described in</td><td> </td><td class="right">   the "PCECC Capability" TLV, described in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.zhao-pce-pcep-extension-for-pce-controller].</td><td> </td><td class="right">   [I-D.zhao-pce-pcep-extension-for-pce-controller].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A new S-bit is added in PCECC-CAPABILITY TLV to indicate support for</td><td> </td><td class="right">   A new S-bit is added in PCECC-CAPABILITY TLV to indicate support for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCECC-SR.  A PCC MUST set S-bit in PCECC-CAPABILITY TLV and include</td><td> </td><td class="right">   PCECC-SR.  A PCC MUST set S-bit in PCECC-CAPABILITY TLV and include</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   SR-PCE-CAPABILITY TLV ([I-D.ietf-pce-segment-routing]) in OPEN Object</td><td> </td><td class="right">   SR-PCE-CAPABILITY TLV ([I-D.ietf-pce-segment-routing]) in OPEN Object</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-4" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-4"><em> page 10, line 33<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-4"><em> page 10, line 49<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Extensions for PCLabelUpd and PCLabelRpt message for SR label are</td><td> </td><td class="right">   Extensions for PCLabelUpd and PCLabelRpt message for SR label are</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   described in Section 6.1.</td><td> </td><td class="right">   described in Section 6.1.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.5.1.5.  LABEL-DB Synchronization</td><td> </td><td class="right">5.5.1.5.  LABEL-DB Synchronization</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.zhao-pce-pcep-extension-for-pce-controller] describes LABEL-DB</td><td> </td><td class="right">   [I-D.zhao-pce-pcep-extension-for-pce-controller] describes LABEL-DB</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Synchronization procedures needed for the labels provisioned for the</td><td> </td><td class="right">   Synchronization procedures needed for the labels provisioned for the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Basic PCECC LSP.  Same procedures should be applied for SR labels as</td><td> </td><td class="right">   Basic PCECC LSP.  Same procedures should be applied for SR labels as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   well.</td><td> </td><td class="right">   well.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0021"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">See [I-D.palle-pce-controller-labeldb-sync] for the optimizations for</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   LABEL-DB synchronization procedure.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">6.  PCEP messages</td><td> </td><td class="right">6.  PCEP messages</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   As defined in [RFC5440], a PCEP message consists of a common header</td><td> </td><td class="right">   As defined in [RFC5440], a PCEP message consists of a common header</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   followed by a variable-length body made of a set of objects that can</td><td> </td><td class="right">   followed by a variable-length body made of a set of objects that can</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   be either mandatory or optional.  An object is said to be mandatory</td><td> </td><td class="right">   be either mandatory or optional.  An object is said to be mandatory</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   in a PCEP message when the object must be included for the message to</td><td> </td><td class="right">   in a PCEP message when the object must be included for the message to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   be considered valid.  For each PCEP message type, a set of rules is</td><td> </td><td class="right">   be considered valid.  For each PCEP message type, a set of rules is</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   defined that specify the set of objects that the message can carry.</td><td> </td><td class="right">   defined that specify the set of objects that the message can carry.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   An implementation MUST form the PCEP messages using the object</td><td> </td><td class="right">   An implementation MUST form the PCEP messages using the object</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ordering specified in this document.</td><td> </td><td class="right">   ordering specified in this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">6.1.  Label Operations</td><td> </td><td class="right">6.1.  Label Operations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0022"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">[Editor's Note: [I-D.zhao-pce-pcep-extension-for-pce-controller]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   defines new messages PCLabelUpd and PCLabelRpt.  Questions where</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   raised on the need for the new messages.  Further the document also</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   includes an appendix on how the existing messages can be extended to</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   add this functionality.  WG needs to decide the final direction i.e.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   new specific messages are needed or existing PCEP messages can be</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   extended.  See See Appendix A to see the extension of existing</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   message for PCECC-SR functionality.]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">6.1.1.  The PCLabelUpd message</td><td> </td><td class="right">6.1.1.  The PCLabelUpd message</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Label Update Message (PCLabelUpd) defined in</td><td> </td><td class="right">   Label Update Message (PCLabelUpd) defined in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.zhao-pce-pcep-extension-for-pce-controller] is extended to</td><td> </td><td class="right">   [I-D.zhao-pce-pcep-extension-for-pce-controller] is extended to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   update the label map at the PCC.</td><td> </td><td class="right">   update the label map at the PCC.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The format of the extended PCLabelUpd message is as follows:</td><td> </td><td class="right">   The format of the extended PCLabelUpd message is as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      &lt;PCLabelUpd Message&gt; ::= &lt;Common Header&gt;</td><td> </td><td class="right">      &lt;PCLabelUpd Message&gt; ::= &lt;Common Header&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                               &lt;pce-label-update-list&gt;</td><td> </td><td class="right">                               &lt;pce-label-update-list&gt;</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-5" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-5"><em> page 15, line 44<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-5"><em> page 16, line 9<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">9.3.  Liveness Detection and Monitoring</td><td> </td><td class="right">9.3.  Liveness Detection and Monitoring</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in this document do not imply any new liveness</td><td> </td><td class="right">   Mechanisms defined in this document do not imply any new liveness</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   detection and monitoring requirements in addition to those already</td><td> </td><td class="right">   detection and monitoring requirements in addition to those already</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   listed in [RFC5440].</td><td> </td><td class="right">   listed in [RFC5440].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">9.4.  Verify Correct Operations</td><td> </td><td class="right">9.4.  Verify Correct Operations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mechanisms defined in this document do not imply any new operation</td><td> </td><td class="right">   Mechanisms defined in this document do not imply any new operation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   verification requirements in addition to those already listed in</td><td> </td><td class="right">   verification requirements in addition to those already listed in</td><td class="lineno"></td></tr>
+      <tr id="diff0023"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   [RFC5440] and [<span class="delete">I-D.ietf-pce-stateful-pce</span>].</td><td> </td><td class="rblock">   [RFC5440] and [<span class="insert">RFC8231</span>].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">9.5.  Requirements On Other Protocols</td><td> </td><td class="right">9.5.  Requirements On Other Protocols</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP extensions defined in this document do not put new requirements</td><td> </td><td class="right">   PCEP extensions defined in this document do not put new requirements</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   on other protocols.</td><td> </td><td class="right">   on other protocols.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">9.6.  Impact On Network Operations</td><td> </td><td class="right">9.6.  Impact On Network Operations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP implementation SHOULD allow a limit to be placed on the rate of</td><td> </td><td class="right">   PCEP implementation SHOULD allow a limit to be placed on the rate of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCLabelUpd messages sent by PCE and processed by PCC.  It SHOULD also</td><td> </td><td class="right">   PCLabelUpd messages sent by PCE and processed by PCC.  It SHOULD also</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-6" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-6"><em> page 17, line 17<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/rfcdiff#part-6"><em> page 17, line 24<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   We would like to thank Robert Tao, Changjing Yan, Tieying Huang and</td><td> </td><td class="right">   We would like to thank Robert Tao, Changjing Yan, Tieying Huang and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Avantika for their useful comments and suggestions.</td><td> </td><td class="right">   Avantika for their useful comments and suggestions.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">12.  References</td><td> </td><td class="right">12.  References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">12.1.  Normative References</td><td> </td><td class="right">12.1.  Normative References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate</td><td> </td><td class="right">   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Requirement Levels", BCP 14, RFC 2119,</td><td> </td><td class="right">              Requirement Levels", BCP 14, RFC 2119,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC2119, March 1997,</td><td> </td><td class="right">              DOI 10.17487/RFC2119, March 1997,</td><td class="lineno"></td></tr>
+      <tr id="diff0024"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              &lt;http://www.rfc-editor.org/info/rfc2119&gt;.</td><td> </td><td class="rblock">              &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc2119&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation</td><td> </td><td class="right">   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Element (PCE) Communication Protocol (PCEP)", RFC 5440,</td><td> </td><td class="right">              Element (PCE) Communication Protocol (PCEP)", RFC 5440,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC5440, March 2009,</td><td> </td><td class="right">              DOI 10.17487/RFC5440, March 2009,</td><td class="lineno"></td></tr>
+      <tr id="diff0025"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              &lt;http://www.rfc-editor.org/info/rfc5440&gt;.</td><td> </td><td class="rblock">              &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc5440&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC7420]  Koushik, A., Stephan, E., Zhao, Q., King, D., and J.</td><td> </td><td class="right">   [RFC7420]  Koushik, A., Stephan, E., Zhao, Q., King, D., and J.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Hardwick, "Path Computation Element Communication Protocol</td><td> </td><td class="right">              Hardwick, "Path Computation Element Communication Protocol</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (PCEP) Management Information Base (MIB) Module",</td><td> </td><td class="right">              (PCEP) Management Information Base (MIB) Module",</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              RFC 7420, DOI 10.17487/RFC7420, December 2014,</td><td> </td><td class="right">              RFC 7420, DOI 10.17487/RFC7420, December 2014,</td><td class="lineno"></td></tr>
+      <tr id="diff0026"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              &lt;http://www.rfc-editor.org/info/rfc7420&gt;.</td><td> </td><td class="rblock">              &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc7420&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5305]  Li, T. and H. Smit, "IS-IS Extensions for Traffic</td><td> </td><td class="right">   [RFC5305]  Li, T. and H. Smit, "IS-IS Extensions for Traffic</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Engineering", RFC 5305, DOI 10.17487/RFC5305, October</td><td> </td><td class="right">              Engineering", RFC 5305, DOI 10.17487/RFC5305, October</td><td class="lineno"></td></tr>
+      <tr id="diff0027"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              2008, &lt;http://www.rfc-editor.org/info/rfc5305&gt;.</td><td> </td><td class="rblock">              2008, &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc5305&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC5307]  Kompella, K., Ed. and Y. Rekhter, Ed., "IS-IS Extensions</td><td> </td><td class="right">   [RFC5307]  Kompella, K., Ed. and Y. Rekhter, Ed., "IS-IS Extensions</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              in Support of Generalized Multi-Protocol Label Switching</td><td> </td><td class="right">              in Support of Generalized Multi-Protocol Label Switching</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (GMPLS)", RFC 5307, DOI 10.17487/RFC5307, October 2008,</td><td> </td><td class="right">              (GMPLS)", RFC 5307, DOI 10.17487/RFC5307, October 2008,</td><td class="lineno"></td></tr>
+      <tr id="diff0028"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              &lt;http://www.rfc-editor.org/info/rfc5307&gt;.</td><td> </td><td class="rblock">              &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc5307&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC4203]  Kompella, K., Ed. and Y. Rekhter, Ed., "OSPF Extensions in</td><td> </td><td class="right">   [RFC4203]  Kompella, K., Ed. and Y. Rekhter, Ed., "OSPF Extensions in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Support of Generalized Multi-Protocol Label Switching</td><td> </td><td class="right">              Support of Generalized Multi-Protocol Label Switching</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (GMPLS)", RFC 4203, DOI 10.17487/RFC4203, October 2005,</td><td> </td><td class="right">              (GMPLS)", RFC 4203, DOI 10.17487/RFC4203, October 2005,</td><td class="lineno"></td></tr>
+      <tr id="diff0029"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              &lt;http://www.rfc-editor.org/info/rfc4203&gt;.</td><td> </td><td class="rblock">              &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc4203&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC3630]  Katz, D., Kompella, K., and D. Yeung, "Traffic Engineering</td><td> </td><td class="right">   [RFC3630]  Katz, D., Kompella, K., and D. Yeung, "Traffic Engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (TE) Extensions to OSPF Version 2", RFC 3630,</td><td> </td><td class="right">              (TE) Extensions to OSPF Version 2", RFC 3630,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC3630, September 2003,</td><td> </td><td class="right">              DOI 10.17487/RFC3630, September 2003,</td><td class="lineno"></td></tr>
+      <tr id="diff0030"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              &lt;http://www.rfc-editor.org/info/rfc3630&gt;.</td><td> </td><td class="rblock">              &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc3630&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC7752]  Gredler, H., Ed., Medved, J., Previdi, S., Farrel, A., and</td><td> </td><td class="right">   [RFC7752]  Gredler, H., Ed., Medved, J., Previdi, S., Farrel, A., and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              S. Ray, "North-Bound Distribution of Link-State and</td><td> </td><td class="right">              S. Ray, "North-Bound Distribution of Link-State and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Traffic Engineering (TE) Information Using BGP", RFC 7752,</td><td> </td><td class="right">              Traffic Engineering (TE) Information Using BGP", RFC 7752,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC7752, March 2016,</td><td> </td><td class="right">              DOI 10.17487/RFC7752, March 2016,</td><td class="lineno"></td></tr>
+      <tr id="diff0031"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              &lt;http://www.rfc-editor.org/info/rfc7752&gt;.</td><td> </td><td class="rblock">              &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc7752&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0032"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.ietf-pce-stateful-pce]</span></td><td> </td><td class="rblock">   <span class="insert">[RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Crabbe, E., Minei, I., Medved, J., and R. Varga, <span class="delete">"PCEP</span></td><td> </td><td class="rblock"><span class="insert">              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Extensions for Stateful PCE", <span class="delete">draft-ietf-pce-stateful-</span></td><td> </td><td class="rblock"><span class="insert">              May 2017, &lt;https://www.rfc-editor.org/info/rfc8174&gt;.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              pce-21 (work in progress), June 2017.</span></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   [RFC8231]</span>  Crabbe, E., Minei, I., Medved, J., and R. Varga, <span class="insert">"Path</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              Computation Element Communication Protocol (PCEP)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">              Extensions for Stateful PCE", <span class="insert">RFC 8231,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              DOI 10.17487/RFC8231, September 2017,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              &lt;https://www.rfc-editor.org/info/rfc8231&gt;.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pce-initiated-lsp]</td><td> </td><td class="right">   [I-D.ietf-pce-pce-initiated-lsp]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP</td><td> </td><td class="right">              Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Extensions for PCE-initiated LSP Setup in a Stateful PCE</td><td> </td><td class="right">              Extensions for PCE-initiated LSP Setup in a Stateful PCE</td><td class="lineno"></td></tr>
+      <tr id="diff0033"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Model", <span class="delete">draft-ietf-pce-pce-initiated-lsp-10</span> (work in</td><td> </td><td class="rblock">              Model", <span class="insert">draft-ietf-pce-pce-initiated-lsp-11</span> (work in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              progress), <span class="delete">June</span> 2017.</td><td> </td><td class="rblock">              progress), <span class="insert">October</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">12.2.  Informative References</td><td> </td><td class="right">12.2.  Informative References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC3031]  Rosen, E., Viswanathan, A., and R. Callon, "Multiprotocol</td><td> </td><td class="right">   [RFC3031]  Rosen, E., Viswanathan, A., and R. Callon, "Multiprotocol</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Label Switching Architecture", RFC 3031,</td><td> </td><td class="right">              Label Switching Architecture", RFC 3031,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              DOI 10.17487/RFC3031, January 2001,</td><td> </td><td class="right">              DOI 10.17487/RFC3031, January 2001,</td><td class="lineno"></td></tr>
+      <tr id="diff0034"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              &lt;http://www.rfc-editor.org/info/rfc3031&gt;.</td><td> </td><td class="rblock">              &lt;http<span class="insert">s</span>://www.rfc-editor.org/info/rfc3031&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-teas-pce-central-control]</td><td> </td><td class="right">   [I-D.ietf-teas-pce-central-control]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Farrel, A., Zhao, Q., Li, Z., and C. Zhou, "An</td><td> </td><td class="right">              Farrel, A., Zhao, Q., Li, Z., and C. Zhou, "An</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Architecture for Use of PCE and PCEP in a Network with</td><td> </td><td class="right">              Architecture for Use of PCE and PCEP in a Network with</td><td class="lineno"></td></tr>
+      <tr id="diff0035"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Central Control", <span class="delete">draft-ietf-teas-pce-central-control-03</span></td><td> </td><td class="rblock">              Central Control", <span class="insert">draft-ietf-teas-pce-central-control-05</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              (work in progress), <span class="delete">June</span> 2017.</td><td> </td><td class="rblock">              (work in progress), <span class="insert">September</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-teas-pcecc-use-cases]</td><td> </td><td class="right">   [I-D.ietf-teas-pcecc-use-cases]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Zhao, Q., Li, Z., Khasanov, B., Ke, Z., Fang, L., Zhou,</td><td> </td><td class="right">              Zhao, Q., Li, Z., Khasanov, B., Ke, Z., Fang, L., Zhou,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              C., Communications, T., and A. Rachitskiy, "The Use Cases</td><td> </td><td class="right">              C., Communications, T., and A. Rachitskiy, "The Use Cases</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              for Using PCE as the Central Controller(PCECC) of LSPs",</td><td> </td><td class="right">              for Using PCE as the Central Controller(PCECC) of LSPs",</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              draft-ietf-teas-pcecc-use-cases-01 (work in progress), May</td><td> </td><td class="right">              draft-ietf-teas-pcecc-use-cases-01 (work in progress), May</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              2017.</td><td> </td><td class="right">              2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-lsp-setup-type]</td><td> </td><td class="right">   [I-D.ietf-pce-lsp-setup-type]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Sivabalan, S., Tantsura, J., Minei, I., Varga, R., and J.</td><td> </td><td class="right">              Sivabalan, S., Tantsura, J., Minei, I., Varga, R., and J.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Hardwick, "Conveying path setup type in PCEP messages",</td><td> </td><td class="right">              Hardwick, "Conveying path setup type in PCEP messages",</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              draft-ietf-pce-lsp-setup-type-04 (work in progress), April</td><td> </td><td class="right">              draft-ietf-pce-lsp-setup-type-04 (work in progress), April</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              2017.</td><td> </td><td class="right">              2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-pcep-yang]</td><td> </td><td class="right">   [I-D.ietf-pce-pcep-yang]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Dhody, D., Hardwick, J., Beeram, V., and j.</td><td> </td><td class="right">              Dhody, D., Hardwick, J., Beeram, V., and j.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              jefftant@gmail.com, "A YANG Data Model for Path</td><td> </td><td class="right">              jefftant@gmail.com, "A YANG Data Model for Path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Computation Element Communications Protocol (PCEP)",</td><td> </td><td class="right">              Computation Element Communications Protocol (PCEP)",</td><td class="lineno"></td></tr>
+      <tr id="diff0036"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              draft-ietf-pce-pcep-yang-0<span class="delete">4</span> (work in progress), June 2017.</td><td> </td><td class="rblock">              draft-ietf-pce-pcep-yang-0<span class="insert">5</span> (work in progress), June 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.zhao-pce-pcep-extension-for-pce-controller]</td><td> </td><td class="right">   [I-D.zhao-pce-pcep-extension-for-pce-controller]</td><td class="lineno"></td></tr>
+      <tr id="diff0037"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Zhao, Q., Li, Z., Dhody, D., and C. Zhou, "PCEP Procedures</td><td> </td><td class="rblock">              Zhao, Q., Li, Z., Dhody, D., <span class="insert">Karunanithi, S., Farrel, A.,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              and Protocol Extensions for Using PCE as a Central</td><td> </td><td class="rblock">              and C. Zhou, "PCEP Procedures and Protocol Extensions for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Controller (PCECC) of LSPs", <span class="delete">draft-zhao-pce-pcep-</span></td><td> </td><td class="rblock">              Using PCE as a Central Controller (PCECC) of LSPs", <span class="insert">draft-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              extension-for-pce-controller-04</span> (work in progress),</td><td> </td><td class="rblock"><span class="insert">              zhao-pce-pcep-extension-for-pce-controller-05</span> (work in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">January</span> 2017.</td><td> </td><td class="rblock">              progress), <span class="insert">June</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-pce-segment-routing]</td><td> </td><td class="right">   [I-D.ietf-pce-segment-routing]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,</td><td> </td><td class="right">              Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              and J. Hardwick, "PCEP Extensions for Segment Routing",</td><td> </td><td class="right">              and J. Hardwick, "PCEP Extensions for Segment Routing",</td><td class="lineno"></td></tr>
+      <tr id="diff0038"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">draft-ietf-pce-segment-routing-09</span> (work in progress),</td><td> </td><td class="rblock">              <span class="insert">draft-ietf-pce-segment-routing-10</span> (work in progress),</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">April</span> 2017.</td><td> </td><td class="rblock">              <span class="insert">October</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-isis-segment-routing-extensions]</td><td> </td><td class="right">   [I-D.ietf-isis-segment-routing-extensions]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Previdi, S., Filsfils, C., Bashandy, A., Gredler, H.,</td><td> </td><td class="right">              Previdi, S., Filsfils, C., Bashandy, A., Gredler, H.,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Litkowski, S., Decraene, B., and j. jefftant@gmail.com,</td><td> </td><td class="right">              Litkowski, S., Decraene, B., and j. jefftant@gmail.com,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              "IS-IS Extensions for Segment Routing", draft-ietf-isis-</td><td> </td><td class="right">              "IS-IS Extensions for Segment Routing", draft-ietf-isis-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              segment-routing-extensions-13 (work in progress), June</td><td> </td><td class="right">              segment-routing-extensions-13 (work in progress), June</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              2017.</td><td> </td><td class="right">              2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-ospf-segment-routing-extensions]</td><td> </td><td class="right">   [I-D.ietf-ospf-segment-routing-extensions]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Psenak, P., Previdi, S., Filsfils, C., Gredler, H.,</td><td> </td><td class="right">              Psenak, P., Previdi, S., Filsfils, C., Gredler, H.,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Shakir, R., Henderickx, W., and J. Tantsura, "OSPF</td><td> </td><td class="right">              Shakir, R., Henderickx, W., and J. Tantsura, "OSPF</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Extensions for Segment Routing", draft-ietf-ospf-segment-</td><td> </td><td class="right">              Extensions for Segment Routing", draft-ietf-ospf-segment-</td><td class="lineno"></td></tr>
+      <tr id="diff0039"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              routing-extensions-<span class="delete">17 (work in progress), June</span> 2017.</td><td> </td><td class="rblock">              routing-extensions-<span class="insert">21 (work in progress), October</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.litkowski-pce-state-sync]</td><td> </td><td class="right">   [I-D.litkowski-pce-state-sync]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Litkowski, S., Sivabalan, S., and D. Dhody, "Inter</td><td> </td><td class="right">              Litkowski, S., Sivabalan, S., and D. Dhody, "Inter</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Stateful Path Computation Element communication</td><td> </td><td class="right">              Stateful Path Computation Element communication</td><td class="lineno"></td></tr>
+      <tr id="diff0040"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              procedures", <span class="delete">draft-litkowski-pce-state-sync-01</span> (work in</td><td> </td><td class="rblock">              procedures", <span class="insert">draft-litkowski-pce-state-sync-02</span> (work in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              progress), <span class="delete">February</span> 2017.</td><td> </td><td class="rblock">              progress), <span class="insert">August</span> 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.dhodylee-pce-pcep-ls]</td><td> </td><td class="right">   [I-D.dhodylee-pce-pcep-ls]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Dhody, D., Lee, Y., and D. Ceccarelli, "PCEP Extension for</td><td> </td><td class="right">              Dhody, D., Lee, Y., and D. Ceccarelli, "PCEP Extension for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Distribution of Link-State and TE Information.", draft-</td><td> </td><td class="right">              Distribution of Link-State and TE Information.", draft-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              dhodylee-pce-pcep-ls-08 (work in progress), June 2017.</td><td> </td><td class="right">              dhodylee-pce-pcep-ls-08 (work in progress), June 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-spring-segment-routing]</td><td> </td><td class="right">   [I-D.ietf-spring-segment-routing]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Filsfils, C., Previdi, S., Decraene, B., Litkowski, S.,</td><td> </td><td class="right">              Filsfils, C., Previdi, S., Decraene, B., Litkowski, S.,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              and R. Shakir, "Segment Routing Architecture", draft-ietf-</td><td> </td><td class="right">              and R. Shakir, "Segment Routing Architecture", draft-ietf-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              spring-segment-routing-12 (work in progress), June 2017.</td><td> </td><td class="right">              spring-segment-routing-12 (work in progress), June 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-spring-segment-routing-mpls]</td><td> </td><td class="right">   [I-D.ietf-spring-segment-routing-mpls]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Filsfils, C., Previdi, S., Bashandy, A., Decraene, B.,</td><td> </td><td class="right">              Filsfils, C., Previdi, S., Bashandy, A., Decraene, B.,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Litkowski, S., and R. Shakir, "Segment Routing with MPLS</td><td> </td><td class="right">              Litkowski, S., and R. Shakir, "Segment Routing with MPLS</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              data plane", draft-ietf-spring-segment-routing-mpls-10</td><td> </td><td class="right">              data plane", draft-ietf-spring-segment-routing-mpls-10</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (work in progress), June 2017.</td><td> </td><td class="right">              (work in progress), June 2017.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0041"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">Appendix A.  <span class="delete">Contributor Addresses</span></td><td> </td><td class="rblock">   <span class="insert">[I-D.palle-pce-controller-labeldb-sync]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              Palle, U., Dhody, D., and S. Karunanithi, "LABEL-DB</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              Synchronization Procedures for a PCE as a central</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              controller(PCECC)", draft-palle-pce-controller-labeldb-</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">              sync-01 (work in progress), June 2017.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">Appendix A.  <span class="insert">Using existing PCEP message</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   This is a temporary section added to this document, till the time a</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   decision on the use of new messages v/s extending existing message is</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   resolved.  This section should be removed before the final</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   publication of the document.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The PCInitiate message can be used to download or remove the labels -</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        &lt;PCInitiate Message&gt; ::= &lt;Common Header&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                 &lt;PCE-initiated-lsp-list&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">     Where:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        &lt;Common Header&gt; is defined in [RFC5440]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        &lt;PCE-initiated-lsp-list&gt; ::= &lt;PCE-initiated-lsp-request&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                     [&lt;PCE-initiated-lsp-list&gt;]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        &lt;PCE-initiated-lsp-request&gt; ::=</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                             (&lt;PCE-initiated-lsp-instantiation&gt;|</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                              &lt;PCE-initiated-lsp-deletion&gt;|</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                              &lt;PCE-initiated-lsp-label-download&gt;|</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                              &lt;PCE-initiated-label-map&gt;)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        &lt;PCE-initiated-lsp-label-download&gt; ::= &lt;SRP&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                               &lt;LSP&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                               &lt;label-list&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        &lt;label-list&gt; ::=  &lt;LABEL&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                          [&lt;label-list&gt;]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       &lt;PCE-initiated-label-map&gt; ::= &lt;SRP&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                     &lt;LABEL&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                     &lt;FEC&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">     Where:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;PCE-initiated-lsp-instantiation&gt; and</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;PCE-initiated-lsp-deletion&gt; are as per</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         [I-D.ietf-pce-pce-initiated-lsp].</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">        The LSP and SRP object is defined in [RFC8231].</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The PCRpt message can be used to report the labels that were</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   allocated by the PCE, to be used during the state synchronization</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   phase.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The format of the PCRpt message is as follows:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;PCRpt Message&gt; ::= &lt;Common Header&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                             &lt;state-report-list&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">      Where:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;state-report-list&gt; ::= &lt;state-report&gt;[&lt;state-report-list&gt;]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;state-report&gt; ::= (&lt;lsp-state-report&gt;|</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                             &lt;pce-label-report&gt;)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0042"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">         <span class="insert">&lt;lsp-state-report&gt; ::= [&lt;SRP&gt;]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                &lt;LSP&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                &lt;path&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;pce-label-report&gt; ::= (&lt;pce-label-delegate&gt;|</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                 &lt;pce-label-map&gt;)</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;pce-label-delegate&gt; ::= &lt;SRP&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                  &lt;LSP&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                                  &lt;label-list&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;label-list&gt; ::=  &lt;LABEL&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                           [&lt;label-list&gt;]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;pce-label-map&gt; ::= &lt;SRP&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                             &lt;LABEL&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">                             &lt;FEC&gt;</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">       Where:</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         &lt;path&gt; is as per [RFC8231] and the LSP and SRP object are</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">         also defined in [RFC8231].</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   The procedure for LSP-DB synchronization would also change, in-case</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   we use the existing message.  It will be the PCCs that would first</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   report all the labels downloaded by the PCE during the state</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   synchronization from PCC towards PCE, and then in case of any</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   discrepancies PCE would use the PCInitiate message to add/remove</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   labels.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">Appendix B.  Contributor Addresses</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Udayasree Palle</td><td> </td><td class="right">   Udayasree Palle</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Technologies</td><td> </td><td class="right">   Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Divyashree Techno Park, Whitefield</td><td> </td><td class="right">   Divyashree Techno Park, Whitefield</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Bangalore, Karnataka  560066</td><td> </td><td class="right">   Bangalore, Karnataka  560066</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   India</td><td> </td><td class="right">   India</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   EMail: udayasreereddy@gmail.com</td><td> </td><td class="right">   EMail: udayasreereddy@gmail.com</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Katherine Zhao</td><td> </td><td class="right">   Katherine Zhao</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Technologies</td><td> </td><td class="right">   Huawei Technologies</td><td class="lineno"></td></tr>
+
+     <tr><td></td><td class="left"></td><td> </td><td class="right"></td><td></td></tr>
+     <tr id="end" bgcolor="gray"><th colspan="5" align="center">&nbsp;End of changes. 42 change blocks.&nbsp;</th></tr>
+     <tr class="stats"><td></td><th><i>63 lines changed or deleted</i></th><th><i> </i></th><th><i>182 lines changed or added</i></th><td></td></tr>
+     <tr><td colspan="5" align="center" class="small"><br>This html diff was produced by rfcdiff 1.46. The latest version is available from <a href="http://www.tools.ietf.org/tools/rfcdiff/">http://tools.ietf.org/tools/rfcdiff/</a> </td></tr>
+   </tbody></table>
+   
+   
+<iframe width="0" height="0" frameborder="0" src="./Diff_ draft-zhao-pce-pcep-extension-pce-controller-sr-00.txt - draft-zhao-pce-pcep-extension-pce-controller-sr-01.txt_files/saved_resource.html" id="GINGER_SOFTWARE_bubblesIFrame" scrolling="no" style="border: 0px solid; display: none; position: absolute; z-index: 2147483647; height: 0px; width: 0px; background-color: transparent;"></iframe><div id="GingerWidgetInfo" style="display:none;">{"version":"0.1.0.624","isExtension":true,"extensionName":"Chrome"}</div></body><script>(function(){(function (){
+            //Todo:is injection needed here?
+            var eventRegister = {};
+
+            var findReactProp = function(elem){
+                for(var key in elem){
+                    if(key.indexOf("__reactInternalInstance")===0){
+                        //var p = null;
+                        //if(elem[key].memoizedProps){
+                        //    p = elem[key].memoizedProps;
+                        //} else if(elem[key]._currentElement){
+                        //    p = elem[key]._currentElement.props
+                        //}
+
+                        //TODO: report if props is not found with Facebook version
+                        return (elem[key].memoizedProps || elem[key]._currentElement.props);
+                    }
+                }
+                return null;
+            };
+
+            document.addEventListener("gingerModule-eventEmitter-react-fire",function(e){
+                //console.log("firing", e);
+                var reactProps = findReactProp(document.activeElement);
+                var eventName = e.detail.event;
+                var eventParams = e.detail.params || {};
+                eventParams.preventDefault = function(){};
+                if(reactProps && eventName) {
+                    reactProps[eventName](eventParams);
+                }
+            });
+            document.addEventListener("gingerModule-eventEmitter-onselect",function(e){
+                var reactProps = findReactProp(document.activeElement);
+                //trigger("select");
+                if(reactProps) {
+                    reactProps.onSelect();
+                }
+            });
+            document.addEventListener("gingerModule-eventEmitter-onpaste",function(e){
+                var reactProps = findReactProp(document.activeElement);
+                var pasteObj = {
+                    defaultPrevented: false,
+                    target: document.activeElement,
+                    preventDefault: function() {},
+                    clipboardData : {
+                        getData: function () {
+                            return e.detail || "";
+                        },
+                        items: ["text/plain"]
+                    }
+                };
+                //trigger("paste",pasteObj);
+                if(reactProps) {
+                    reactProps.onPaste(pasteObj);
+                }
+            });
+
+            var trigger = function(eventName,data){
+                if(!eventRegister[eventName]) return;
+                for(var i = 0; i<eventRegister[eventName].length; i++){
+                    var listener = eventRegister[eventName][i];
+                    listener(new CustomEvent(eventName),data);
+                }
+            };
+
+            var nativeEventListener = document.addEventListener.bind(document);
+            document.addEventListener = function(eventName, callback, options) {
+                console.log("registering event",eventName);
+                var eventRegisterItem = eventRegister[eventName] || [];
+                eventRegisterItem.push(callback);
+                eventRegister[eventName] = eventRegisterItem;
+                nativeEventListener(eventName, callback, options);
+            };
+
+        })() })()</script></html>
