@@ -1,0 +1,1717 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"
+[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902"
+     category="std"
+     docName="draft-ietf-pce-stateful-pce-p2mp-05"
+     obsoletes=""
+     updates=""
+     submissionType="IETF"
+     xml:lang="en">
+  <front>
+    <title abbrev="STATEFUL-P2MP">Path Computation Element (PCE)
+    Protocol Extensions for Stateful PCE usage for
+    Point-to-Multipoint Traffic Engineering Label Switched
+    Paths</title>
+    <author initials="U"
+            surname="Palle"
+            fullname="Udayasree Palle">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>udayasreereddy@gmail.com</email>
+      </address>
+    </author>
+    <author fullname="Dhruv Dhody"
+            initials="D"
+            surname="Dhody">
+      <organization abbrev="Huawei Technologies">Huawei
+      Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+    <author initials='Y.T'
+            surname="Tanaka"
+            fullname='Yosuke Tanaka'>
+      <organization abbrev="NTT Communications">NTT Communications
+      Corporation</organization>
+      <address>
+        <postal>
+          <street>Granpark Tower</street>
+          <street>3-4-1 Shibaura, Minato-ku</street>
+          <region>Tokyo</region>
+          <code>108-8118</code>
+          <country>Japan</country>
+        </postal>
+        <email>yosuke.tanaka@ntt.com</email>
+      </address>
+    </author>
+    <author initials="V" surname="Beeram" fullname="Vishnu Pavan Beeram">
+      <organization>Juniper Networks</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>vbeeram@juniper.net</email>
+      </address>
+    </author>
+
+    <date
+          year="2017" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+      <t>The Path Computation Element (PCE) has been identified as
+      an appropriate technology for the determination of the paths
+      of point-to-multipoint (P2MP) TE LSPs.
+      This document provides
+      extensions required for Path Computation Element communication Protocol (PCEP) so as to enable the usage of a
+      stateful PCE capability in supporting P2MP TE LSPs.</t>
+    </abstract>
+  </front>
+  <middle>
+    <section title="Introduction"
+             toc="default">
+      <t>As per
+      <xref target="RFC4655" />, the Path Computation Element (PCE)
+      is an entity that is capable of computing a network path or
+      route based on a network graph, and applying computational
+      constraints. A Path Computation Client (PCC) may make
+      requests to a PCE for paths to be computed.</t>
+      <t>
+      <xref target="RFC4857" /> describes how to set up
+      point-to-multipoint (P2MP) Traffic Engineering Label Switched
+      Paths (TE LSPs) for use in Multiprotocol Label Switching
+      (MPLS) and Generalized MPLS (GMPLS) networks. The PCE has
+      been identified as a suitable application for the computation
+      of paths for P2MP TE LSPs (<xref target="RFC5671"/>).</t>
+      <t>The PCEP is designed as a communication protocol between
+      PCCs and PCEs for point-to-point (P2P) path computations and
+      is defined in
+      <xref target="RFC5440" />. The extensions of PCEP to request
+      path computation for P2MP TE LSPs are described in
+      <xref target="I-D.ietf-pce-rfc6006bis" />.</t>
+      <t>Stateful PCEs are shown to be helpful in many application
+      scenarios, in both MPLS and GMPLS networks, as illustrated in
+      <xref target='RFC8051'></xref>. These
+      scenarios apply equally to P2P and P2MP TE LSPs.
+      <xref target='RFC8231'></xref> provides the
+      fundamental extensions needed for stateful PCE to support
+      general functionality for P2P TE LSP. <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref> provides
+      the an extensions needed for stateful PCE-initiated
+      P2P TE LSP.
+      Complementarily, this
+      document focuses on the extensions that are necessary in
+      order for the deployment of stateful PCEs to support P2MP TE
+      LSPs. This document describes the setup, maintenance and
+      teardown of PCE-initiated P2MP LSPs under the stateful PCE
+      model.</t>
+      <section title="Requirements Language"
+               toc="default">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.</t>
+      </section>
+    </section>
+
+    <section title="Terminology"
+             toc="default">
+      <t>Terminology used in this document is same as terminology
+      used in
+      <xref target='RFC8231'></xref>,
+      <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>, and
+      <xref target="I-D.ietf-pce-rfc6006bis" />.</t>
+    </section>
+    <section title="Supporting P2MP TE LSP for Stateful PCE"
+             toc="default"
+             anchor="SEC_M">
+      <section title="Motivation"
+               toc="default">
+        <t>
+        <xref target='RFC8051'>
+        </xref> presents several use cases, demonstrating scenarios
+        that benefit from the deployment of a stateful PCE
+        including optimization, recovery, etc which are equally
+        applicable to P2MP TE LSPs.
+        <xref target='RFC8231'></xref> defines the
+        extensions to PCEP for P2P TE LSPs. Complementarily, this
+      document focuses on the extensions that are necessary in
+      order for the deployment of stateful PCEs to support P2MP TE
+      LSPs.</t>
+        <t>In addition to that, the stateful nature of a PCE
+        simplifies the information conveyed in PCEP messages since
+        it is possible to refer to the LSPs via PLSP-ID
+        (<xref target='RFC8231'></xref>). For P2MP
+        this is an added advantage, where the size of message is
+        much larger. In case of stateless PCE, a modification of
+        P2MP tree requires encoding of all leaves along with the
+        paths in PCReq message, but using a stateful PCE with P2MP
+        capability, the PCEP message can be used to convey only the
+        modifications (the other information can be retrieved from
+        the P2MP LSP identifier in the LSP database (LSPDB)).</t>
+        <t>In environments where the P2MP TE LSP
+        placement needs to change in response to application
+        demands, it is useful to support dynamic creation and tear
+        down of P2MP TE LSPs. The ability for a PCE to trigger the
+        creation of P2MP TE LSPs on demand can be seamlessly
+        integrated into a controller-based network architecture,
+        where intelligence in the controller can determine when and
+        where to set up paths. Section 3 of
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'>
+        </xref> further describes the motivation behind the
+        PCE-Initiation capability, which are equally applicable for
+        P2MP TE LSPs.</t>
+      </section>
+      <section title="Objectives"
+               toc="default">
+        <t>The objectives for the protocol extensions to support
+        P2MP TE LSP for stateful PCE are same as the objectives
+        described in section 3.2 of
+        <xref target='RFC8231'></xref>.</t>
+      </section>
+    </section>
+    <section title="Functions to Support P2MP TE LSPs for Stateful PCEs"
+             toc="default">
+      <t>
+      <xref target='RFC8231'></xref> specifies new
+      functions to support a stateful PCE. It also specifies that a
+      function can be initiated either from a PCC towards a PCE
+      (C-E) or from a PCE towards a PCC (E-C).</t>
+      <t>This document extends these functions to support P2MP TE
+      LSPs.</t>
+      <t>
+        <list style="hanging">
+          <t hangText="Capability Advertisement (E-C,C-E):">both
+          the PCC and the PCE must announce during PCEP session
+          establishment that they support PCEP Stateful PCE
+          extensions for P2MP using mechanisms defined in
+          <xref target='SEC_CA'></xref>.</t>
+          <t hangText="LSP State Synchronization (C-E):">after the
+          session between the PCC and a stateful PCE with P2MP
+          capability is initialized, the PCE must learn the state
+          of a PCC's P2MP TE LSPs before it can perform path
+          computations or update LSP attributes in a PCC.</t>
+          <t hangText="LSP Update Request (E-C):">a stateful PCE
+          with P2MP capability requests modification of attributes
+          on a PCC's P2MP TE LSP.</t>
+          <t hangText="LSP State Report (C-E):">a PCC sends an LSP
+          state report to a PCE whenever the state of a P2MP TE LSP
+          changes.</t>
+          <t hangText="LSP Control Delegation (C-E,E-C):">a PCC
+          grants to a PCE the right to update LSP attributes on one
+          or more P2MP TE LSPs; the PCE becomes the authoritative
+          source of the LSP's attributes as long as the delegation
+          is in effect (See Section 5.7 of
+          <xref target='RFC8231'></xref>); the
+          PCC may withdraw the delegation or the PCE may give up
+          the delegation at any time.</t>
+          <t hangText="PCE-initiated LSP instantiation (E-C):">a PCE
+          sends an LSP Initiate Message to a PCC to instantiate or
+          delete a P2MP TE LSP.</t>
+        </list>
+      </t>
+
+    </section>
+    <section title="Architectural Overview of Protocol Extensions"
+             toc="default">
+      <section title="Extension of PCEP Messages"
+               toc="default">
+        <t>New PCEP messages are defined in
+        <xref target='RFC8231'></xref> to support
+        stateful PCE for P2P TE LSPs. In this document these
+        messages are extended to support P2MP TE LSPs.</t>
+        <t>
+          <list style="hanging">
+            <t hangText="Path Computation State Report (PCRpt):">
+            Each P2MP TE LSP State Report in a PCRpt message can
+            contain actual P2MP TE LSP path attributes, LSP status,
+            etc. An LSP State Report carried on a PCRpt message is
+            also used in delegation or revocation of control of a
+            P2MP TE LSP to/from a PCE. The extension of PCRpt
+            message is described in
+            <xref target="SEC_RPT" />.</t>
+            <t hangText="Path Computation Update Request (PCUpd):">
+            Each P2MP TE LSP Update Request in a PCUpd message MUST
+            contain all LSP parameters that a PCE wishes to set for
+            a given P2MP TE LSP. An LSP Update Request carried on a
+            PCUpd message is also used to return LSP delegations if
+            at any point PCE no longer desires control of a P2MP TE
+            LSP. The PCUpd message is described in
+            <xref target="SEC_UPD" />.</t>
+          </list>
+        </t>
+        <t>A new PCEP message is defined in
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref> to support
+        stateful PCE instantiation of P2P TE LSPs. In this document this
+        message is extended to support P2MP TE LSPs.</t>
+        <t>
+          <list style="hanging">
+            <t hangText="Path Computation LSP Initiate Message (PCInitiate):">
+             is a PCEP message sent by a PCE to a PCC to trigger P2MP TE LSP
+             instantiation or deletion. The PCInitiate message is described in
+            <xref target="SEC_PCINIT" />.
+            </t>
+            </list>
+        </t>
+        <t>The path computation request (PCReq) and path computation reply (PCRep)
+          messages are also extended to support stateful PCE for P2P TE LSP in
+          <xref target='RFC8231'></xref>. In this document these
+        messages are extended to support P2MP TE LSPs as well.</t>
+      </section>
+      <section title="Capability Advertisement"
+               toc="default"
+               anchor="SEC_CA">
+        <t>During PCEP Initialization Phase, as per Section 7.1.1
+        of
+        <xref target='RFC8231'></xref>, PCEP
+        speakers advertises Stateful capability via Stateful PCE
+        Capability TLV in open message.
+        Two new flags are defined for the STATEFUL-PCE-CAPABILITY TLV
+        defined in <xref target='RFC8231'></xref> and
+        updated in <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>
+        and <xref target='RFC8232'></xref>.
+        </t>
+
+        <t>Three new bits N (P2MP-CAPABILITY), M (P2MP-LSP-UPDATE-CAPABILITY), and
+        P (P2MP-LSP-INSTANTIATION-CAPABILITY)
+        are added in this document:</t>
+        <t>
+          <list style="hanging">
+            <t hangText="N (P2MP-CAPABILITY bit - TBD4):">if
+            set to 1 by a PCC, the N Flag
+      indicates that the PCC is willing to send P2MP LSP State Reports whenever
+   P2MP LSP parameters or operational status changes.; if
+      set to 1 by a PCE, the N Flag indicates that the PCE is interested
+      in receiving LSP State Reports whenever LSP parameters or
+      operational status changes. The P2MP-CAPABILITY Flag must be
+      advertised by both a PCC and a PCE for PCRpt messages P2MP extension to be
+      allowed on a PCEP session.</t>
+            <t hangText="M (P2MP-LSP-UPDATE-CAPABILITY bit - TBD5):">if
+            set to 1 by a PCC, the M Flag
+      indicates that the PCC allows modification of P2MP LSP parameters; if
+      set to 1 by a PCE, the M Flag indicates that the PCE is capable of
+      updating P2MP LSP parameters.  The P2MP-LSP-UPDATE-CAPABILITY Flag must be
+      advertised by both a PCC and a PCE for PCUpd messages P2MP extension to be
+      allowed on a PCEP session.</t>
+      <t hangText="P (P2MP-LSP-INSTANTIATION-CAPABILITY bit - TBD6):">
+            If set to 1 by a PCC, the P Flag indicates that the PCC
+            allows instantiation of an P2MP LSP by a PCE.  If
+            set to 1
+            by a PCE, the P flag indicates that the PCE supports
+            P2MP LSP instantiation. The P2MP-LSP-INSTANTIATION-CAPABILITY
+            flag must be set by both PCC and PCE in order to support
+            PCE-initiated P2MP LSP instantiation.</t>
+          </list>
+        </t>
+        <t>A PCEP speaker should continue to advertise the basic P2MP
+        capability via mechanisms as described in
+        <xref target="I-D.ietf-pce-rfc6006bis"/>.</t>
+      </section>
+      <section title="IGP Extensions for Stateful PCE P2MP Capabilities Advertisement"
+               toc="default">
+      <t>
+         When PCCs are LSRs participating in the IGP (OSPF or IS-IS), and PCEs
+     are either LSRs or servers also participating in the IGP, an
+     effective mechanism for PCE discovery within an IGP routing domain
+     consists of utilizing IGP advertisements.  Extensions for the
+     advertisement of PCE Discovery Information are defined for OSPF and
+     for IS-IS in <xref target="RFC5088"/> and <xref target="RFC5089"/> respectively.</t>
+
+     <t>The PCE-CAP-FLAGS sub-TLV, defined in <xref target="RFC5089"/>, is an optional sub-
+     TLV used to advertise PCE capabilities.  It MAY be present within the
+     PCED sub-TLV carried by OSPF or IS-IS.  <xref target="RFC5088"/> and <xref target="RFC5089"/>
+     provide the description and processing rules for this sub-TLV when
+     carried within OSPF and IS-IS, respectively.</t>
+
+     <t>The format of the PCE-CAP-FLAGS sub-TLV is included below for easy
+     reference: </t>
+
+     <t>Type:  5  </t>
+
+     <t>Length:  Multiple of 4. </t>
+
+     <t>Value:  This contains an array of units of 32 bit flags with the most
+        significant bit as 0.  Each bit represents one PCE capability.  </t>
+
+     <t>PCE capability bits are defined in [RFC5088].  This document defines
+     new capability bits for the stateful PCE with P2MP as follows:</t>
+      <figure>
+      <artwork align="center">
+       Bit                  Capability
+       TBD1                 Active Stateful PCE with P2MP
+       TBD2                 Passive Stateful PCE with P2MP
+       TBD3                 PCE-Initiation with P2MP
+      </artwork>
+      </figure>
+
+     <t>Note that while active, passive or initiation stateful PCE with P2MP capabilities may be
+     advertised during discovery, PCEP Speakers that wish to use stateful
+     PCEP MUST advertise stateful PCEP capabilities during PCEP session
+     setup, as specified in the current document.  A PCC MAY initiate
+     stateful PCEP P2MP capability advertisement at PCEP session setup even if it
+     did not receive any IGP PCE capability advertisements.</t>
+
+      </section>
+      <section title="State Synchronization"
+               toc="default">
+        <t>State Synchronization operations described in Section
+        5.6 of
+        <xref target='RFC8231'></xref> are
+        applicable for P2MP TE LSPs as well. The optimizations
+        described in <xref target='RFC8232'></xref>
+        can also be applied for P2MP.</t>
+      </section>
+      <section title="LSP Delegation"
+               toc="default">
+        <t>LSP delegation operations described in Section 5.7 of
+        <xref target='RFC8231'></xref> are
+        applicable for P2MP TE LSPs as well.</t>
+      </section>
+      <section title="LSP Operations"
+               toc="default">
+        <section title="Passive Stateful PCE"
+                 toc="default">
+          <t>LSP operations for passive stateful PCE described in
+          Section 5.8.1 of
+          <xref target='RFC8231'></xref> are
+          applicable for P2MP TE LSPs as well.</t>
+          <t>The Path Computation Request and Response message
+          format for P2MP TE LSPs is described in Section 3.4 and
+          Section 3.5 of <xref target="I-D.ietf-pce-rfc6006bis"/> respectively.</t>
+          <t>The Request and Response message for P2MP TE LSPs are
+          extended to support encoding of LSP object, so that it is
+          possible to refer to a LSP with a unique identifier and
+          simplify the PCEP message exchange. For example, in case of
+          modification of one leaf in a P2MP tree, there should be
+          no need to carry the full P2MP tree in PCReq
+          message.</t>
+          <t>The extension for the Request and Response message for
+          passive stateful operations on P2MP TE LSPs are described
+          in <xref target='SEC_REQ'></xref> and
+          <xref target='SEC_REP'></xref>. The extension for the
+          Path Computation LSP State Report (PCRpt) message is
+          described in <xref target='SEC_RPT'></xref>.</t>
+        </section>
+        <section title="Active Stateful PCE"
+                 toc="default">
+          <t>LSP operations for active stateful PCE described in
+          Section 5.8.2 of
+          <xref target='RFC8231'></xref> are
+          applicable for P2MP TE LSPs as well.</t>
+          <t>The extension for the Path Computation LSP Update
+          (PCUpd) message for
+          active stateful operations on P2MP TE LSPs are described
+          in <xref target='SEC_UPD'></xref>.</t>
+        </section>
+        <section title="PCE-Initiated LSP"
+                 toc="default">
+        <t>As per section 5.1 of
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>, the
+        PCE sends a Path Computation LSP Initiate Request
+        (PCInitiate) message to the PCC to suggest instantiation or
+        deletion of a
+        P2P TE LSP. This document extends the PCInitiate message to
+        support P2MP TE LSP (see details in
+        <xref target="SEC_PCINIT" />).</t>
+        <t>P2MP TE LSP suggested instantiation and deletion operations are
+        same as P2P LSP as described in section 5.3
+        and 5.4 of
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>. </t>
+        <section title="P2MP TE LSP Instantiation"
+               toc="default"
+               anchor="SEC_INST">
+        <t>The Instantiation operation of P2MP TE LSP is same as
+        defined in section 5.3 of
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>
+        including handling of PLSP-ID, SYMBOLIC-PATH-NAME TLV etc.
+        Rules of processing and error codes remains unchanged.
+        The N
+        bit MUST be set in LSP object in PCInitiate message by PCE
+        to specify the instantiation is for P2MP TE LSP.</t>
+        <t>Though N bit is set in the LSP object,
+        P2MP-LSP-IDENTIFIER TLV MUST
+        NOT be included in the LSP object in PCIntiitate message as
+        it SHOULD be generated by PCC and carried in PCRpt message.</t>
+      </section>
+      <section title="P2MP TE LSP Deletion"
+               toc="default">
+        <t>The deletion operation of P2MP TE LSP is same as defined
+        in section 5.4 of
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref> by
+        sending an LSP Initiate Message with an LSP object carrying
+        the PLSP-ID of the LSP to be removed and an SRP object with
+        the R flag set (LSP-REMOVE as per section 5.2 of
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>).
+        Rules of processing and error codes remains unchanged.</t>
+      </section>
+      <section title="Adding and Pruning Leaves for the P2MP TE LSP"
+               toc="default">
+      <t>Adding of new leaves and Pruning of old Leaves for
+      the PCE initiated P2MP TE LSP MUST be carried in PCUpd message
+      as per <xref target='SEC_UPD'></xref>
+      for P2MP TE LSP extensions.
+      As defined in <xref target='I-D.ietf-pce-rfc6006bis'></xref>, leaf type = 1 for
+      adding of new leaves, leaf type = 2 for pruning of old leaves of
+      P2MP END-POINTS Object are used in PCUpd message.</t>
+      <t>PCC MAY use the Incremental State Update mechanism as described
+      in <xref target='RFC4875'></xref> to signal adding and pruning
+      of leaves.</t>
+      </section>
+      <section title="P2MP TE LSP Delegation and Cleanup"
+               toc="default">
+        <t>P2MP TE LSP delegation and cleanup operations are same
+        as defined in section 6 of
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>.
+        Rules of processing and error codes remains unchanged.</t>
+      </section>
+        </section>
+      </section>
+    </section>
+    <section title="PCEP Message Extensions"
+             toc="default">
+      <section title="The PCRpt Message"
+               toc="default"
+               anchor="SEC_RPT">
+        <t>As per Section 6.1 of
+        <xref target='RFC8231'></xref>, PCRpt
+        message is used to report the current state of a P2P TE
+        LSP. This document extends the PCRpt message in reporting
+        the status of P2MP TE LSP.</t>
+        <t>The format of PCRpt message is as follows:</t>
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG4">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+&lt;PCRpt Message&gt; ::= &lt;Common Header&gt;
+                  &lt;state-report-list&gt;
+Where:
+
+&lt;state-report-list&gt; ::= &lt;state-report&gt;
+                      [&lt;state-report-list&gt;]
+
+&lt;state-report&gt; ::= [&lt;SRP&gt;]
+                    &lt;LSP&gt;
+                    &lt;end-point-intended-path-pair-list&gt;
+                    [&lt;actual-attribute-list&gt;
+                    &lt;end-point-actual-path-pair-list&gt;]
+                    &lt;intended-attribute-list&gt;
+
+Where:
+
+&lt;end-point-intended-path-pair-list&gt;::=
+                   [&lt;END-POINTS&gt;]
+                   [&lt;S2LS&gt;]
+                   &lt;intended-path&gt;
+                   [&lt;end-point-intended-path-pair-list&gt;]
+
+&lt;end-point-actual-path-pair-list&gt;::=
+                   [&lt;END-POINTS&gt;]
+                   &lt;actual-path&gt;
+                   [&lt;end-point-actual-path-pair-list&gt;]
+
+&lt;intended-path&gt; ::= (&lt;ERO&gt;|&lt;SERO&gt;)
+           [&lt;intended-path&gt;]
+
+&lt;actual-path&gt; ::= (&lt;RRO&gt;|&lt;SRRO&gt;)
+           [&lt;actual-path&gt;]
+
+&lt;intended-attribute-list&gt; is defined in [RFC5440] and
+extended by PCEP extensions.
+&lt;actual-attribute-list&gt; consists of the actual computed and
+signaled values of the &lt;BANDWIDTH&gt; and &lt;metric-lists&gt;
+objects defined in [RFC5440].
+
+</artwork>
+        </figure>
+        <t>The P2MP END-POINTS object defined in
+        <xref target="I-D.ietf-pce-rfc6006bis"/> is mandatory for specifying
+        address of P2MP leaves grouped based on leaf types.</t>
+        <t>
+        <list style="symbols">
+
+   <t>New leaves to add (leaf type = 1)</t>
+
+   <t>Old leaves to remove (leaf type = 2)</t>
+
+   <t>Old leaves whose path can be modified/reoptimized (leaf type = 3)</t>
+
+   <t>Old leaves whose path must be left unchanged (leaf type = 4)</t>
+        </list>
+        </t>
+        <t>When reporting the status of a P2MP TE LSP, the
+        destinations are grouped in END-POINTS object based on the operational status (O
+        field in S2LS object) and leaf type (in END-POINTS). This way the leaves that share the same operational status are grouped together.
+        For reporting the status of delegated P2MP TE LSP, leaf-type = 3, where as for non-delegated
+        P2MP TE LSP, leaf-type = 4 is used.</t>
+
+        <t>For delegated P2MP TE LSP configuration changes are reported via PCRpt message. For example,
+        adding of new leaves END-POINTS (leaf-type = 1) is used where as removing of old leaves (leaf-type = 2) is used. </t>
+        <t>Note that we preserve compatibility with the
+        <xref target='RFC8231'></xref> definition
+        of &lt;state-report&gt;. At least one instance of
+        &lt;END-POINTS&gt; MUST be present in this message for P2MP LSP.</t>
+
+        <t>During state synchronization, the PCRpt message must report the status of the full P2MP TE LSP.</t>
+
+        <t>The S2LS object MUST be carried in PCRpt
+        message along with END-POINTS object when N bit is set in
+        LSP object for P2MP TE LSP. If the S2LS object is missing, the receiving
+        PCE MUST send a PCErr message with Error-type=6 (Mandatory Object
+        missing) and Error-value=TBD11 (S2LS object missing). If the
+        END-POINTS object is missing, the receiving
+        PCE MUST send a PCErr message with Error-type=6 (Mandatory Object
+        missing) and Error-value=3 (END-POINTS object missing) (defined
+        in <xref target='RFC5440'></xref>.</t>
+      </section>
+      <section title="The PCUpd Message"
+               toc="default"
+               anchor="SEC_UPD">
+        <t>As per Section 6.2 of
+        <xref target='RFC8231'></xref>, PCUpd
+        message is used to update P2P TE LSP attributes. This
+        document extends the PCUpd message in updating the
+        attributes of P2MP TE LSP.</t>
+        <t>The format of a PCUpd message is as follows:</t>
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG5">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+   &lt;PCUpd Message&gt; ::= &lt;Common Header&gt;
+                       &lt;update-request-list&gt;
+
+   Where:
+
+   &lt;update-request-list&gt; ::= &lt;update-request&gt;
+                             [&lt;update-request-list&gt;]
+
+   &lt;update-request&gt; ::= &lt;SRP&gt;
+                        &lt;LSP&gt;
+                        &lt;end-point-path-pair-list&gt;
+                        &lt;attribute-list&gt;
+
+   Where:
+
+   &lt;end-point-path-pair-list&gt;::=
+                   [&lt;END-POINTS&gt;]
+                   &lt;intended-path&gt;
+                   [&lt;end-point-path-pair-list&gt;]
+
+   &lt;intended-path&gt; ::= (&lt;ERO&gt;|&lt;SERO&gt;)
+              [&lt;intended-path&gt;]
+
+   &lt;attribute-list&gt; is defined in [RFC5440] and
+   extended by PCEP extensions.
+
+</artwork>
+        </figure>
+        <t>Note that we preserve compatibility with the
+        <xref target='RFC8231'></xref> definition
+        of &lt;update-request&gt;.</t>
+        <t>The PCC MAY use the make-before-break or sub-group-based
+        procedures described in <xref target='RFC4875'></xref> based
+        on a local policy decision.</t>
+        <t>The END-POINTS object MUST be carried in PCUpd
+        message when N bit is set in
+        LSP object for P2MP TE LSP. If the
+        END-POINTS object is missing, the receiving
+        PCC MUST send a PCErr message with Error-type=6 (Mandatory Object
+        missing) and Error-value=3 (END-POINTS object missing) (defined
+        in <xref target='RFC5440'></xref>.</t>
+      </section>
+      <section title="The PCReq Message"
+               toc="default"
+               anchor="SEC_REQ">
+        <t>As per Section 3.4 of
+        <xref target='I-D.ietf-pce-rfc6006bis'></xref>, PCReq
+        message is used for a P2MP path computation request.
+        This document extends the PCReq message such that a PCC MAY
+        include the LSP object in the PCReq message if the stateful PCE
+        P2MP capability has been negotiated on a PCEP session between
+        the PCC and a PCE.</t>
+        <t>The format of PCReq message is as follows:</t>
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG6">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+         <![CDATA[
+ <PCReq Message>::= <Common Header>
+                    [<svec-list>]
+                    <request-list>
+
+where:
+
+<svec-list>::= <SVEC>
+               [<OF>]
+               [<metric-list>]
+               [<svec-list>]
+
+<request-list>::=<request>[<request-list>]
+
+<request>::= <RP>
+             <end-point-rro-pair-list>
+             [<LSP>]
+             [<OF>]
+             [<LSPA>]
+             [<BANDWIDTH>]
+             [<metric-list>]
+             [<IRO>|<BNC>]
+             [<LOAD-BALANCING>]
+
+
+<end-point-rro-pair-list>::= <END-POINTS>
+                             [<RRO-List>[<BANDWIDTH>]]
+                             [<end-point-rro-pair-list>]
+
+<RRO-List>::=(<RRO>|<SRRO>)[<RRO-List>]
+<metric-list>::=<METRIC>[<metric-list>]
+]]>
+</artwork>
+        </figure>
+        </section>
+        <section title="The PCRep Message"
+               toc="default"
+               anchor="SEC_REP">
+        <t>As per Section 3.5 of
+        <xref target='I-D.ietf-pce-rfc6006bis'></xref>, PCRep
+        message is used for a P2MP path computation reply.
+        This document extends the PCRep message such that a PCE MAY
+        include the LSP object in the PCRep message if the stateful PCE
+        P2MP capability has been negotiated on a PCEP session between
+        the PCC and a PCE.</t>
+        <t>The format of PCRep message is as follows:</t>
+        <t><figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG7">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+<PCRep Message>::= <Common Header>
+                   <response-list>
+
+where:
+
+<response-list>::=<response>[<response-list>]
+
+<response>::=<RP>
+             [<end-point-path-pair-list>]
+             [<LSP>]
+             [<NO-PATH>]
+             [<UNREACH-DESTINATION>]
+             [<attribute-list>]
+
+<end-point-path-pair-list>::= [<END-POINTS>]
+                              <path>
+                              [<end-point-path-pair-list>]
+
+<path> ::= (<ERO>|<SERO>) [<path>]
+
+<attribute-list>::=[<OF>]
+                   [<LSPA>]
+                   [<BANDWIDTH>]
+                   [<metric-list>]
+                   [<IRO>]
+]]>
+</artwork>
+        </figure> </t>
+        </section>
+        <section title="The PCInitiate message"
+               toc="default"
+               anchor="SEC_PCINIT">
+        <t>As defined in section 5.1 of
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>, PCE
+        sends a PCInitiate message to a PCC to recommend instantiation
+        of a P2P TE
+        LSP, this document extends the format of PCInitiate message
+        for the creation of P2MP TE LSPs but the creation and
+        deletion operations of P2MP TE LSP are same to the P2P TE
+        LSP.</t>
+        <t>The format of PCInitiate message is as follows:</t>
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG8">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+&lt;PCInitiate Message&gt; ::= &lt;Common Header&gt;
+                         &lt;PCE-initiated-lsp-list&gt;
+Where:
+
+&lt;PCE-initiated-lsp-list&gt; ::= &lt;PCE-initiated-lsp-request&gt;
+                             [&lt;PCE-initiated-lsp-list&gt;]
+
+&lt;PCE-initiated-lsp-request&gt; ::=
+(&lt;PCE-initiated-lsp-instantiation&gt;|&lt;PCE-initiated-lsp-deletion&gt;)
+
+&lt;PCE-initiated-lsp-instantiation&gt; ::= &lt;SRP&gt;
+                                      &lt;LSP&gt;
+                                      &lt;end-point-path-pair-list&gt;
+                                      [&lt;attribute-list&gt;]
+
+&lt;PCE-initiated-lsp-deletion&gt; ::= &lt;SRP&gt;
+                                 &lt;LSP&gt;
+
+Where:
+
+&lt;end-point-path-pair-list&gt;::=
+                   [&lt;END-POINTS&gt;]
+                   &lt;intended-path&gt;
+                   [&lt;end-point-path-pair-list&gt;]
+
+&lt;intended-path&gt; ::= (&lt;ERO&gt;|&lt;SERO&gt;)
+           [&lt;intended-path&gt;]
+
+&lt;attribute-list&gt; is defined in [RFC5440] and extended
+by PCEP extensions.
+
+</artwork>
+        </figure>
+        <t>The PCInitiate message with an LSP object with N bit
+        (P2MP) set is used to convey operation on a P2MP TE LSP.
+        The SRP object is used to correlate between initiation
+        requests sent by the PCE and the error reports and state
+        reports sent by the PCC as described in
+        <xref target='RFC8231'></xref>.</t>
+
+        <t>The END-POINTS object MUST be carried in PCInitiate
+        message when N bit is set in
+        LSP object for P2MP TE LSP. If the
+        END-POINTS object is missing, the receiving
+        PCC MUST send a PCErr message with Error-type=6 (Mandatory Object
+        missing) and Error-value=3 (END-POINTS object missing) (defined
+        in <xref target='RFC5440'></xref>.</t>
+      </section>
+      <section title="Example"
+               toc="default">
+        <section title="P2MP TE LSP Update Request"
+                 toc="default">
+          <t>LSP Update Request message is sent by an active
+          stateful PCE to update the P2MP TE LSP parameters or
+          attributes. An example of a PCUpd message for P2MP TE LSP
+          is described below:</t>
+          <figure align="left"
+                  alt=""
+                  height=""
+                  suppress-title="true"
+                  title=""
+                  width="">
+            <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+           Common Header
+           SRP
+           LSP with P2MP flag set
+           END-POINTS for leaf type 3
+             ERO list
+</artwork>
+          </figure>
+          <t>In this example, a stateful PCE request updation of
+          path taken by some of the leaves in a P2MP tree. The
+          update request uses the END-POINT type 3
+          (modified/reoptimized). The ERO list represents the S2LS
+          path after modification. The update message does not need
+          to encode the full P2MP tree in this case.</t>
+        </section>
+        <section title="P2MP TE LSP Report"
+                 toc="default">
+          <t>LSP State Report message is sent by a PCC to report or
+          delegate the P2MP TE LSP. An example of a PCRpt message
+          for a delegated P2MP TE LSP is described below to add new leaves to
+          an existing P2MP TE LSP:</t>
+          <figure align="left"
+                  alt=""
+                  height=""
+                  suppress-title="true"
+                  title=""
+                  width="">
+            <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+           Common Header
+           LSP with P2MP flag set
+           END-POINTS for leaf type 1
+             S2LS (O=DOWN)
+             ERO list (empty)
+</artwork>
+          </figure>
+          <t>An example of a PCRpt message for P2MP TE LSP is
+          described below to prune leaves from an existing P2MP TE
+          LSP:</t>
+          <figure align="left"
+                  alt=""
+                  height=""
+                  suppress-title="true"
+                  title=""
+                  width="">
+            <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+           Common Header
+           LSP with P2MP flag set
+           END-POINTS for leaf type 2
+             S2LS (O=UP)
+             ERO list
+</artwork>
+          </figure>
+          <t>An example of a PCRpt message for a delegated P2MP TE LSP is
+          described below to report status of leaves in an
+          existing P2MP TE LSP:</t>
+          <figure align="left"
+                  alt=""
+                  height=""
+                  suppress-title="true"
+                  title=""
+                  width="">
+            <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+           Common Header
+           LSP with P2MP flag set
+           END-POINTS for leaf type 3
+             S2LS (O=UP)
+             ERO list
+           END-POINTS for leaf type 3
+             S2LS (O=DOWN)
+             ERO list
+</artwork>
+          </figure>
+          <t>An example of a PCRpt message for a non-delegated P2MP TE LSP is
+          described below to report status of leaves:</t>
+          <figure align="left"
+                  alt=""
+                  height=""
+                  suppress-title="true"
+                  title=""
+                  width="">
+            <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+           Common Header
+           LSP with P2MP flag set
+           END-POINTS for leaf type 4
+             S2LS (O=ACTIVE)
+             ERO list
+           END-POINTS for leaf type 4
+             S2LS (O=DOWN)
+             ERO list
+</artwork>
+          </figure>
+        </section>
+      </section>
+
+    </section>
+    <section title="PCEP Object Extensions"
+             toc="default">
+      <t>The PCEP TLV defined in this document is compliant with
+      the PCEP TLV format defined in
+      <xref target="RFC5440" />.</t>
+      <section title="Extension of LSP Object"
+               toc="default">
+        <t>LSP Object is defined in Section 7.3 of
+        <xref target='RFC8231'></xref>. It
+        specifies PLSP-ID to uniquely identify an LSP that is
+        constant for the life time of a PCEP session. Similarly for
+        P2MP tunnel, PLSP-ID identify a P2MP TE LSP uniquely.
+        This document adds the following flags to the LSP
+        Object:</t>
+        <t>
+          <list style="hanging">
+            <t hangText="N (P2MP bit - TBD7):">If the bit is set to 1, it
+            specifies the message is for P2MP TE LSP which MUST be
+            set in PCRpt or PCUpd message for a P2MP TE LSP.</t>
+            <t hangText="F (Fragmentation bit - TBD8):">If the bit is set
+            to 1, it specifies the message is fragmented.</t>
+          </list>
+        </t>
+        <t>If P2MP bit is set, the following P2MP-LSP-IDENTIFIER
+        TLV MUST be present in LSP object.</t>
+      </section>
+      <section title="P2MP-LSP-IDENTIFIER TLV"
+               toc="default">
+        <t>The P2MP LSP Identifier TLV MUST be included in the LSP
+        object in PCRpt message for RSVP-TE signaled P2MP TE LSPs. If
+        the TLV is missing, the PCE will generate an error with
+        error-type 6 (mandatory object missing) and error-value TBD12
+        (P2MP-LSP-IDENTIFIER TLV missing) and close the PCEP
+        session.</t>
+        <t>The P2MP LSP Identifier TLV MAY be included in the LSP
+        object in PCUpd message for RSVP-TE signaled P2MP TE LSPs. The
+        special value of all zeros for this TLV is used to refer to
+        all paths pertaining to a particular PLSP-ID.</t>
+        <t>There are two P2MP LSP Identifier TLVs, one for IPv4 and
+        one for IPv6.</t>
+        <t>The format of the IPV4-P2MP-LSP-IDENTIFIER TLV is shown
+        in the following figure:</t>
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="false"
+                title="IPV4-P2MP-LSP-IDENTIFIER TLV format"
+                width=""
+                anchor="SEC_FIG1">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Type=TBD9           |           Length=16           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                   IPv4 Tunnel Sender Address                  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             LSP ID            |           Tunnel ID           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Extended Tunnel ID                     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             P2MP ID                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+</artwork>
+        </figure>
+        <t>The type (16-bit) of the TLV is TBD9 to be assigned by IANA. The length (16-bit) has a fixed value
+        of 16 octets. The value contains the following fields:</t>
+        <t>
+          <list style="hanging">
+            <t hangText="IPv4 Tunnel Sender Address:">contains the
+            sender node's IPv4 address, as defined in
+            <xref target="RFC3209" />, Section 4.6.2.1 for the
+            LSP_TUNNEL_IPv4 Sender Template Object.</t>
+            <t hangText="LSP ID:">contains the 16-bit 'LSP ID'
+            identifier defined in
+            <xref target="RFC3209" />, Section 4.6.2.1 for the
+            LSP_TUNNEL_IPv4 Sender Template Object.</t>
+            <t hangText="Tunnel ID:">contains the 16-bit 'Tunnel
+            ID' identifier defined in
+            <xref target="RFC3209" />, Section 4.6.1.1 for the
+            LSP_TUNNEL_IPv4 Session Object. </t>
+            <t hangText="Extended Tunnel ID:">contains the 32-bit
+            'Extended Tunnel ID' identifier defined in
+            <xref target="RFC3209" />, Section 4.6.1.1 for the
+            LSP_TUNNEL_IPv4 Session Object.</t>
+            <t hangText="P2MP ID:">contains the 32-bit 'P2MP ID'
+            identifier defined in Section 19.1.1 of
+            <xref target="RFC4875"/> for the P2MP LSP Tunnel IPv4
+            SESSION Object.</t>
+          </list>
+        </t>
+        <t>The format of the IPV6-P2MP-LSP-IDENTIFIER TLV is shown
+        in the following figure:</t>
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="false"
+                title="IPV6-P2MP-LSP-IDENTIFIER TLV format"
+                width=""
+                anchor="SEC_FIG2">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Type=TBD10          |           Length=40           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
++                                                               +
+|                  IPv6 tunnel sender address                   |
++                          (16 octets)                          +
+|                                                               |
++                                                               +
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             LSP ID            |           Tunnel ID           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
++                                                               +
+|                       Extended Tunnel ID                      |
++                          (16 octets)                          +
+|                                                               |
++                                                               +
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             P2MP ID                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</artwork>
+        </figure>
+        <t>The type of the TLV is TBD10 to be assigned by IANA. The length (16-bit) has a fixed length
+        of 40 octets. The value contains the following fields:</t>
+        <t>
+          <list style="hanging">
+            <t hangText="IPv6 Tunnel Sender Address:">contains the
+            sender node's IPv6 address, as defined in
+            <xref target="RFC3209" />, Section 4.6.2.2 for the
+            LSP_TUNNEL_IPv6 Sender Template Object.</t>
+            <t hangText="LSP ID:">contains the 16-bit 'LSP ID'
+            identifier defined in
+            <xref target="RFC3209" />, Section 4.6.2.2 for the
+            LSP_TUNNEL_IPv6 Sender Template Object.</t>
+            <t hangText="Tunnel ID:">contains the 16-bit 'Tunnel
+            ID' identifier defined in
+            <xref target="RFC3209" />, Section 4.6.1.2 for the
+            LSP_TUNNEL_IPv6 Session Object.  </t>
+            <t hangText="Extended Tunnel ID:">contains the 128-bit
+            'Extended Tunnel ID' identifier defined in
+            <xref target="RFC3209" />, Section 4.6.1.2 for the
+            LSP_TUNNEL_IPv6 Session Object.</t>
+            <t hangText="P2MP ID:">As defined above in
+            IPV4-P2MP-LSP-IDENTIFIERS TLV.</t>
+          </list>
+        </t>
+        <t>Tunnel ID remains
+            constant over the life time of a tunnel.</t>
+      </section>
+      <section title="S2LS Object" toc="default">
+        <t>The S2LS (Source-to-Leaves) Object is used to report RSVP-TE
+        state of one or more destinations (leaves) encoded within the
+        END-POINTS object for a P2MP TE LSP. It MUST be carried in PCRpt
+        message along with END-POINTS object when N bit is set in
+        LSP object.</t>
+        <t>S2LS Object-Class is TBD19.</t>
+        <t>S2LS Object-Types is 1.</t>
+        <t>The format of the S2LS object is shown in the following
+        figure:</t>
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="false"
+                title="S2LS object format"
+                width=""
+                anchor="SEC_FIG3">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             Flags                       |    O|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+//                      Optional TLVs                          //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</artwork>
+        </figure>
+ <t>
+          <list style="hanging">
+            <t hangText="Flags(32 bits):"></t>
+            <t hangText="O(Operational - 3 bits)">the O Field
+            represents the operational status of the group of
+            destinations. The values are as per Operational field in LSP object defined in Section 7.3 of
+        <xref target='RFC8231'></xref>.</t>
+          </list>
+        </t>
+        <t>When N bit is set in LSP object then the O field in LSP
+        object represents the operational status of the full P2MP TE LSP and
+        the O field in S2LS object represents the operational status
+        of a group of destinations encoded within the END-POINTS
+        object.</t>
+
+    <t>Future documents MAY define optional TLVs that MAY be included
+    in the S2LS Object.</t>
+      </section>
+    </section>
+
+    <section title="Message Fragmentation"
+               toc="default">
+        <t>The total PCEP message length, including the common
+        header, is 16 bytes. In certain scenarios the P2MP report
+        and update request may not fit into a single PCEP message
+        (e.g. initial report or update). The F-bit is used in the LSP
+        object to signal that the initial report, update, or initiate
+        message was too
+        large to fit into a single message and will be fragmented
+        into multiple messages. In order to identify the single
+        report or update each message will use the same
+        PLSP-ID. In order to identify that a series of PCInitiate messages
+        represents a single Initiate, each message will use the
+        same PLSP-ID (in this case 0) and SRP-ID-number.</t>
+        <t>Fragmentation procedure described below for report or
+        update message is similar to
+        <xref target="I-D.ietf-pce-rfc6006bis"/> which describes request and
+        response message fragmentation.</t>
+        <section title="Report Fragmentation Procedure"
+                 toc="default">
+          <t>If the initial report is too large to fit into a
+          single report message, the PCC will split the report over
+          multiple messages. Each message sent to the PCE, except
+          the last one, will have the F-bit set in the LSP object
+          to signify that the report has been fragmented into
+          multiple messages. In order to identify that a series of
+          report messages represents a single report, each message
+          will use the same PLSP-ID.</t>
+          <t>To indicate P2MP message fragmentation errors associated
+          with a P2MP Report, a Error-Type (18) for "P2MP Fragmentation Error" and a new
+          error-value TBD13 is used if a PCE has not received the last
+          piece of the fragmented message, it should send an error
+          message to the PCC to signal that it has received an
+          incomplete message (i.e., "Fragmented Report failure").</t>
+        </section>
+        <section title="Update Fragmentation Procedure"
+                 toc="default">
+          <t>Once the PCE computes and updates a path for some or
+          all leaves in a P2MP TE LSP, an update message is sent to
+          the PCC. If the update is too large to fit into a single
+          update message, the PCE will split the update over
+          multiple messages. Each update message sent by the PCE,
+          except the last one, will have the F-bit set in the LSP
+          object to signify that the update has been fragmented
+          into multiple messages. In order to identify that a
+          series of update messages represents a single update,
+          each message will use the same PLSP-ID and
+          SRP-ID-number.</t>
+          <t>To indicate P2MP message fragmentation errors associated
+          with a P2MP Update request, a Error-Type (18) for "P2MP Fragmentation Error" and a new
+          error-value TBD14 is used if a PCC has not received the last
+          piece of the fragmented message, it should send an error
+          message to the PCE to signal that it has received an
+          incomplete message (i.e., "Fragmented Update failure").</t>
+        </section>
+        <section title="PCIntiate Fragmentation Procedure"
+               toc="default">
+        <t>Once the PCE initiates to set up the P2MP TE LSP, a
+        PCInitiate message is sent to the PCC. If the PCInitiate is
+        too large to fit into a single PCInitiate message, the PCE
+        will split the PCInitiate over multiple messages. Each
+        PCInitiate message sent by the PCE, except the last one,
+        will have the F-bit set in the LSP object to signify that
+        the PCInitiate has been fragmented into multiple messages.
+        In order to identify that a series of PCInitiate messages
+        represents a single Initiate, each message will use the
+        same PLSP-ID (in this case 0) and SRP-ID-number.</t>
+        <t>To indicate P2MP message fragmentation errors associated
+          with a P2MP PCInitiate, a Error-Type (18) for "P2MP Fragmentation Error" and a new
+          error-value TBD15 is used if a PCC has not received the last
+          piece of the fragmented message, it should send an error
+          message to the PCE to signal that it has received an
+          incomplete message (i.e., "Fragmented Instantiation failure").</t>
+      </section>
+      </section>
+    <section title="Non-Support of P2MP TE LSPs for Stateful PCE"
+             toc="default">
+      <t>The PCEP protocol extensions described in this document
+      for stateful PCEs with P2MP capability MUST NOT be used if
+      PCE has not advertised its stateful capability with P2MP as
+      per
+      <xref target="SEC_CA" />.
+      If the PCEP Speaker on the PCC supports the extensions of this
+      draft (understands the P2MP flag in the LSP object) but did not
+      advertise this capability, then upon receipt
+      of PCUpd message from the PCE, it SHOULD generate a PCErr with
+      error-type 19 (Invalid Operation), error-value TBD17 (Attempted
+      LSP Update Request for P2MP if active stateful PCE capability
+      for P2MP was not advertised).  If the PCEP Speaker on the PCE
+      supports the extensions of this draft (understands the P2MP
+      flag in the LSP object) but did not advertise this
+      capability, then upon receipt of a PCRpt message from the PCC, it
+      SHOULD generate a PCErr with error-type 19 (Invalid Operation),
+      error-value TBD16 (Attempted LSP State Report for P2MP if stateful PCE
+   capability for P2MP was not advertised) and it will
+   terminate the PCEP session.</t>
+
+      <t>If a Stateful PCE receives a P2MP TE LSP report message
+      and the PCE does not understand the P2MP flag in the LSP
+      object, and therefore the PCEP extensions described in this
+      document, then the Stateful PCE would act as per
+      <xref target='RFC8231'></xref>.</t>
+
+       <t>The PCEP protocol extensions described in this document
+      for PCC or PCE with instantiation capability for P2MP TE LSPs
+      MUST NOT be used if PCC or PCE has not advertised its
+      stateful capability with Instantiation and P2MP capability as
+      per
+      <xref target="SEC_CA" />.
+      If the PCEP Speaker on the PCC supports the extensions of this
+      draft (understands the P (P2MP-LSP-INSTANTIATION-CAPABILITY) flag
+      in the LSP object) but did not
+      advertise this capability, then upon receipt
+      of PCInitiate message from the PCE, it SHOULD generate a PCErr with
+      error-type 19 (Invalid Operation), error-value TBD18 (Attempted
+      LSP Instantiation Request for P2MP if stateful PCE instantiation capability
+      for P2MP was not advertised).</t>
+
+    </section>
+<section title="Manageability Considerations"
+             toc="default">
+      <t>All manageability requirements and considerations listed in
+      <xref target="RFC5440"/>, <xref target="I-D.ietf-pce-rfc6006bis"/>,
+   <xref target='RFC8231'></xref>, and
+   <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>
+   apply to PCEP protocol extensions defined in this document.  In
+   addition, requirements and considerations listed in this section
+   apply.</t>
+      <section title="Control of Function and Policy"
+               toc="default">
+        <t>A PCE or PCC implementation MUST allow configuring the
+        stateful PCEP capability, the LSP Update
+   capability, and the LSP Initiation capability for P2MP LSPs.</t>
+      </section>
+      <section title="Information and Data Models"
+               toc="default">
+        <t>The PCEP YANG module <xref target='I-D.ietf-pce-pcep-yang'></xref>
+   SHOULD be extended to include advertised P2MP stateful capabilities,
+   P2MP synchronization status, and delegation status of P2MP LSP etc. The
+   statistics module should also count P2MP LSP related data.</t>
+      </section>
+      <section title="Liveness Detection and Monitoring"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new liveness detection
+        and monitoring requirements in addition to those already listed in
+        <xref target="RFC5440"/>.</t>
+      </section>
+      <section title="Verify Correct Operations"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new operation
+        verification requirements in addition to those already listed in
+        <xref target="RFC5440"/>, <xref target="I-D.ietf-pce-rfc6006bis"/>,
+        <xref target='RFC8231'></xref>, and
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>.</t>
+      </section>
+      <section title="Requirements On Other Protocols"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new requirements
+        on other protocols.</t>
+      </section>
+      <section title="Impact On Network Operations"
+               toc="default">
+        <t>Mechanisms defined in this document do not have any impact on
+        network operations in addition to those already listed in
+        <xref target="RFC5440"/>, <xref target="I-D.ietf-pce-rfc6006bis"/>,
+        <xref target='RFC8231'></xref>, and
+        <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>.</t>
+        <t>Stateful PCE feature for P2MP LSP would help with network operations.</t>
+      </section>
+    </section>
+<section title="IANA Considerations"
+             toc="default">
+      <t>This document requests IANA actions to allocate code
+      points for the protocol elements defined in this document.</t>
+      <section title="PCE Capabilities in IGP Advertisements"
+               toc="default">
+      <t>IANA is requested to allocate new bits in the OSPF Parameters "PCE
+   Capability Flags" registry, as follows:
+        <figure title=""
+                suppress-title="true"
+                align="center"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="center"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+
+Bit      Meaning               Reference
+TBD1     Active Stateful       [This I-D]
+         PCE with P2MP
+TBD2     Passive Stateful      [This I-D]
+         PCE with P2MP
+TBD3     Stateful PCE          [This I-D]
+         Initiation with P2MP
+    ]]>
+</artwork>
+        </figure>            </t>
+      </section>
+      <section title="STATEFUL-PCE-CAPABILITY TLV"
+               toc="default">
+      <t>The STATEFUL-PCE-CAPABILITY TLV is defined in
+   <xref target='RFC8231'/>  and a registry is requested to be
+   created to manage the flags in the TLV.  IANA is requested to make
+   the following allocations in the aforementioned registry.</t>
+        <figure title=""
+                suppress-title="true"
+                align="left"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="left"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+    Bit    Description           Reference
+
+    TBD4    P2MP-CAPABILITY      [This I-D]
+    TBD5    P2MP-LSP-UPDATE-     [This I-D]
+            CAPABILITY
+    TBD6    P2MP-LSP-            [This I-D]
+            INSTANTIATION-
+            CAPABILITY
+    ]]>
+
+</artwork>
+        </figure>
+      </section>
+      <section title="LSP Object"
+               toc="default">
+        <t>The LSP object is defined in <xref target='RFC8231'/> and a registry is created to
+        manage the Flags field of the LSP object. </t>
+        <t>IANA is requested to make the following allocations in the aforementioned registry.</t>
+        <figure title=""
+                suppress-title="true"
+                align="left"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="left"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+    Bit    Description           Reference
+
+    TBD7    P2MP                 [This I-D]
+    TBD8    Fragmentation        [This I-D]
+
+    ]]>
+
+</artwork>
+        </figure>
+      </section>
+      <section title="PCEP-Error Object"
+               toc="default">
+        <t>IANA is requested to allocate new error values within
+   the "PCEP-ERROR Object Error Types and Values" sub-registry of the
+   PCEP Numbers registry, as follows:</t>       
+        <figure title=""
+                suppress-title="true"
+                align="left"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="left"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+    Error-Type  Meaning
+       6        Mandatory Object missing [RFC5440]
+                  Error-value=TBD11: S2LS object missing
+                  Error-value=TBD12: P2MP-LSP-IDENTIFIER TLV missing
+       18       P2MP Fragmentation Error [I-D.ietf-pce-rfc6006bis]
+                  Error-value= TBD13. Fragmented Report
+                      failure
+                  Error-value= TBD14. Fragmented Update
+                      failure
+                  Error-value= TBD15. Fragmented Instantiation
+                      failure
+       19       Invalid Operation [RFC8231]
+                  Error-value= TBD16. Attempted LSP State Report
+                      for P2MP if stateful PCE capability
+                      for P2MP was not advertised
+                  Error-value= TBD17. Attempted LSP Update Request
+                      for P2MP if active stateful PCE capability
+                      for P2MP was not advertised
+                  Error-value= TBD18. Attempted LSP Instantiation
+                      Request for P2MP if stateful PCE
+                      instantiation capability for P2MP was not
+                      advertised
+
+    Reference for all new Error-Value above is [This I-D].
+
+    ]]>
+
+</artwork>
+        </figure>
+      </section>
+      <section title="PCEP TLV Type Indicators"
+               toc="default">
+        <t>IANA is requested to make the
+   assignment of a new value for the existing "PCEP TLV Type Indicators"
+   registry as follows:</t>
+        <figure title=""
+                suppress-title="true"
+                align="left"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="left"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+       Value     Meaning                           Reference
+         TBD9    P2MP-IPV4-LSP-IDENTIFIERS         [This I-D]
+         TBD10   P2MP-IPV6-LSP-IDENTIFIERS         [This I-D]
+    ]]>
+
+</artwork>
+        </figure>
+      </section>
+      <section title="PCEP object"
+               toc="default">
+   <t>IANA is requested to allocate new object-class values and object
+   types within the "PCEP Objects" sub-registry of the PCEP Numbers
+   registry, as follows.</t>
+        <figure title=""
+                suppress-title="true"
+                align="left"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="left"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+    Object-Class Value  Name                               Reference
+
+            TBD19       S2LS                               [This.I-D]
+                        Object-Type
+                        0: Reserved
+                        1: S2LS
+         ]]>
+
+</artwork>
+        </figure>
+      </section>
+       <section title="S2LS object"
+               toc="default">
+               <t>
+                This document requests that a new sub-registry, named "S2LS Object
+   Flag Field", is created within the "Path Computation Element Protocol
+   (PCEP) Numbers" registry to manage the Flag field of the S2LS
+   object.New values are to be assigned by Standards Action <xref target="RFC8126"/>.
+   Each bit should be tracked with the following qualities:
+   <list style="symbols">
+    <t>Bit number (counting from bit 0 as the most significant bit)</t>
+    <t>Capability description</t>
+    <t>Defining RFC</t>
+   </list>
+    </t>
+    <t>The following values are defined in this document:</t>
+        <figure title=""
+                suppress-title="true"
+                align="left"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="left"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+                 Bit     Description           Reference
+
+                29-31    Operational (3-bit)   [This.I-D]
+         ]]>
+
+</artwork>
+        </figure>
+       </section>
+
+    </section>
+    <section title="Security Considerations"
+             toc="default">
+    <t>The stateful operations on P2MP TE LSP are more
+   CPU-intensive and also utilize more bandwidth on wire. In the event of
+   an unauthorized stateful P2MP operations, or a denial of service
+   attack, the subsequent PCEP operations may be disruptive
+   to the network.  Consequently, it is important that implementations
+   conform to the relevant security requirements of
+   <xref target="RFC5440"/>, <xref target="I-D.ietf-pce-rfc6006bis"/> and
+   <xref target='RFC8231'></xref>, and
+   <xref target='I-D.ietf-pce-pce-initiated-lsp'></xref>.
+   Further <xref target="RFC8253"/> discusses an
+   enhanced approach to provide secure transport for PCEP via
+   Transport Layer Security (TLS).</t>
+    </section>
+
+
+    <section title="Acknowledgments"
+             toc="default">
+      <t>Thanks to Quintin Zhao, Avantika and Venugopal Reddy for his comments.</t>
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119.xml" ?>
+      <?rfc include="reference.RFC.3209.xml" ?>
+      <?rfc include="reference.RFC.5088.xml" ?>
+      <?rfc include="reference.RFC.5089.xml" ?>
+      <?rfc include="reference.RFC.5440.xml" ?>
+      <?rfc include="reference.RFC.8174.xml"?>
+      <?rfc include="reference.RFC.8231.xml"?>
+      <?rfc include="reference.RFC.8232.xml"?>
+      <?rfc include="reference.I-D.ietf-pce-pce-initiated-lsp"?>
+
+      <?rfc include="reference.I-D.ietf-pce-rfc6006bis" ?>
+      </references>
+    <references title="Informative References">
+
+      <?rfc include="reference.RFC.4655.xml" ?>
+      <?rfc include="reference.RFC.4857.xml" ?>
+      <?rfc include="reference.RFC.4875.xml" ?>
+      
+
+      <?rfc include="reference.RFC.5671.xml" ?>
+
+      <?rfc include="reference.RFC.8051.xml" ?>
+      <?rfc include="reference.RFC.8126.xml" ?>
+      
+      <?rfc include="reference.RFC.8253.xml"?>
+      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
+
+      </references>
+<section title="Contributor Addresses" toc="default">
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+          <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Yuji Kamite
+NTT Communications Corporation
+Granpark Tower
+3-4-1 Shibaura, Minato-ku
+Tokyo  108-8118
+Japan
+
+EMail: y.kamite@ntt.com
+        ]]></artwork>
+        </figure>
+      </t>
+       </section>
+
+  </back>
+</rfc>
