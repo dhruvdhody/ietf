@@ -184,14 +184,22 @@ with new PCEP TLVs. The suggested range is 65280-65535.-->
    <xref target="I-D.ietf-pce-pce-initiated-lsp"/>.  Any document that adds a new PCEP message
    type must specify how to handle unknown objects on that message.-->
 
-      If the PCE does not understand or support an experimental object with
+      <!-- [changed again] If the PCE does not understand or support an experimental object with
    the P flag set in the Object Header, in the Path Computation Request
    message (PCReq), the entire PCEP message is rejected and PCE responds
    with a PCErr message with Error-Type="Unknown Object" or "Not
    supported object" as described in [RFC5440]. Otherwise, the object is
    ignored. Message-specific behavior may be specified (e.g., [RFC8231]
    defines rules for a PCC to handle an unknown object in an Update
-   (PCUpd) message).
+   (PCUpd) message).-->
+
+      If a PCEP speaker does not understand or support an experimental
+   object then the way it handles this situation depends on the message
+   type.  For example, a PCE handles an unknown object in the Path
+   Computation Request (PCReq) message according to the rules of
+   <xref target="RFC5440"/>. Message-specific behavior may be specified (e.g.,
+   <xref target="RFC8231"/> defines rules for a PCC to handle an unknown object in a
+   Path Computation LSP Update (PCUpd) Request message).
 
     </t>
    <t>As per section 7.1 of <xref target="RFC5440"/>, unknown experimental PCEP TLV would be ignored.</t>
