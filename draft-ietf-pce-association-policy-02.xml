@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902" category="std" docName="draft-ietf-pce-association-policy-02" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+  <front>
+    <title abbrev="ASSOC-POLICY">Path Computation Element communication
+    Protocol extension for associating Policies and LSPs</title>
+<author initials="D" surname="Dhody" fullname="Dhruv Dhody" role="editor">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+
+    <author initials="S" surname="Sivabalan" fullname="Siva Sivabalan">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>2000 Innovation Drive</street>
+          <city>Kanata</city>
+          <region>Ontario</region>
+          <code>K2K 3E8</code>
+          <country>Canada</country>
+        </postal>
+        <email>msiva@cisco.com</email>
+      </address>
+    </author>    
+    
+    <author initials="S" surname="Litkowski" fullname="Stephane Litkowski">
+      <organization>Orange</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>stephane.litkowski@orange.com</email>
+      </address>
+    </author>
+    <author initials="J" surname="Tantsura" fullname="Jeff Tantsura">
+      <organization>Individual</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>jefftant.ietf@gmail.com</email>
+      </address>
+    </author>
+    <author initials="J" surname="Hardwick" fullname="Jonathan Hardwick">
+      <organization>Metaswitch Networks</organization>
+      <address>
+        <postal>
+          <street>100 Church Street</street>
+          <city>Enfield</city>
+          <region>Middlesex</region>
+          <code></code>
+          <country>UK</country>
+        </postal>
+        <email>Jonathan.Hardwick@metaswitch.com</email>
+      </address>
+    </author>
+    <date year="2018" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+  
+<t>
+   This document introduces a simple mechanism to associate policies to 
+   a group of Label Switched Paths (LSPs) via an extension to the Path Computation
+   Element (PCE) Communication Protocol (PCEP).</t> 
+   </abstract>
+  </front>
+  <middle>
+   <section title="Introduction" toc="default">
+   <t><xref target="RFC5440"/> describes the Path Computation Element
+   communication Protocol (PCEP) which enables the communication between
+   a Path Computation Client (PCC) and a Path Control Element (PCE),
+   or between two PCEs based on the PCE architecture
+   <xref target="RFC4655"/>.</t>
+
+
+   <t>PCEP Extensions 
+   for Stateful PCE Model <xref target="RFC8231"/> 
+   describes a set of extensions to PCEP to
+   enable active control of MPLS-TE and GMPLS tunnels. 
+   <xref target="RFC8281"/> describes the setup and teardown of
+   PCE-initiated LSPs under the active stateful PCE model, without the
+   need for local configuration on the PCC, thus allowing for a dynamic
+   network. Currently, the LSPs can either be signaled via RSVP-TE or can be
+   segment routed as specified in <xref target="I-D.ietf-pce-segment-routing"/>.</t>
+
+   <t><xref target='I-D.ietf-pce-association-group'/> introduces a generic
+   mechanism to create a grouping of LSPs which can then be used to
+   define associations between a set of LSPs and a set of attributes (such
+   as configuration parameters or behaviors) and is equally applicable
+   to stateful PCE (active and passive modes) and stateless PCE.</t>
+
+   <t>This document specifies a PCEP extension to associate one or
+   more LSPs with policies using the generic association mechanism.</t>
+   
+   <t>A PCEP speaker may want to influence the PCEP peer with respect 
+   to path selection and other policies.  This document describes a 
+   PCEP extension to associate policies by creating Policy Association 
+   Group (PAG) and encoding this association in PCEP messages. The 
+   specification is applicable to both stateful and stateless
+   PCEP sessions.
+</t>
+   
+   
+    <section title="Requirements Language" toc="default">
+         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all
+   capitals, as shown here.</t>
+   <!--
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described
+        in <xref target="RFC2119"/>.</t>-->
+      </section>
+    </section>
+
+    <section title="Terminology" toc="default">
+      <t>The following terminology is used in this document.</t>
+      <t>
+        <list style="hanging">
+          <t hangText="LSR:">Label Switch Router.</t>
+          <t hangText="MPLS:">Multiprotocol Label Switching.</t>
+          <t hangText="PAG:">Policy Association Group.</t>
+          <t hangText="PCC:">Path Computation Client. Any client application requesting a
+            path computation to be performed by a Path Computation Element.</t>
+          <t hangText="PCE:">Path Computation Element.  An entity (component, application,
+            or network node) that is capable of computing a network path or route based on a network graph and applying computational constraints.</t>
+          <t hangText="PCEP:">Path Computation Element Communication Protocol.</t>
+        </list>
+      </t>
+    </section>
+    <section title="Motivation" toc="default">
+   <t>Paths computed using PCE MAY be subjected to various policies on 
+   both PCE and PCC.  For example, in a centralized traffic engineering
+   scenario, network operators may instantiate LSPs and specifies
+   policies for traffic steering, path monitoring, etc., for some LSPs
+   via the stateful PCE. Similarly, a PCC may request a user- or 
+service-specific policy to be applied at the PCE, such as constraints relaxation to 
+meet optimal QoS and resiliency. </t>  
+   
+   <t>PCEP speaker can use the generic mechanism as per
+   <xref target='I-D.ietf-pce-association-group'/> to associate a set
+   of LSPs with policy, without the need to know the
+   details of such policies, which simplifies network operations, avoids
+   frequent software upgrades, as well provides an ability to introduce
+   new policy faster.</t>
+        <t><figure title="Sample use-cases for carrying policies over PCEP session" suppress-title="false" align="left" alt="" width="" height="">
+            <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+
+                                                         
+                                                           PAG Y
+                                               {Service-Specific Policy
+                                                      for constraint   
+          Initiate & Monitor LSP                         relaxation}  
+                   |                                          |
+                   | PAG X                    PCReq           |    
+                   V {Monitor LSP}         {PAG Y}            V 
+                +-----+                   ----------------> +-----+
+     _ _ _ _ _ _| PCE |                  |                  | PCE |
+    |           +-----+                  |      ----------> +-----+
+    | PCEInitiate                        |     |    PCReq
+    |{PAG X}                             |     | {PAG Y}
+    |                                    |     |
+    |              .-----.               |     |         .-----.
+    |             (       )              |  +----+      (       )
+    |         .--(         )--.          |  |PCC1|--.--(         )--.
+    V        (                 )         |  +----+ (                 )
+  +---+     (                   )        |        (                   )
+  |PCC|----(   (G)MPLS network    )   +----+     ( (G)MPLS network   )
+  +---+     (                   )     |PCC2|------(                   )
+PAG X        (                 )      +----+       (                 )
+{Monitor LSP} '--(         )--'                     '--(         )--'
+                  (       )                             (       )
+                   '-----'                               '-----'
+
+  Case 1: Policy requested by PCE        Case 2: Policy requested by 
+          and enforced by PCC                    PCC and enforced by 
+                                                 PCE   
+
+]]></artwork>
+          </figure></t>
+  
+    <section title="Policy based Constraints" toc="default">
+    <t>In the context of policy-enabled path computation
+    <xref target="RFC5394"/>, path computation policies may be applied
+    at both a PCC and a PCE. Consider an Label Switch Router (LSR) with
+    a policy enabled PCC, it receives a service request via signaling,
+    including over a Network-Network Interface (NNI) or User Network
+    Interface (UNI) reference point, or receives a configuration request
+    over a management interface to establish a service. The PCC may also
+    apply user- or service-specific policies to decide how the path
+    selection process should be constrained, that is, which constraints,
+    diversities, optimization criterion, and constraint relaxation
+    strategies should be applied in order for the service LSP(s) to have
+    a likelihood to be successfully established and provide necessary
+    QoS and resilience against network failures. The user- or
+    service-specific policies applied to PCC and are then passed to
+    the PCE along with the Path computation request, in the form of
+    constraints <xref target="RFC5394"/>. </t>
+
+    <t>PCEP speaker can use the generic mechanism as per
+    <xref target='I-D.ietf-pce-association-group'/> to associate a set
+    of LSPs with policy and its resulting path computation constraints.
+    This simplified the path computation message exchanges.</t>
+    </section>
+    
+    </section>
+    <section title="Overview" toc="default">
+     <t>As per <xref target='I-D.ietf-pce-association-group'/>, LSPs
+     are associated with other LSPs with which they interact by adding
+     them to a common association group.  Grouping can also be used to 
+     define association between LSPs
+     and policies associated to them.
+      One new Association Type is defined in this document, 
+      based on the generic Association object - 
+      <list style="symbols">
+      <t>Association type = TBD1 ("Policy 
+      Association Type") for Policy Association Group (PAG) </t>
+      </list>
+      </t>
+      
+   <t>This Association-Type is operator-configured association in nature and 
+   	created by the operator manually on the PCEP peers. The LSP belonging to 
+   	this associations is conveyed via PCEP messages to the PCEP peer. 
+   	Operator-configured
+   Association Range SHOULD NOT be set for this association-type, and MUST be ignored, so that the full
+   range of association identifier can be utilized.</t>
+
+      <t>A PAG can have one or more LSPs and its associated policy(s). 
+      	The association identifier, type (Policy), as well as the association source IP address is manually
+        configured by the operator and is used to identify the PAG.</t>
+
+
+    <t>As per the processing rules, as specified in section 5.3 of 
+    <xref target='I-D.ietf-pce-association-group'/>, if  a PCEP speaker
+   does not support this Policy
+   association-type, it MUST return a PCErr message with Error-Type TBD
+   "Association Error" and Error-Value 1 "Association-type is not
+   supported". Since the PAG is opaque in nature, the PAG and the policy 
+   MUST be set on the PCEP peers. 
+   If a PCE speaker receives PAG in a PCEP message, and the
+   association information is not configured, it MUST return
+   a PCErr message with Error-Type TBD "Association Error" and Error-
+   Value 4 "Association unknown". All other processing is as per 
+   section 5.3 of 
+    <xref target='I-D.ietf-pce-association-group'/>.</t>   
+
+
+     
+    </section>
+    
+<section title="Policy Association Group" toc="default">
+    <t>Association groups
+   and their memberships are defined using the ASSOCIATION object defined in 
+   <xref target='I-D.ietf-pce-association-group'/>. Two object types for IPv4 and IPv6
+   are defined. The ASSOCIATION object includes "Association type" indicating
+   the type of the association group. This document add a new Association type - </t>
+
+   <t>Association type = TBD1 ("Policy 
+      Association Type") for PAG.</t>
+   <t>PAG may carry optional TLVs including but not limited to -</t>
+      <t>
+     <list style="symbols">
+     <t>POLICY-PARAMETERS-TLV: Used to communicate opaque information useful to apply the policy, described in <xref target="policy-tlv"/>.</t> 
+     <t>VENDOR-INFORMATION-TLV: Used to communicate arbitrary vendor specific behavioral
+     information, described in <xref target="RFC7470"/>.</t>
+     </list>
+     </t>
+     <section title="Policy Parameters TLV" toc="default" anchor="policy-tlv">
+     <t>The POLICY-PARAMETERS-TLV is an optional TLV that can be carried in ASSOCIATION object (with "Policy Association Type") to carry opaque information needed to apply the policy at the PCEP peer. The TLV format is as per the format of all PCEP TLVs, as defined in <xref target="RFC5440"/>, and shown in <xref target="fig-policy-tlv"/>.</t>
+        <t><figure anchor="fig-policy-tlv">
+            <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Type=TBD2             |          Length               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Len1 |                       Variable1                       |
+   +---------------------------------------------------------------+
+   |                                          |       padding      |
+   +---------------------------------------------------------------+
+   |  Len2 |                       Variable2      |   padding      |
+   +---------------------------------------------------------------+
+   //                                                             //
+   +---------------------------------------------------------------+
+   |  LenN |                       VariableN      |   padding      |
+   +---------------------------------------------------------------+
+]]></artwork>
+          </figure></t>
+     <t>The type of the POLICY-PARAMETERS-TLV is TBD2 and it has a
+   variable length.  The Value field is a set of (Len, Variable) pair padded to 4-bytes alignment; padding is not included in 'Len' field. The 'Len' field is 1-byte followed by the opaque variable. The PCEP peer implementation need to be aware of the order, format and meaning of these variables well in advance based on the policy. The exact use of this TLV is beyond the scope of this document.</t>
+   <t>If the PCEP peer is unaware of the policy parameters associated with the policy and it receives the POLICY-PARAMETERS-TLV, it MUST ignore the TLV and SHOULD log this event.</t>
+     </section> 
+     </section>
+
+
+
+    <section title="Security Considerations" toc="default">
+      <t>This document defines one new type for association, which do not add any new
+      security concerns beyond those discussed in <xref target="RFC5440"/>,
+      <xref target='RFC8231'/> and <xref target='I-D.ietf-pce-association-group'/> in itself.</t>
+      <t> Some deployments may find policy associations and their implications
+        as extra sensitive
+      and thus should employ suitable PCEP security mechanisms like <xref target='RFC8253'/>. 
+      Also extra care needs to be taken by the implementation with respect to POLICY-PARAMETERS-TLV while decoding, verifying and applying these policy variables. </t>
+    </section>
+
+    <section title="IANA Considerations" toc="default">
+    <section title="Association object Type Indicators" toc="default">
+    <t>This document defines the following new association type originally
+    defined in <xref target='I-D.ietf-pce-association-group'/>.</t>
+<t>
+ <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Value     Name                        Reference
+
+TBD1      Policy Association Type     [This I.D.]
+]]></artwork>
+        </figure>
+      </t>
+    </section>
+    <section title="PCEP TLV Type Indicators" toc="default">
+      <t>The following TLV Type Indicator values are requested within
+   the "PCEP TLV Type Indicators" subregistry of the "Path Computation
+   Element Protocol (PCEP) Numbers" registry:</t>
+<t>
+ <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Value     Description                 Reference
+
+TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
+]]></artwork>
+        </figure>
+      </t>   
+    </section>
+    </section>
+<section title="Manageability Considerations" toc="default">
+      <section title="Control of Function and Policy" toc="default">
+        <t>
+   An operator MUST BE allowed to configure the policy associations at PCEP peers
+   and associate it with the LSPs. </t>
+      </section>
+      <section title="Information and Data Models" toc="default">
+        <t><xref target="RFC7420"/> describes the PCEP MIB, there are no new MIB Objects
+        for this document.</t>
+      </section>
+      <section title="Liveness Detection and Monitoring" toc="default">
+        <t>Mechanisms defined in this document do not imply any new liveness detection
+        and monitoring requirements in addition to those already listed in
+        <xref target="RFC5440"/>.</t>
+      </section>
+      <section title="Verify Correct Operations" toc="default">
+        <t>Mechanisms defined in this document do not imply any new operation
+        verification requirements in addition to those already listed in
+        <xref target="RFC5440"/>.</t>
+      </section>
+      <section title="Requirements On Other Protocols" toc="default">
+        <t>Mechanisms defined in this document do not imply any new requirements
+        on other protocols.</t>
+      </section>
+      <section title="Impact On Network Operations" toc="default">
+        <t>Mechanisms defined in this document do not have any impact on
+        network operations in addition to those already listed in
+        <xref target="RFC5440"/>.</t>
+      </section>
+    </section>
+    <section title="Acknowledgments" toc="default">
+      <t>A special thanks to author of
+      <xref target='I-D.ietf-pce-association-group'/>, this document borrow
+      some of the text from it.</t>
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+    <?rfc include="reference.RFC.2119.xml" ?>
+    
+    <?rfc include="reference.RFC.5440.xml" ?>
+    <?rfc include="reference.RFC.8174.xml" ?>
+    <?rfc include="reference.RFC.8231.xml" ?>
+    <?rfc include="reference.I-D.ietf-pce-association-group"?>
+    
+    </references>
+    <references title="Informative References">
+     <?rfc include="reference.RFC.4655.xml" ?>
+     <?rfc include="reference.RFC.5394.xml" ?>
+     
+     <?rfc include="reference.RFC.7420.xml" ?>
+     <?rfc include="reference.RFC.7470.xml" ?>
+     <?rfc include="reference.RFC.8253.xml"?>
+     <?rfc include="reference.RFC.8281.xml"?>
+     <?rfc include="reference.I-D.ietf-pce-segment-routing"?>
+     
+
+
+    </references>
+<section title="Contributor Addresses" toc="default">
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+          <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Qin Wu
+Huawei Technologies
+101 Software Avenue, Yuhua District
+Nanjing, Jiangsu  210012
+China
+
+EMail: sunseawq@huawei.com
+
+Clarence Filsfils
+Cisco Systems, Inc.
+Pegasus Parc
+De kleetlaan 6a, DIEGEM  BRABANT 1831
+BELGIUM
+
+Email: cfilsfil@cisco.com
+
+Xian Zhang
+Huawei Technologies
+Bantian, Longgang District
+Shenzhen  518129
+P.R.China
+
+EMail: zhang.xian@huawei.com
+
+Udayasree Palle
+Huawei Technologies
+Divyashree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: udayasreereddy@gmail.com
+
+        ]]></artwork>
+        </figure>
+      </t>
+    </section>
+
+  </back>
+</rfc>
