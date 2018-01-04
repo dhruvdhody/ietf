@@ -78,17 +78,17 @@ Table of Contents
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
      7.1.  Association object Type Indicators  . . . . . . . . . . .   8
-     7.2.  PCEP TLV Type Indicators  . . . . . . . . . . . . . . . .   8
-   8.  Manageability Considerations  . . . . . . . . . . . . . . . .   8
+     7.2.  PCEP TLV Type Indicators  . . . . . . . . . . . . . . . .   9
+   8.  Manageability Considerations  . . . . . . . . . . . . . . . .   9
      8.1.  Control of Function and Policy  . . . . . . . . . . . . .   9
      8.2.  Information and Data Models . . . . . . . . . . . . . . .   9
      8.3.  Liveness Detection and Monitoring . . . . . . . . . . . .   9
      8.4.  Verify Correct Operations . . . . . . . . . . . . . . . .   9
      8.5.  Requirements On Other Protocols . . . . . . . . . . . . .   9
      8.6.  Impact On Network Operations  . . . . . . . . . . . . . .   9
-   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   9
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .   9
+   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  10
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  10
      10.2.  Informative References . . . . . . . . . . . . . . . . .  10
    Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  12
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
@@ -362,7 +362,9 @@ Internet-Draft                ASSOC-POLICY                  January 2018
    ASSOCIATION object (with "Policy Association Type") to carry opaque
    information needed to apply the policy at the PCEP peer.  The TLV
    format is as per the format of all PCEP TLVs, as defined in
-   [RFC5440], and shown in Figure 2.
+   [RFC5440], and shown in Figure 2.  Only one POLICY-PARAMETERS-TLV can
+   be carried and only the first occurrence is processed and any others
+   MUST be ignored.
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -384,8 +386,6 @@ Internet-Draft                ASSOC-POLICY                  January 2018
 
                 Figure 2: The POLICY-PARAMETERS-TLV format
 
-   The type of the POLICY-PARAMETERS-TLV is TBD2 and it has a variable
-   length.  The Value field is a set of (Len, Variable) pair padded to
 
 
 
@@ -394,15 +394,27 @@ Dhody, et al.             Expires July 8, 2018                  [Page 7]
 Internet-Draft                ASSOC-POLICY                  January 2018
 
 
+   The type of the POLICY-PARAMETERS-TLV is TBD2 and it has a variable
+   length.  The Value field is a set of (Len, Variable) pair padded to
    4-bytes alignment; padding is not included in 'Len' field.  The 'Len'
    field is 1-byte followed by the opaque variable.  The PCEP peer
    implementation need to be aware of the order, format and meaning of
    these variables well in advance based on the policy.  The exact use
-   of this TLV is beyond the scope of this document.
+   of this TLV is beyond the scope of this document.  To specify a NULL
+   value for the variable, the 'Len' field MUST be set to Zero and a
+   padding to 4-byte alignment MUST be added.
 
    If the PCEP peer is unaware of the policy parameters associated with
    the policy and it receives the POLICY-PARAMETERS-TLV, it MUST ignore
-   the TLV and SHOULD log this event.
+   the TLV and SHOULD log this event.  Further, if one or more
+   parameters received in the POLICY-PARAMETERS-TLV received by the PCEP
+   speaker are considered as unacceptable in the context of the
+   associated policy (e.g. out of range value, badly encoded value...),
+   the PCEP speaker MUST NOT apply the received policy and SHOULD log
+   this event.
+
+   Note that, the vendor specific behavioral information is encoded in
+   VENDOR-INFORMATION-TLV which can be used along with this TLV.
 
 6.  Security Considerations
 
@@ -427,6 +439,17 @@ Internet-Draft                ASSOC-POLICY                  January 2018
 
    TBD1      Policy Association Type     [This I.D.]
 
+
+
+
+
+
+
+Dhody, et al.             Expires July 8, 2018                  [Page 8]
+
+Internet-Draft                ASSOC-POLICY                  January 2018
+
+
 7.2.  PCEP TLV Type Indicators
 
    The following TLV Type Indicator values are requested within the
@@ -438,17 +461,6 @@ Internet-Draft                ASSOC-POLICY                  January 2018
    TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
 
 8.  Manageability Considerations
-
-
-
-
-
-
-
-Dhody, et al.             Expires July 8, 2018                  [Page 8]
-
-Internet-Draft                ASSOC-POLICY                  January 2018
-
 
 8.1.  Control of Function and Policy
 
@@ -482,6 +494,18 @@ Internet-Draft                ASSOC-POLICY                  January 2018
    Mechanisms defined in this document do not have any impact on network
    operations in addition to those already listed in [RFC5440].
 
+
+
+
+
+
+
+
+Dhody, et al.             Expires July 8, 2018                  [Page 9]
+
+Internet-Draft                ASSOC-POLICY                  January 2018
+
+
 9.  Acknowledgments
 
    A special thanks to author of [I-D.ietf-pce-association-group], this
@@ -495,16 +519,6 @@ Internet-Draft                ASSOC-POLICY                  January 2018
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-
-Dhody, et al.             Expires July 8, 2018                  [Page 9]
-
-Internet-Draft                ASSOC-POLICY                  January 2018
-
 
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
@@ -540,6 +554,14 @@ Internet-Draft                ASSOC-POLICY                  January 2018
               DOI 10.17487/RFC5394, December 2008,
               <https://www.rfc-editor.org/info/rfc5394>.
 
+
+
+
+Dhody, et al.             Expires July 8, 2018                 [Page 10]
+
+Internet-Draft                ASSOC-POLICY                  January 2018
+
+
    [RFC7420]  Koushik, A., Stephan, E., Zhao, Q., King, D., and J.
               Hardwick, "Path Computation Element Communication Protocol
               (PCEP) Management Information Base (MIB) Module",
@@ -550,17 +572,6 @@ Internet-Draft                ASSOC-POLICY                  January 2018
               Constraints in the Path Computation Element Communication
               Protocol", RFC 7470, DOI 10.17487/RFC7470, March 2015,
               <https://www.rfc-editor.org/info/rfc7470>.
-
-
-
-
-
-
-
-Dhody, et al.             Expires July 8, 2018                 [Page 10]
-
-Internet-Draft                ASSOC-POLICY                  January 2018
-
 
    [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
               "PCEPS: Usage of TLS to Provide a Secure Transport for the
@@ -579,17 +590,6 @@ Internet-Draft                ASSOC-POLICY                  January 2018
               and J. Hardwick, "PCEP Extensions for Segment Routing",
               draft-ietf-pce-segment-routing-11 (work in progress),
               November 2017.
-
-
-
-
-
-
-
-
-
-
-
 
 
 

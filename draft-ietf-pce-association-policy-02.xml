@@ -297,7 +297,8 @@ PAG X        (                 )      +----+       (                 )
      </list>
      </t>
      <section title="Policy Parameters TLV" toc="default" anchor="policy-tlv">
-     <t>The POLICY-PARAMETERS-TLV is an optional TLV that can be carried in ASSOCIATION object (with "Policy Association Type") to carry opaque information needed to apply the policy at the PCEP peer. The TLV format is as per the format of all PCEP TLVs, as defined in <xref target="RFC5440"/>, and shown in <xref target="fig-policy-tlv"/>.</t>
+     <t>The POLICY-PARAMETERS-TLV is an optional TLV that can be carried in ASSOCIATION object (with "Policy Association Type") to carry opaque information needed to apply the policy at the PCEP peer. The TLV format is as per the format of all PCEP TLVs, as defined in <xref target="RFC5440"/>, and shown in <xref target="fig-policy-tlv"/>. 
+     Only one POLICY-PARAMETERS-TLV can be carried and only the first occurrence is processed and any others MUST be ignored.</t>
         <t><figure title="The POLICY-PARAMETERS-TLV format" suppress-title="false" align="left" alt="" width="" height="" anchor="fig-policy-tlv">
             <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
     0                   1                   2                   3
@@ -320,8 +321,11 @@ PAG X        (                 )      +----+       (                 )
 ]]></artwork>
           </figure></t>
      <t>The type of the POLICY-PARAMETERS-TLV is TBD2 and it has a
-   variable length.  The Value field is a set of (Len, Variable) pair padded to 4-bytes alignment; padding is not included in 'Len' field. The 'Len' field is 1-byte followed by the opaque variable. The PCEP peer implementation need to be aware of the order, format and meaning of these variables well in advance based on the policy. The exact use of this TLV is beyond the scope of this document.</t>
-   <t>If the PCEP peer is unaware of the policy parameters associated with the policy and it receives the POLICY-PARAMETERS-TLV, it MUST ignore the TLV and SHOULD log this event.</t>
+   variable length.  The Value field is a set of (Len, Variable) pair padded to 4-bytes alignment; padding is not included in 'Len' field. The 'Len' field is 1-byte followed by the opaque variable. The PCEP peer implementation need to be aware of the order, format and meaning of these variables well in advance based on the policy. The exact use of this TLV is beyond the scope of this document. To specify a NULL value for the variable, the 'Len' field MUST be set to Zero and a padding to 4-byte alignment MUST be added.</t>
+   <t>If the PCEP peer is unaware of the policy parameters associated with the policy and it receives the POLICY-PARAMETERS-TLV, it MUST ignore the TLV and SHOULD log this event.
+   Further, if one or more parameters received in the POLICY-PARAMETERS-TLV received by the PCEP speaker are considered as unacceptable in the context of the associated policy (e.g. out of range value, badly encoded value...), the  PCEP speaker MUST NOT apply the received policy and SHOULD log this event.
+   </t>
+   <t>Note that, the vendor specific behavioral information is encoded in VENDOR-INFORMATION-TLV which can be used along with this TLV.</t>
      </section> 
      </section>
 
