@@ -80,7 +80,7 @@ Table of Contents
      7.1.  Association object Type Indicators  . . . . . . . . . . .   8
      7.2.  PCEP TLV Type Indicators  . . . . . . . . . . . . . . . .   8
    8.  Manageability Considerations  . . . . . . . . . . . . . . . .   8
-     8.1.  Control of Function and Policy  . . . . . . . . . . . . .   8
+     8.1.  Control of Function and Policy  . . . . . . . . . . . . .   9
      8.2.  Information and Data Models . . . . . . . . . . . . . . .   9
      8.3.  Liveness Detection and Monitoring . . . . . . . . . . . .   9
      8.4.  Verify Correct Operations . . . . . . . . . . . . . . . .   9
@@ -256,7 +256,7 @@ Internet-Draft                ASSOC-POLICY                  January 2018
                                                   PCE
 
 
-         Sample use-cases for carrying policies over PCEP session
+    Figure 1: Sample use-cases for carrying policies over PCEP session
 
 3.1.  Policy based Constraints
 
@@ -362,7 +362,7 @@ Internet-Draft                ASSOC-POLICY                  January 2018
    ASSOCIATION object (with "Policy Association Type") to carry opaque
    information needed to apply the policy at the PCEP peer.  The TLV
    format is as per the format of all PCEP TLVs, as defined in
-   [RFC5440], and shown in Figure 1.
+   [RFC5440], and shown in Figure 2.
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -380,12 +380,12 @@ Internet-Draft                ASSOC-POLICY                  January 2018
       |  LenN |                       VariableN      |   padding      |
       +---------------------------------------------------------------+
 
-                                 Figure 1
+      * The variable and padding in figure is for illustration purpose
+
+                Figure 2: The POLICY-PARAMETERS-TLV format
 
    The type of the POLICY-PARAMETERS-TLV is TBD2 and it has a variable
    length.  The Value field is a set of (Len, Variable) pair padded to
-   4-bytes alignment; padding is not included in 'Len' field.  The 'Len'
-   field is 1-byte followed by the opaque variable.  The PCEP peer
 
 
 
@@ -394,6 +394,8 @@ Dhody, et al.             Expires July 8, 2018                  [Page 7]
 Internet-Draft                ASSOC-POLICY                  January 2018
 
 
+   4-bytes alignment; padding is not included in 'Len' field.  The 'Len'
+   field is 1-byte followed by the opaque variable.  The PCEP peer
    implementation need to be aware of the order, format and meaning of
    these variables well in advance based on the policy.  The exact use
    of this TLV is beyond the scope of this document.
@@ -437,10 +439,8 @@ Internet-Draft                ASSOC-POLICY                  January 2018
 
 8.  Manageability Considerations
 
-8.1.  Control of Function and Policy
 
-   An operator MUST BE allowed to configure the policy associations at
-   PCEP peers and associate it with the LSPs.
+
 
 
 
@@ -449,6 +449,11 @@ Dhody, et al.             Expires July 8, 2018                  [Page 8]
 
 Internet-Draft                ASSOC-POLICY                  January 2018
 
+
+8.1.  Control of Function and Policy
+
+   An operator MUST BE allowed to configure the policy associations at
+   PCEP peers and associate it with the LSPs.
 
 8.2.  Information and Data Models
 
@@ -491,11 +496,6 @@ Internet-Draft                ASSOC-POLICY                  January 2018
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
-              Element (PCE) Communication Protocol (PCEP)", RFC 5440,
-              DOI 10.17487/RFC5440, March 2009,
-              <https://www.rfc-editor.org/info/rfc5440>.
-
 
 
 
@@ -505,6 +505,11 @@ Dhody, et al.             Expires July 8, 2018                  [Page 9]
 
 Internet-Draft                ASSOC-POLICY                  January 2018
 
+
+   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
+              Element (PCE) Communication Protocol (PCEP)", RFC 5440,
+              DOI 10.17487/RFC5440, March 2009,
+              <https://www.rfc-editor.org/info/rfc5440>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -546,11 +551,6 @@ Internet-Draft                ASSOC-POLICY                  January 2018
               Protocol", RFC 7470, DOI 10.17487/RFC7470, March 2015,
               <https://www.rfc-editor.org/info/rfc7470>.
 
-   [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
-              "PCEPS: Usage of TLS to Provide a Secure Transport for the
-              Path Computation Element Communication Protocol (PCEP)",
-              RFC 8253, DOI 10.17487/RFC8253, October 2017,
-              <https://www.rfc-editor.org/info/rfc8253>.
 
 
 
@@ -561,6 +561,12 @@ Dhody, et al.             Expires July 8, 2018                 [Page 10]
 
 Internet-Draft                ASSOC-POLICY                  January 2018
 
+
+   [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
+              "PCEPS: Usage of TLS to Provide a Secure Transport for the
+              Path Computation Element Communication Protocol (PCEP)",
+              RFC 8253, DOI 10.17487/RFC8253, October 2017,
+              <https://www.rfc-editor.org/info/rfc8253>.
 
    [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
               Computation Element Communication Protocol (PCEP)
@@ -573,12 +579,6 @@ Internet-Draft                ASSOC-POLICY                  January 2018
               and J. Hardwick, "PCEP Extensions for Segment Routing",
               draft-ietf-pce-segment-routing-11 (work in progress),
               November 2017.
-
-
-
-
-
-
 
 
 
