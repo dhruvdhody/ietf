@@ -103,7 +103,7 @@
     path over which various services are offered. Each domain is under the 
     control of the domain controller (or lower-level controller), and a "super controller" (or high-level controller) 
     takes responsibility for a high-level view of the network before distributing tasks to domain controllers (or lower-level controllers).
-
+    It is possible for each of the domain to use a different tunneling mechanism (eg RSVP-TE, Segment Routing (SR) etc).
    </t>
    <t>
    <xref target="I-D.ietf-teas-actn-framework"/> describes the framework for 
@@ -249,28 +249,28 @@
     </t>        
     <t>
 <figure title="L3VPN" anchor="fig_l3vpn">
-          <artwork><![CDATA[        
-                                            | L3SM 
-                                            V
-                                 +--------------------+
-                                 |  Super Controller  |
-                                 +--------------------+
-                                            |
-                            +-------------------------------+
-                            |                               |
-                            V                               V
-                         +--------+                   +--------+
-                         | DoCo#1 |                   | DoCo#2 |
-                         |        |                   |        |
-                         +--------+                   +--------+
+<artwork><![CDATA[        
+                                  | L3SM 
+                                  V
+                       +--------------------+
+                       |  Super Controller  |
+                       +--------------------+
+                                  |
+                  +-------------------------------+
+                  |                               |
+                  V                               V
+               +--------+                   +--------+
+               | DoCo#1 |                   | DoCo#2 |
+               |        |                   |        |
+               +--------+                   +--------+
 
-                   CE                                                   CE
-                    \     AS 100                          AS 200       /
-                     \                                               /
-                      A----B----C----ASBR1------ASBR2----D----E----F
-                     /    /    /       /          /     /    /    /
-                    /    /    /       /          /     /    /    / 
-             CE----G----H----I----ASBR3------ASBR4----J----K----L------CE    
+         CE                                                   CE
+          \     AS 100                          AS 200       /
+           \                                               /
+            A----B----C----ASBR1------ASBR2----D----E----F
+           /    /    /       /          /     /    /    /
+          /    /    /       /          /     /    /    / 
+   CE----G----H----I----ASBR3------ASBR4----J----K----L------CE    
 ]]></artwork></figure>                 
     </t>
     <t>Based on the user data in L3SM model, the network configurations need to be trickle down to the network device to setup the L3VPN.</t>
@@ -337,32 +337,150 @@
          
 ]]></artwork>
         </figure>
-
+    <t>Super Controller is responsible for setting the seamless MPLS service. It should break down the service model to network configuration model <xref target="RFC8309"/> and the domain controller further break it to the device configuration model to the PE/ASBR to make the E2E seamless MPLS service. The selection of appropriate ASBRs and handling of intra-domain tunnels is coordinated by the Super Controller in the similar fashion as shown in <xref target="sec_l3vpn"/>.</t>
+    <t>By enabling BGP sessions between Domain Controller and Super Controller, BGP labeled routes can also be learned at Super Controller. As super Controller is aware of the (abstract) topology, it could make intelligent decisions regarding E2E BGP LSP to optimize based on the overall traffic information.</t>
+    </section>
+    <section title="L2VPN and EVPN service" toc="default" anchor="sec_l2">
+    	<t>There are two fundamentally different kinds of Layer 2 VPN service
+   that a service provider could offer to a customer: Virtual Private
+   Wire Service (VPWS) and Virtual Private LAN Service (VPLS) <xref target="RFC4664"/>.
+   A VPWS is a VPN service that supplies an L2 point-to-point service. 
+   A VPLS is an L2 service that emulates LAN service across a Wide Area
+   Network (WAN). A BGP MPLS-based Ethernet VPN (EVPN) <xref target="RFC7432"/> addresses 
+   some of the limitations when it
+   comes to multihoming and redundancy, multicast optimization,
+   provisioning simplicity, flow-based load balancing, and multipathing etc. 
+   </t>
+   <t>The handling of L2VPN/EVPN service is done in a similar fashion as shown in <xref target="sec_l3vpn"/>.</t>
     </section>
    </section>  
 
    
-   <section title="Control Plane Considerations" toc="default" anchor="sec_cp">
-    <t></t>     
+    <section title="Possible Features/Extensions" toc="default" anchor="sec_ext">
+    <t>This sections list some of the possible features or protocol extensions that could be worked on to deploy HIC in a multi-domain packet network.
+    	<list style="numbers">
+    		<t>Simplify the initial configurations needed to setup the relationship between the super controller and the domain controllers. Note that 
+    			this could be done via exchanges during initial session establishment, discovery via other protocols, service discovery (such as DNS) etc.</t>
+    		<t>The (higher-level controller, lover-level controller) relationship or the the role of the controller. </t>	
+    		<t>The learning and handling of various capabilities of the Super Controller and Domain Controller. </t>
+    		<t>Handling of multiple instances of controller at each level for high availability.</t>
+    		<t>TBD</t>
+    	</list>
+    </t>     
     </section>  
 
-   <section title="Management Plane Considerations" toc="default" anchor="sec_mp">
-    <t></t>     
+<section title="Other Considerations" toc="default">
+   <section title="Control Plane" toc="default" anchor="sec_cp">
+    <section title="PCE / PCEP" toc="default" anchor="sec_pce">
+    <t>The Path Computation Element communication Protocol (PCEP) <xref target="RFC5440"/> provides
+   mechanisms for Path Computation Elements (PCEs) <xref target="RFC4655"/> to perform path
+   computations in response to Path Computation Clients (PCCs) requests.</t>
+   
+   <t>The ability to compute shortest constrained TE LSPs in Multiprotocol
+   Label Switching (MPLS) and Generalized MPLS (GMPLS) networks across
+   multiple domains has been identified as a key motivation for PCE
+   development.</t>
+   
+   <t>A stateful PCE <xref target="RFC8231"/> is capable of considering, for the purposes of
+   path computation, not only the network state in terms of links and
+   nodes (referred to as the Traffic Engineering Database or TED) but
+   also the status of active services (previously computed paths,
+   and currently reserved resources, stored in the Label Switched
+   Paths Database (LSPDB).</t>
+
+   <t><xref target="RFC8051"/> describes general considerations for
+   a stateful PCE deployment and examines its applicability and
+   benefits, as well as its challenges and limitations through a number
+   of use cases.</t>
+
+   <t><xref target="RFC8231"/> describes a set of extensions to PCEP to
+   provide stateful control.  A stateful PCE has access to not only the
+   information carried by the network's Interior Gateway Protocol (IGP),
+   but also the set of active paths and their reserved resources for its
+   computations.  The additional state allows the PCE to compute
+   constrained paths while considering individual LSPs and their
+   interactions.  <xref target="RFC8281"/> describes the setup,
+   maintenance and teardown of PCE-initiated LSPs under the stateful PCE
+   model.</t>
+
+   <t><xref target="RFC8231"/> also describes the active stateful PCE.
+   The active PCE functionality allows a PCE to reroute an existing
+   LSP or make changes to the attributes of an existing LSP, or a PCC to delegate
+   control of specific LSPs to a new PCE.</t>
+
+   <t>Computing paths across large multi-domain environments
+   require special computational components and cooperation between
+   entities in different domains capable of complex path computation.
+   The PCE provides an architecture and a set of functional components 
+   to address this problem space. A PCE may be used to compute 
+   end-to-end paths across multi-domain
+   environments using a per-domain path computation technique <xref target="RFC5152"/>.
+   The Backward recursive PCE based path computation (BRPC) mechanism
+   <xref target="RFC5441"/> defines a PCE-based path computation procedure to compute
+   inter-domain constrained  MPLS and
+   GMPLS TE networks. However,
+   both per-domain and BRPC techniques assume that the sequence of
+   domains to be crossed from source to destination is known, either
+   fixed by the network operator or obtained by other means.</t>
+   <t><xref target="RFC6805"/> describes a Hierarchical PCE (H-PCE)
+   architecture which can be used for computing end-to-end paths for
+   inter-domain MPLS Traffic Engineering (TE) and GMPLS Label Switched
+   Paths (LSPs) when the domain sequence is not known.  
+   Within the Hierarchical PCE (H-PCE) architecture, 
+   the Parent PCE (P-PCE) is used to compute a multi-domain
+   path based on the domain connectivity information.  A Child PCE
+   (C-PCE) may be responsible for a single domain or multiple domains,
+   it is used to compute the intra-domain path based on its domain
+   topology information.</t>
+   
+   <t><xref target="I-D.ietf-pce-stateful-hpce"/> state the considerations for stateful PCE(s) in
+   hierarchical PCE architecture.  In particular, the behavior changes
+   and additions to the existing stateful PCE mechanisms (including PCE-
+   initiated LSP setup and active PCE usage) in the context of networks
+   using the H-PCE architecture.</t> 
+   <t><xref target="I-D.ietf-pce-applicability-actn"/> examines the applicability of PCE/PCEP to the ACTN
+   framework in detail.</t>
+    </section>
+    <section title="BGP" toc="default" anchor="sec_bgp_cons">
+    	<t>[Editor's Note - TBD, maybe some one who is expert in BGP can add details on BGP-LS, BGP-Flowspec, RR handling, BGP Policy etc]</t>
+    </section>
     </section>  
 
-
-
+   <section title="Management Plane" toc="default" anchor="sec_mp">
+    <section title="YANG Models" toc="default" anchor="sec_Yang">
+    <t>This is an non-exhaustive list of possible yang models developed or in-development that could be used for HIC.
+    <list>
+    	<t>Topology: <xref target="I-D.ietf-i2rs-yang-network-topo"/> defines a generic YANG data model for
+        network topology. <xref target="I-D.ietf-teas-yang-te-topo"/> defines a YANG data model for representing, retrieving
+        and manipulating Traffic Engineering (TE) Topologies. </t>
+    	<t>Tunnel: <xref target="I-D.ietf-teas-yang-te"/> defines a YANG data model for the configuration and
+        management of Traffic Engineering (TE) interfaces, tunnels and Label
+        Switched Paths (LSPs).</t>
+    	<t>L3VPN: The Layer 3 service model (L3SM) is defined in <xref target="RFC8299"/>, which is a YANG data model that can be used for
+   communication between customers and network operators and to deliver
+   a Layer 3 provider-provisioned VPN service. <xref target="I-D.ietf-bess-l3vpn-yang"/> defines a YANG data model that can be used to configure
+   and manage BGP Layer 3 VPNs at the device. Note that a network configuration model at the Domain Controller level needs to be developed.</t>
+    	<t>L2VPN/EVPN: <xref target="I-D.ietf-l2sm-l2vpn-service-model"/> defines a YANG data model that can be used to configure
+   a Layer 2 Provider Provisioned VPN service. This model is intended to be instantiated at management system to
+   deliver the overall service. <xref target="I-D.ietf-bess-l2vpn-yang"/> and <xref target="I-D.ietf-bess-evpn-yang"/> defines a YANG data model to 
+   configure and manage L2VPN and EVPN service respectively. Note that a network configuration model at the Domain Controller level needs to be developed.</t>
+    	<t>OAM: TBD</t>
+    </list>	
+    </t>
+    <t>[Editor's Note - the above list should be extended.]</t>
+    </section>     
+    <section title="Protocol Considerations" toc="default" anchor="sec_netconf">
+    <t>The Network Configuration Protocol (NETCONF) <xref target="RFC6241"/> provides mechanisms to install, manipulate, and delete the
+   configuration of network devices. The RESTCONF <xref target="RFC8040"/> describes an HTTP-based protocol that provides a
+   programmatic interface for accessing data defined in YANG, using the
+   datastore concepts defined in NETCONF. </t>
+   <t>Some other mechanism like gRPC/gNMI could also be used between controllers using the same YANG data models.</t>	
+    </section>
+    </section>  
+    </section>
     <section title="IANA Considerations" toc="default" anchor="sec_iana">
     <t>There are no IANA concerns in this document.</t>     
     </section>  
-    
-    <!--<section title="Allocation Policy" toc="default">
-    <t>The allocation policy for the IANA request in <xref target="sec_iana"/> is "Experimental".
-    As per <xref target="RFC8126"/>, IANA does not record specific assignments for any particular use for this policy.</t>
-    
-    <t>As the experiment/standard progress and an early IANA allocation or RFC publication happens, the IANA defined codepoints are used 
-    and experimental code points are freed up.</t>
-    </section>  -->
     
     
     <section title="Security Considerations" toc="default">
@@ -388,32 +506,38 @@
      <?rfc include="reference.RFC.4271.xml"?>
      <?rfc include="reference.RFC.4456.xml"?>
      <?rfc include="reference.RFC.4655.xml" ?>
+     <?rfc include="reference.RFC.4664.xml" ?>
+     <?rfc include="reference.RFC.5152.xml"?>
      <?rfc include="reference.RFC.5305.xml"?>
      <?rfc include="reference.RFC.5440.xml"?>
+     <?rfc include="reference.RFC.5441.xml"?>
      <?rfc include="reference.RFC.6241.xml"?>
      <?rfc include="reference.RFC.6805.xml"?>
+     <?rfc include="reference.RFC.7432.xml" ?>
      <?rfc include="reference.RFC.7491.xml" ?>
      <?rfc include="reference.RFC.7752.xml" ?>
      <?rfc include="reference.RFC.7926.xml" ?>
      <?rfc include="reference.RFC.8040.xml"?>
+     <?rfc include="reference.RFC.8051.xml"?>
      <?rfc include="reference.RFC.8231.xml"?>
      <?rfc include="reference.RFC.8281.xml"?>
      <?rfc include="reference.RFC.8299.xml"?>
      <?rfc include="reference.RFC.8309.xml"?>
      <?rfc include="reference.I-D.ietf-teas-actn-yang.xml"?>
      <?rfc include="reference.I-D.ietf-pce-applicability-actn.xml"?>
+     <?rfc include="reference.I-D.ietf-teas-yang-te.xml"?>
      <?rfc include="reference.I-D.ietf-teas-yang-te-topo.xml"?>
      <?rfc include="reference.I-D.ietf-i2rs-yang-network-topo.xml"?>
      <?rfc include="reference.I-D.ietf-pce-stateful-hpce.xml"?>
-     <?rfc include="reference.I-D.ietf-teas-yang-te.xml"?>
      <?rfc include="reference.I-D.ietf-teas-yang-path-computation.xml"?>
      <?rfc include="reference.I-D.ietf-mpls-seamless-mpls.xml"?>
+     <?rfc include="reference.I-D.ietf-bess-evpn-yang.xml"?>
+     <?rfc include="reference.I-D.ietf-bess-l2vpn-yang.xml"?>
+     <?rfc include="reference.I-D.ietf-bess-l3vpn-yang.xml"?>
+     <?rfc include="reference.I-D.ietf-l2sm-l2vpn-service-model.xml"?>
      <?rfc include="reference.I-D.dhodylee-pce-pcep-ls.xml"?>
      <?rfc include="reference.I-D.lee-teas-te-service-mapping-yang.xml"?>
     </references>
-    <section title="A" toc="default">
-    <t>
-    </t>
-    </section>
+    
   </back>
 </rfc>
