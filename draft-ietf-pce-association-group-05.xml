@@ -289,7 +289,7 @@
    <t>The PCEP OP-CONF-ASSOC-RANGE TLV has the following format:</t>
      <figure anchor="OP-CONF-ASSOC-RANGE" title="The OP-CONF-ASSOC-RANGE TLV format">
      <artwork><![CDATA[
-   TYPE:    TBD
+   TYPE:    29 (Early allocation by IANA)
    LENGTH:  N * 8 (where N is the number of association types)
    VALUE:   
 
@@ -314,8 +314,8 @@
    <t>Reserved (2 bytes): This field MUST be set to 0 on
    transmission and MUST be ignored on receipt.</t>
    <t>Assoc-type (2 bytes): The association type.</t>
-   <t>Start-Assoc-ID (2 bytes): The start association identifier for the Operator-configured Association Range for the particular association type.</t>
-   <t>Range (2 bytes): The number of associations marked for the Operator-configured Associations.</t>
+   <t>Start-Assoc-ID (2 bytes): The start association identifier for the Operator-configured Association Range for the particular association type. The values 0 and 0xFFFF MUST NOT be used.</t>
+   <t>Range (2 bytes): The number of associations marked for the Operator-configured Associations. The Range MUST be greater than 0, and it MUST be such that (Start-Assoc-ID + Range) cross the association identifer range 0xFFFF.</t>
 </list></t>
 <section title="Procedure">
    <t>A PCEP speaker MAY include an OP-CONF-ASSOC-RANGE TLV within an OPEN object in an Open
@@ -329,12 +329,19 @@
    <t>As specified in <xref target="RFC5440"/>, a PCEP peer that does not recognize the
    OP-CONF-ASSOC-RANGE TLV will silently ignore it.</t>
 
-   <t>The Operator-configured Association Range SHOULD be included for each association type that could be both dynamic and operator-configured. For association types that are only dynamic or only operator-configured, this TLV can be skipped, in which case the full range of association identifier is considered dynamic or operator-configured respectively. 
+   <t>The Operator-configured Association Range SHOULD be included for each association type that could be both dynamic and operator-configured. For association types that are only dynamic or only operator-configured, this TLV MAY be skipped, in which case the full range of association identifier is considered dynamic or operator-configured respectively. 
     Each association type (that are defined in separate documents) can specify the default value for the operator-configured association range for their respective association type. </t>
 
    <t>The absence of the OP-CONF-ASSOC-RANGE TLV in an OPEN object MUST be
    interpreted as an absence of explicit Operator-configured Association Range at the PCEP peer. 
    In which case, the default behavior as per each association type would be applied.</t> 
+
+   <t>If the Assoc-Type is not recognized or supported by the PCEP speaker, it MUST ignore that respective Start-Assoc-ID and Range. If the Start-Assoc-ID or Range are set incorrectly, the PCEP
+   session MUST be rejected with error type 1 and error value 1 (PCEP
+   session establishment failure / Reception of an invalid Open
+   message). The PCEP speaker originating OP-CONF-ASSOC-RANGE TLV MUST NOT carry operlapping range for an association-type. If a PCEP peer receives overlapping range it MUST consider the Open message malformed and MUST reject the PCEP session with error type 1 and error value 1 (PCEP
+   session establishment failure / Reception of an invalid Open
+   message). </t>
 </section>
     </section>
     <section anchor="association" title="ASSOCIATION Object">
@@ -346,7 +353,7 @@
         and their memberships are defined using a new ASSOCIATION object.
       </t>
 
-    <t>ASSOCIATION Object-Class is to be assigned by IANA (TBD).</t>
+    <t>ASSOCIATION Object-Class is 40 (Early allocation by IANA).</t>
     <t> ASSOCIATION Object-Type is 1 for IPv4 and its format is shown in
     <xref target="Association-Object-Fmt1"/>:</t>
 
@@ -408,15 +415,17 @@
     </t>
 
     <t> Association ID (2-byte): the identifier of the association group.  When combined
-    with Type and Association Source, this value uniquely identifies an association group.
+    with Association Type and Association Source, this value uniquely identifies an association group.
     The value 0xffff and 0x0 are reserved. The value 0xffff is used to indicate
     all association groups.
     </t>
 
 
-    <t> Association Source: 4 or 16 bytes - An IPv4 or IPv6 address. This could be the IP
+    <t> <!--Association Source: 4 or 16 bytes - An IPv4 or IPv6 address. This could be the IP
         address of the PCEP speaker that created a dynamic association, an operator configured IP address, or an IP
-        address selected as per the local policy. The value such as 0.0.0.0 or ::/128 are acceptable.
+        address selected as per the local policy. The value such as 0.0.0.0 or ::/128 are acceptable.-->
+        Association Source: 4 or 16 bytes - A valid IPv4 or IPv6 address that provides scoping for the Association ID.
+        See <xref target="Rules"/> for details. 
     </t>
 
     <t> Optional TLVs: The optional TLVs follow the PCEP TLV format
@@ -425,7 +434,8 @@
 
     <section anchor="Global-association-src" title="Global Association Source TLV">
 
-      <t> The Global Association Source TLV is an optional TLV for use in the Association Object.
+      <t> The Global Association Source TLV is an optional TLV for use in the Association Object. 
+        The meaning and the usage is as per <xref target="RFC6780"/>.
       </t>
 
    <figure anchor="Global-Association-Object-Fmt1" title="The Global Association Source TLV  format">
@@ -453,7 +463,7 @@
     <section anchor="EXT-association" title="Extended Association ID TLV">
 
       <t> The Extended Association ID TLV is an optional TLV for use in
-      the Association Object.
+      the Association Object. The meaning and the usage is as per <xref target="RFC6780"/>.
       </t>
 
    <figure anchor="Ext-id-Object-Fmt1" title="The Extended Association ID  TLV  format">
@@ -475,7 +485,9 @@
     <t> Extended Association ID: as defined in <xref target="RFC6780"/>. </t>
 
     </section>
-
+    <section title="Unique Identification for an Association Group">
+    <t>The combination of the mandatory fields Association type, Association ID and Association Source in the ASSOCIATION object uniquely identify the association group. If the optional TLVs - Global Association Source or Extended Association ID are also included, than they MUST be included in combination with mandatory fields to uniquely identifying the association group. </t>
+    </section>
     </section> <!-- Object Definition -->
     <section title="Relationship with the RSVP ASSOCIATION">
         <t>The format of PCEP ASSOCIATION Object defined in this document, is aligned with the RSVP ASSOCIATION object (<xref target="RFC6780"/>). Various Association-Types related to RSVP association 
@@ -593,8 +605,8 @@ Where:
 
    </t>
    <t>
-   The PCReq message is defined in [RFC5440] and updated in
-   [RFC8231], it is further updated below for
+   The PCReq message is defined in <xref target="RFC5440"/>  and updated in
+   <xref target="RFC8231"/> , it is further updated below for
    association:
    </t>
 
@@ -628,6 +640,42 @@ Where:
 
     </t>
     </section>
+    <section  title="Reply Message">
+<t>
+    In case of passive stateful or stateless PCE, the ASSOCIATION Object
+    is OPTIONAL and MAY be carried in the Path Computation Reply
+   (PCRep) message with the NO-PATH object. The ASSOCIATION indicates the 
+   association group that cause the PCE to fail to find a path.
+   </t>
+   <t>
+   The PCRep message is defined in <xref target="RFC5440"/>  and updated in
+   <xref target="RFC8231"/> , it is further updated below for
+   association:
+   </t>
+
+    <figure>
+      <artwork><![CDATA[
+<PCRep Message> ::= <Common Header>
+                    <response-list>
+Where:
+
+<response-list>::=<response>[<response-list>]
+
+<response>::=<RP>
+             [<LSP>]
+             [<NO-PATH>]
+             [<association-list>]
+             [<attribute-list>]
+             [<path-list>]
+
+Where:
+      <association-list> ::= <ASSOCIATION> [<association-list>]
+    ]]></artwork>
+    </figure>
+    <t>
+   Note that LSP object MAY be present for the passive stateful PCE mode.
+    </t>      
+    </section>
     </section> <!-- Object Encoding -->
 
     <section  anchor="Rules" title="Processing Rules">
@@ -640,7 +688,7 @@ Where:
     another peer.-->
     If a
     PCEP speaker does not recognize the ASSOCIATION object, it will return a PCErr
-    message with Error-Type  "Unknown Object" as described in [RFC5440].
+    message with Error-Type  "Unknown Object" as described in <xref target="RFC5440"/> .
     If a
     PCEP speaker understand the ASSOCIATION object but does not support the association-type,
     it MUST return a PCErr
@@ -678,7 +726,7 @@ Where:
     If a PCE
     peer is unwilling or unable to process the ASSOCIATION object, it MUST return a
     PCErr message with the Error-Type "Not supported object" and follow the relevant
-    procedures described in [RFC5440].
+    procedures described in <xref target="RFC5440"/> .
     On receiving a PCEP
     message with ASSOCIATION, if a
     PCEP speaker could not add the LSP to the association group for any reason, it MUST
@@ -761,7 +809,7 @@ Where:
           <ttcol align="left" width='50%'>Name </ttcol>
           <ttcol align="left">Reference </ttcol>
           <c></c><c>&nbsp;&nbsp;&nbsp;&nbsp;</c><c></c>
-          <c>TBD</c><c>Association</c><c>[This I-D]</c>
+          <c>40 (Early allocation by IANA)</c><c>Association</c><c>[This I-D]</c>
           <c></c><c>Object-Type</c><c></c>
           <c></c><c>&nbsp;&nbsp;&nbsp;&nbsp;0: Reserved </c><c></c>
           <c></c><c>&nbsp;&nbsp;&nbsp;&nbsp;1: IPv4 </c><c></c>
@@ -777,9 +825,9 @@ Where:
           <ttcol align="center" width='20%'>Value</ttcol>
           <ttcol align="left" width='40%'>Meaning </ttcol>
           <ttcol align="left" width='40%'>Reference </ttcol>
-          <c>TBD</c><c>&nbsp;Operator-configured Association Range</c><c>[This I-D]</c>
-          <c>TBD</c><c>&nbsp;Global Association Source</c><c>[This I-D]</c>
-          <c>TBD</c><c>&nbsp;Extended Association Id</c><c>[This I-D]</c>
+          <c>29 (Early allocation by IANA)</c><c>&nbsp;Operator-configured Association Range</c><c>[This I-D]</c>
+          <c>30 (Early allocation by IANA)</c><c>&nbsp;Global Association Source</c><c>[This I-D]</c>
+          <c>31 (Early allocation by IANA)</c><c>&nbsp;Extended Association Id</c><c>[This I-D]</c>
         </texttable>
     </section>
     <section title="Association Flags">
@@ -839,9 +887,9 @@ Where:
 <![CDATA[
     Error-Type  Meaning
        26       Association Error [This I-D]
-                Error-value=0:
-                   Unassigned
-                Error-value=1:
+    (early      Error-value=0:
+    alloc by       Unassigned
+    IANA)       Error-value=1:
                    Association-type is not supported
                 Error-value=2:
                   Too many LSPs in the association group
@@ -879,6 +927,9 @@ Where:
    Security (TLS) <xref target="RFC8253"/>, as per the recommendations and
    best current practices in <xref target="RFC7525"/>, is RECOMMENDED.
   </t>
+  <t>Much of the information carried in the ASSOCIATION object, as per this document is not extra sensitive. It often reflects information
+    that can also be derived from the LSP Database, but association provides a much easier grouping of related LSPs and messages. Implementations 
+    and operator can and should use indirect values in ASSOCIATION as a way to hide any sensitive business relationships.</t>
    </section>
 <section title="Manageability Considerations" toc="default">
  <t>
