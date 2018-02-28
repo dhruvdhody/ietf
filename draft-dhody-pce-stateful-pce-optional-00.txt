@@ -1,0 +1,336 @@
+
+
+
+
+PCE Working Group                                          D. Dhody, Ed.
+Internet-Draft                                       Huawei Technologies
+Intended status: Standards Track                            S. Litkowski
+Expires: September 1, 2018                                        Orange
+                                                       February 28, 2018
+
+
+        Extension for Stateful PCE to identify Optional Objects.
+                draft-dhody-pce-stateful-pce-optional-00
+
+Abstract
+
+   This document introduces a mechanism to mark some Path Computation
+   Element (PCE) Communication Protocol (PCEP) objects as optional
+   during PCEP messages exchange for the Stateful PCE model.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on September 1, 2018.
+
+Copyright Notice
+
+   Copyright (c) 2018 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+Dhody & Litkowski       Expires September 1, 2018               [Page 1]
+
+Internet-Draft                STATEFUL-OPT                 February 2018
+
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
+   2.  Motivation  . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   4.  PCEP Extention  . . . . . . . . . . . . . . . . . . . . . . .   3
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   3
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   3
+     6.1.  PCEP TLV Type Indicators  . . . . . . . . . . . . . . . .   3
+   7.  Manageability Considerations  . . . . . . . . . . . . . . . .   4
+     7.1.  Control of Function and Policy  . . . . . . . . . . . . .   4
+     7.2.  Information and Data Models . . . . . . . . . . . . . . .   4
+     7.3.  Liveness Detection and Monitoring . . . . . . . . . . . .   4
+     7.4.  Verify Correct Operations . . . . . . . . . . . . . . . .   4
+     7.5.  Requirements On Other Protocols . . . . . . . . . . . . .   4
+     7.6.  Impact On Network Operations  . . . . . . . . . . . . . .   4
+   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   4
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .   5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
+
+1.  Introduction
+
+   [RFC5440] describes the Path Computation Element communication
+   Protocol (PCEP) which enables the communication between a Path
+   Computation Client (PCC) and a Path Control Element (PCE), or between
+   two PCEs based on the PCE architecture [RFC4655].
+
+   PCEP Extensions for Stateful PCE Model [RFC8231] describes a set of
+   extensions to PCEP to enable active control of Multiprotocol Label
+   Switching Traffic Engineering (MPLS-TE) and Generalzied MPLS (GMPLS)
+   tunnels.  [RFC8281] describes the setup and teardown of PCE-initiated
+   LSPs under the active stateful PCE model, without the need for local
+   configuration on the PCC, thus allowing for a dynamic network.
+
+   [RFC5440] defined P flag as part of Common Object Header to allow a
+   PCC to specify in a PCReq message sent to a PCE whether the object
+   must be taken into account by the PCE during path computation or is
+   just optional.  The I flag is used by a PCE in a PCRep message to
+   indicate to a PCC whether or not an optional object was processed.
+   Stateful PCE [RFC8231] specified that P and I flags of the PCEP
+   objects defined in [RFC8231] MUST be set to 0 on transmission and
+   SHOULD be ignored on receipt since they are exclusively related to
+   path computation requests.  The behavior for P and I flag in other
+   objects defined in [RFC5440] and other extension was not specified.
+   This document clarifies how the P and I flag could be used in
+
+
+
+Dhody & Litkowski       Expires September 1, 2018               [Page 2]
+
+Internet-Draft                STATEFUL-OPT                 February 2018
+
+
+   stateful PCE model to identify optional objects in the Path
+   Computation State Report (PCRpt), the Path Computation Update Request
+   (PCUpd) and the LSP Initiate Request (PCInitiate) message.
+
+1.1.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+2.  Motivation
+
+   The stateful PCE introduces following new messages:
+
+      Path Computation State Report (PCRpt):
+
+3.  Overview
+
+4.  PCEP Extention
+
+5.  Security Considerations
+
+   This document defines one new type for association, which do not add
+   any new security concerns beyond those discussed in [RFC5440],
+   [RFC8231] and [I-D.ietf-pce-association-group] in itself.
+
+   Some deployments may find policy associations and their implications
+   as extra sensitive and thus should employ suitable PCEP security
+   mechanisms like [RFC8253].  Also extra care needs to be taken by the
+   implementation with respect to POLICY-PARAMETERS-TLV while decoding,
+   verifying and applying these policy variables.
+
+6.  IANA Considerations
+
+6.1.  PCEP TLV Type Indicators
+
+   The following TLV Type Indicator values are requested within the
+   "PCEP TLV Type Indicators" subregistry of the "Path Computation
+   Element Protocol (PCEP) Numbers" registry:
+
+   Value     Description                 Reference
+
+   TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
+
+
+
+
+
+
+Dhody & Litkowski       Expires September 1, 2018               [Page 3]
+
+Internet-Draft                STATEFUL-OPT                 February 2018
+
+
+7.  Manageability Considerations
+
+7.1.  Control of Function and Policy
+
+   An operator MUST be allowed to configure the policy associations at
+   PCEP peers and associate it with the LSPs.  They MAY also allow
+   configuration to related policy parameters, in which case the an
+   operator MUST also be allowed to set the encoding format and order to
+   parse the associated policy parameters TLV.
+
+7.2.  Information and Data Models
+
+   An implementation SHOULD allow the operator to view the PAG
+   configured.  Further implementation SHOULD allow to view the current
+   set of LSPs in the PAG.  To serve this purpose, the PCEP YANG module
+   [I-D.ietf-pce-pcep-yang] includes association groups and can be used
+   for PAG.
+
+7.3.  Liveness Detection and Monitoring
+
+   Mechanisms defined in this document do not imply any new liveness
+   detection and monitoring requirements in addition to those already
+   listed in [RFC5440].
+
+7.4.  Verify Correct Operations
+
+   Mechanisms defined in this document do not imply any new operation
+   verification requirements in addition to those already listed in
+   [RFC5440].
+
+7.5.  Requirements On Other Protocols
+
+   Mechanisms defined in this document do not imply any new requirements
+   on other protocols.
+
+7.6.  Impact On Network Operations
+
+   Mechanisms defined in this document do not have any impact on network
+   operations in addition to those already listed in [RFC5440].
+
+8.  Acknowledgments
+
+   A special thanks to author of [I-D.ietf-pce-association-group], this
+   document borrow some of the text from it.
+
+
+
+
+
+
+
+Dhody & Litkowski       Expires September 1, 2018               [Page 4]
+
+Internet-Draft                STATEFUL-OPT                 February 2018
+
+
+9.  References
+
+9.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
+              Element (PCE) Communication Protocol (PCEP)", RFC 5440,
+              DOI 10.17487/RFC5440, March 2009,
+              <https://www.rfc-editor.org/info/rfc5440>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for Stateful PCE", RFC 8231,
+              DOI 10.17487/RFC8231, September 2017,
+              <https://www.rfc-editor.org/info/rfc8231>.
+
+   [I-D.ietf-pce-association-group]
+              Minei, I., Crabbe, E., Sivabalan, S., Ananthakrishnan, H.,
+              Dhody, D., and Y. Tanaka, "PCEP Extensions for
+              Establishing Relationships Between Sets of LSPs", draft-
+              ietf-pce-association-group-04 (work in progress), August
+              2017.
+
+9.2.  Informative References
+
+   [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
+              Element (PCE)-Based Architecture", RFC 4655,
+              DOI 10.17487/RFC4655, August 2006,
+              <https://www.rfc-editor.org/info/rfc4655>.
+
+   [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
+              "PCEPS: Usage of TLS to Provide a Secure Transport for the
+              Path Computation Element Communication Protocol (PCEP)",
+              RFC 8253, DOI 10.17487/RFC8253, October 2017,
+              <https://www.rfc-editor.org/info/rfc8253>.
+
+
+
+
+
+
+
+
+Dhody & Litkowski       Expires September 1, 2018               [Page 5]
+
+Internet-Draft                STATEFUL-OPT                 February 2018
+
+
+   [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for PCE-Initiated LSP Setup in a Stateful PCE
+              Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
+              <https://www.rfc-editor.org/info/rfc8281>.
+
+   [I-D.ietf-pce-pcep-yang]
+              Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
+              YANG Data Model for Path Computation Element
+              Communications Protocol (PCEP)", draft-ietf-pce-pcep-
+              yang-06 (work in progress), January 2018.
+
+Authors' Addresses
+
+   Dhruv Dhody (editor)
+   Huawei Technologies
+   Divyashree Techno Park, Whitefield
+   Bangalore, Karnataka  560066
+   India
+
+   EMail: dhruv.ietf@gmail.com
+
+
+   Stephane Litkowski
+   Orange
+
+   EMail: stephane.litkowski@orange.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Dhody & Litkowski       Expires September 1, 2018               [Page 6]
