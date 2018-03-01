@@ -76,18 +76,17 @@ Table of Contents
      3.4.  Unknown Object Handling . . . . . . . . . . . . . . . . .   6
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-     5.1.  PCEP TLV Type Indicators  . . . . . . . . . . . . . . . .   6
-   6.  Manageability Considerations  . . . . . . . . . . . . . . . .   6
-     6.1.  Control of Function and Policy  . . . . . . . . . . . . .   6
+     5.1.  STATEFUL-PCE-CAPABILITY TLV . . . . . . . . . . . . . . .   6
+   6.  Manageability Considerations  . . . . . . . . . . . . . . . .   7
+     6.1.  Control of Function and Policy  . . . . . . . . . . . . .   7
      6.2.  Information and Data Models . . . . . . . . . . . . . . .   7
      6.3.  Liveness Detection and Monitoring . . . . . . . . . . . .   7
      6.4.  Verify Correct Operations . . . . . . . . . . . . . . . .   7
      6.5.  Requirements On Other Protocols . . . . . . . . . . . . .   7
      6.6.  Impact On Network Operations  . . . . . . . . . . . . . .   7
-   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
@@ -106,6 +105,7 @@ Table of Contents
 
    [RFC5440] defined P flag (Processing-Rule) as part of Common Object
    Header to allow a PCC to specify in a PCReq message sent to a PCE
+   whether the object must be taken into account by the PCE during path
 
 
 
@@ -114,7 +114,6 @@ Dhody & Litkowski       Expires September 2, 2018               [Page 2]
 Internet-Draft                STATEFUL-OPT                    March 2018
 
 
-   whether the object must be taken into account by the PCE during path
    computation or is just optional.  The I flag (Ignore) is used by a
    PCE in a PCRep message to indicate to a PCC whether or not an
    optional object was processed.  Stateful PCE [RFC8231] specified that
@@ -162,6 +161,7 @@ Internet-Draft                STATEFUL-OPT                    March 2018
    set) for the Path Delay Variation metric [RFC8233].  In some
    scenarios it would be useful to state that this limiting constraint
    can be relaxed by the PCE, in case it cannot find a path.  Similarly
+   in case of an association groups [I-D.ietf-pce-association-group]
 
 
 
@@ -170,7 +170,6 @@ Dhody & Litkowski       Expires September 2, 2018               [Page 3]
 Internet-Draft                STATEFUL-OPT                    March 2018
 
 
-   in case of an association groups [I-D.ietf-pce-association-group]
    such as Disjoint Association [I-D.ietf-pce-association-diversity],
    the PCE may need to completely relax the disjointness constraint in
    order to provide a path to all the LSPs that are part of the
@@ -218,6 +217,7 @@ Internet-Draft                STATEFUL-OPT                    March 2018
    When the P flag is set, the object MUST be taken into account by the
    PCE.  Conversely, when the P flag is cleared, the object is optional
    and the PCE is free to ignore it.  The P flag for the mandatory
+   objects LSP and ERO (intended path) MUST be set in the PCRpt message.
 
 
 
@@ -226,7 +226,6 @@ Dhody & Litkowski       Expires September 2, 2018               [Page 4]
 Internet-Draft                STATEFUL-OPT                    March 2018
 
 
-   objects LSP and ERO (intended path) MUST be set in the PCRpt message.
    If the mandatory object is received with the P flag set incorrectly
    according to the rules stated above, the receiving peer MUST send a
    PCErr message with Error-Type=10 (Reception of an invalid object) and
@@ -277,6 +276,7 @@ Internet-Draft                STATEFUL-OPT                    March 2018
 
 
 
+
 Dhody & Litkowski       Expires September 2, 2018               [Page 5]
 
 Internet-Draft                STATEFUL-OPT                    March 2018
@@ -293,41 +293,41 @@ Internet-Draft                STATEFUL-OPT                    March 2018
 
    This document updates the handling of unknown objects in stateful
    PCEP messages as per the setting of P flag in the common object
-   header in the same way as [RFC8231].
+   header in a similar way as [RFC5440], i.e. if a PCEP speaker does not
+   understand an object with the P flag set or understands the object
+   but decides to ignore the object, the entire stateful PCEP message
+   MUST be rejected and the PCE MUST send a PCErr message with Error-
+   Type="Unknown Object" or "Not supported Object" [RFC5440].  In case
+   the P flag is not set, the PCEP speaker is free to ignore the object
+   and continue with the message processing as defined.
+
+   [RFC8231] defined LSP Error Code TLV to be carried in PCRpt message
+   in the LSP object to convey error information.  This document does
+   not change that impact that procedure.
 
 4.  Security Considerations
 
-   This document defines one new type for association, which do not add
-   any new security concerns beyond those discussed in [RFC5440],
-   [RFC8231] and [I-D.ietf-pce-association-group] in itself.
+   This documents clarifies how the already existing P and I flag in
+   PCEP common object header could be used during stateful PCEP
+   exchanges.  It updates the unknown object error handling in statefule
+   PCEP message exchange.  These changes on its own do not add any new
+   security concerns.  The security considerations identified in
+   [RFC5440], [RFC8231], and [RFC8281].
 
-   Some deployments may find policy associations and their implications
-   as extra sensitive and thus should employ suitable PCEP security
-   mechanisms like [RFC8253].  Also extra care needs to be taken by the
-   implementation with respect to POLICY-PARAMETERS-TLV while decoding,
-   verifying and applying these policy variables.
+   As stated in [RFC6952], PCEP implementations SHOULD support the TCP-
+   AO [RFC5925] and not use TCP MD5 because of TCP MD5's known
+   vulnerabilities and weakness.  PCEP also support Transport Layer
+   Security (TLS) [RFC8253] as per the recommendations and best current
+   practices in [RFC7525].
 
 5.  IANA Considerations
 
-5.1.  PCEP TLV Type Indicators
+5.1.  STATEFUL-PCE-CAPABILITY TLV
 
-   The following TLV Type Indicator values are requested within the
-   "PCEP TLV Type Indicators" subregistry of the "Path Computation
-   Element Protocol (PCEP) Numbers" registry:
-
-   Value     Description                 Reference
-
-   TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
-
-6.  Manageability Considerations
-
-6.1.  Control of Function and Policy
-
-   An operator MUST be allowed to configure the policy associations at
-   PCEP peers and associate it with the LSPs.  They MAY also allow
-   configuration to related policy parameters, in which case the an
-   operator MUST also be allowed to set the encoding format and order to
-   parse the associated policy parameters TLV.
+   [RFC8231] defines the STATEFUL-PCE-CAPABILITY TLV; per that RFC, IANA
+   created a registry to manage the value of the STATEFUL-PCE-CAPABILITY
+   TLV's Flag field.  IANA has allocated a new bit in the STATEFUL-PCE-
+   CAPABILITY TLV Flag Field registry, as follows:
 
 
 
@@ -338,13 +338,24 @@ Dhody & Litkowski       Expires September 2, 2018               [Page 6]
 Internet-Draft                STATEFUL-OPT                    March 2018
 
 
+   Bit       Description                 Reference
+   -------------------------------------------------
+   TBD1      RELAX bit                   [This I.D.]
+
+6.  Manageability Considerations
+
+6.1.  Control of Function and Policy
+
+   An operator MUST be allowed to configure the capability to support
+   relaxation of constraints in the stateful PCEP message exchange.
+   They SHOULD also allow configuration of related LSP contraints (or
+   parameters) that are optional to process.
+
 6.2.  Information and Data Models
 
-   An implementation SHOULD allow the operator to view the PAG
-   configured.  Further implementation SHOULD allow to view the current
-   set of LSPs in the PAG.  To serve this purpose, the PCEP YANG module
-   [I-D.ietf-pce-pcep-yang] includes association groups and can be used
-   for PAG.
+   An implementation SHOULD allow the operator to view the capability
+   defined in this document.  To serve this purpose, the PCEP YANG
+   module [I-D.ietf-pce-pcep-yang] could be extended.
 
 6.3.  Liveness Detection and Monitoring
 
@@ -368,14 +379,20 @@ Internet-Draft                STATEFUL-OPT                    March 2018
    Mechanisms defined in this document do not have any impact on network
    operations in addition to those already listed in [RFC5440].
 
-7.  Acknowledgments
+7.  References
 
-   A special thanks to author of [I-D.ietf-pce-association-group], this
-   document borrow some of the text from it.
+7.1.  Normative References
 
-8.  References
 
-8.1.  Normative References
+
+
+
+
+
+Dhody & Litkowski       Expires September 2, 2018               [Page 7]
+
+Internet-Draft                STATEFUL-OPT                    March 2018
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -387,13 +404,6 @@ Internet-Draft                STATEFUL-OPT                    March 2018
               DOI 10.17487/RFC5440, March 2009,
               <https://www.rfc-editor.org/info/rfc5440>.
 
-
-
-Dhody & Litkowski       Expires September 2, 2018               [Page 7]
-
-Internet-Draft                STATEFUL-OPT                    March 2018
-
-
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -404,18 +414,41 @@ Internet-Draft                STATEFUL-OPT                    March 2018
               DOI 10.17487/RFC8231, September 2017,
               <https://www.rfc-editor.org/info/rfc8231>.
 
-8.2.  Informative References
+7.2.  Informative References
 
    [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
               Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
               <https://www.rfc-editor.org/info/rfc4655>.
 
+   [RFC5925]  Touch, J., Mankin, A., and R. Bonica, "The TCP
+              Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
+              June 2010, <https://www.rfc-editor.org/info/rfc5925>.
+
+   [RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of
+              BGP, LDP, PCEP, and MSDP Issues According to the Keying
+              and Authentication for Routing Protocols (KARP) Design
+              Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,
+              <https://www.rfc-editor.org/info/rfc6952>.
+
+   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "Recommendations for Secure Use of Transport Layer
+              Security (TLS) and Datagram Transport Layer Security
+              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
+              2015, <https://www.rfc-editor.org/info/rfc7525>.
+
    [RFC8233]  Dhody, D., Wu, Q., Manral, V., Ali, Z., and K. Kumaki,
               "Extensions to the Path Computation Element Communication
               Protocol (PCEP) to Compute Service-Aware Label Switched
               Paths (LSPs)", RFC 8233, DOI 10.17487/RFC8233, September
               2017, <https://www.rfc-editor.org/info/rfc8233>.
+
+
+
+Dhody & Litkowski       Expires September 2, 2018               [Page 8]
+
+Internet-Draft                STATEFUL-OPT                    March 2018
+
 
    [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
               "PCEPS: Usage of TLS to Provide a Secure Transport for the
@@ -442,14 +475,6 @@ Internet-Draft                STATEFUL-OPT                    March 2018
               association-diversity-03 (work in progress), February
               2018.
 
-
-
-
-Dhody & Litkowski       Expires September 2, 2018               [Page 8]
-
-Internet-Draft                STATEFUL-OPT                    March 2018
-
-
    [I-D.ietf-pce-association-group]
               Minei, I., Crabbe, E., Sivabalan, S., Ananthakrishnan, H.,
               Dhody, D., and Y. Tanaka, "PCEP Extensions for
@@ -472,31 +497,6 @@ Authors' Addresses
    Orange
 
    EMail: stephane.litkowski@orange.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

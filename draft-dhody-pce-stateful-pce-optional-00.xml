@@ -189,32 +189,38 @@
     </section>
 </section>
 <section title="Unknown Object Handling" toc="default">
-  <t>This document updates the handling of unknown objects in stateful PCEP messages as per the setting of P flag in the common object header in the same way as <xref target="RFC8231"/>.</t>
+  <t>This document updates the handling of unknown objects in stateful PCEP messages as per the setting of P flag in the common object header in a similar way as <xref target="RFC5440"/>, i.e. if a PCEP speaker does not understand an object with the P flag set or
+   understands the object but decides to ignore the object, the entire
+   stateful PCEP message MUST be rejected and the PCE MUST send a PCErr message
+   with Error-Type="Unknown Object" or "Not supported Object" <xref target="RFC5440"/>. In case the P flag is not set, the PCEP speaker is free to ignore the object and continue with the message processing as defined. </t>
+   <t><xref target="RFC8231"/> defined LSP Error Code TLV to be carried in PCRpt message in the LSP object
+   to convey error information. This document does not change that impact that procedure. </t>
   </section>
 </section>
 
 
     <section title="Security Considerations" toc="default">
-      <t>This document defines one new type for association, which do not add any new
-      security concerns beyond those discussed in <xref target="RFC5440"/>,
-      <xref target='RFC8231'/> and <xref target='I-D.ietf-pce-association-group'/> in itself.</t>
-      <t> Some deployments may find policy associations and their implications
-        as extra sensitive
-      and thus should employ suitable PCEP security mechanisms like <xref target='RFC8253'/>. 
-      Also extra care needs to be taken by the implementation with respect to POLICY-PARAMETERS-TLV while decoding, verifying and applying these policy variables. </t>
+      <t>This documents clarifies how the already existing P and I flag in PCEP common object header could be used during stateful PCEP exchanges. It updates the
+        unknown object error handling in statefule PCEP message exchange. These changes on its own do not add any new security concerns. The security considerations identified in <xref target="RFC5440"/>, <xref target="RFC8231"/>, and <xref target="RFC8281"/>.</t>
+        <t> As stated in <xref target="RFC6952"/>, PCEP implementations SHOULD support the
+   TCP-AO <xref target="RFC5925"/> and not use TCP MD5 because of TCP MD5's known
+   vulnerabilities and weakness. PCEP also support Transport Layer Security (TLS)
+      <xref target="RFC8253"/> as per the recommendations and best current practices
+      in <xref target="RFC7525"/>.</t>
     </section>
 
     <section title="IANA Considerations" toc="default">
-    <section title="PCEP TLV Type Indicators" toc="default">
-      <t>The following TLV Type Indicator values are requested within
-   the "PCEP TLV Type Indicators" subregistry of the "Path Computation
-   Element Protocol (PCEP) Numbers" registry:</t>
+    <section title="STATEFUL-PCE-CAPABILITY TLV" toc="default">
+      <t><xref target="RFC8231"/> defines the STATEFUL-PCE-CAPABILITY TLV; per that RFC, IANA
+   created a registry to manage the value of the STATEFUL-PCE-CAPABILITY
+   TLV's Flag field.  IANA has allocated a new bit in the STATEFUL-PCE-
+   CAPABILITY TLV Flag Field registry, as follows:</t>
 <t>
  <figure title="" suppress-title="false" align="left" alt="" width="" height="">
    <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
-Value     Description                 Reference
-
-TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
+Bit       Description                 Reference
+-------------------------------------------------
+TBD1      RELAX bit                   [This I.D.]
 ]]></artwork>
         </figure>
       </t>   
@@ -223,12 +229,10 @@ TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
 <section title="Manageability Considerations" toc="default">
       <section title="Control of Function and Policy" toc="default">
         <t>
-   An operator MUST be allowed to configure the policy associations at PCEP peers
-   and associate it with the LSPs. They MAY also allow configuration to related policy parameters, in which case
-   the an operator MUST also be allowed to set the encoding format and order to parse the associated policy parameters TLV.</t>
+   An operator MUST be allowed to configure the capability to support relaxation of constraints in the stateful PCEP message exchange. They SHOULD also allow configuration of related LSP contraints (or parameters) that are optional to process. </t>
       </section>
       <section title="Information and Data Models" toc="default">
-        <t>An implementation SHOULD allow the operator to view the PAG configured. Further implementation SHOULD allow to view the current set of LSPs in the PAG.  To serve this purpose, the PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> includes association groups and can be used for PAG.</t> 
+        <t>An implementation SHOULD allow the operator to view the capability defined in this document.   To serve this purpose, the PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> could be extended. </t> 
       </section>
       <section title="Liveness Detection and Monitoring" toc="default">
         <t>Mechanisms defined in this document do not imply any new liveness detection
@@ -250,11 +254,6 @@ TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
         <xref target="RFC5440"/>.</t>
       </section>
     </section>
-    <section title="Acknowledgments" toc="default">
-      <t>A special thanks to author of
-      <xref target='I-D.ietf-pce-association-group'/>, this document borrow
-      some of the text from it.</t>
-    </section>
   </middle>
   <back>
     <references title="Normative References">
@@ -268,8 +267,9 @@ TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
     </references>
     <references title="Informative References">
      <?rfc include="reference.RFC.4655.xml" ?>
-     
-     <!--<?rfc include="reference.RFC.7420.xml" ?>-->
+     <?rfc include="reference.RFC.5925.xml" ?>
+     <?rfc include="reference.RFC.6952.xml" ?>
+     <?rfc include="reference.RFC.7525.xml" ?>
      <?rfc include="reference.RFC.8233.xml"?>
      <?rfc include="reference.RFC.8253.xml"?>
      <?rfc include="reference.RFC.8281.xml"?>
