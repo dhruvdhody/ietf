@@ -11,9 +11,9 @@
 <?rfc compact="yes" ?>
 <?rfc iprnotified="Yes" ?>
 <?rfc strict="no" ?>
-<rfc ipr="trust200902" category="std" docName="draft-dhody-pce-stateful-pce-optional-00" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="std" docName="draft-dhody-pce-stateful-pce-optional-00" obsoletes="" updates="RFC8231" submissionType="IETF" xml:lang="en">
   <front>
-    <title abbrev="STATEFUL-OPT">Extension for Stateful PCE to identify Optional Objects.</title>
+    <title abbrev="STATEFUL-OPT">Extension for Stateful PCE to allow Optional Processing of PCEP Objects.</title>
 <author initials="D" surname="Dhody" fullname="Dhruv Dhody" role="editor">
       <organization>Huawei Technologies</organization>
       <address>
@@ -48,7 +48,7 @@
   
 <t>
    This document introduces a mechanism to mark some Path Computation
-   Element (PCE) Communication Protocol (PCEP) objects as optional during PCEP messages exchange for the Stateful PCE model.</t> 
+   Element (PCE) Communication Protocol (PCEP) objects as optional during PCEP messages exchange for the Stateful PCE model to allow relaxing some constraints.</t> 
    </abstract>
   </front>
   <middle>
@@ -68,21 +68,24 @@
    need for local configuration on the PCC, thus allowing for a dynamic
    network.</t>
 
-   <t><xref target="RFC5440"/> defined P flag as part of Common Object Header
+   <t><xref target="RFC5440"/> defined P flag (Processing-Rule) as part of Common Object Header
    to allow a PCC to specify
       in a PCReq message sent to a PCE whether the object must be taken
       into account by the PCE during path computation or is just
-      optional. The I flag is used by a PCE in a PCRep
+      optional. The I flag (Ignore) is used by a PCE in a PCRep
       message to indicate to a PCC whether or not an optional object was
       processed. Stateful PCE <xref target="RFC8231"/> 
       specified that  P and I flags of the PCEP
-   objects defined in <xref target="RFC8231"/> MUST be set to 0 on
-   transmission and SHOULD be ignored on receipt since they are
+   objects defined in <xref target="RFC8231"/> is to be set to 0 on
+   transmission and ignored on receipt since they are
    exclusively related to path computation requests. The behavior for P and I flag in 
    other objects defined in <xref target="RFC5440"/> and other extension was not specified. 
-   This document clarifies how the P and I flag could be used in stateful PCE model to identify 
+   This document clarifies how the P and I flag could be used in the stateful PCE model to identify 
    optional objects in the Path Computation State Report (PCRpt),  the Path Computation Update Request (PCUpd) 
    and the LSP Initiate Request (PCInitiate) message.</t>
+
+   <t>This document updates <xref target="RFC8231"/> with respect to usage of P and I flag as well as 
+   handling of unknown objects in stateful PCEP message exchanges.</t>
    
     <section title="Requirements Language" toc="default">
          <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -98,19 +101,97 @@
       </section>
     </section>
 
-    <section title="Motivation" toc="default">
-    <t>The stateful PCE introduces following new messages:
-      <list>
-        <t>Path Computation State Report (PCRpt): </t>
-      </list>
-    </t>  
-    </section>
     <section title="Overview" toc="default">
+    <t><xref target="RFC5440"/> describes the handling on unknown objects as per the setting of the P flag for the PCReq message. 
+    Further <xref target="RFC8231"/> defined the usage of LSP Error Code TLV in PCRpt message in response to failed LSP Update Request
+    via PCUpd message (for example, due to an unsupported object or a TLV).</t>
+    <t>This document clarifies the procedure for marking some objects as optional to be processed by the PCEP peer in the stateful PCEP messages. Further
+      this document updates the procedure for handling unknown objects in the stateful PCEP messages based on the P flag.</t>  
+    <section title="Usage Example" toc="default">
+    <t>The PCRpt message is used to report the current state of an LSP. As part of the message both the &lt;intended-attribute-list&gt; and &lt;actual-attribute-list&gt; is encoded. 
+      The &lt;intended-attribute-list&gt; could include the METRIC object to indicate a limiting constraint (B flag set) for the Path Delay Variation metric <xref target="RFC8233"/>. In some scenarios it would be useful to state that this limiting constraint can be relaxed by the PCE, in case it cannot find a path. Similarly in case of an association groups <xref target='I-D.ietf-pce-association-group'/> such as Disjoint Association <xref target="I-D.ietf-pce-association-diversity"/>, the PCE may need to completely relax the  
+        disjointness constraint in order to provide a path to all the LSPs that are part of the association. In these case it would be useful mark the objects as optional and could be ignored by the PCEP peer. Also it would be used for the PCEP speaker to learn if the PCEP peer has relaxed the constraint and ignored the processing of the PCEP object.</t>  
+
+     <t>Thus, this document simply clarifies how the already existing P and I flag in PCEP common object header could be used during stateful PCEP exchanges.</t>   
+    </section>
     </section>
     
 <section title="PCEP Extention" toc="default">
+  <section title="STATEFUL-PCE-CAPABILITY TLV" toc="default">
+  <t>A PCEP speaker indicates its ability to support for handling P and I flag during the stateful PCEP message exchanges during the PCEP initialization phase, as follows. 
+    When the PCEP session is created, it sends an Open message with an OPEN object that
+   contains the STATEFUL-PCE-CAPABILITY TLV, as defined in <xref target="RFC8231"/>.  A
+   new flag, the R (RELAX) flag, is introduced to
+   this TLV to indicate support for relaxing the processing of some objects via the use of P and I flag in PCEP common object header.</t>
+   <t>R (RELAX bit - TBD1): If set to 1 by a PCEP Speaker, the R flag indicates that the PCEP Speaker is willing to send and receive PCEP objects with handling of P and I flags in the PCEP common object header. In case the bit is unset, it indicates that the PCEP Speaker would not handle P and I flags in the PCEP common object header.</t>
+   <t>The R flag must be set by both a PCC and a PCE for handling of P and I flag in the PCEP common object header to allow relaxing some constraints by marking objects as optional to process. If the PCEP speaker that did not set R flag but receives PCEP objects with P or I bit set, would behave as per the processing rule in <xref target="RFC8231"/>.</t>
 </section>
-
+  <section title="Handling of P flag" toc="default">
+    <section title="The PCRpt message" toc="default">
+      <t>The P flag in the PCRpt message <xref target="RFC8231"/> allows a PCC to specify
+      to a PCE whether the object must be taken
+      into account by the PCE (during path computation or re-optimization) or is just
+      optional.  When the P flag is set, the object MUST be taken into
+      account by the PCE.  Conversely, when the P flag is cleared, the
+      object is optional and the PCE is free to ignore it. The P flag for the
+      mandatory objects LSP and ERO (intended path) MUST be set in the 
+      PCRpt message. If the mandatory object is
+   received with the P flag set incorrectly according to the rules
+   stated above, the receiving peer MUST send a PCErr message with
+   Error-Type=10 (Reception of an invalid object) and Error-value=1 
+   (reception of an object with P flag not set). By default, the PCC 
+   SHOULD set the P flag, unless a local configuration or local policy 
+   indicates that some constraints (corresponding PCEP objects) can be
+   marked as optional and could be ignored by the PCE.</t>
+    </section>
+    <section title="The PCUpd message and the PCInitiate message" toc="default">
+      <t>The P flag in the PCUpd message <xref target="RFC8231"/> and the PCInitiate message <xref target="RFC8281"/> allows a PCE to specify
+      to a PCC whether the object must be taken
+      into account by the PCC (during path setup) or is just
+      optional.  When the P flag is set, the object MUST be taken into
+      account by the PCC.  Conversely, when the P flag is cleared, the
+      object is optional and the PCC is free to ignore it. The P flag for the
+      mandatory objects SRP, LSP and ERO (intended path) MUST be set in the 
+      PCUpd message. If the mandatory object is
+   received with the P flag set incorrectly according to the rules
+   stated above, the receiving peer MUST send a PCErr message with
+   Error-Type=10 (Reception of an invalid object) and Error-value=1 
+   (reception of an object with P flag not set). By default, the PCE 
+   SHOULD set the P flag, unless a local configuration or local policy 
+   indicates that some constraints (corresponding PCEP objects) can be
+   marked as optional and could be ignored by the PCC.</t>
+    </section>
+  </section>  
+  <section title="Handling of I flag" toc="default">
+  <section title="The PCUpd message" toc="default">
+       <t>The I flag in the PCUpd message <xref target="RFC8231"/> allows a PCE to 
+       indicate to a PCC whether or not an optional object was
+      processed.  The PCE MAY include the ignored optional object in its
+      update request and set the I flag to indicate that the optional object was
+      ignored.  When the I flag is cleared, the
+      PCE indicates that the optional object was processed. Note that 
+      for the delegated LSPs, the PCE can update and mark some object as
+      ignored even when the PCC had set the P flag during delegation.</t>
+  </section>    
+  <section title="The PCRpt message" toc="default">
+   <t>The I flag in the PCRpt message <xref target="RFC8231"/> allows a PCC to 
+      indicate to a PCE whether or not an optional object was
+      processed in response to an LSP Update Request.  The PCC MAY include the ignored optional object in its
+      report and set the I flag to indicate that the optional object was
+      ignored at PCC.  When the I flag is cleared, the
+      PCC indicates that the optional object was processed. 
+      The I flag has no meaning if the PCRpt message is not in response to a 
+      PCUpd or PCInitiate message.
+      </t>
+    </section>
+    <section title="The PCInitiate message" toc="default">
+      <t>The I flag has no meaning in the PCinitiate message <xref target="RFC8281"/>.</t>
+    </section>
+</section>
+<section title="Unknown Object Handling" toc="default">
+  <t>This document updates the handling of unknown objects in stateful PCEP messages as per the setting of P flag in the common object header in the same way as <xref target="RFC8231"/>.</t>
+  </section>
+</section>
 
 
     <section title="Security Considerations" toc="default">
@@ -182,16 +263,19 @@ TBD2      POLICY-PARAMETERS-TLV       [This I.D.]
     <?rfc include="reference.RFC.5440.xml" ?>
     <?rfc include="reference.RFC.8174.xml" ?>
     <?rfc include="reference.RFC.8231.xml" ?>
-    <?rfc include="reference.I-D.ietf-pce-association-group"?>
+    
     
     </references>
     <references title="Informative References">
      <?rfc include="reference.RFC.4655.xml" ?>
      
      <!--<?rfc include="reference.RFC.7420.xml" ?>-->
+     <?rfc include="reference.RFC.8233.xml"?>
      <?rfc include="reference.RFC.8253.xml"?>
      <?rfc include="reference.RFC.8281.xml"?>
      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
+     <?rfc include="reference.I-D.ietf-pce-association-diversity"?>
+     <?rfc include="reference.I-D.ietf-pce-association-group"?>
      
 
 
