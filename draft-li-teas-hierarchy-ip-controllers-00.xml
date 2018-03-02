@@ -11,7 +11,7 @@
 <?rfc compact="yes" ?>
 <?rfc iprnotified="Yes" ?>
 <?rfc strict="no" ?>
-<rfc ipr="pre5378Trust200902" category="info" docName="draft-li-teas-hierarchy-ip-controllers-00" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+<rfc ipr="trust200902" category="info" docName="draft-li-teas-hierarchy-ip-controllers-00" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
   <front>
     <title abbrev="HIC">Hierarchy of IP Controllers (HIC)</title>
     <author initials="Z" surname="Li" fullname="Zhenbin Li">
@@ -214,6 +214,7 @@
    BGP-LS <xref target="RFC7752"/> by which link-state and TE information is collected and shared with domain controller using the BGP routing protocol. </t> 
    <t>An alternate approach would be to rely on the management plane interface which uses the YANG model for network/TE Topology as per <xref target="I-D.ietf-i2rs-yang-network-topo"/> and <xref target="I-D.ietf-teas-yang-te-topo"/>.</t>
    <t>The domain controller is expected to share the domain topology to the Super Controller as aligned to ACTN (where PNC abstract the topology towards MDSC). A level of abstraction is usually applied while presenting the topology to a higher level controller. Topology abstraction is described in <xref target="RFC7926"/> as well as <xref target="I-D.ietf-teas-actn-framework"/>. BGP-LS, PCEP-LS <xref target="I-D.dhodylee-pce-pcep-ls"/> or management plane interface based on the abstracted network/TE Topology could be used to carry the abstract topology to the super-controller. At minimum the border nodes and inter-domain links are exposed to the super-controller. </t>
+   <t>Further <xref target="I-D.ietf-teas-actn-framework"/> defines three types of topology abstraction - (1) Native/White Topology; (2) Black Topology; and (3) Grey Topology. Based on the local policy, the domain controller would share the domain topology to the Super Controller based on the abstraction type. Note that any of the control plane or management plane mechanism could be used to carry abstracted domain topology. The Super Controller's MDSC function is expected to manage a E2E topology by coordinating the abstracted domain topology received from the domain controllers.</t>
    </section> 
    <section title="Path Computation/Path instantiation" toc="default" anchor="sec_pc">
     <t>The Domain Controller is responsible for computing and setup of path when the source and destination is in the same domain, otherwise the Super Controller coordinates the multi-domain path computation and setup with the help of the domain controller. This is aligned to ACTN.</t> 
@@ -227,65 +228,17 @@
     PCE with Parent PCE coordinating multi-domain path computation function between Child PCE(s). This fits well 
     with HIC as described in this document.</t> 
     <t>Note that a management plane interface which uses the YANG model for path computation/setup (<xref target="I-D.ietf-teas-yang-path-computation"/> and <xref target="I-D.ietf-teas-yang-te"/>) could be used in place of PCEP.</t>
+    <t>In case there is a need to stitch per domain tunnels into an E2E tunnel, mechanism are described in <xref target="I-D.lee-pce-lsp-stitching-hpce"/> and <xref target="I-D.dugeon-pce-stateful-interdomain"/>.</t>
    </section>
    <section title="BGP considerations" toc="default" anchor="sec_bgp">
    <t><xref target="RFC4456"/> describes the concept of route-reflection where a "route reflector" (RR) reflects the routes to avoid full mesh connection between Internal BGP (IBGP) peers. The IP domain
    controller can play the role of RR in its domain. The super controller can further act as RR to towards the domain controller.</t>
-   <t>[Editor's Note: To do - BGP policy, BGP Flowspec. Maybe a BGP expert can add details here!]</t>
-   <t>[Editor's Note: Is there a role of BMP here?]</t>
+   <t>[Editor's Note: To do - BGP Policy, BGP Flowspec. More information will be added in the next version]</t>
+   <t>[Editor's Note: Need to evaluate a role of BMP]</t>
    </section>
    </section>
 
    <section title="VPN Service" toc="default" anchor="sec_vpn">
-    <section title="L3VPN" toc="default" anchor="sec_l3vpn">
-    <t>
-    A Layer 3 IP VPN service is a collection of sites that are authorized
-   to exchange traffic between each other over a shared IP
-   infrastructure. <xref target="RFC4110"/> provides a framework for Layer 3 Provider-Provisioned
-   Virtual Private Networks (PPVPNs). <xref target="RFC8299"/> provides a L3VPN
-   service delivery YANG model for PE-based VPNs. The Super controller is expected to implement the L3SM model
-   and translate it to network models towards the domain controller, which in terns translate it to the device model. 
-   See <xref target="RFC8309"/> for more details.   
-    </t>        
-    <t>
-<figure title="L3VPN" anchor="fig_l3vpn">
-<artwork><![CDATA[        
-                                  | L3SM 
-                                  V
-                       +--------------------+
-                       |  Super Controller  |
-                       +--------------------+
-                                  |
-                  +-------------------------------+
-                  |                               |
-                  V                               V
-               +--------+                   +--------+
-               | DoCo#1 |                   | DoCo#2 |
-               |        |                   |        |
-               +--------+                   +--------+
-
-         CE                                                   CE
-          \     AS 100                          AS 200       /
-           \                                               /
-            A----B----C----ASBR1------ASBR2----D----E----F
-           /    /    /       /          /     /    /    /
-          /    /    /       /          /     /    /    / 
-   CE----G----H----I----ASBR3------ASBR4----J----K----L------CE    
-]]></artwork></figure>                 
-    </t>
-    <t>Based on the user data in L3SM model, the network configurations need to be trickle down to the network device to setup the L3VPN.</t>
-    <t>Based on the QoS or Policy requirement for the L3VPN service, the Super Controller may - 
-        <list style="symbols">
-            <t>Set the tunnel selection policy at the PE/ASBR routers so that they could select the existing tunnels</t>
-            <t>Select an existing tunnels at the controller level and bind it to the VPN service</t>
-            <t>Initiate the process of creating a new tunnel based on the QoS requirement and bind it the VPN service</t>
-            <t>Initiate the process of creating a new tunnel based on the the policy</t>
-        </list>
-    </t>
-    <t>Refer <xref target="I-D.lee-teas-te-service-mapping-yang"/> for more details from ACTN perspective.</t>
-    <t>Apart from the Management plane interface based on respective YANG models, the control plane interface PCEP could be used for path computation and setup. </t>
-    </section>         
-
     <section title="Seamless MPLS" toc="default" anchor="sec_smpls">
     <t><xref target="I-D.ietf-mpls-seamless-mpls">Seamless MPLS</xref>
       describes an architecture which can be used to extend MPLS networks to
@@ -338,8 +291,58 @@
 ]]></artwork>
         </figure>
     <t>Super Controller is responsible for setting the seamless MPLS service. It should break down the service model to network configuration model <xref target="RFC8309"/> and the domain controller further break it to the device configuration model to the PE/ASBR to make the E2E seamless MPLS service. The selection of appropriate ASBRs and handling of intra-domain tunnels is coordinated by the Super Controller in the similar fashion as shown in <xref target="sec_l3vpn"/>.</t>
-    <t>By enabling BGP sessions between Domain Controller and Super Controller, BGP labeled routes can also be learned at Super Controller. As super Controller is aware of the (abstract) topology, it could make intelligent decisions regarding E2E BGP LSP to optimize based on the overall traffic information.</t>
-    </section>
+    <t>By enabling BGP sessions between Domain Controller and Super Controller, BGP labeled routes can also be learned at Super Controller. As Super Controller is aware of the (abstract) topology, it could make intelligent decisions regarding E2E BGP LSP to optimize based on the overall traffic information.</t>
+    </section>    
+    <section title="L3VPN" toc="default" anchor="sec_l3vpn">
+    <t>
+    A Layer 3 IP VPN service is a collection of sites that are authorized
+   to exchange traffic between each other over a shared IP
+   infrastructure. <xref target="RFC4110"/> provides a framework for Layer 3 Provider-Provisioned
+   Virtual Private Networks (PPVPNs). <xref target="RFC8299"/> provides a L3VPN
+   service delivery YANG model for PE-based VPNs. The Super controller is expected to implement the L3SM model
+   and translate it to network models towards the domain controller, which in terns translate it to the device model. 
+   See <xref target="RFC8309"/> for more details.   
+    </t>        
+    <t>
+<figure title="L3VPN" anchor="fig_l3vpn">
+<artwork><![CDATA[        
+                                  | L3SM 
+                                  V
+                       +--------------------+
+                       |  Super Controller  |
+                       +--------------------+
+                                  |
+                  +-------------------------------+
+                  |                               |
+                  V                               V
+               +--------+                   +--------+
+               | DoCo#1 |                   | DoCo#2 |
+               |        |                   |        |
+               +--------+                   +--------+
+
+         CE                                                   CE
+          \     AS 100                          AS 200       /
+           \                                               /
+            A----B----C----ASBR1------ASBR2----D----E----F
+           /    /    /       /          /     /    /    /
+          /    /    /       /          /     /    /    / 
+   CE----G----H----I----ASBR3------ASBR4----J----K----L------CE    
+]]></artwork></figure>                 
+    </t>
+    <t>Based on the user data in L3SM model, the network configurations need to be trickle down to the network device to setup the L3VPN.</t>
+    <t>Based on the QoS or Policy requirement for the L3VPN service, the Super Controller may - 
+        <list style="symbols">
+            <t>Set the tunnel selection policy at the PE/ASBR routers so that they could select the existing tunnels</t>
+            <t>Select an existing tunnels at the controller level and bind it to the VPN service</t>
+            <t>Initiate the process of creating a new tunnel based on the QoS requirement and bind it the VPN service</t>
+            <t>Initiate the process of creating a new tunnel based on the the policy</t>
+        </list>
+    </t>
+    <t>Refer <xref target="I-D.lee-teas-te-service-mapping-yang"/> for more details from ACTN perspective.</t>
+    <t>Apart from the Management plane interface based on respective YANG models, the control plane interface PCEP could be used for path computation and setup. </t>
+    </section>         
+
+    
     <section title="L2VPN and EVPN service" toc="default" anchor="sec_l2">
     	<t>There are two fundamentally different kinds of Layer 2 VPN service
    that a service provider could offer to a customer: Virtual Private
@@ -364,9 +367,10 @@
     		<t>The (higher-level controller, lover-level controller) relationship or the the role of the controller. </t>	
     		<t>The learning and handling of various capabilities of the Super Controller and Domain Controller. </t>
     		<t>Handling of multiple instances of controller at each level for high availability.</t>
-    		<t>TBD</t>
+    		
     	</list>
-    </t>     
+    </t>
+    <t>[Editor's Note - This list is expected to be updated in next version with more details]</t>     
     </section>  
 
 <section title="Other Considerations" toc="default">
@@ -442,7 +446,7 @@
    framework in detail.</t>
     </section>
     <section title="BGP" toc="default" anchor="sec_bgp_cons">
-    	<t>[Editor's Note - TBD, maybe some one who is expert in BGP can add details on BGP-LS, BGP-Flowspec, RR handling, BGP Policy etc]</t>
+    	<t>[Editor's Note - TBD, More details on BGP-LS, BGP-Flowspec, RR handling, BGP Policy etc to be added in the next revision]</t>
     </section>
     </section>  
 
@@ -473,7 +477,7 @@
     <t>The Network Configuration Protocol (NETCONF) <xref target="RFC6241"/> provides mechanisms to install, manipulate, and delete the
    configuration of network devices. The RESTCONF <xref target="RFC8040"/> describes an HTTP-based protocol that provides a
    programmatic interface for accessing data defined in YANG, using the
-   datastore concepts defined in NETCONF. </t>
+   data-store concepts defined in NETCONF. </t>
    <t>Some other mechanism like gRPC/gNMI could also be used between controllers using the same YANG data models.</t>	
     </section>
     </section>  
@@ -537,6 +541,8 @@
      <?rfc include="reference.I-D.ietf-l2sm-l2vpn-service-model.xml"?>
      <?rfc include="reference.I-D.dhodylee-pce-pcep-ls.xml"?>
      <?rfc include="reference.I-D.lee-teas-te-service-mapping-yang.xml"?>
+     <?rfc include="reference.I-D.lee-pce-lsp-stitching-hpce.xml"?>
+     <?rfc include="reference.I-D.dugeon-pce-stateful-interdomain.xml"?>
     </references>
     
   </back>

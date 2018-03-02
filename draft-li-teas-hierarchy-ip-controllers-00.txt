@@ -5,8 +5,8 @@
 TEAS Working Group                                                 Z. Li
 Internet-Draft                                                  D. Dhody
 Intended status: Informational                                   H. Chen
-Expires: August 17, 2018                             Huawei Technologies
-                                                       February 13, 2018
+Expires: September 2, 2018                           Huawei Technologies
+                                                           March 1, 2018
 
 
                    Hierarchy of IP Controllers (HIC)
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 17, 2018.
+   This Internet-Draft will expire on September 2, 2018.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Li, et al.               Expires August 17, 2018                [Page 1]
+Li, et al.              Expires September 2, 2018               [Page 1]
 
-Internet-Draft                     HIC                     February 2018
+Internet-Draft                     HIC                        March 2018
 
 
    carefully, as they describe your rights and restrictions with respect
@@ -64,35 +64,23 @@ Internet-Draft                     HIC                     February 2018
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
-   This document may contain material from IETF Documents or IETF
-   Contributions published or made publicly available before November
-   10, 2008.  The person(s) controlling the copyright in some of this
-   material may not have granted the IETF Trust the right to allow
-   modifications of such material outside the IETF Standards Process.
-   Without obtaining an adequate license from the person(s) controlling
-   the copyright in such materials, this document may not be modified
-   outside the IETF Standards Process, and derivative works of it may
-   not be created outside the IETF Standards Process, except to format
-   it for publication as an RFC or to translate it into languages other
-   than English.
-
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Overview  . . . . . . . . . . . . . . . . . . . . . . . . . .   4
-     2.1.  Mapping to ACTN . . . . . . . . . . . . . . . . . . . . .   5
+     2.1.  Mapping to ACTN . . . . . . . . . . . . . . . . . . . . .   4
      2.2.  Interface between Super Controller and Domain Controller
            in HIC  . . . . . . . . . . . . . . . . . . . . . . . . .   5
    3.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . . . .   6
      3.1.  Topology  . . . . . . . . . . . . . . . . . . . . . . . .   6
      3.2.  Path Computation/Path instantiation . . . . . . . . . . .   7
-     3.3.  BGP considerations  . . . . . . . . . . . . . . . . . . .   7
+     3.3.  BGP considerations  . . . . . . . . . . . . . . . . . . .   8
    4.  VPN Service . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     4.1.  L3VPN . . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     4.2.  Seamless MPLS . . . . . . . . . . . . . . . . . . . . . .   9
+     4.1.  Seamless MPLS . . . . . . . . . . . . . . . . . . . . . .   8
+     4.2.  L3VPN . . . . . . . . . . . . . . . . . . . . . . . . . .  10
      4.3.  L2VPN and EVPN service  . . . . . . . . . . . . . . . . .  11
    5.  Possible Features/Extensions  . . . . . . . . . . . . . . . .  11
-   6.  Other Considerations  . . . . . . . . . . . . . . . . . . . .  11
+   6.  Other Considerations  . . . . . . . . . . . . . . . . . . . .  12
      6.1.  Control Plane . . . . . . . . . . . . . . . . . . . . . .  12
        6.1.1.  PCE / PCEP  . . . . . . . . . . . . . . . . . . . . .  12
        6.1.2.  BGP . . . . . . . . . . . . . . . . . . . . . . . . .  13
@@ -101,18 +89,11 @@ Table of Contents
        6.2.2.  Protocol Considerations . . . . . . . . . . . . . . .  14
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
-   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  14
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  14
+   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  15
      10.2.  Informative References . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
-
-
-
-Li, et al.               Expires August 17, 2018                [Page 2]
-
-Internet-Draft                     HIC                     February 2018
-
 
 1.  Introduction
 
@@ -125,6 +106,14 @@ Internet-Draft                     HIC                     February 2018
    programmed.  It is possible to view this component as performing
    specific computations to place flows within the network given
    knowledge of the availability of network resources, how other
+
+
+
+Li, et al.              Expires September 2, 2018               [Page 2]
+
+Internet-Draft                     HIC                        March 2018
+
+
    forwarding devices are programmed, and the way that other flows are
    routed.  The Application-Based Network Operation (ABNO) [RFC7491]
    describes how various components and technologies fit together.
@@ -162,14 +151,6 @@ Internet-Draft                     HIC                     February 2018
    of the VPN service.  This require multi-domain coordination between
    domain controllers to compute and setup E2E path for the VPN service.
 
-
-
-
-Li, et al.               Expires August 17, 2018                [Page 3]
-
-Internet-Draft                     HIC                     February 2018
-
-
    This document describes the interactions between various IP
    controllers in a hierarchical fashion to provide various IP services.
    It describes how the Abstraction and Control of Traffic Engineered
@@ -179,6 +160,15 @@ Internet-Draft                     HIC                     February 2018
    Protocol (PCEP)) and management plane aspects (Yang models) to
    provide end to end dynamic services spanning multiple domains and
    controllers (e.g.  L3VPN, Seamless MPLS etc).
+
+
+
+
+
+Li, et al.              Expires September 2, 2018               [Page 3]
+
+Internet-Draft                     HIC                        March 2018
+
 
 2.  Overview
 
@@ -217,15 +207,6 @@ Internet-Draft                     HIC                     February 2018
    orchestrator to setup dynamic services spanning multiple domains.
    The IP "Super Controller" breaks down and assigns tasks to the domain
    controllers, responsible for communicating to network devices in the
-
-
-
-
-Li, et al.               Expires August 17, 2018                [Page 4]
-
-Internet-Draft                     HIC                     February 2018
-
-
    domain.  It further coordinates between the controller to provide a
    unified view of the multi-domain network.
 
@@ -237,6 +218,13 @@ Internet-Draft                     HIC                     February 2018
    o  Multi-domain coordination
 
    o  Virtualization/Abstraction
+
+
+
+Li, et al.              Expires September 2, 2018               [Page 4]
+
+Internet-Draft                     HIC                        March 2018
+
 
    o  Customer mapping/translation
 
@@ -277,9 +265,21 @@ Internet-Draft                     HIC                     February 2018
 
 
 
-Li, et al.               Expires August 17, 2018                [Page 5]
+
+
+
+
+
+
+
+
+
+
+
+
+Li, et al.              Expires September 2, 2018               [Page 5]
 
-Internet-Draft                     HIC                     February 2018
+Internet-Draft                     HIC                        March 2018
 
 
       +----------------------------------------------+
@@ -333,9 +333,9 @@ Internet-Draft                     HIC                     February 2018
 
 
 
-Li, et al.               Expires August 17, 2018                [Page 6]
+Li, et al.              Expires September 2, 2018               [Page 6]
 
-Internet-Draft                     HIC                     February 2018
+Internet-Draft                     HIC                        March 2018
 
 
    presenting the topology to a higher level controller.  Topology
@@ -345,6 +345,16 @@ Internet-Draft                     HIC                     February 2018
    abstracted network/TE Topology could be used to carry the abstract
    topology to the super-controller.  At minimum the border nodes and
    inter-domain links are exposed to the super-controller.
+
+   Further [I-D.ietf-teas-actn-framework] defines three types of
+   topology abstraction - (1) Native/White Topology; (2) Black Topology;
+   and (3) Grey Topology.  Based on the local policy, the domain
+   controller would share the domain topology to the Super Controller
+   based on the abstraction type.  Note that any of the control plane or
+   management plane mechanism could be used to carry abstracted domain
+   topology.  The Super Controller's MDSC function is expected to manage
+   a E2E topology by coordinating the abstracted domain topology
+   received from the domain controllers.
 
 3.2.  Path Computation/Path instantiation
 
@@ -369,6 +379,21 @@ Internet-Draft                     HIC                     February 2018
    path computation/setup ([I-D.ietf-teas-yang-path-computation] and
    [I-D.ietf-teas-yang-te]) could be used in place of PCEP.
 
+   In case there is a need to stitch per domain tunnels into an E2E
+   tunnel, mechanism are described in [I-D.lee-pce-lsp-stitching-hpce]
+   and [I-D.dugeon-pce-stateful-interdomain].
+
+
+
+
+
+
+
+Li, et al.              Expires September 2, 2018               [Page 7]
+
+Internet-Draft                     HIC                        March 2018
+
+
 3.3.  BGP considerations
 
    [RFC4456] describes the concept of route-reflection where a "route
@@ -377,93 +402,14 @@ Internet-Draft                     HIC                     February 2018
    the role of RR in its domain.  The super controller can further act
    as RR to towards the domain controller.
 
-   [Editor's Note: To do - BGP policy, BGP Flowspec.  Maybe a BGP expert
-   can add details here!]
+   [Editor's Note: To do - BGP Policy, BGP Flowspec.  More information
+   will be added in the next version]
 
-   [Editor's Note: Is there a role of BMP here?]
-
-
-
-
-
-
-
-
-Li, et al.               Expires August 17, 2018                [Page 7]
-
-Internet-Draft                     HIC                     February 2018
-
+   [Editor's Note: Need to evaluate a role of BMP]
 
 4.  VPN Service
 
-4.1.  L3VPN
-
-   A Layer 3 IP VPN service is a collection of sites that are authorized
-   to exchange traffic between each other over a shared IP
-   infrastructure.  [RFC4110] provides a framework for Layer 3 Provider-
-   Provisioned Virtual Private Networks (PPVPNs).  [RFC8299] provides a
-   L3VPN service delivery YANG model for PE-based VPNs.  The Super
-   controller is expected to implement the L3SM model and translate it
-   to network models towards the domain controller, which in terns
-   translate it to the device model.  See [RFC8309] for more details.
-
-                                     | L3SM
-                                     V
-                          +--------------------+
-                          |  Super Controller  |
-                          +--------------------+
-                                     |
-                     +-------------------------------+
-                     |                               |
-                     V                               V
-                  +--------+                   +--------+
-                  | DoCo#1 |                   | DoCo#2 |
-                  |        |                   |        |
-                  +--------+                   +--------+
-
-            CE                                                   CE
-             \     AS 100                          AS 200       /
-              \                                               /
-               A----B----C----ASBR1------ASBR2----D----E----F
-              /    /    /       /          /     /    /    /
-             /    /    /       /          /     /    /    /
-      CE----G----H----I----ASBR3------ASBR4----J----K----L------CE
-
-                              Figure 3: L3VPN
-
-   Based on the user data in L3SM model, the network configurations need
-   to be trickle down to the network device to setup the L3VPN.
-
-   Based on the QoS or Policy requirement for the L3VPN service, the
-   Super Controller may -
-
-   o  Set the tunnel selection policy at the PE/ASBR routers so that
-      they could select the existing tunnels
-
-   o  Select an existing tunnels at the controller level and bind it to
-      the VPN service
-
-
-
-Li, et al.               Expires August 17, 2018                [Page 8]
-
-Internet-Draft                     HIC                     February 2018
-
-
-   o  Initiate the process of creating a new tunnel based on the QoS
-      requirement and bind it the VPN service
-
-   o  Initiate the process of creating a new tunnel based on the the
-      policy
-
-   Refer [I-D.lee-teas-te-service-mapping-yang] for more details from
-   ACTN perspective.
-
-   Apart from the Management plane interface based on respective YANG
-   models, the control plane interface PCEP could be used for path
-   computation and setup.
-
-4.2.  Seamless MPLS
+4.1.  Seamless MPLS
 
    Seamless MPLS [I-D.ietf-mpls-seamless-mpls] describes an architecture
    which can be used to extend MPLS networks to integrate access and
@@ -499,11 +445,9 @@ Internet-Draft                     HIC                     February 2018
 
 
 
-
-
-Li, et al.               Expires August 17, 2018                [Page 9]
+Li, et al.              Expires September 2, 2018               [Page 8]
 
-Internet-Draft                     HIC                     February 2018
+Internet-Draft                     HIC                        March 2018
 
 
                                 |
@@ -542,7 +486,7 @@ Internet-Draft                     HIC                     February 2018
 
 
 
-                          Figure 4: Seamless MPLS
+                          Figure 3: Seamless MPLS
 
    Super Controller is responsible for setting the seamless MPLS
    service.  It should break down the service model to network
@@ -550,21 +494,89 @@ Internet-Draft                     HIC                     February 2018
    it to the device configuration model to the PE/ASBR to make the E2E
    seamless MPLS service.  The selection of appropriate ASBRs and
    handling of intra-domain tunnels is coordinated by the Super
-   Controller in the similar fashion as shown in Section 4.1.
+   Controller in the similar fashion as shown in Section 4.2.
 
    By enabling BGP sessions between Domain Controller and Super
    Controller, BGP labeled routes can also be learned at Super
 
 
 
-Li, et al.               Expires August 17, 2018               [Page 10]
+Li, et al.              Expires September 2, 2018               [Page 9]
 
-Internet-Draft                     HIC                     February 2018
+Internet-Draft                     HIC                        March 2018
 
 
-   Controller.  As super Controller is aware of the (abstract) topology,
+   Controller.  As Super Controller is aware of the (abstract) topology,
    it could make intelligent decisions regarding E2E BGP LSP to optimize
    based on the overall traffic information.
+
+4.2.  L3VPN
+
+   A Layer 3 IP VPN service is a collection of sites that are authorized
+   to exchange traffic between each other over a shared IP
+   infrastructure.  [RFC4110] provides a framework for Layer 3 Provider-
+   Provisioned Virtual Private Networks (PPVPNs).  [RFC8299] provides a
+   L3VPN service delivery YANG model for PE-based VPNs.  The Super
+   controller is expected to implement the L3SM model and translate it
+   to network models towards the domain controller, which in terns
+   translate it to the device model.  See [RFC8309] for more details.
+
+                                     | L3SM
+                                     V
+                          +--------------------+
+                          |  Super Controller  |
+                          +--------------------+
+                                     |
+                     +-------------------------------+
+                     |                               |
+                     V                               V
+                  +--------+                   +--------+
+                  | DoCo#1 |                   | DoCo#2 |
+                  |        |                   |        |
+                  +--------+                   +--------+
+
+            CE                                                   CE
+             \     AS 100                          AS 200       /
+              \                                               /
+               A----B----C----ASBR1------ASBR2----D----E----F
+              /    /    /       /          /     /    /    /
+             /    /    /       /          /     /    /    /
+      CE----G----H----I----ASBR3------ASBR4----J----K----L------CE
+
+                              Figure 4: L3VPN
+
+   Based on the user data in L3SM model, the network configurations need
+   to be trickle down to the network device to setup the L3VPN.
+
+   Based on the QoS or Policy requirement for the L3VPN service, the
+   Super Controller may -
+
+   o  Set the tunnel selection policy at the PE/ASBR routers so that
+      they could select the existing tunnels
+
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 10]
+
+Internet-Draft                     HIC                        March 2018
+
+
+   o  Select an existing tunnels at the controller level and bind it to
+      the VPN service
+
+   o  Initiate the process of creating a new tunnel based on the QoS
+      requirement and bind it the VPN service
+
+   o  Initiate the process of creating a new tunnel based on the the
+      policy
+
+   Refer [I-D.lee-teas-te-service-mapping-yang] for more details from
+   ACTN perspective.
+
+   Apart from the Management plane interface based on respective YANG
+   models, the control plane interface PCEP could be used for path
+   computation and setup.
 
 4.3.  L2VPN and EVPN service
 
@@ -579,7 +591,7 @@ Internet-Draft                     HIC                     February 2018
    based load balancing, and multipathing etc.
 
    The handling of L2VPN/EVPN service is done in a similar fashion as
-   shown in Section 4.1.
+   shown in Section 4.2.
 
 5.  Possible Features/Extensions
 
@@ -599,24 +611,20 @@ Internet-Draft                     HIC                     February 2018
    3.  The learning and handling of various capabilities of the Super
        Controller and Domain Controller.
 
+
+
+Li, et al.              Expires September 2, 2018              [Page 11]
+
+Internet-Draft                     HIC                        March 2018
+
+
    4.  Handling of multiple instances of controller at each level for
        high availability.
 
-   5.  TBD
+   [Editor's Note - This list is expected to be updated in next version
+   with more details]
 
 6.  Other Considerations
-
-
-
-
-
-
-
-
-Li, et al.               Expires August 17, 2018               [Page 11]
-
-Internet-Draft                     HIC                     February 2018
-
 
 6.1.  Control Plane
 
@@ -657,6 +665,15 @@ Internet-Draft                     HIC                     February 2018
    to the attributes of an existing LSP, or a PCC to delegate control of
    specific LSPs to a new PCE.
 
+
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 12]
+
+Internet-Draft                     HIC                        March 2018
+
+
    Computing paths across large multi-domain environments require
    special computational components and cooperation between entities in
    different domains capable of complex path computation.  The PCE
@@ -666,14 +683,6 @@ Internet-Draft                     HIC                     February 2018
    computation technique [RFC5152].  The Backward recursive PCE based
    path computation (BRPC) mechanism [RFC5441] defines a PCE-based path
    computation procedure to compute inter-domain constrained MPLS and
-
-
-
-Li, et al.               Expires August 17, 2018               [Page 12]
-
-Internet-Draft                     HIC                     February 2018
-
-
    GMPLS TE networks.  However, both per-domain and BRPC techniques
    assume that the sequence of domains to be crossed from source to
    destination is known, either fixed by the network operator or
@@ -700,8 +709,8 @@ Internet-Draft                     HIC                     February 2018
 
 6.1.2.  BGP
 
-   [Editor's Note - TBD, maybe some one who is expert in BGP can add
-   details on BGP-LS, BGP-Flowspec, RR handling, BGP Policy etc]
+   [Editor's Note - TBD, More details on BGP-LS, BGP-Flowspec, RR
+   handling, BGP Policy etc to be added in the next revision]
 
 6.2.  Management Plane
 
@@ -712,6 +721,15 @@ Internet-Draft                     HIC                     February 2018
 
       Topology: [I-D.ietf-i2rs-yang-network-topo] defines a generic YANG
       data model for network topology.  [I-D.ietf-teas-yang-te-topo]
+
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 13]
+
+Internet-Draft                     HIC                        March 2018
+
+
       defines a YANG data model for representing, retrieving and
       manipulating Traffic Engineering (TE) Topologies.
 
@@ -722,14 +740,6 @@ Internet-Draft                     HIC                     February 2018
       L3VPN: The Layer 3 service model (L3SM) is defined in [RFC8299],
       which is a YANG data model that can be used for communication
       between customers and network operators and to deliver a Layer 3
-
-
-
-Li, et al.               Expires August 17, 2018               [Page 13]
-
-Internet-Draft                     HIC                     February 2018
-
-
       provider-provisioned VPN service.  [I-D.ietf-bess-l3vpn-yang]
       defines a YANG data model that can be used to configure and manage
       BGP Layer 3 VPNs at the device.  Note that a network configuration
@@ -754,7 +764,7 @@ Internet-Draft                     HIC                     February 2018
    mechanisms to install, manipulate, and delete the configuration of
    network devices.  The RESTCONF [RFC8040] describes an HTTP-based
    protocol that provides a programmatic interface for accessing data
-   defined in YANG, using the datastore concepts defined in NETCONF.
+   defined in YANG, using the data-store concepts defined in NETCONF.
 
    Some other mechanism like gRPC/gNMI could also be used between
    controllers using the same YANG data models.
@@ -767,6 +777,15 @@ Internet-Draft                     HIC                     February 2018
 
    There are no new security concerns in this document.
 
+
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 14]
+
+Internet-Draft                     HIC                        March 2018
+
+
 9.  Acknowledgments
 
 10.  References
@@ -777,14 +796,6 @@ Internet-Draft                     HIC                     February 2018
               Ceccarelli, D. and Y. Lee, "Framework for Abstraction and
               Control of Traffic Engineered Networks", draft-ietf-teas-
               actn-framework-11 (work in progress), October 2017.
-
-
-
-
-Li, et al.               Expires August 17, 2018               [Page 14]
-
-Internet-Draft                     HIC                     February 2018
-
 
 10.2.  Informative References
 
@@ -824,6 +835,13 @@ Internet-Draft                     HIC                     February 2018
               (LSPs)", RFC 5152, DOI 10.17487/RFC5152, February 2008,
               <https://www.rfc-editor.org/info/rfc5152>.
 
+
+
+Li, et al.              Expires September 2, 2018              [Page 15]
+
+Internet-Draft                     HIC                        March 2018
+
+
    [RFC5305]  Li, T. and H. Smit, "IS-IS Extensions for Traffic
               Engineering", RFC 5305, DOI 10.17487/RFC5305, October
               2008, <https://www.rfc-editor.org/info/rfc5305>.
@@ -832,15 +850,6 @@ Internet-Draft                     HIC                     February 2018
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
               DOI 10.17487/RFC5440, March 2009,
               <https://www.rfc-editor.org/info/rfc5440>.
-
-
-
-
-
-Li, et al.               Expires August 17, 2018               [Page 15]
-
-Internet-Draft                     HIC                     February 2018
-
 
    [RFC5441]  Vasseur, JP., Ed., Zhang, R., Bitar, N., and JL. Le Roux,
               "A Backward-Recursive PCE-Based Computation (BRPC)
@@ -876,6 +885,19 @@ Internet-Draft                     HIC                     February 2018
               DOI 10.17487/RFC7752, March 2016,
               <https://www.rfc-editor.org/info/rfc7752>.
 
+
+
+
+
+
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 16]
+
+Internet-Draft                     HIC                        March 2018
+
+
    [RFC7926]  Farrel, A., Ed., Drake, J., Bitar, N., Swallow, G.,
               Ceccarelli, D., and X. Zhang, "Problem Statement and
               Architecture for Information Exchange between
@@ -886,17 +908,6 @@ Internet-Draft                     HIC                     February 2018
    [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
               Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
               <https://www.rfc-editor.org/info/rfc8040>.
-
-
-
-
-
-
-
-Li, et al.               Expires August 17, 2018               [Page 16]
-
-Internet-Draft                     HIC                     February 2018
-
 
    [RFC8051]  Zhang, X., Ed. and I. Minei, Ed., "Applicability of a
               Stateful Path Computation Element (PCE)", RFC 8051,
@@ -925,40 +936,41 @@ Internet-Draft                     HIC                     February 2018
               <https://www.rfc-editor.org/info/rfc8309>.
 
    [I-D.ietf-teas-actn-yang]
-              Lee, Y., zhenghaomian@huawei.com, z., Yoon, B., Dios, O.,
-              Shin, J., and S. Belotti, "Applicability of YANG models
+              Lee, Y., zhenghaomian@huawei.com, z., Ceccarelli, D.,
+              Yoon, B., and S. Belotti, "Applicability of YANG models
               for Abstraction and Control of Traffic Engineered
-              Networks", draft-ietf-teas-actn-yang-00 (work in
-              progress), November 2017.
+              Networks", draft-ietf-teas-actn-yang-01 (work in
+              progress), February 2018.
+
+
+
+
+
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 17]
+
+Internet-Draft                     HIC                        March 2018
+
 
    [I-D.ietf-pce-applicability-actn]
               Dhody, D., Lee, Y., and D. Ceccarelli, "Applicability of
               Path Computation Element (PCE) for Abstraction and Control
               of TE Networks (ACTN)", draft-ietf-pce-applicability-
-              actn-02 (work in progress), October 2017.
+              actn-03 (work in progress), March 2018.
 
    [I-D.ietf-teas-yang-te]
               Saad, T., Gandhi, R., Liu, X., Beeram, V., Shah, H., and
               I. Bryskin, "A YANG Data Model for Traffic Engineering
-              Tunnels and Interfaces", draft-ietf-teas-yang-te-10 (work
-              in progress), December 2017.
-
-
-
-
-
-
-
-Li, et al.               Expires August 17, 2018               [Page 17]
-
-Internet-Draft                     HIC                     February 2018
-
+              Tunnels and Interfaces", draft-ietf-teas-yang-te-12 (work
+              in progress), February 2018.
 
    [I-D.ietf-teas-yang-te-topo]
               Liu, X., Bryskin, I., Beeram, V., Saad, T., Shah, H., and
               O. Dios, "YANG Data Model for Traffic Engineering (TE)
-              Topologies", draft-ietf-teas-yang-te-topo-13 (work in
-              progress), October 2017.
+              Topologies", draft-ietf-teas-yang-te-topo-15 (work in
+              progress), February 2018.
 
    [I-D.ietf-i2rs-yang-network-topo]
               Clemm, A., Medved, J., Varga, R., Bahadur, N.,
@@ -985,16 +997,24 @@ Internet-Draft                     HIC                     February 2018
               ietf-mpls-seamless-mpls-07 (work in progress), June 2014.
 
    [I-D.ietf-bess-evpn-yang]
-              Brissette, P., Sajassi, A., Shah, H., Li, Z.,
-              Tiruveedhula, K., Hussain, I., and J. Rabadan, "Yang Data
-              Model for EVPN", draft-ietf-bess-evpn-yang-03 (work in
-              progress), October 2017.
+              Brissette, P., Shah, H., Hussain, I., Tiruveedhula, K.,
+              and J. Rabadan, "Yang Data Model for EVPN", draft-ietf-
+              bess-evpn-yang-05 (work in progress), February 2018.
+
+
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 18]
+
+Internet-Draft                     HIC                        March 2018
+
 
    [I-D.ietf-bess-l2vpn-yang]
               Shah, H., Brissette, P., Chen, I., Hussain, I., Wen, B.,
               and K. Tiruveedhula, "YANG Data Model for MPLS-based
-              L2VPN", draft-ietf-bess-l2vpn-yang-07 (work in progress),
-              October 2017.
+              L2VPN", draft-ietf-bess-l2vpn-yang-08 (work in progress),
+              February 2018.
 
    [I-D.ietf-bess-l3vpn-yang]
               Jain, D., Patel, K., Brissette, P., Li, Z., Zhuang, S.,
@@ -1002,18 +1022,10 @@ Internet-Draft                     HIC                     February 2018
               for BGP/MPLS L3 VPNs", draft-ietf-bess-l3vpn-yang-02 (work
               in progress), October 2017.
 
-
-
-
-Li, et al.               Expires August 17, 2018               [Page 18]
-
-Internet-Draft                     HIC                     February 2018
-
-
    [I-D.ietf-l2sm-l2vpn-service-model]
               Wen, B., Fioccola, G., Xie, C., and L. Jalil, "A YANG Data
               Model for L2VPN Service Delivery", draft-ietf-l2sm-l2vpn-
-              service-model-06 (work in progress), February 2018.
+              service-model-08 (work in progress), February 2018.
 
    [I-D.dhodylee-pce-pcep-ls]
               Dhody, D., Lee, Y., and D. Ceccarelli, "PCEP Extension for
@@ -1023,8 +1035,19 @@ Internet-Draft                     HIC                     February 2018
    [I-D.lee-teas-te-service-mapping-yang]
               Lee, Y., Dhody, D., Ceccarelli, D., Tantsura, J., and G.
               Fioccola, "Traffic Engineering and Service Mapping Yang
-              Model", draft-lee-teas-te-service-mapping-yang-04 (work in
-              progress), October 2017.
+              Model", draft-lee-teas-te-service-mapping-yang-06 (work in
+              progress), February 2018.
+
+   [I-D.lee-pce-lsp-stitching-hpce]
+              Lee, Y., Dhody, D., and D. Ceccarelli, "PCEP Extensions
+              for Stitching LSPs in Hierarchical Stateful PCE Model",
+              draft-lee-pce-lsp-stitching-hpce-01 (work in progress),
+              December 2017.
+
+   [I-D.dugeon-pce-stateful-interdomain]
+              Dugeon, O. and J. Meuric, "PCEP Extension for Stateful
+              Inter-Domain Tunnels", draft-dugeon-pce-stateful-
+              interdomain-00 (work in progress), October 2017.
 
 Authors' Addresses
 
@@ -1035,6 +1058,12 @@ Authors' Addresses
    China
 
    EMail: lizhenbin@huawei.com
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 19]
+
+Internet-Draft                     HIC                        March 2018
 
 
    Dhruv Dhody
@@ -1061,4 +1090,31 @@ Authors' Addresses
 
 
 
-Li, et al.               Expires August 17, 2018               [Page 19]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Li, et al.              Expires September 2, 2018              [Page 20]
