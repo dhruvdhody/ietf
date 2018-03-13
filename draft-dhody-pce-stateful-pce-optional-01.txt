@@ -84,9 +84,10 @@ Table of Contents
      6.4.  Verify Correct Operations . . . . . . . . . . . . . . . .   7
      6.5.  Requirements On Other Protocols . . . . . . . . . . . . .   7
      6.6.  Impact On Network Operations  . . . . . . . . . . . . . .   7
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   8
+   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
@@ -105,7 +106,6 @@ Table of Contents
 
    [RFC5440] defined P flag (Processing-Rule) as part of Common Object
    Header to allow a PCC to specify in a PCReq message sent to a PCE
-   whether the object must be taken into account by the PCE during path
 
 
 
@@ -114,6 +114,7 @@ Dhody & Litkowski      Expires September 13, 2018               [Page 2]
 Internet-Draft                STATEFUL-OPT                    March 2018
 
 
+   whether the object must be taken into account by the PCE during path
    computation or is just optional.  The I flag (Ignore) is used by a
    PCE in a PCRep message to indicate to a PCC whether or not an
    optional object was processed.  Stateful PCE [RFC8231] specified that
@@ -161,7 +162,6 @@ Internet-Draft                STATEFUL-OPT                    March 2018
    set) for the Path Delay Variation metric [RFC8233].  In some
    scenarios it would be useful to state that this limiting constraint
    can be relaxed by the PCE, in case it cannot find a path.  Similarly
-   in case of an association groups [I-D.ietf-pce-association-group]
 
 
 
@@ -170,6 +170,7 @@ Dhody & Litkowski      Expires September 13, 2018               [Page 3]
 Internet-Draft                STATEFUL-OPT                    March 2018
 
 
+   in case of an association groups [I-D.ietf-pce-association-group]
    such as Disjoint Association [I-D.ietf-pce-association-diversity],
    the PCE may need to completely relax the disjointness constraint in
    order to provide a path to all the LSPs that are part of the
@@ -217,7 +218,6 @@ Internet-Draft                STATEFUL-OPT                    March 2018
    When the P flag is set, the object MUST be taken into account by the
    PCE.  Conversely, when the P flag is cleared, the object is optional
    and the PCE is free to ignore it.  The P flag for the mandatory
-   objects LSP and ERO (intended path) MUST be set in the PCRpt message.
 
 
 
@@ -226,6 +226,7 @@ Dhody & Litkowski      Expires September 13, 2018               [Page 4]
 Internet-Draft                STATEFUL-OPT                    March 2018
 
 
+   objects LSP and ERO (intended path) MUST be set in the PCRpt message.
    If the mandatory object is received with the P flag set incorrectly
    according to the rules stated above, the receiving peer MUST send a
    PCErr message with Error-Type=10 (Reception of an invalid object) and
@@ -273,7 +274,6 @@ Internet-Draft                STATEFUL-OPT                    March 2018
    the ignored optional object in its report and set the I flag to
    indicate that the optional object was ignored at PCC.  When the I
    flag is cleared, the PCC indicates that the optional object was
-
 
 
 
@@ -379,10 +379,10 @@ Internet-Draft                STATEFUL-OPT                    March 2018
    Mechanisms defined in this document do not have any impact on network
    operations in addition to those already listed in [RFC5440].
 
-7.  References
+7.  Acknowledgments
 
-7.1.  Normative References
-
+   Thanks to Jonathan Hardwick for discussion and suggestions around
+   this draft.
 
 
 
@@ -393,6 +393,10 @@ Dhody & Litkowski      Expires September 13, 2018               [Page 7]
 
 Internet-Draft                STATEFUL-OPT                    March 2018
 
+
+8.  References
+
+8.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -414,7 +418,7 @@ Internet-Draft                STATEFUL-OPT                    March 2018
               DOI 10.17487/RFC8231, September 2017,
               <https://www.rfc-editor.org/info/rfc8231>.
 
-7.2.  Informative References
+8.2.  Informative References
 
    [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
               Element (PCE)-Based Architecture", RFC 4655,
@@ -437,11 +441,7 @@ Internet-Draft                STATEFUL-OPT                    March 2018
               (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
               2015, <https://www.rfc-editor.org/info/rfc7525>.
 
-   [RFC8233]  Dhody, D., Wu, Q., Manral, V., Ali, Z., and K. Kumaki,
-              "Extensions to the Path Computation Element Communication
-              Protocol (PCEP) to Compute Service-Aware Label Switched
-              Paths (LSPs)", RFC 8233, DOI 10.17487/RFC8233, September
-              2017, <https://www.rfc-editor.org/info/rfc8233>.
+
 
 
 
@@ -449,6 +449,12 @@ Dhody & Litkowski      Expires September 13, 2018               [Page 8]
 
 Internet-Draft                STATEFUL-OPT                    March 2018
 
+
+   [RFC8233]  Dhody, D., Wu, Q., Manral, V., Ali, Z., and K. Kumaki,
+              "Extensions to the Path Computation Element Communication
+              Protocol (PCEP) to Compute Service-Aware Label Switched
+              Paths (LSPs)", RFC 8233, DOI 10.17487/RFC8233, September
+              2017, <https://www.rfc-editor.org/info/rfc8233>.
 
    [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
               "PCEPS: Usage of TLS to Provide a Secure Transport for the
@@ -493,6 +499,13 @@ Authors' Addresses
    EMail: dhruv.ietf@gmail.com
 
 
+
+
+Dhody & Litkowski      Expires September 13, 2018               [Page 9]
+
+Internet-Draft                STATEFUL-OPT                    March 2018
+
+
    Stephane Litkowski
    Orange
 
@@ -501,4 +514,47 @@ Authors' Addresses
 
 
 
-Dhody & Litkowski      Expires September 13, 2018               [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Dhody & Litkowski      Expires September 13, 2018              [Page 10]
