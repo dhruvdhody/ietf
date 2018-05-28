@@ -191,13 +191,13 @@
    PCE architectures and PCEP.</t>
    
    <t>The extension for PCECC in Segment Routing (SR) is specified in a
-   seperate draft <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>.</t>
+   separate draft <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>.</t>
 
-   <t>[Important Note - Note that this document achieves this by defining a new PCEP message. 
+   <!--<t>[Important Note - Note that this document achieves this by defining a new PCEP message. 
     The authors and WG also debated on the use of existing PCEP messages. 
     <xref target="Procedures"/> defines the first approach where as <xref target="appendix"/>  
     defines the latter. The authors are open to either of the approach and
-    will follow the direction of the WG.]</t>
+    will follow the direction of the WG.]</t>-->
    
 
       <section title="Requirements Language"
@@ -229,7 +229,7 @@
    different uses. This is also described in section 3.1.2. of 
    <xref target='RFC8283'/>. For the purpose
    of this document, it is assumed that label range to be used by a PCE
-   is known and set on both PCEP peers. A future extension MAY add capability to
+   is known and set on both PCEP peers. A future extension could add this capability to
    advertise the range via possible PCEP extensions as well. 
    The rest of processing is similar
    to the existing stateful PCE mechanism.</t>
@@ -246,16 +246,16 @@
        advertise its PCECC capability to its peers.</t>
 
    <t>PCEP speaker not supporting this draft MUST be able to reject
-       PCECC related extentions with a reason code that indicates no
-       support for PCECC.</t>
+       PCECC related extensions with a error reason code that indicates that this feature is not
+       supported.</t>
 
-   <t>PCEP SHOULD provide a means to identify PCECC based LSP in the
+   <t>PCEP speaker MUST provide a means to identify PCECC based LSP in the
        PCEP messages.</t>
 
-   <t>PCEP SHOULD provide a means to update (or cleanup) the label-
+   <t>PCEP procedures SHOULD provide a means to update (or cleanup) the label-
        download entry to the PCC.</t>
 
-   <t>PCEP SHOULD provide a means to synchronize the labels between
+   <t>PCEP procedures SHOULD provide a means to synchronize the labels between
        PCE to PCC in PCEP messages.</t>       
   
         </list>
@@ -276,26 +276,28 @@
     <t>
         <list style="hanging">
           <t hangText="(PCRpt):">a PCEP message described in <xref target='RFC8231'/>.
-          PCRpt message is used to send PCECC LSP Reports.</t>
+          PCRpt message is used to send PCECC LSP Reports. It is also extended to report the set of labels for which explicit action is required
+          from PCE. See <xref target="sec_label_db_sync"/> for more details.</t>
           <t hangText="(PCInitiate):">a PCEP message described in <xref target='RFC8281'/>.
-          PCInitiate message is used to setup PCE-Initiated LSP based on PCECC mechanism. </t>
+          PCInitiate message is used to setup PCE-Initiated LSP based on PCECC mechanism. 
+          It is also extended to download or cleanup the Label entry on all nodes along the path.</t>
           <t hangText="(PCUpd):">a PCEP message described in <xref target='RFC8231'/>.
           PCUpd message is used to send PCECC LSP Update.</t>
-          <t hangText="(PCLabelUpd):">a new PCEP message sent by a PCE to a PCC
+          <!--<t hangText="(PCLabelUpd):">a new PCEP message sent by a PCE to a PCC
           to download or cleanup the Label entry. The PCLabelUpd
           message described in <xref target="SEC_PCLabelUpd"/>.</t>
           <t hangText="(PCLabelRpt):">a new PCEP message sent by a PCC to a PCE to
           report the set of labels for which explicit action is required
           from PCE to update or cleanup or do nothing for these Label entries.
-          The PCLabelRpt message described in <xref target="SEC_PCLabelRpt"/>.</t>          
+          The PCLabelRpt message described in <xref target="SEC_PCLabelRpt"/>.</t>-->          
         </list>
     </t>
 
-    <t>[Editor's Note: This document defines new messages PCLabelUpd and 
+    <!--<t>[Editor's Note: This document defines new messages PCLabelUpd and 
       PCLabelRpt. The authors and WG also debated on the use of existing PCEP messages. 
       See <xref target="appendix"/> on how the existing messages can be extended 
       to add this functionality. WG needs to decide the final direction i.e. new specific messages 
-      are needed or existing PCEP messages can be extended.]</t>
+      are needed or existing PCEP messages can be extended.]</t>-->
 
     <t>The new LSP functions defined in this document are mapped onto the messages as
     shown in the following table.</t>
@@ -319,16 +321,13 @@
 | Function                               | Message                  |
 +----------------------------------------+--------------------------+
 | PCECC Capability advertisement         | Open                     |
-| Label entry Update                     | PCLabelUpd               |
-|                                        | (or PCInitiate)          |
-| Label entry Cleanup                    | PCLabelUpd               |
-|                                        | (or PCInitiate)          |
+| Label entry Add                        | PCInitiate               |
+| Label entry Cleanup                    | PCInitiate               |
 | PCECC Initiated LSP                    | PCInitiate               |
 | PCECC LSP Update                       | PCUpd                    |
 | PCECC LSP State Report                 | PCRpt                    |
 | PCECC LSP Delegation                   | PCRpt                    |
-| PCECC Label Report                     | PCLabelRpt               |
-|                                        | (or PCRpt)               | 
+| PCECC Label Report                     | PCRpt                    |
 +----------------------------------------+--------------------------+
 ]]>
 </artwork>
@@ -343,17 +342,15 @@
 
    <t>PST = TBD: Path is setup via PCECC mode.</t></list></t>
 
-   <t>A PCEP speaker SHOULD indicate its support of the function described
+   <t>A PCEP speaker MUST indicate its support of the function described
    in this document by sending a PATH-SETUP-TYPE-CAPABILITY TLV in the
    OPEN object with this new PST included in the PST list.</t>
-
 
    <t>This document also defines the PCECC Capability sub-TLV <xref target="SEC_PCECC_CAP_TLV"/>.  PCEP
    speakers use this sub-TLV to exchange information about their PCECC
    capability.  If a PCEP speaker includes PST=TBD in the PST List of the
    PATH-SETUP-TYPE-CAPABILITY TLV then it MUST also include the 
    PCECC Capability sub-TLV inside the PATH-SETUP-TYPE-CAPABILITY TLV. </t>  
-
 
    <t>The presence of the PST and PCECC Capability sub-TLV in PCC's OPEN Object
    indicates that the PCC is willing to function as a PCECC client.</t>
@@ -366,7 +363,7 @@
    respective OPEN message.  If the PCEP Speakers support the extensions
    of this draft but did not advertise this capability then a PCErr message with
    Error-Type=19(Invalid Operation) and Error-Value=TBD (Attempted
-   LSP setup/download/label-range reservation if PCECC capability was not
+   PCECC operations when PCECC capability was not
    advertised) will be generated and the PCEP session will be terminated.</t>
    <t>A PCC or a PCE MUST include both PCECC-CAPABILITY sub-TLV and
    STATEFUL-PCE-CAPABILITY TLV (<xref target='RFC8231'/>) in OPEN Object to support the extensions defined
@@ -392,9 +389,8 @@
     TLV is set to zero. The LSP-ID is further used during label download and this relationship is useful for maintainability reasons. </t>
     <t>When a PCE receives PCRpt message with D flags and PST Type set, it MAY
    generates LSP ID; calculates the path and assigns labels along the
-   path; and set up the path by sending PCLabelUpd message to each node
-   along the path of the LSP. [Note: See <xref target="appendix"/> for how
-   we could use PCInitiate message instead.]</t>
+   path; and set up the path by sending PCInitiate message to each node
+   along the path of the LSP. </t>
     <t>In response to the delegate PCRpt message, the PCE SHOULD send the PCUpd message with the same PLSP-ID to the
     Ingress PCC.</t>
     <t>The PCECC LSPs MUST be delegated to a PCE at all times.
@@ -403,13 +399,12 @@
     is same as defined in <xref target='RFC8231'/>. If the PCE receives
     PCRpt message for LSP deletion then it does Label cleanup operation as
     described in <xref target="SEC_CLEANUP"/> for the corresponding LSP.</t>
-    <t>The Basic PCECC LSP setup sequence is as shown below using a new
-    message PCLabelUpd.</t>
+    <t>The Basic PCECC LSP setup sequence is as shown below.</t>
     <figure align="left"
                 alt=""
                 height=""
                 suppress-title="false"
-                title="Using PCLabelUpd For Label Operations"
+                title="Basic PCECC LSP setup"
                 width=""
                 anchor="SEC_FIG2">
      <artwork align="left"
@@ -431,13 +426,13 @@
  |Egress  |  |     |                                     |
  +--------+  |     |                                     |
      |       |     |                                     |
-     |<------ PCLabelUpd,PLSP-ID=1  -------------------- | Label
+     |<------ PCInitiate,PLSP-ID=1  -------------------- | Label
      |       |     |       (LSP ID=1)                    | download
      |       |     |                                     |
-     |       |<----- PCLabelUpd,PLSP-ID=1  ------------- | Label
+     |       |<----- PCInitiate,PLSP-ID=1  ------------- | Label
      |       |     |      (LSP ID=1)                     | download
      |       |     |                                     |
-     |       |     |<--- PCLabelUpd,PLSP-ID=1  --------- | Label
+     |       |     |<--- PCInitiate,PLSP-ID=1  --------- | Label
      |       |     |      (LSP ID=1)                     | download
      |       |     |                                     |
      |       |     |<-- PCUpd,PLSP-ID=1,PST=TBD, D=1-----| PCECC LSP
@@ -455,17 +450,15 @@
     
     <section title="Label Operations"
              toc="default">
-    <t>The new label operations in PCEP can be done via a new PCLabelUpd message and by
+    <t>The new label operations in PCEP can be done via the PCInitiate message and by
    defining new PCEP Objects for Label operations. Local label range of
-   each PCC can be configured at PCE and PCE. [Note: See <xref target="appendix"/> for how
-   we could use PCInitiate message instead.]</t> 
+   each PCC is assumed to be known at both the PCC and the PCE. </t> 
                    
     <section title="Label Download"
              toc="default">
-    <t>In order to setup an LSP based on PCECC, the PCE sends a PCLabelUpd message
+    <t>In order to setup an LSP based on PCECC, the PCE sends a PCInitiate message
     to each node of the LSP to download the Label entry as described in <xref target="SEC_BASIC_SETUP"/>.
-  [Note: See <xref target="appendix"/> for how
-   we could use PCInitiate message instead.]</t>
+  </t>
     <t>The LSP object in PCLabelUpd MUST include the LSP-IDENTIFIER TLV.</t>
     <t>If a node (PCC) receives a PCLabelUpd message with a Label, out
     	of the range set aside for the PCE, it MUST send a PCErr message with Error-type=TBD
@@ -683,7 +676,7 @@
     </section>    
     
     <section title="LABEL-DB Synchronization"
-             toc="default">
+             toc="default" anchor="sec_label_db_sync">
     <t>The purpose of LABEL-DB synchronization is to make sure that the
    PCE's view of LABEL-DB matches with the PCC's LABEL-DB.  The LABEL-
    DB synchronization MUST be performed from PCE to PCC immediately
@@ -1394,7 +1387,7 @@ and extended in <xref target="RFC8281"/>.
           <t hangText="----------   -------"></t>
           <t hangText="19">Invalid operation.
           <list style="hanging" hangIndent="37">
-            <t hangText=" Error-value = TBD :">Attempted LSP setup/download/label-range reservation if PCECC capability was not advertised</t>
+            <t hangText=" Error-value = TBD :">Attempted PCECC operations when PCECC capability was not advertised</t>
             <t hangText=" Error-value = TBD :">Stateful PCE capability was not advertised</t>
             <t hangText=" Error-value = TBD :">Unknown Label</t>            
           </list>
