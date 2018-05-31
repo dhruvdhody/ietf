@@ -448,10 +448,10 @@
     </section>
     
     
-    <section title="Label Operations"
+    <section title="Central Control Intructions"
              toc="default">
-    <t>The new label operations in PCEP can be done via the PCInitiate message and by
-   defining new PCEP Objects for Label operations. Local label range of
+    <t>The new central controller's instructions (CCI) for the label operations in PCEP can be done via the PCInitiate message and by
+   defining a new PCEP Objects for CCI operations. Local label range of
    each PCC is assumed to be known at both the PCC and the PCE. </t> 
                    
     <section title="Label Download"
@@ -469,14 +469,13 @@
    (label download failure) and Error-value=TBD (label failed to be download)and MUST include the
    SRP object to specify the error is for the corresponding label update via PCInitiate message.</t>
    
-    <t>New PCEP object for LABEL is defined in <xref target='SEC_LABEL'/> to encode the Label
-   operations.</t>
+    <t>New PCEP object for central control instructions (CCI) is defined in <xref target='SEC_CCI'/>.</t>
     </section>
     
     <section title="Label Cleanup"
              toc="default"
              anchor="SEC_CLEANUP">
-    <t>In order to delete an LSP based on PCECC, the PCE sends a PCInitiate
+    <t>In order to delete an LSP based on PCECC, the PCE sends a central controller instructions via a PCInitiate
     message to each node along the path of the LSP to cleanup the Label entry. 
   </t>
     <t>If the PCC receives a PCInitiate message but does not recognize the
@@ -544,8 +543,7 @@
     in <xref target='RFC8281'/>. The PCE should further
     perform Label entry cleanup operation as described in
     <xref target="SEC_CLEANUP"/> for the corresponding LSP.</t>
-    <t>The PCE Initiated PCECC LSP setup sequence is shown below using 
-    a new PCLabelUpd message.</t>
+    <t>The PCE Initiated PCECC LSP setup sequence is shown below -</t>
    <figure align="left"
                 alt=""
                 height=""
@@ -601,8 +599,8 @@
     updated LSP and then switch traffic, before cleaning up the old labels. On successful traffic switch over to the
     new LSP, PCC sends a PCRpt message to the PCE for the deletion of old LSP.
     Further the PCE does cleanup operation for the old LSP as described in <xref target="SEC_CLEANUP"/>.</t>
-    <t>The PCECC LSP Update and make-before-break sequence is shown below 
-    using a new PCLabelUpd message. </t>
+    <t>The PCECC LSP Update and make-before-break sequence is shown below -
+    </t>
     <figure align="left"
                 alt=""
                 height=""
@@ -665,10 +663,9 @@
     
     <section title="Session Termination"
              toc="default">
-    <t>PCC MUST mark all labels that were previously reported by this PCE
-   as stale on session down. <xref target='RFC8231'/> defines the
-   State Timeout Interval. The labels which are marked stale and provisioned
-   for the Basic PCECC LSP on this session MUST be cleaned up at the expiration of 
+    <t>PCC would mark all labels that were previously reported by this PCE
+   as stale on session down as per the procedures defined in <xref target='RFC8231'/>. The labels which are marked stale and provisioned
+   for the Basic PCECC LSP on this session would be cleaned up at the expiration of 
    the State Timeout Interval. The labels will be retained when the
    Infinite State Timeout Interval is used.</t>
 
@@ -693,114 +690,7 @@
     <xref target="appendix"/>. In the case, some modifications needs to be made to the existing 
     LSP-DB synchronization mechanism to also handle the label synchronization.]</t>-->
    
-    <!--<section title="LABEL-DB Synchronization procedure"
-             toc="default">
-    <t>During LABEL-DB Synchronization, a PCE first takes a snapshot
-   of the label database for the session, then sends this snapshot to
-   the PCC in a sequence of Label Update message (PCLabelUpd message).
-   Each PCLabelUpd message sent during LABEL-DB Synchronization has
-   the SYNC Flag in the SRP Object(see <xref target="SEC_SRP_OBJ"/>) set to 1.</t>
-   <t>The end of synchronization marker is a PCLabelUpd message with the
-   SYNC Flag set to 0 for SRP Object and Label equal to a reserved value
-   of 0 in the LABEL object (<xref target='SEC_LABEL'/>).
-   If the PCE has no label to synchronize, it will only send
-   the end of synchronization marker.</t>
-   <t>PCC MUST remove the stale marking for the all labels on receipt of corresponding
-   PCLabelUpd message during the LABEL-DB Synchronization phase. The remaining
-   stale marked labels after the LABEL-DB synchronization process MUST be reported
-   to PCE in a sequence of Label Report message (PCLabelRpt message) with the SYNC Flag
-   in the SRP Object(see <xref target="SEC_SRP_OBJ"/>) set to 1.</t>
-   <t>The end of report synchronization marker is a PCLabelRpt message with the
-   SYNC Flag set to 0 for SRP Object with Label equal to reserved value
-   0 in the LABEL object ((<xref target='SEC_LABEL'/>)). If the PCC has no label to report, it will only
-   send the end of report synchronization marker.</t>
-   <t>Either the PCE or the PCC MAY terminate the session using the PCEP
-   session termination procedures during the LABEL-DB synchronization
-   phase. The session reestablishment MUST be re-attempted as per the
-   procedures defined in <xref target="RFC5440" />, including use of
-   a back-off timer.</t>
-   <t>The PCC does not send positive acknowledgments for properly received
-   label database synchronization messages.  It MUST respond with a
-   PCErr message with Error-type TBD1 (Label Database Synchronization
-   Error) and Error-value 1 (indicating an error in processing the
-   PCLabelUpd) if it encounters a problem with the Label Update it
-   received from the PCE and it MUST terminate the session.</t>
-   <t>If the PCE encounters a problem which prevents it from completing
-   the label transfer, it MUST send a PCErr message with Error-type TBD1
-   (Label Database Synchronization Error) and Error-value 2 (indicating
-   an internal PCE Error) to the PCC and terminate the session.</t>   
-   <t>PCE MUST respond with a PCErr message with Error-type TBD1 (Label Database
-   Report Synchronization Error) and Error-value 1 (indicating an error
-   in processing the PCLabelRpt) if it encounters a problem with the Label
-   Report it received from the PCC and it MUST terminate the session.</t>
-
-   <t>The successful LABEL-DB Synchronization sequence is shown below.</t>
-
-   <figure align="left"
-                alt=""
-                height=""
-                suppress-title="true"
-                title=""
-                width=""
-                anchor="SEC_FIG6">
-          <artwork align="left"
-         alt=""
-         height=""
-         name=""
-         type=""
-         width=""
-         xml:space="preserve">
-<![CDATA[
-      + +-+-+-+-                         + +-+-+-+-
-      |        |                         |  PCC   |
-      |  PCE   |                         | Transit|
-      |        |                         |  Node  |
-      +-+-+-+-+-                         +-+-+-+-+-
-          |                                   |
-          |                                   |
-          |                .                  |
-          |                .                  |
-          |                                   |
-          |------- PCLabelUpd, PLSP-ID=2----->|(Label 
-          |            (LSP ID=2)             | Download       
-          |                                   | for LSP's) 
-          |------- PCLabelUpd, PLSP-ID=3----->|
-          |            (LSP ID=3)             |        
-          |                                   |
-          |------- PCLabelUpd, PLSP-ID=4----->|
-          |            (LSP ID=4)             |        
-          |                .                  |
-          |                .                  |(Session
-          |                                   | down, mark
-          |------- Session Down---------X     | all label's
-          |                                   | Stale of this
-          |                .                  | Session)  
-          |                .                  | 
-          |<------ Session Re-established---->|(Session up)
-          |                .                  |   
-          |                .                  |
-          |<-----PCRpt, SYNC=0----------------| (No LSP to SYNC)
-          |                                   |
-          |----PCLabelUpd,PLSP-ID=2,SYNC=1--->|(LABEL-DB
-          |----PCLabelUpd,PLSP-ID=3,SYNC=1--->| SYNC, unmark
-          |                                   | stale label)
-          |------PCLabelUpd, SYNC=0---------->|
-          |                                   |(End of LABEL-DB
-          |                                   | SYNC)
-          |                                   |
-          |<-----PCLabelRpt,PLSP-ID=4,SYNC=1--|(Report all stale
-          |                                   | Labels of this  
-          |<-----PCLabelRpt,SYNC=0------------| Session)
-          |                                   |
-          |------- PCLabelUpd, PLSP-ID=4 ---->|Label Cleanup
-          |        (LSP ID=4, R=1)            |
-          |                                   |
-          |                                   |
-]]>
-        </artwork>
-        </figure>   
-        <t>See <xref target="I-D.palle-pce-controller-labeldb-sync"/> for the optimizations for LABEL-DB synchronization procedure.</t>  
-    </section>-->   
+    
     </section>
     
     <section title="PCECC LSP State Report"
@@ -827,10 +717,10 @@
    <t>LSP-IDENTIFIERS TLV MUST be included in the LSP object for PCECC
    LSP.</t>
    
-    <section title="Label Operations"
+    <!--<section title="Label Operations"
              toc="default"
              anchor="SEC_LabelOp"> 
-    <!--<t>[Editor's Note: This document defines new messages PCLabelUpd and 
+    <t>[Editor's Note: This document defines new messages PCLabelUpd and 
       PCLabelRpt. The authors and WG also debated on the use of existing PCEP messages.
       See <xref target="appendix"/> on how the existing messages can be extended 
       to add this functionality. WG needs to decide the final direction i.e. new specific messages 
@@ -991,14 +881,14 @@
      <PCE-initiated-lsp-request> ::= 
                             (<PCE-initiated-lsp-instantiation>|
                              <PCE-initiated-lsp-deletion>|
-                             <PCE-initiated-lsp-label-download>)
+                             <PCE-initiated-lsp-central-control>)
 
-     <PCE-initiated-lsp-label-download> ::= <SRP>
-                                            <LSP>
-                                            <label-list>
+     <PCE-initiated-lsp-central-control> ::= <SRP>
+                                             <LSP>
+                                             <cci-list>
 
-     <label-list> ::=  <LABEL>
-                       [<label-list>]
+     <cci-list> ::=  <CCI>
+                     [<cci-list>]
 
   Where:
      <PCE-initiated-lsp-instantiation> and 
@@ -1010,20 +900,20 @@
 ]]></artwork>
         </figure>
       </t>    
-      <t>When PCInitiate message is used to download labels, the SRP, LSP and LABEL objects MUST be present. 
+      <t>When PCInitiate message is used to download labels, the SRP, LSP and CCI objects MUST be present. 
         The SRP object is defined in <xref target='RFC8231'/> and if the SRP object is missing, the receiving PCC MUST send
     a PCErr message with Error-type=6 (Mandatory Object missing) and
     Error-value=10 (SRP object missing). The LSP object is defined in <xref target='RFC8231'/> and if the LSP object is missing, the receiving PCC MUST send
     a PCErr message with Error-type=6 (Mandatory Object missing) and
-    Error-value=8 (LSP object missing). The LABEL object is defined in <xref target="SEC_LABEL"/> and if the LABEL object is
+    Error-value=8 (LSP object missing). The CCI object is defined in <xref target="SEC_CCI"/> and if the CCI object is
     missing, the receiving PCC MUST send a PCErr message with Error-type=6
-    (Mandatory Object missing) and Error-value=TBD (LABEL object missing).
-    More than one LABEL object MAY be included in the PCInitiate message
+    (Mandatory Object missing) and Error-value=TBD (CCI object missing).
+    More than one CCI object MAY be included in the PCInitiate message
     for the transit LSR.</t>
 
     <t>To cleanup the SRP object must set the R (remove) bit.</t>
     </section>
-    </section> 
+     
     <section title="The PCRpt message"
              toc="default"
              anchor="SEC_PCRpt">    
@@ -1038,20 +928,18 @@
       <state-report-list> ::= <state-report>[<state-report-list>]
 
       <state-report> ::= (<lsp-state-report>|
-                          <pce-label-report>) 
+                          <central-control-report>) 
 
       <lsp-state-report> ::= [<SRP>]
                              <LSP>
                              <path>
 
-      <pce-label-report> ::= <pce-label-delegate>
+      <central-control-report> ::= [<SRP>]
+                                   <LSP>
+                                   <cci-list>
 
-      <pce-label-delegate> ::= <SRP>
-                               <LSP>
-                               <label-list>
-
-      <label-list> ::=  <LABEL>
-                        [<label-list>]                  
+      <cci-list> ::=  <CCI>
+                      [<cci-list>]                  
 
     Where:
       <path> is as per [RFC8231] and the LSP and SRP object are 
@@ -1059,20 +947,20 @@
 ]]></artwork>
         </figure>
    </t>
-      <t>When PCRpt message is used to report the label allocations, the SRP, LSP and LABEL objects MUST be present. 
+      <t>When PCRpt message is used to report the label allocations, the SRP, LSP and CCI objects MUST be present. 
         The SRP object is defined in <xref target='RFC8231'/> and if the SRP object is missing, the receiving PCE MUST send
     a PCErr message with Error-type=6 (Mandatory Object missing) and
     Error-value=10 (SRP object missing). The LSP object is defined in <xref target='RFC8231'/> and if the LSP object is missing, the receiving PCE MUST send
     a PCErr message with Error-type=6 (Mandatory Object missing) and
-    Error-value=8 (LSP object missing). The LABEL object is defined in <xref target="SEC_LABEL"/> and if the LABEL object is
+    Error-value=8 (LSP object missing). The CCI object is defined in <xref target="SEC_CCI"/> and if the CCI object is
     missing, the receiving PCC MUST send a PCErr message with Error-type=6
-    (Mandatory Object missing) and Error-value=TBD (LABEL object missing).
-    More than one LABEL object MAY be included in the PCRpt message
+    (Mandatory Object missing) and Error-value=TBD (CCI object missing).
+    More than one CCI object MAY be included in the PCRpt message
     for the transit LSR.</t>
     </section>
     </section>
     
-    </section>
+    
     
     <section title="PCEP Objects"
              toc="default">
@@ -1141,13 +1029,13 @@
    based mechanism.</t>
     </section>
     
-    <section title="Label Object"
+    <section title="CCI Object"
              toc="default"
-             anchor="SEC_LABEL">
-    <t>The LABEL Object is used to specify the Label information and
+             anchor="SEC_CCI">
+    <t>The Central Control Instructions (CCI) Object is used by the PCE to specify the forwarding instructions (Label information in the context of this document) to the PCC, and
     MAY be carried within PCInitiate or PCRpt message for label download.</t>
-    <t>LABEL Object-Class is TBD.</t>
-    <t>LABEL Object-Type is 1.</t>
+    <t>CCI Object-Class is TBD.</t>
+    <t>CCI Object-Type is 1 for the MPLS Label.</t>
       <figure align="left"
                 alt=""
                 height=""
@@ -1166,6 +1054,8 @@
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            CC-ID                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |          Reserved            |              Flags           |O|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                 Label                 |     Reserved          |
@@ -1177,28 +1067,32 @@
 ]]>
         </artwork>
         </figure>
-    <t>The fields in the LABEL object are as follows:
+    <t>The fields in the CCI object are as follows:
     <list style="hanging">
+    <t hangText="CC-ID:"> A PCEP-specific identifier for the CCI
+   information.  A PCE creates an CC-ID for each instruction, the value is
+   unique within the scope of the PCE and is constant for the lifetime
+   of a PCEP session.  The values 0 and 0xFFFFFFFF are reserved
+   and MUST NOT be used.</t>
     <t hangText="Flags:"> is used to carry any additional information
-    pertaining to the label. Currently, the following flag bit is
+    pertaining to the CCI. Currently, the following flag bit is
     defined: <list style="symbols">
     <t>O bit(Out-label) : If the bit is set, it specifies the label is
     the OUT label and it is mandatory to encode the next-hop
     information (via IPV4-ADDRESS TLV or
     IPV6-ADDRESS TLV or UNNUMBERED-IPV4-ID-ADDRESS TLV in
-    LABEL object). If the bit is not set, it specifies the label is
+    the CCI object). If the bit is not set, it specifies the label is
     the IN label and it is optional to encode the local interface
     information (via IPV4-ADDRESS TLV or
     IPV6-ADDRESS TLV or UNNUMBERED-IPV4-ID-ADDRESS TLV in
-    LABEL object).</t> </list></t>
-    <t hangText="Label (20-bit):">The Label information encoded such
-    that the 20 rightmost bits represent a label.</t>
+    the CCI object).</t> </list></t>
+    <t hangText="Label (20-bit):">The Label information.</t>
     <t hangText="Reserved (12 bit):">Set to zero while sending, ignored on receive.</t>
     </list></t>
     
     <section title="Address TLVs"
              toc="default">
-    <t>This document defines the following TLV for the LABEL object to
+    <t>This document defines the following TLV for the CCI object to
     associate the next-hop information in case of an outgoing label and
     local interface information in case of an incoming label.</t>
       <figure align="left"
@@ -1347,10 +1241,8 @@ and extended in <xref target="RFC8281"/>.
       </section>
       <section title="Impact On Network Operations"
                toc="default">
-        <t>PCEP implementation SHOULD allow a limit to be placed on the rate
-   of PCLabelUpd messages sent by PCE and processed by PCC.
-   It SHOULD also allow sending a notification when a rate threshold is
-   reached.</t>
+        <t>PCEP extensions defined in this document do not put new requirements
+   on network operations.</t>
       </section>
     </section>
 
@@ -1358,7 +1250,7 @@ and extended in <xref target="RFC8281"/>.
     <section title="IANA Considerations"
              toc="default">
              
-      <section title="PCLabelUpd-PCLabelRpt message" toc="default">
+      <!--<section title="PCLabelUpd-PCLabelRpt message" toc="default">
         <t>IANA is requested to allocate a new message type within the "PCEP
           Messages" sub-registry of the PCEP Numbers registry for:</t>
      <texttable anchor="PCEP-LBL-MSG" style="none" suppress-title="true" title="" align="center">
@@ -1372,7 +1264,7 @@ and extended in <xref target="RFC8281"/>.
        <c>Label Report</c>
        <c>This document</c>       
      </texttable>      
-      </section>
+      </section>-->
       
       <section title="PCEP TLV Type Indicators" toc="default">
         <t>IANA is requested to confirm the early allocation of the following
@@ -1416,26 +1308,26 @@ and extended in <xref target="RFC8281"/>.
       </section>
             
       <section title="PCEP Object" toc="default">
-        <t>IANA is requested to allocate new registry for LABEL PCEP object.</t>
+        <t>IANA is requested to allocate new registry for CCI PCEP object.</t>
      <texttable anchor="PCEP-OBJECT" style="none" suppress-title="true" title="" align="center">
       <ttcol align="left" width="20%">Object-Class Value</ttcol>
       <ttcol align="left" width="30%">Name</ttcol>
       <ttcol align="left" width="20%">Reference</ttcol>
        <c>TBD</c>
-       <c>LABEL Object-Type</c>
+       <c>CCI Object-Type</c>
        <c>This document</c>
        <c> </c>
        <c>1</c>
-       <c> </c>       
+       <c>MPLS Label </c>       
      </texttable>            
       </section>
       
-      <section title="LABEL Object Flag Field" toc="default">
-        <t>IANA is requestd to create a registry to manage the Flag field
-           of the LABEL object.</t>
-        <t>One bit to be defined for the LABEL Object flag field in this document:</t>
-        <t>Codespace of the Flag field (LABEL Object)</t>
-     <texttable anchor="LABEL-FLAG" style="none" suppress-title="true" title="" align="center">
+      <section title="CCI Object Flag Field" toc="default">
+        <t>IANA is requested to create a registry to manage the Flag field
+           of the CCI object.</t>
+        <t>One bit to be defined for the CCI Object flag field in this document:</t>
+        <t>Codespace of the Flag field (CCI Object)</t>
+     <texttable anchor="CCI-FLAG" style="none" suppress-title="true" title="" align="center">
       <ttcol align="left" width="20%">Bit</ttcol>
       <ttcol align="left" width="30%">Description</ttcol>
       <ttcol align="left" width="20%">Reference</ttcol>
@@ -1484,7 +1376,7 @@ and extended in <xref target="RFC8281"/>.
           </t>
           <t hangText="6">Mandatory Object missing.
           <list style="hanging" hangIndent="37">
-            <t hangText=" Error-value = TBD :">LABEL object missing</t>
+            <t hangText=" Error-value = TBD :">CCI object missing</t>
           </list>
           </t>
           <t hangText="TBD">Label download failure.
@@ -1493,12 +1385,12 @@ and extended in <xref target="RFC8281"/>.
             <t hangText=" Error-value = TBD :">Download of label Failed.</t>
           </list>
           </t>
-          <t hangText="TBD">Label DB synchronization failed.
+          <!--<t hangText="TBD">Label DB synchronization failed.
           <list style="hanging" hangIndent="37">
             <t hangText=" Error-value = TBD :">Processing label update Failed during synchronization.</t>
             <t hangText=" Error-value = TBD :">Internal PCE Error during synchronization.</t>
           </list>
-          </t>              
+          </t>              -->
         </list>
         </t>         
       </section>      
@@ -1532,7 +1424,7 @@ and extended in <xref target="RFC8281"/>.
     <?rfc include="reference.I-D.ietf-pce-lsp-setup-type"?>
     <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
     <?rfc include="reference.I-D.zhao-pce-pcep-extension-pce-controller-sr"?>
-    <?rfc include="reference.I-D.palle-pce-controller-labeldb-sync"?>
+    <!--<?rfc include="reference.I-D.palle-pce-controller-labeldb-sync"?>-->
 
 
       </references>
@@ -1555,6 +1447,14 @@ Bangalore, Karnataka  560066
 India
 
 EMail: udayasreereddy@gmail.com
+
+Mahendra Singh Negi 
+Huawei Technologies
+Divyashree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: mahendrasingh@huawei.com
 
 Katherine Zhao
 Huawei Technologies
