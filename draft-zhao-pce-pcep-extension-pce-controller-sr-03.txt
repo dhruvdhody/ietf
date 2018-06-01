@@ -5,13 +5,13 @@
 PCE Working Group                                                Q. Zhao
 Internet-Draft                                                     Z. Li
 Intended status: Standards Track                                D. Dhody
-Expires: December 2, 2018                                 S. Karunanithi
+Expires: December 3, 2018                                 S. Karunanithi
                                                      Huawei Technologies
                                                                A. Farrel
                                                    Juniper Networks, Inc
                                                                  C. Zhou
                                                            Cisco Systems
-                                                            May 31, 2018
+                                                            June 1, 2018
 
 
    PCEP Procedures and Protocol Extensions for Using PCE as a Central
@@ -20,18 +20,43 @@ Expires: December 2, 2018                                 S. Karunanithi
 
 Abstract
 
-   In certain networks deployment scenarios, service providers would
-   like to keep all the existing MPLS functionalities in both MPLS and
-   GMPLS while removing the complexity of existing signaling protocols
-   such as LDP and RSVP-TE.  PCE has been proposed to be used as a
-   central controller (PCECC) so that LSP can be calculated/setup/
-   initiated and label forwarding entries are downloaded through a
-   centralized PCE server to each network devices along the path while
-   leveraging the existing PCE technologies as much as possible.
+   The Path Computation Element (PCE) is a core component of Software-
+   Defined Networking (SDN) systems.  It can compute optimal paths for
+   traffic across a network and can also update the paths to reflect
+   changes in the network or traffic demands.
+
+   PCE was developed to derive paths for MPLS Label Switched Paths
+   (LSPs), which are supplied to the head end of the LSP using the Path
+   Computation Element Communication Protocol (PCEP).  But SDN has a
+   broader applicability than signaled (G)MPLS traffic-engineered (TE)
+   networks, and the PCE may be used to determine paths in a range of
+   use cases.  PCEP has been proposed as a control protocol for use in
+   these environments to allow the PCE to be fully enabled as a central
+   controller.
+
+   A PCE-based central controller (PCECC) can simplify the processing of
+   a distributed control plane by blending it with elements of SDN and
+   without necessarily completely replacing it.  Thus, the LSP can be
+   calculated/setup/initiated and the label forwarding entries can also
+   be downloaded through a centralized PCE server to each network
+   devices along the path while leveraging the existing PCE technologies
+   as much as possible.
 
    This document specifies the procedures and PCEP protocol extensions
-   when the PCE functions as one of the central controller components in
-   Segment Routing (SR).
+   when a PCE-based controller is also responsible for configuring the
+   forwarding actions on the routers, in addition to computing the paths
+   for packet flows in a segment routing network and telling the edge
+   routers what instructions to attach to packets as they enter the
+   network.
+
+
+
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 1]
+
+Internet-Draft                    PCECC                        June 2018
+
 
 Status of This Memo
 
@@ -48,15 +73,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 2, 2018.
-
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 1]
-
-Internet-Draft                    PCECC                         May 2018
-
+   This Internet-Draft will expire on December 3, 2018.
 
 Copyright Notice
 
@@ -76,8 +93,8 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   4
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   5
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   5
    3.  PCECC SR  . . . . . . . . . . . . . . . . . . . . . . . . . .   5
    4.  PCEP Requirements . . . . . . . . . . . . . . . . . . . . . .   5
    5.  Procedures for Using the PCE as the Central Controller
@@ -85,35 +102,35 @@ Table of Contents
      5.1.  Stateful PCE Model  . . . . . . . . . . . . . . . . . . .   6
      5.2.  New LSP Functions . . . . . . . . . . . . . . . . . . . .   6
      5.3.  PCECC Capability Advertisement  . . . . . . . . . . . . .   6
-     5.4.  PCEP session IP address and TEDB Router ID  . . . . . . .   6
+     5.4.  PCEP session IP address and TEDB Router ID  . . . . . . .   7
      5.5.  LSP Operations  . . . . . . . . . . . . . . . . . . . . .   7
        5.5.1.  PCECC Segment Routing (SR)  . . . . . . . . . . . . .   7
          5.5.1.1.  PCECC SR Node/Prefix Label allocation . . . . . .   7
-         5.5.1.2.  PCECC SR Adjacency Label allocation . . . . . . .   8
-         5.5.1.3.  Redundant PCEs  . . . . . . . . . . . . . . . . .   9
+
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 2]
+
+Internet-Draft                    PCECC                        June 2018
+
+
+         5.5.1.2.  PCECC SR Adjacency Label allocation . . . . . . .   9
+         5.5.1.3.  Redundant PCEs  . . . . . . . . . . . . . . . . .  10
          5.5.1.4.  Session Termination . . . . . . . . . . . . . . .  10
          5.5.1.5.  Synchronization of Label Allocations  . . . . . .  10
    6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .  10
-     6.1.  Central Control Intructions . . . . . . . . . . . . . . .  10
-       6.1.1.  The PCInitiate message  . . . . . . . . . . . . . . .  10
-       6.1.2.  The PCRpt message . . . . . . . . . . . . . . . . . .  11
-   7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  12
-     7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .  12
-       7.1.1.  PCECC Capability sub-TLV  . . . . . . . . . . . . . .  12
+     6.1.  Central Control Intructions . . . . . . . . . . . . . . .  11
+       6.1.1.  The PCInitiate message  . . . . . . . . . . . . . . .  11
+       6.1.2.  The PCRpt message . . . . . . . . . . . . . . . . . .  12
+   7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  13
+     7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .  13
+       7.1.1.  PCECC Capability sub-TLV  . . . . . . . . . . . . . .  13
      7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  13
      7.3.  CCI Object  . . . . . . . . . . . . . . . . . . . . . . .  13
      7.4.  FEC Object  . . . . . . . . . . . . . . . . . . . . . . .  15
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
    9.  Manageability Considerations  . . . . . . . . . . . . . . . .  17
      9.1.  Control of Function and Policy  . . . . . . . . . . . . .  17
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 2]
-
-Internet-Draft                    PCECC                         May 2018
-
-
      9.2.  Information and Data Models . . . . . . . . . . . . . . .  17
      9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  17
      9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  17
@@ -144,6 +161,15 @@ Internet-Draft                    PCECC                         May 2018
    configuration on the PCC, thus allowing for a dynamic MPLS network
    that is centrally controlled and deployed.
 
+
+
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 3]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    [RFC8283] introduces the architecture for PCE as a central
    controller, examines the motivations and applicability for PCEP as a
    southbound interface, and introduces the implications for the
@@ -162,14 +188,6 @@ Internet-Draft                    PCECC                         May 2018
 
    [I-D.ietf-spring-segment-routing] provides an introduction to SR
    technology.  The corresponding IS-IS and OSPF extensions are
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 3]
-
-Internet-Draft                    PCECC                         May 2018
-
-
    specified in [I-D.ietf-isis-segment-routing-extensions] and
    [I-D.ietf-ospf-segment-routing-extensions] , respectively.
 
@@ -201,6 +219,13 @@ Internet-Draft                    PCECC                         May 2018
    use cases where SR LSPs are calculated/setup/initiated/downloaded
    through extending the existing PCE architectures and PCEP.
 
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 4]
+
+Internet-Draft                    PCECC                        June 2018
+
+
 1.1.  Requirements Language
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -213,18 +238,6 @@ Internet-Draft                    PCECC                         May 2018
 
    Terminologies used in this document is same as described in the draft
    [RFC8283] and [I-D.ietf-teas-pcecc-use-cases].
-
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 4]
-
-Internet-Draft                    PCECC                         May 2018
-
 
 3.  PCECC SR
 
@@ -262,6 +275,13 @@ Internet-Draft                    PCECC                         May 2018
    o  PCEP speaker supporting this draft MUST have the capability to
       advertise its PCECC-SR capability to its peers.
 
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 5]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    o  PCEP speaker not supporting this draft MUST be able to reject
       PCECC-SR related message with a reason code that indicates no
       support for PCECC.
@@ -271,16 +291,6 @@ Internet-Draft                    PCECC                         May 2018
 
    o  PCEP procedures SHOULD provide a means to synchronize the SR
       labels allocations between PCE to PCC in the PCEP messages.
-
-
-
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 5]
-
-Internet-Draft                    PCECC                         May 2018
-
 
 5.  Procedures for Using the PCE as the Central Controller (PCECC) in
     Segment Routing
@@ -319,6 +329,15 @@ Internet-Draft                    PCECC                         May 2018
    support the PCECC SR extensions defined in this document.  If S-bit
    is set in PCECC-CAPABILITY sub-TLV and SR-PCE-CAPABILITY sub-TLV is
    not advertised in OPEN Object, PCE SHOULD send a PCErr message with
+
+
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 6]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    Error-Type=19 (Invalid Operation) and Error-value=TBD(SR capability
    was not advertised) and terminate the session.
 
@@ -328,15 +347,6 @@ Internet-Draft                    PCECC                         May 2018
    [RFC5305] for MPLS-TE; [RFC4203] and [RFC5307] for GMPLS).  An
    alternative is offered by BGP-LS [RFC7752] and
    [I-D.dhodylee-pce-pcep-ls].
-
-
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 6]
-
-Internet-Draft                    PCECC                         May 2018
-
 
    PCEP [RFC5440] speaker MAY use any IP address while creating a TCP
    session.  It is important to link the session IP address with the
@@ -376,6 +386,14 @@ Internet-Draft                    PCECC                         May 2018
    Each node (PCC) is allocated a node-SID (label) by the PCECC.  The
    PCECC sends PCInitiate message to update the label map of each node
    to all the nodes in the domain.  The TE router ID is determined from
+
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 7]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    the TEDB or from "IPv4/IPv6 Router-ID" Sub-TLV
    [I-D.dhodylee-pce-pcep-ls], in the OPEN Object Section 5.4.
 
@@ -386,14 +404,6 @@ Internet-Draft                    PCECC                         May 2018
 
    If a node (PCC) receives a PCInitiate message with a Label, out of
    the range set aside for the global label, it MUST send a PCErr
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 7]
-
-Internet-Draft                    PCECC                         May 2018
-
-
    message with Error-type=TBD (label download failure) and Error-
    value=TBD (Label out of range) and MUST include the SRP object to
    specify the error is for the corresponding label update via
@@ -433,6 +443,13 @@ Internet-Draft                    PCECC                         May 2018
    ECMP-aware shortest-path forwarding of the packet towards the related
    node.
 
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 8]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    PCE relies on the Node/Prefix Label cleanup using the same PCInitiate
    message.
 
@@ -442,13 +459,6 @@ Internet-Draft                    PCECC                         May 2018
    to compute and initiate SR-TE paths, as well as a PCC to request a
    path subject to certain constraint(s) and optimization criteria in SR
    networks.
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 8]
-
-Internet-Draft                    PCECC                         May 2018
-
 
    For PCECC SR, apart from node-SID, Adj-SID is used where each
    adjacency is allocated an Adj-SID (label) by the PCECC.  The PCECC
@@ -487,6 +497,15 @@ Internet-Draft                    PCECC                         May 2018
    Section 7.2).  All PCEP procedures and mechanism are similar to
    [I-D.ietf-pce-segment-routing].
 
+
+
+
+
+Zhao, et al.            Expires December 3, 2018                [Page 9]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    PCE relies on the Adj label cleanup using the same PCInitiate
    message.
 
@@ -498,13 +517,6 @@ Internet-Draft                    PCECC                         May 2018
    Note that the SR labels are downloaded independent to the PCECC LSP,
    and remains intact till any topology change.  The redundant PCEs MUST
    have a common view of all SR labels allocated in the domain.
-
-
-
-Zhao, et al.            Expires December 2, 2018                [Page 9]
-
-Internet-Draft                    PCECC                         May 2018
-
 
    In case the session to the PCE that allocated the SR labels is down,
    similar to the LSP re-delegation mechanism, the SR labels are re-
@@ -542,6 +554,14 @@ Internet-Draft                    PCECC                         May 2018
    in a PCEP message when the object must be included for the message to
    be considered valid.  For each PCEP message type, a set of rules is
    defined that specify the set of objects that the message can carry.
+
+
+
+Zhao, et al.            Expires December 3, 2018               [Page 10]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    An implementation MUST form the PCEP messages using the object
    ordering specified in this document.
 
@@ -554,13 +574,6 @@ Internet-Draft                    PCECC                         May 2018
    to support SR based central control instructions.
 
    The format of the extended PCInitiate message is as follows:
-
-
-
-Zhao, et al.            Expires December 2, 2018               [Page 10]
-
-Internet-Draft                    PCECC                         May 2018
-
 
         <PCInitiate Message> ::= <Common Header>
                                  <PCE-initiated-lsp-list>
@@ -597,6 +610,14 @@ Internet-Draft                    PCECC                         May 2018
    or CCI object is as per
    [I-D.zhao-pce-pcep-extension-for-pce-controller].  If the FEC object
    is missing, the receiving PCC MUST send a PCErr message with Error-
+
+
+
+Zhao, et al.            Expires December 3, 2018               [Page 11]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    type=6 (Mandatory Object missing) and Error-value=TBD (FEC object
    missing).
 
@@ -609,14 +630,6 @@ Internet-Draft                    PCECC                         May 2018
    phase.
 
    The format of the PCRpt message is as follows:
-
-
-
-
-Zhao, et al.            Expires December 2, 2018               [Page 11]
-
-Internet-Draft                    PCECC                         May 2018
-
 
          <PCRpt Message> ::= <Common Header>
                              <state-report-list>
@@ -653,6 +666,14 @@ Internet-Draft                    PCECC                         May 2018
    type=6 (Mandatory Object missing) and Error-value=TBD (FEC object
    missing).
 
+
+
+
+Zhao, et al.            Expires December 3, 2018               [Page 12]
+
+Internet-Draft                    PCECC                        June 2018
+
+
 7.  PCEP Objects
 
 7.1.  OPEN Object
@@ -663,15 +684,6 @@ Internet-Draft                    PCECC                         May 2018
    CAPABILITY TLV.
 
    A new S-bit is defined in PCECC-CAPABILITY sub-TLV for PCECC-SR:
-
-
-
-
-
-
-Zhao, et al.            Expires December 2, 2018               [Page 12]
-
-Internet-Draft                    PCECC                         May 2018
 
 
        0                   1                   2                   3
@@ -713,21 +725,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 2, 2018               [Page 13]
+Zhao, et al.            Expires December 3, 2018               [Page 13]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
     0                   1                   2                   3
@@ -781,9 +781,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 14]
+Zhao, et al.            Expires December 3, 2018               [Page 14]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
          A 24-bit label where the 20 rightmost bits are used for
@@ -837,9 +837,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 15]
+Zhao, et al.            Expires December 3, 2018               [Page 15]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -893,9 +893,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 16]
+Zhao, et al.            Expires December 3, 2018               [Page 16]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
 8.  Security Considerations
@@ -949,9 +949,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 17]
+Zhao, et al.            Expires December 3, 2018               [Page 17]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
 10.  IANA Considerations
@@ -1005,9 +1005,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 18]
+Zhao, et al.            Expires December 3, 2018               [Page 18]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
 12.  References
@@ -1061,9 +1061,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 19]
+Zhao, et al.            Expires December 3, 2018               [Page 19]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
    [RFC7752]  Gredler, H., Ed., Medved, J., Previdi, S., Farrel, A., and
@@ -1117,9 +1117,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 20]
+Zhao, et al.            Expires December 3, 2018               [Page 20]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
    [I-D.ietf-pce-lsp-setup-type]
@@ -1173,9 +1173,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 21]
+Zhao, et al.            Expires December 3, 2018               [Page 21]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
    [I-D.ietf-spring-segment-routing]
@@ -1229,9 +1229,9 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 22]
+Zhao, et al.            Expires December 3, 2018               [Page 22]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
 Appendix A.  Contributor Addresses
@@ -1285,9 +1285,9 @@ Authors' Addresses
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 23]
+Zhao, et al.            Expires December 3, 2018               [Page 23]
 
-Internet-Draft                    PCECC                         May 2018
+Internet-Draft                    PCECC                        June 2018
 
 
    Zhenbin Li
@@ -1341,4 +1341,4 @@ Internet-Draft                    PCECC                         May 2018
 
 
 
-Zhao, et al.            Expires December 2, 2018               [Page 24]
+Zhao, et al.            Expires December 3, 2018               [Page 24]
