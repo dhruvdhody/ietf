@@ -124,96 +124,100 @@
 
    <t>PCE was developed to derive paths for MPLS Label Switched Paths
    (LSPs), which are supplied to the head end of the LSP using the Path
-   Computation Element Communication Protocol (PCEP). But SDN has a broader 
-   applicability than signaled (G)MPLS traffic-engineered
-   (TE) networks, and the PCE may be used to determine paths in a range
-   of use cases.  PCEP has been proposed as a control protocol for
-   use in these environments to allow the PCE to be fully enabled as a
-   central controller.</t>
+   Computation Element Communication Protocol (PCEP).  But SDN has a
+   broader applicability than signaled (G)MPLS traffic-engineered (TE)
+   networks, and the PCE may be used to determine paths in a range of
+   use cases.  PCEP has been proposed as a control protocol for use in
+   these environments to allow the PCE to be fully enabled as a central
+   controller.</t>
 
-   <t>A PCE-based central controller (PCECC) can
-   simplify the processing of a distributed control plane by blending it
-   with elements of SDN and without necessarily completely replacing it. 
-   Thus, the LSP can be
-   calculated/setup/initiated and the label forwarding entries can also be
-   downloaded through a centralized PCE server to each network devices
-   along the path while leveraging the existing PCE technologies as
-   much as possible.</t>
+   <t>A PCE-based central controller (PCECC) can simplify the processing of
+   a distributed control plane by blending it with elements of SDN and
+   without necessarily completely replacing it.  Thus, the LSP can be
+   calculated/setup/initiated and the label forwarding entries can also
+   be downloaded through a centralized PCE server to each network
+   devices along the path while leveraging the existing PCE technologies
+   as much as possible.</t>
 
-   <t>This document specifies the procedures and PCEP protocol extensions when 
-   a PCE-based controller is also responsible for configuring
-   the forwarding actions on the routers, in addition to computing
-   the paths for packet flows in a segment routing network and telling the edge routers
-   what instructions to attach to packets as they enter the network.
-   </t>
+   <t>This document specifies the procedures and PCEP protocol extensions
+   when a PCE-based controller is also responsible for configuring the
+   forwarding actions on the routers, in addition to computing the paths
+   for packet flows in a segment routing network and telling the edge
+   routers what instructions to attach to packets as they enter the
+   network.   </t>
 
    </abstract>
   </front>
   <middle>
     <section title="Introduction"
              toc="default">
+<t>The Path Computation Element (PCE) <xref target='RFC4655'/> was developed to offload
+   path computation function from routers in an MPLS traffic-engineered
+   network.  Since then, the role and function of the PCE has grown to
+   cover a number of other uses (such as GMPLS <xref target='RFC7025'/>) and to allow
+   delegated control <xref target='RFC8231'/> and PCE-initiated use of network
+   resources <xref target='RFC8281'/>.</t>
 
-   <t>The Path Computation Element communication Protocol (PCEP) provides
-   mechanisms for Path Computation Elements (PCEs) to perform route
-   computations in response to Path Computation Clients (PCCs) requests.
-   PCEP Extensions for PCE-initiated LSP Setup in a Stateful PCE Model
-   <xref target='RFC8231'/> describes a set of extensions to PCEP to
-   enable active control of MPLS-TE and GMPLS tunnels.</t>
+   <t>According to <xref target='RFC7399'/>, Software-Defined Networking (SDN) refers to a
+   separation between the control elements and the forwarding components
+   so that software running in a centralized system, called a
+   controller, can act to program the devices in the network to behave
+   in specific ways.  A required element in an SDN architecture is a
+   component that plans how the network resources will be used and how
+   the devices will be programmed.  It is possible to view this
+   component as performing specific computations to place traffic flows
+   within the network given knowledge of the availability of network
+   resources, how other forwarding devices are programmed, and the way
+   that other flows are routed.  This is the function and purpose of a
+   PCE, and the way that a PCE integrates into a wider network control
+   system (including an SDN system) is presented in <xref target='RFC7491'/>.</t>
 
-   <t><xref target='RFC8281'/> describes the setup and tear down of
-   PCE-initiated LSPs under the active stateful PCE model, without the
-   need for local configuration on the PCC, thus allowing for a dynamic
-   MPLS network that is centrally controlled and deployed.</t>
-   
-   <t><xref target='RFC8283'/> introduces the architecture for
-   PCE as a central controller, examines the motivations and applicability
-   for PCEP as a southbound interface, and introduces the implications for the
-   protocol. <xref target='I-D.ietf-teas-pcecc-use-cases'/> describes the use cases for
+   <t>In early PCE implementations, where the PCE was used to derive paths
+   for MPLS Label Switched Paths (LSPs), paths were requested by network
+   elements (known as Path Computation Clients (PCCs)), and the results
+   of the path computations were supplied to network elements using the
+   Path Computation Element Communication Protocol (PCEP) <xref target='RFC5440'/>.
+   This protocol was later extended to allow a PCE to send unsolicited
+   requests to the network for LSP establishment <xref target='RFC8281'/>.</t>
+
+   <t><xref target='RFC8283'/> introduces the architecture for PCE as a central
+   controller as an extension of the architecture described in <xref target='RFC4655'/>
+   and assumes the continued use of PCEP as the protocol used between
+   PCE and PCC. <xref target='RFC8283'/>  further examines the motivations and applicability
+   for PCEP as a Southbound Interface (SBI), and introduces the implications for the
+   protocol.  <xref target='I-D.ietf-teas-pcecc-use-cases'/> describes the use cases for
    the PCECC architecture.</t>
    
-   <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> specify the PCEP extension 
-   for the PCE as the central controller (PCECC). This document extends 
-   the PCECC procedures for Segment Routing (SR).</t>
-   
-   <t>Segment Routing (SR) technology leverage the source routing and
-   tunneling paradigms.  A source node can choose a path without
-   relying on hop-by-hop signaling protocols such as LDP or RSVP-TE.
-   Each path is specified as a set of "segments" advertised by link-
-   state routing protocols (IS-IS or OSPF).</t>
-   
-   <t><xref target='I-D.ietf-spring-segment-routing'/> provides an introduction to SR
-   technology.  The corresponding IS-IS and OSPF extensions are
+   <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> specify the procedures and PCEP protocol extensions for
+   using the PCE as the central controller for static LSPs, where 
+   LSPs can be provisioned as explicit label instructions at each
+   hop on the end-to-end path.</t>
+
+   <t>Segment Routing (SR) technology leverages the source routing and tunneling paradigms.
+   A source node can choose a path without relying on hop-by-hop
+   signaling protocols such as LDP or RSVP-TE.  Each path is specified
+   as a set of "segments" advertised by link-state routing protocols
+   (IS-IS or OSPF).  <xref target='I-D.ietf-spring-segment-routing'/> provides an
+   introduction to SR architecture. The corresponding IS-IS and OSPF extensions are
    specified in <xref target='I-D.ietf-isis-segment-routing-extensions'/> and
-   <xref target='I-D.ietf-ospf-segment-routing-extensions'/> , respectively.</t>
+   <xref target='I-D.ietf-ospf-segment-routing-extensions'/> , respectively.
+   It relies on a series of
+   forwarding instructions being placed in the header of a packet. 
+   The segment routing architecture supports operations that can be used
+   to steer packet flows in a network, thus providing a form of traffic
+   engineering. <xref target='I-D.ietf-pce-segment-routing'/> specify the SR specific PCEP
+   extensions. 
+ </t>
 
-   <t>A Segment Routed path (SR path) can be derived from an IGP Shortest
-   Path Tree (SPT).  Segment Routed Traffic Engineering paths (SR-TE
-   paths) may not follow IGP SPT.  Such paths may be chosen by a
-   suitable network planning tool and provisioned on the source node of
-   the SR-TE path.</t>
+   <t>PCECC may further use PCEP protocol for SR SID (Segment Identifier) distribution on the SR nodes
+    with some benefits.</t>
 
-   <t>It is possible to use a stateful PCE for computing one or more SR-TE
-   paths taking into account various constraints and objective
-   functions.  Once a path is chosen, the stateful PCE can instantiate
-   an SR-TE path on a PCC using PCEP extensions specified in
-   <xref target='RFC8281'/> using the SR specific PCEP
-   extensions described in <xref target='I-D.ietf-pce-segment-routing'/>.</t>
-
-   <t>PCECC may further use PCEP protocol for SR SID distribution instead
-   of IGP extensions with some benefits.</t>
-
-   <t>The <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>, 
-   specifies the procedures and PCEP protocol extensions for
-   using the PCE as one of the the central controller components 
-   and user cases where LSPs are calculated/setup/initiated and label 
-   forwarding entries are downloaded on each hop along the path, through extending the existing 
-   PCE architectures and PCEP.</t>
-
-   <t>This draft specify the procedures and PCEP protocol extensions for
-   using the PCE as the central controller for SR SID distribution
-   and use cases where SR LSPs are calculated/setup/initiated/downloaded
-   through extending the existing PCE architectures and PCEP.</t>
-
+   <t>This document specifies the procedures and PCEP protocol extensions when 
+   a PCE-based controller is also responsible for configuring
+   the forwarding actions on the routers (SR SID distribution in this case), in addition to computing
+   the paths for packet flows in a segment routing network and telling the edge routers
+   what instructions to attach to packets as they enter the network.
+   </t>
 
       <!--<t>[Important Note - Note that this document achieves by extending the new PCEP message defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. 
     The authors and WG also debated on the use of existing PCEP messages. 
@@ -322,7 +326,8 @@
       to add this functionality. WG needs to decide the final direction i.e. new specific messages 
       are needed or existing PCEP messages can be extended. See See <xref target="appendix"/> 
       to see the extension of existing message for PCECC-SR functionality.]</t>-->
-
+        
+        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> specify an object called CCI for the encoding of central controller's instructions. This document extends the CCI by defining a new object-type for segment routing. The PCEP messages are extended in this document to handle the PCECC operations for SR.</t>
     </section>
     
     <section title="PCECC Capability Advertisement"
@@ -1085,6 +1090,10 @@
 
     <references title="Informative References">
     <?rfc include="reference.RFC.3031.xml" ?>
+    <?rfc include="reference.RFC.4655.xml"?>
+      <?rfc include="reference.RFC.7025.xml"?>
+      <?rfc include="reference.RFC.7399.xml"?>
+      <?rfc include="reference.RFC.7491.xml"?>
     <?rfc include="reference.RFC.8232.xml"?>
     <?rfc include="reference.RFC.8283.xml"?>
     <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>

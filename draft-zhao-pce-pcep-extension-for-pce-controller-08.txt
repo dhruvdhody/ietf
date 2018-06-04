@@ -5,13 +5,13 @@
 PCE Working Group                                                Q. Zhao
 Internet-Draft                                                     Z. Li
 Intended status: Standards Track                                D. Dhody
-Expires: December 3, 2018                                 S. Karunanithi
+Expires: December 6, 2018                                 S. Karunanithi
                                                      Huawei Technologies
                                                                A. Farrel
                                                    Juniper Networks, Inc
                                                                  C. Zhou
                                                            Cisco Systems
-                                                            June 1, 2018
+                                                            June 4, 2018
 
 
    PCEP Procedures and Protocol Extensions for Using PCE as a Central
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Zhao, et al.            Expires December 3, 2018                [Page 1]
+Zhao, et al.            Expires December 6, 2018                [Page 1]
 
 Internet-Draft                    PCECC                        June 2018
 
@@ -68,7 +68,7 @@ Internet-Draft                    PCECC                        June 2018
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 3, 2018.
+   This Internet-Draft will expire on December 6, 2018.
 
 Copyright Notice
 
@@ -88,7 +88,7 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   4
+     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   5
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   5
    3.  Basic PCECC Mode  . . . . . . . . . . . . . . . . . . . . . .   5
    4.  PCEP Requirements . . . . . . . . . . . . . . . . . . . . . .   5
@@ -99,113 +99,132 @@ Table of Contents
      5.3.  PCECC Capability Advertisement  . . . . . . . . . . . . .   7
      5.4.  LSP Operations  . . . . . . . . . . . . . . . . . . . . .   8
        5.4.1.  Basic PCECC LSP Setup . . . . . . . . . . . . . . . .   8
-       5.4.2.  Central Control Intructions . . . . . . . . . . . . .   9
-         5.4.2.1.  Label Download  . . . . . . . . . . . . . . . . .   9
-         5.4.2.2.  Label Cleanup . . . . . . . . . . . . . . . . . .  10
-       5.4.3.  PCE Initiated PCECC LSP . . . . . . . . . . . . . . .  11
-       5.4.4.  PCECC LSP Update  . . . . . . . . . . . . . . . . . .  12
-       5.4.5.  Session Termination . . . . . . . . . . . . . . . . .  13
-       5.4.6.  Synchronization of Label Allocations  . . . . . . . .  14
+       5.4.2.  Central Control Intructions . . . . . . . . . . . . .  10
+         5.4.2.1.  Label Download  . . . . . . . . . . . . . . . . .  10
+         5.4.2.2.  Label Cleanup . . . . . . . . . . . . . . . . . .  11
+       5.4.3.  PCE Initiated PCECC LSP . . . . . . . . . . . . . . .  12
+       5.4.4.  PCECC LSP Update  . . . . . . . . . . . . . . . . . .  13
+       5.4.5.  Session Termination . . . . . . . . . . . . . . . . .  16
+       5.4.6.  Synchronization of Central Controllers Instructions .  16
 
 
 
-Zhao, et al.            Expires December 3, 2018                [Page 2]
+Zhao, et al.            Expires December 6, 2018                [Page 2]
 
 Internet-Draft                    PCECC                        June 2018
 
 
-       5.4.7.  PCECC LSP State Report  . . . . . . . . . . . . . . .  14
-   6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .  14
-     6.1.  The PCInitiate message  . . . . . . . . . . . . . . . . .  14
-     6.2.  The PCRpt message . . . . . . . . . . . . . . . . . . . .  15
-   7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  16
-     7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .  16
-       7.1.1.  PCECC Capability sub-TLV  . . . . . . . . . . . . . .  17
-     7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  17
-     7.3.  CCI Object  . . . . . . . . . . . . . . . . . . . . . . .  17
-       7.3.1.  Address TLVs  . . . . . . . . . . . . . . . . . . . .  18
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  20
-     8.1.  Malicious PCE . . . . . . . . . . . . . . . . . . . . . .  20
-   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  20
-     9.1.  Control of Function and Policy  . . . . . . . . . . . . .  20
-     9.2.  Information and Data Models . . . . . . . . . . . . . . .  20
-     9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  20
-     9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  20
-     9.5.  Requirements On Other Protocols . . . . . . . . . . . . .  20
-     9.6.  Impact On Network Operations  . . . . . . . . . . . . . .  21
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  21
-     10.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  21
-     10.2.  New Path Setup Type Registry . . . . . . . . . . . . . .  21
-     10.3.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  21
-     10.4.  CCI Object Flag Field  . . . . . . . . . . . . . . . . .  21
-     10.5.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  22
-   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  22
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  22
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .  22
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  23
-   Appendix A.  Using existing PCEP message  . . . . . . . . . . . .  25
-   Appendix B.  Contributor Addresses  . . . . . . . . . . . . . . .  25
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  25
+       5.4.7.  PCECC LSP State Report  . . . . . . . . . . . . . . .  16
+   6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .  16
+     6.1.  The PCInitiate message  . . . . . . . . . . . . . . . . .  17
+     6.2.  The PCRpt message . . . . . . . . . . . . . . . . . . . .  18
+   7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  19
+     7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .  19
+       7.1.1.  PCECC Capability sub-TLV  . . . . . . . . . . . . . .  19
+     7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  19
+     7.3.  CCI Object  . . . . . . . . . . . . . . . . . . . . . . .  20
+       7.3.1.  Address TLVs  . . . . . . . . . . . . . . . . . . . .  21
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  22
+     8.1.  Malicious PCE . . . . . . . . . . . . . . . . . . . . . .  22
+   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  22
+     9.1.  Control of Function and Policy  . . . . . . . . . . . . .  22
+     9.2.  Information and Data Models . . . . . . . . . . . . . . .  22
+     9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  22
+     9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  23
+     9.5.  Requirements On Other Protocols . . . . . . . . . . . . .  23
+     9.6.  Impact On Network Operations  . . . . . . . . . . . . . .  23
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
+     10.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  23
+     10.2.  New Path Setup Type Registry . . . . . . . . . . . . . .  23
+     10.3.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  23
+     10.4.  CCI Object Flag Field  . . . . . . . . . . . . . . . . .  24
+     10.5.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  24
+   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  24
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  25
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  26
+   Appendix A.  Using existing PCEP message  . . . . . . . . . . . .  28
+   Appendix B.  Contributor Addresses  . . . . . . . . . . . . . . .  28
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
 
 1.  Introduction
 
-   In certain network deployment scenarios, service providers would like
-   to have the ability to dynamically adapt to a wide range of
-   customer's requests for the sake of flexible network service
-   delivery, Software-Defined Networks (SDN) has provides additional
-   flexibility in how the network is operated compared to the
-   traditional network.
+   The Path Computation Element (PCE) [RFC4655] was developed to offload
+   path computation function from routers in an MPLS traffic-engineered
+   network.  Since then, the role and function of the PCE has grown to
+   cover a number of other uses (such as GMPLS [RFC7025]) and to allow
+   delegated control [RFC8231] and PCE-initiated use of network
+   resources [RFC8281].
 
-   The existing networking ecosystem has become awfully complex and
-   highly demanding in terms of robustness, performance, scalability,
-   flexibility, agility, etc.  By migrating to the SDN enabled network
-   from the existing network, service providers and network operators
-   must have a solution which they can evolve easily from the existing
+   According to [RFC7399], Software-Defined Networking (SDN) refers to a
+   separation between the control elements and the forwarding components
+   so that software running in a centralized system, called a
+   controller, can act to program the devices in the network to behave
+   in specific ways.  A required element in an SDN architecture is a
+   component that plans how the network resources will be used and how
 
 
 
-
-Zhao, et al.            Expires December 3, 2018                [Page 3]
+Zhao, et al.            Expires December 6, 2018                [Page 3]
 
 Internet-Draft                    PCECC                        June 2018
 
 
-   network into the SDN enabled network while keeping the network
-   services remain scalable, guarantee robustness and availability etc.
+   the devices will be programmed.  It is possible to view this
+   component as performing specific computations to place traffic flows
+   within the network given knowledge of the availability of network
+   resources, how other forwarding devices are programmed, and the way
+   that other flows are routed.  This is the function and purpose of a
+   PCE, and the way that a PCE integrates into a wider network control
+   system (including an SDN system) is presented in [RFC7491].
 
-   Taking the smooth transition between traditional network and the new
-   SDN enabled network into account, especially from a cost impact
-   assessment perspective, using the existing PCE components from the
-   current network to function as the central controller of the SDN
-   network is one choice, which not only achieves the goal of having a
-   centralized controller, but also leverage the existing PCE network
-   components.
+   In early PCE implementations, where the PCE was used to derive paths
+   for MPLS Label Switched Paths (LSPs), paths were requested by network
+   elements (known as Path Computation Clients (PCCs)), and the results
+   of the path computations were supplied to network elements using the
+   Path Computation Element Communication Protocol (PCEP) [RFC5440].
+   This protocol was later extended to allow a PCE to send unsolicited
+   requests to the network for LSP establishment [RFC8281].
 
-   The Path Computation Element communication Protocol (PCEP) provides
-   mechanisms for Path Computation Elements (PCEs) to perform route
-   computations in response to Path Computation Clients (PCCs) requests.
-   PCEP Extensions for PCE-initiated LSP Setup in a Stateful PCE Model
-   [RFC8231] describes a set of extensions to PCEP to enable active
-   control of MPLS-TE and GMPLS tunnels.
+   [RFC8283] introduces the architecture for PCE as a central controller
+   as an extension of the architecture described in [RFC4655] and
+   assumes the continued use of PCEP as the protocol used between PCE
+   and PCC.  [RFC8283]  further examines the motivations and
+   applicability for PCEP as a Southbound Interface (SBI), and
+   introduces the implications for the protocol.
+   [I-D.ietf-teas-pcecc-use-cases] describes the use cases for the PCECC
+   architecture.
 
-   [RFC8281] describes the setup and tear down of PCE-initiated LSPs
-   under the active stateful PCE model, without the need for local
-   configuration on the PCC, thus allowing for a dynamic MPLS network
-   that is centrally controlled and deployed.
-
-   [RFC8283] introduces the architecture for PCE as a central
-   controller, examines the motivations and applicability for PCEP as a
-   Southbound Interface (SBI), and introduces the implications for the
-   protocol.  [I-D.ietf-teas-pcecc-use-cases] describes the use cases
-   for the PCECC architecture.
+   A PCE-based central controller (PCECC) can simplify the processing of
+   a distributed control plane by blending it with elements of SDN and
+   without necessarily completely replacing it.  Thus, the LSP can be
+   calculated/setup/initiated and the label forwarding entries can also
+   be downloaded through a centralized PCE server to each network
+   devices along the path while leveraging the existing PCE technologies
+   as much as possible.
 
    This draft specify the procedures and PCEP protocol extensions for
-   using the PCE as the central controller and user cases where LSPs are
-   calculated/setup/initiated/downloaded through extending the existing
-   PCE architectures and PCEP.
+   using the PCE as the central controller for static LSPs, where LSPs
+   can be provisioned as explicit label instructions at each hop on the
+   end-to-end path.  Each router along the path must be told what label-
+   forwarding instructions to program and what resources to reserve.
+   The PCE-based controller keeps a view of the network and determines
+   the paths of the end-to-end LSPs, and the controller uses PCEP to
+   communicate with each router along the path of the end-to-end LSP.
 
    The extension for PCECC in Segment Routing (SR) is specified in a
    separate draft [I-D.zhao-pce-pcep-extension-pce-controller-sr].
+
+
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018                [Page 4]
+
+Internet-Draft                    PCECC                        June 2018
+
 
 1.1.  Requirements Language
 
@@ -214,17 +233,6 @@ Internet-Draft                    PCECC                        June 2018
    "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018                [Page 4]
-
-Internet-Draft                    PCECC                        June 2018
-
 
 2.  Terminology
 
@@ -265,22 +273,20 @@ Internet-Draft                    PCECC                        June 2018
    3.  PCEP speaker MUST provide a means to identify PCECC based LSP in
        the PCEP messages.
 
+
+
+
+
+Zhao, et al.            Expires December 6, 2018                [Page 5]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    4.  PCEP procedures SHOULD provide a means to update (or cleanup) the
        label- download entry to the PCC.
 
    5.  PCEP procedures SHOULD provide a means to synchronize the labels
        between PCE to PCC in PCEP messages.
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018                [Page 5]
-
-Internet-Draft                    PCECC                        June 2018
-
 
 5.  Procedures for Using the PCE as the Central Controller (PCECC)
 
@@ -297,7 +303,7 @@ Internet-Draft                    PCECC                        June 2018
 
    (PCRpt):  a PCEP message described in [RFC8231].  PCRpt message is
       used to send PCECC LSP Reports.  It is also extended to report the
-      set of labels for which explicit action is required from PCE.  See
+      set of labels instructions received from the PCE.  See
       Section 5.4.6 for more details.
 
    (PCInitiate):  a PCEP message described in [RFC8281].  PCInitiate
@@ -310,6 +316,26 @@ Internet-Draft                    PCECC                        June 2018
 
    The new LSP functions defined in this document are mapped onto the
    messages as shown in the following table.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018                [Page 6]
+
+Internet-Draft                    PCECC                        June 2018
 
 
    +----------------------------------------+--------------------------+
@@ -326,17 +352,12 @@ Internet-Draft                    PCECC                        June 2018
    +----------------------------------------+--------------------------+
 
 
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018                [Page 6]
-
-Internet-Draft                    PCECC                        June 2018
-
+   This document specify a new object CCI (see Section 7.3) for the
+   encoding of central controller's instructions.  In the scope of this
+   document this is limited to Label forwarding instructions.  The CC-ID
+   is the unique identifier for the central controller's instructions in
+   PCEP.  The PCEP messages are extended in this document to handle the
+   PCECC operations.
 
 5.3.  PCECC Capability Advertisement
 
@@ -363,6 +384,16 @@ Internet-Draft                    PCECC                        June 2018
    Object indicates that the PCC is willing to function as a PCECC
    client.
 
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018                [Page 7]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    The presence of the PST and PCECC Capability sub-TLV in PCE's OPEN
    message indicates that the PCE is interested in function as a PCECC
    server.
@@ -377,22 +408,12 @@ Internet-Draft                    PCECC                        June 2018
    terminated.
 
    A PCC or a PCE MUST include both PCECC-CAPABILITY sub-TLV and
-   STATEFUL-PCE-CAPABILITY TLV ([RFC8231]) in OPEN Object to support the
-   extensions defined in this document.  If PCECC-CAPABILITY sub-TLV is
-   advertised and STATEFUL-PCE-CAPABILITY TLV is not advertised in OPEN
-   Object, it SHOULD send a PCErr message with Error-Type=19 (Invalid
-   Operation) and Error-value=TBD (stateful PCE capability was not
-   advertised) and terminate the session.
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018                [Page 7]
-
-Internet-Draft                    PCECC                        June 2018
-
+   STATEFUL-PCE-CAPABILITY TLV ([RFC8231]) (with I flag set [RFC8281])
+   in OPEN Object to support the extensions defined in this document.
+   If PCECC-CAPABILITY sub-TLV is advertised and STATEFUL-PCE-CAPABILITY
+   TLV is not advertised in OPEN Object, it SHOULD send a PCErr message
+   with Error-Type=19 (Invalid Operation) and Error-value=TBD (stateful
+   PCE capability was not advertised) and terminate the session.
 
 5.4.  LSP Operations
 
@@ -410,18 +431,36 @@ Internet-Draft                    PCECC                        June 2018
    LSP-IDENTIFIER TLV MUST be included for PCECC LSP, the LSP-ID MAY be
    generated by the PCE for PCECC LSP, in that case the first PCRpt
    message of PCECC LSP, LSP-ID of LSP-IDENTIFIER TLV is set to zero.
-   The LSP-ID is further used during label download and this
-   relationship is useful for maintainability reasons.
+   If PCC generates the LSP-ID, it is reported in the PCRpt message.
+   The LSP object is included during label download to identify the
+   PCECC LSP.  The LSP-ID (in LSP-IDENTIFIER TLV) is also used during
+   label download and this relationship is useful for maintainability
+   reasons.
 
    When a PCE receives PCRpt message with D flags and PST Type set, it
-   MAY generates LSP ID; calculates the path and assigns labels along
-   the path; and set up the path by sending PCInitiate message to each
-   node along the path of the LSP.
+   MAY generates LSP ID (if it is not included); calculates the path and
+   assigns labels along the path; and set up the path by sending
+   PCInitiate message to each node along the path of the LSP.  The PCC
+   generates a Path Computation State Report (PCRpt) and include the
 
-   In response to the delegate PCRpt message, the PCE SHOULD send the
-   PCUpd message with the same PLSP-ID to the Ingress PCC.
 
-   The PCECC LSPs MUST be delegated to a PCE at all times.
+
+Zhao, et al.            Expires December 6, 2018                [Page 8]
+
+Internet-Draft                    PCECC                        June 2018
+
+
+   central controller's instruction (CCI).  The CC-ID is uniquely
+   identify the central controller's instruction within PCEP.  The PCC
+   further responds with the PCRpt messages including the CCI and LSP
+   objects.
+
+   Once the label operations are completed, the PCE SHOULD send the
+   PCUpd message to the Ingress PCC.  The PCUpd message is as per
+   [RFC8231] SHOULD include the path information as calculated by the
+   PCE.
+
+   Note that the PCECC LSPs MUST be delegated to a PCE at all times.
 
    LSP deletion operation for PCECC LSP is same as defined in [RFC8231].
    If the PCE receives PCRpt message for LSP deletion then it does Label
@@ -445,7 +484,24 @@ Internet-Draft                    PCECC                        June 2018
 
 
 
-Zhao, et al.            Expires December 3, 2018                [Page 8]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018                [Page 9]
 
 Internet-Draft                    PCECC                        June 2018
 
@@ -461,14 +517,17 @@ Internet-Draft                    PCECC                        June 2018
     |Egress  |  |     |                                     |
     +--------+  |     |                                     |
         |       |     |                                     |
-        |<------ PCInitiate,PLSP-ID=1  -------------------- | Label
+        |<------ PCInitiate,CC-ID=X,PLSP-ID=1  ------------ | Label
         |       |     |       (LSP ID=1)                    | download
+        |------- PCRpt,CC-ID=X,PLSP-ID=1  ----------------->|
         |       |     |                                     |
-        |       |<----- PCInitiate,PLSP-ID=1  ------------- | Label
+        |       |<----- PCInitiate,CC-ID=Y,PLSP-ID=1  ----- | Label
         |       |     |      (LSP ID=1)                     | download
+        |       |-----  PCRpt,CC-ID=Y,PLSP-ID=1  ---------->|
         |       |     |                                     |
-        |       |     |<--- PCInitiate,PLSP-ID=1  --------- | Label
+        |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=1  - | Label
         |       |     |      (LSP ID=1)                     | download
+        |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=1  ------>|
         |       |     |                                     |
         |       |     |<-- PCUpd,PLSP-ID=1,PST=TBD, D=1-----| PCECC LSP
         |       |     |      (LSP ID=1)                     | Update
@@ -477,45 +536,47 @@ Internet-Draft                    PCECC                        June 2018
 
                       Figure 2: Basic PCECC LSP setup
 
-   The PCECC LSP are considered to be 'up' by default.  The Ingress MAY
-   further choose to deploy a data plane check mechanism and report the
-   status back to the PCE via PCRpt message.
+   The PCECC LSP are considered to be 'up' by default (on receipt of
+   PCUpd message from PCE).  The Ingress MAY further choose to deploy a
+   data plane check mechanism and report the status back to the PCE via
+   PCRpt message.
 
 5.4.2.  Central Control Intructions
 
    The new central controller's instructions (CCI) for the label
-   operations in PCEP can be done via the PCInitiate message and by
-   defining a new PCEP Objects for CCI operations.  Local label range of
-   each PCC is assumed to be known at both the PCC and the PCE.
+   operations in PCEP is done via the PCInitiate message, by defining a
+   new PCEP Objects for CCI operations.  Local label range of each PCC
+   is assumed to be known at both the PCC and the PCE.
 
 5.4.2.1.  Label Download
 
    In order to setup an LSP based on PCECC, the PCE sends a PCInitiate
-   message to each node of the LSP to download the Label entry as
-   described in Section 5.4.1.
-
-   The LSP object in PCInitiate message MUST include the LSP-IDENTIFIER
-   TLV.
+   message to each node along the path to download the Label instruction
+   as described in Section 5.4.1.
 
 
 
 
-
-Zhao, et al.            Expires December 3, 2018                [Page 9]
+Zhao, et al.            Expires December 6, 2018               [Page 10]
 
 Internet-Draft                    PCECC                        June 2018
 
 
+   The CCI object MUST be included, along with the LSP object in the
+   PCInitiate message.  The LSP-IDENTIFIER TLV MUST be included in LSP
+   object.
+
    If a node (PCC) receives a PCInitiate message which includes a Label
-   to download that is out of the range set aside for the PCE, it MUST
-   send a PCErr message with Error-type=TBD (label download failure) and
-   Error-value=TBD (Label out of range) and MUST include the SRP object
-   to specify the error is for the corresponding label update via
-   PCInitiate message.  If a PCC receives a PCInitiate message but
-   failed to download the Label entry, it MUST send a PCErr message with
-   Error-type=TBD (label download failure) and Error-value=TBD (label
-   failed to be download)and MUST include the SRP object to specify the
-   error is for the corresponding label update via PCInitiate message.
+   to download as part of CCI, that is out of the range set aside for
+   the PCE, it MUST send a PCErr message with Error-type=TBD (label
+   download failure) and Error-value=TBD (Label out of range) and MUST
+   include the SRP object to specify the error is for the corresponding
+   label update via PCInitiate message.  If a PCC receives a PCInitiate
+   message but failed to download the Label entry, it MUST send a PCErr
+   message with Error-type=TBD (label download failure) and Error-
+   value=TBD (label failed to be download)and MUST include the SRP
+   object to specify the error is for the corresponding label update via
+   PCInitiate message.
 
    New PCEP object for central control instructions (CCI) is defined in
    Section 7.3.
@@ -524,18 +585,16 @@ Internet-Draft                    PCECC                        June 2018
 
    In order to delete an LSP based on PCECC, the PCE sends a central
    controller instructions via a PCInitiate message to each node along
-   the path of the LSP to cleanup the Label entry.
+   the path of the LSP to cleanup the Label forwarding instruction.
 
    If the PCC receives a PCInitiate message but does not recognize the
-   label, the PCC MUST generate a PCErr message with Error-Type
-   19(Invalid operation) and Error-Value=TBD, "Unknown Label" and MUST
-   include the SRP object to specify the error is for the corresponding
-   label cleanup via PCInitiate message.
+   label in the CCI, the PCC MUST generate a PCErr message with Error-
+   Type 19(Invalid operation) and Error-Value=TBD, "Unknown Label" and
+   MUST include the SRP object to specify the error is for the
+   corresponding label cleanup (via PCInitiate message).
 
-   The R flag in SRP object defined in [RFC8281] specifies the deletion
-   of Label Entry in the PCInitiate message.
-
-
+   The R flag in the SRP object defined in [RFC8281] specifies the
+   deletion of Label Entry in the PCInitiate message.
 
 
 
@@ -554,10 +613,7 @@ Internet-Draft                    PCECC                        June 2018
 
 
 
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 10]
+Zhao, et al.            Expires December 6, 2018               [Page 11]
 
 Internet-Draft                    PCECC                        June 2018
 
@@ -573,23 +629,32 @@ Internet-Draft                    PCECC                        June 2018
     |Egress  |  |     |                                      |
     +--------+  |     |                                      |
         |       |     |                                      |
-        |<------ PCInitiate, PLSP-ID=1 --------------------- | Label
+        |<------ PCInitiate,CC-ID=X,PLSP-ID=1  ------------  | Label
         |       |     |       (LSP ID=1, R=1)                | cleanup
+        |------- PCRpt,CC-ID=X,PLSP-ID=1  ------------------>|
         |       |     |                                      |
-        |       |<----- PCInitiate, PLSP-ID=1 -------------- | Label
+        |       |<----- PCInitiate,CC-ID=Y,PLSP-ID=1  ------ | Label
         |       |     |       (LSP ID=1, R=1)                | cleanup
+        |       |-----  PCRpt,CC-ID=Y,PLSP-ID=1  ----------->|
         |       |     |                                      |
-        |       |     |<--- PCInitiate, PLSP-ID=1 ---------- | Label
+        |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=1  -- | Label
         |       |     |       (LSP ID=1, R=1)                | cleanup
+        |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=1  ------->|
         |       |     |                                      |
 
+
+   As per [RFC8281], following the removal of the Label forwarding
+   instruction, the PCC MUST send a PCRpt message.  The SRP object in
+   the PCRpt MUST include the SRP-ID-number from the PCInitiate message
+   that triggered the removal.  The R flag in the SRP object MUST be
+   set.
 
 5.4.3.  PCE Initiated PCECC LSP
 
    The LSP Instantiation operation is same as defined in [RFC8281].
 
-   In order to setup a PCE Initiated LSP based on PCECC mechanism, a PCE
-   sends PCInitiate message with Path Setup Type set for PCECC (see
+   In order to setup a PCE Initiated LSP based on the PCECC mechanism, a
+   PCE sends PCInitiate message with Path Setup Type set for PCECC (see
    Section 7.2) to the Ingress PCC.
 
    The Ingress PCC MUST also set D (Delegate) flag (see [RFC8231]) and C
@@ -597,8 +662,20 @@ Internet-Draft                    PCECC                        June 2018
    PCC responds with first PCRpt message with the status as "GOING-UP"
    and assigned PLSP-ID.
 
-   The rest of the PCECC LSP setup operations are same as those
-   described in Section 5.4.1.
+   Note that the label forwarding instructions from PCECC are send after
+   the initial PCInitiate and PCRpt exchange.  This is done so that the
+   PLSP-ID and other LSP identifiers can be obtained from the ingress
+   and can be included in the label forwarding instruction in the next
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 12]
+
+Internet-Draft                    PCECC                        June 2018
+
+
+   PCInitiate message.  The rest of the PCECC LSP setup operations are
+   same as those described in Section 5.4.1.
 
    The LSP deletion operation for PCE Initiated PCECC LSP is same as
    defined in [RFC8281].  The PCE should further perform Label entry
@@ -606,16 +683,6 @@ Internet-Draft                    PCECC                        June 2018
    corresponding LSP.
 
    The PCE Initiated PCECC LSP setup sequence is shown below -
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 11]
-
-Internet-Draft                    PCECC                        June 2018
 
 
                   +-------+                              +-------+
@@ -629,32 +696,47 @@ Internet-Draft                    PCECC                        June 2018
     |Egress  |  |     |--- PCRpt,PLSP-ID=2,P=1,D=1,C=1--->   | PCECC LSP
     +--------+  |     |       (LSP ID=0,GOING-UP)            |(LSPID=2
         |       |     |                                      | assigned)
-        |<------ PCInitiate, PLSP-ID=2 --------------------- | Label
+        |<------ PCInitiate,CC-ID=X,PLSP-ID=2 -------------- | Label
         |       |     |       (LSP ID=2)                     | download
+        |------- PCRpt,CC-ID=X,PLSP-ID=2  ------------------>|
         |       |     |                                      |
-        |       |<----- PCInitiate, PLSP-ID=2 -------------- | Label
+        |       |<----- PCInitiate,CC-ID=Y,PLSP-ID=2 ------- | Label
         |       |     |       (LSP ID=2)                     | download
+        |       |-----  PCRpt,CC-ID=Y,PLSP-ID=2  ----------->|
         |       |     |                                      |
-        |       |     |<--- PCInitiate, PLSP-ID=2 ---------- | Label
+        |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=2 --- | Label
         |       |     |       (LSP ID=2)                     | download
+        |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=2  ------->|
         |       |     |                                      |
         |       |     |<-- PCUpd, PLSP-ID=2, PST=TBD, D=1--- | PCECC LSP
         |       |     |       (LSP ID=2)                     | Update
         |       |     |                                      |
 
 
+   Once the label operations are completed, the PCE SHOULD send the
+   PCUpd message to the Ingress PCC.  The PCUpd message is as per
+   [RFC8231].
+
 5.4.4.  PCECC LSP Update
 
    In case of a modification of PCECC LSP with a new path, a PCE sends a
    PCUpd message to the Ingress PCC.
 
-   When a PCC receives a PCUpd message for an existing LSP, a PCC MUST
-   follow the make-before-break procedure i.e. first download labels for
-   the updated LSP and then switch traffic, before cleaning up the old
-   labels.  On successful traffic switch over to the new LSP, PCC sends
-   a PCRpt message to the PCE for the deletion of old LSP.  Further the
-   PCE does cleanup operation for the old LSP as described in
-   Section 5.4.2.2.
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 13]
+
+Internet-Draft                    PCECC                        June 2018
+
+
+   When a PCC receives a PCUpd message for an existing LSP, the PCEP
+   implementation MUST follow the make-before-break procedure i.e. first
+   download labels for the updated LSP and then switch traffic, before
+   cleaning up the old labels.  On successful traffic switch over to the
+   new LSP, PCC sends a PCRpt message to the PCE for the deletion of old
+   LSP.  Further the PCE does cleanup operation for the old LSP as
+   described in Section 5.4.2.2.
 
    The PCECC LSP Update and make-before-break sequence is shown below -
 
@@ -669,7 +751,37 @@ Internet-Draft                    PCECC                        June 2018
 
 
 
-Zhao, et al.            Expires December 3, 2018               [Page 12]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 14]
 
 Internet-Draft                    PCECC                        June 2018
 
@@ -685,14 +797,17 @@ Internet-Draft                    PCECC                        June 2018
     |Egress  |  |     |                                     |
     +--------+  |     |                                     |
         |       |     |                                     | Modify LSP
-        |<------ PCInitiate, PLSP-ID=1 -------------------  | (LSPID=3
+        |<------ PCInitiate,CC-ID=XX,PLSP-ID=1 -----------  | (LSPID=3
         |       |     |       (LSP ID=3)                    | assigned)
+        |------- PCRpt,CC-ID=XX,PLSP-ID=1  ---------------->|
         |       |     |                                     |
-        |       |<----- PCInitiate, PLSP-ID=1-------------  | Label
+        |       |<----- PCInitiate,CC-ID=YY,PLSP-ID=1------ | Label
         |       |     |      (LSP ID=3)                     | download
+        |       |-----  PCRpt,CC-ID=YY,PLSP-ID=1  --------->|
         |       |     |                                     |
-        |       |     |<--- PCInitiate, PLSP-ID=1 --------  | Label
+        |       |     |<--- PCInitiate,CC-ID=ZZ,PLSP-ID=1 - | Label
         |       |     |      (LSP ID=3)                     | download
+        |       |     |---- PCRpt,CC-ID=ZZ,PLSP-ID=1  ----->|
         |       |     |                                     |
         |       |     |<-- PCUpd, PLSP-ID=1, PST=TBD, D=1-- | PCECC
         |       |     |       (LSP ID=3)                    | LSP Update
@@ -700,40 +815,48 @@ Internet-Draft                    PCECC                        June 2018
         |       |     |-- PCRpt,PLSP-ID=1,PST=TBD,D=1,R=1-->| Delete
         |       |     |       (LSP ID=1)                    | old LSP
         |       |     |                                     |
-        |<------ PCInitiate, PLSP-ID=1 -------------------  | Label
+        |<------ PCInitiate,CC-ID=XX,PLSP-ID=1 -----------  | Label
         |       |     |       (LSP ID=1, R=1)               | cleanup
+        |------- PCRpt,CC-ID=XX,PLSP-ID=1  ---------------->|
         |       |     |                                     |
-        |       |<----- PCInitiate, PLSP-ID=1 ------------  | Label
+        |       |<----- PCInitiate,CC-ID=YY,PLSP-ID=1 ----- | Label
         |       |     |      (LSP ID=1, R=1)                | cleanup
+        |       |-----  PCRpt,CC-ID=YY,PLSP-ID=1  --------->|
         |       |     |                                     |
-        |       |     |<--- PCInitiate, PLSP-ID=1 --------  | Label
+        |       |     |<--- PCInitiate,CC-ID=ZZ,PLSP-ID=1 - | Label
         |       |     |      (LSP ID=1, R=1)                | cleanup
+        |       |     |---- PCRpt,CC-ID=ZZ,PLSP-ID=1  ----->|
+        |       |     |                                     |
 
 
    The modified PCECC LSP are considered to be 'up' by default.  The
    Ingress MAY further choose to deploy a data plane check mechanism and
    report the status back to the PCE via PCRpt message.
 
-5.4.5.  Session Termination
-
-   PCC would mark all labels that were previously reported by this PCE
-   as stale on session down as per the procedures defined in [RFC8231].
-   The labels which are marked stale and provisioned for the Basic PCECC
-   LSP on this session would be cleaned up at the expiration of the
-   State Timeout Interval.  The labels will be retained when the
-   Infinite State Timeout Interval is used.
 
 
 
-Zhao, et al.            Expires December 3, 2018               [Page 13]
+
+Zhao, et al.            Expires December 6, 2018               [Page 15]
 
 Internet-Draft                    PCECC                        June 2018
 
 
-5.4.6.  Synchronization of Label Allocations
+5.4.5.  Session Termination
 
-   The purpose of Label synchronization is to make sure that the PCE's
-   view of Label allocation matches with the PCC's Label allocation.
+   PCC would mark all central controllers instructions (CCI) (labels in
+   the context of this document) that were previously instructed by this
+   PCE as stale on session down as per the procedures defined in
+   [RFC8231].  The labels which are marked stale and provisioned for the
+   Basic PCECC LSP on this session would be cleaned up at the expiration
+   of the State Timeout Interval.  The labels will be retained when the
+   Infinite State Timeout Interval is used.
+
+5.4.6.  Synchronization of Central Controllers Instructions
+
+   The purpose of Central Controllers Instructions synchronization
+   (labels in the context of this document) is to make sure that the
+   PCE's view of CCI (Labels) matches with the PCC's Label allocation.
    This synchronization is performed as part of the LSP state
    synchronization as described in [RFC8231] and [RFC8233].
 
@@ -741,7 +864,10 @@ Internet-Draft                    PCECC                        June 2018
    of its LSPs to the PCE using PCRpt messages and as per [RFC8281], PCE
    would initiate any missing LSPs and/or remove any LSPs that are not
    wanted.  The same PCEP messages and procedure is also used for the
-   label allocation synchronization.
+   Central Controllers Instructions synchronization.  The PCRpt message
+   includes the CCI and the LSP object to report the label forwarding
+   instructions.  The PCE would further remove any unwanted instructions
+   or initiate any missing instructions.
 
 5.4.7.  PCECC LSP State Report
 
@@ -762,28 +888,20 @@ Internet-Draft                    PCECC                        June 2018
 
    LSP-IDENTIFIERS TLV MUST be included in the LSP object for PCECC LSP.
 
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 16]
+
+Internet-Draft                    PCECC                        June 2018
+
+
 6.1.  The PCInitiate message
 
    The PCInitiate message [RFC8281] can be used to download or remove
    the labels, the message has been extended as shown below -
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 14]
-
-Internet-Draft                    PCECC                        June 2018
 
 
         <PCInitiate Message> ::= <Common Header>
@@ -814,32 +932,39 @@ Internet-Draft                    PCECC                        June 2018
         The LSP and SRP object is defined in [RFC8231].
 
 
-   When PCInitiate message is used to download labels, the SRP, LSP and
-   CCI objects MUST be present.  The SRP object is defined in [RFC8231]
-   and if the SRP object is missing, the receiving PCC MUST send a PCErr
-   message with Error-type=6 (Mandatory Object missing) and Error-
-   value=10 (SRP object missing).  The LSP object is defined in
-   [RFC8231] and if the LSP object is missing, the receiving PCC MUST
-   send a PCErr message with Error-type=6 (Mandatory Object missing) and
-   Error-value=8 (LSP object missing).  The CCI object is defined in
-   Section 7.3 and if the CCI object is missing, the receiving PCC MUST
-   send a PCErr message with Error-type=6 (Mandatory Object missing) and
-   Error-value=TBD (CCI object missing).  More than one CCI object MAY
-   be included in the PCInitiate message for the transit LSR.
+   When PCInitiate message is used for central controller's instructions
+   (labels), the SRP, LSP and CCI objects MUST be present.  The SRP
+   object is defined in [RFC8231] and if the SRP object is missing, the
+   receiving PCC MUST send a PCErr message with Error-type=6 (Mandatory
+   Object missing) and Error-value=10 (SRP object missing).  The LSP
+   object is defined in [RFC8231] and if the LSP object is missing, the
+   receiving PCC MUST send a PCErr message with Error-type=6 (Mandatory
+   Object missing) and Error-value=8 (LSP object missing).  The CCI
+   object is defined in Section 7.3 and if the CCI object is missing,
+   the receiving PCC MUST send a PCErr message with Error-type=6
+   (Mandatory Object missing) and Error-value=TBD (CCI object missing).
+   More than one CCI object MAY be included in the PCInitiate message
+   for the transit LSR.
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 17]
+
+Internet-Draft                    PCECC                        June 2018
+
 
    To cleanup the SRP object must set the R (remove) bit.
+
+   At max two instances of CCI object would be included in case of
+   transit LSR to encode both in-coming and out-going label forwarding
+   instructions.  Other instances MUST be ignored.
 
 6.2.  The PCRpt message
 
    The PCRpt message can be used to report the labels that were
    allocated by the PCE, to be used during the state synchronization
    phase.
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 15]
-
-Internet-Draft                    PCECC                        June 2018
 
 
          <PCRpt Message> ::= <Common Header>
@@ -866,18 +991,27 @@ Internet-Draft                    PCECC                        June 2018
          <path> is as per [RFC8231] and the LSP and SRP object are
          also defined in [RFC8231].
 
-   When PCRpt message is used to report the label allocations, the SRP,
-   LSP and CCI objects MUST be present.  The SRP object is defined in
-   [RFC8231] and if the SRP object is missing, the receiving PCE MUST
-   send a PCErr message with Error-type=6 (Mandatory Object missing) and
-   Error-value=10 (SRP object missing).  The LSP object is defined in
-   [RFC8231] and if the LSP object is missing, the receiving PCE MUST
-   send a PCErr message with Error-type=6 (Mandatory Object missing) and
-   Error-value=8 (LSP object missing).  The CCI object is defined in
-   Section 7.3 and if the CCI object is missing, the receiving PCC MUST
-   send a PCErr message with Error-type=6 (Mandatory Object missing) and
-   Error-value=TBD (CCI object missing).  More than one CCI object MAY
-   be included in the PCRpt message for the transit LSR.
+   When PCRpt message is used to report the central controller's
+   instructions (labels), the SRP, LSP and CCI objects MUST be present.
+   The SRP object is defined in [RFC8231] and if the SRP object is
+   missing, the receiving PCE MUST send a PCErr message with Error-
+   type=6 (Mandatory Object missing) and Error-value=10 (SRP object
+   missing).  The LSP object is defined in [RFC8231] and if the LSP
+   object is missing, the receiving PCE MUST send a PCErr message with
+   Error-type=6 (Mandatory Object missing) and Error-value=8 (LSP object
+   missing).  The CCI object is defined in Section 7.3 and if the CCI
+   object is missing, the receiving PCC MUST send a PCErr message with
+   Error-type=6 (Mandatory Object missing) and Error-value=TBD (CCI
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 18]
+
+Internet-Draft                    PCECC                        June 2018
+
+
+   object missing).  Two CCI object can be included in the PCRpt message
+   for the transit LSR.
 
 7.  PCEP Objects
 
@@ -887,16 +1021,6 @@ Internet-Draft                    PCECC                        June 2018
 7.1.  OPEN Object
 
    This document defines a new optional TLVs for use in the OPEN Object.
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 16]
-
-Internet-Draft                    PCECC                        June 2018
-
 
 7.1.1.  PCECC Capability sub-TLV
 
@@ -934,6 +1058,14 @@ Internet-Draft                    PCECC                        June 2018
 
    o  PST = TBD: Path is setup via PCECC mode.
 
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 19]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    On a PCRpt/PCUpd/PCInitiate message, the PST=TBD in PATH-SETUP-TYPE
    TLV in SRP object indicates that this LSP was setup via a PCECC based
    mechanism.
@@ -946,13 +1078,6 @@ Internet-Draft                    PCECC                        June 2018
    PCRpt message for label download.
 
    CCI Object-Class is TBD.
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 17]
-
-Internet-Draft                    PCECC                        June 2018
-
 
    CCI Object-Type is 1 for the MPLS Label.
 
@@ -989,6 +1114,14 @@ Internet-Draft                    PCECC                        June 2018
          UNNUMBERED-IPV4-ID-ADDRESS TLV in the CCI object).  If the bit
          is not set, it specifies the label is the IN label and it is
          optional to encode the local interface information (via
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 20]
+
+Internet-Draft                    PCECC                        June 2018
+
+
          IPV4-ADDRESS TLV or IPV6-ADDRESS TLV or UNNUMBERED-IPV4-ID-
          ADDRESS TLV in the CCI object).
 
@@ -1001,13 +1134,6 @@ Internet-Draft                    PCECC                        June 2018
    This document defines the following TLV for the CCI object to
    associate the next-hop information in case of an outgoing label and
    local interface information in case of an incoming label.
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 18]
-
-Internet-Draft                    PCECC                        June 2018
 
 
    IPV4-ADDRESS TLV:
@@ -1045,6 +1171,13 @@ Internet-Draft                    PCECC                        June 2018
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 21]
+
+Internet-Draft                    PCECC                        June 2018
+
+
    The address TLVs are as follows:
 
    IPV4-ADDRESS TLV:  an IPv4 address.
@@ -1053,18 +1186,6 @@ Internet-Draft                    PCECC                        June 2018
 
    UNNUMBERED-IPV4-ID-ADDRESS TLV:  a pair of Node ID / Interface ID
       tuples.
-
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 19]
-
-Internet-Draft                    PCECC                        June 2018
-
 
 8.  Security Considerations
 
@@ -1103,6 +1224,16 @@ Internet-Draft                    PCECC                        June 2018
    detection and monitoring requirements in addition to those already
    listed in [RFC5440].
 
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 22]
+
+Internet-Draft                    PCECC                        June 2018
+
+
 9.4.  Verify Correct Operations
 
    Mechanisms defined in this document do not imply any new operation
@@ -1113,14 +1244,6 @@ Internet-Draft                    PCECC                        June 2018
 
    PCEP extensions defined in this document do not put new requirements
    on other protocols.
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 20]
-
-Internet-Draft                    PCECC                        June 2018
-
 
 9.6.  Impact On Network Operations
 
@@ -1160,6 +1283,13 @@ Internet-Draft                    PCECC                        June 2018
           TBD                CCI Object-Type       This document
                              1                     MPLS Label
 
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 23]
+
+Internet-Draft                    PCECC                        June 2018
+
+
 10.4.  CCI Object Flag Field
 
    IANA is requested to create a registry to manage the Flag field of
@@ -1168,15 +1298,6 @@ Internet-Draft                    PCECC                        June 2018
    One bit to be defined for the CCI Object flag field in this document:
 
    Codespace of the Flag field (CCI Object)
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 21]
-
-Internet-Draft                    PCECC                        June 2018
-
 
             Bit            Description           Reference
             7              Specifies label       This document
@@ -1215,6 +1336,16 @@ Internet-Draft                    PCECC                        June 2018
    We would like to thank Robert Tao, Changjing Yan, Tieying Huang and
    Avantika for their useful comments and suggestions.
 
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 24]
+
+Internet-Draft                    PCECC                        June 2018
+
+
 12.  References
 
 12.1.  Normative References
@@ -1223,16 +1354,6 @@ Internet-Draft                    PCECC                        June 2018
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 22]
-
-Internet-Draft                    PCECC                        June 2018
-
 
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
@@ -1273,22 +1394,41 @@ Internet-Draft                    PCECC                        June 2018
               Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
               <https://www.rfc-editor.org/info/rfc8281>.
 
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 25]
+
+Internet-Draft                    PCECC                        June 2018
+
+
 12.2.  Informative References
+
+   [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
+              Element (PCE)-Based Architecture", RFC 4655,
+              DOI 10.17487/RFC4655, August 2006,
+              <https://www.rfc-editor.org/info/rfc4655>.
+
+   [RFC7025]  Otani, T., Ogaki, K., Caviglia, D., Zhang, F., and C.
+              Margaria, "Requirements for GMPLS Applications of PCE",
+              RFC 7025, DOI 10.17487/RFC7025, September 2013,
+              <https://www.rfc-editor.org/info/rfc7025>.
+
+   [RFC7399]  Farrel, A. and D. King, "Unanswered Questions in the Path
+              Computation Element Architecture", RFC 7399,
+              DOI 10.17487/RFC7399, October 2014,
+              <https://www.rfc-editor.org/info/rfc7399>.
+
+   [RFC7491]  King, D. and A. Farrel, "A PCE-Based Architecture for
+              Application-Based Network Operations", RFC 7491,
+              DOI 10.17487/RFC7491, March 2015,
+              <https://www.rfc-editor.org/info/rfc7491>.
 
    [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
               "PCEPS: Usage of TLS to Provide a Secure Transport for the
               Path Computation Element Communication Protocol (PCEP)",
               RFC 8253, DOI 10.17487/RFC8253, October 2017,
               <https://www.rfc-editor.org/info/rfc8253>.
-
-
-
-
-
-Zhao, et al.            Expires December 3, 2018               [Page 23]
-
-Internet-Draft                    PCECC                        June 2018
-
 
    [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
               Architecture for Use of PCE and the PCE Communication
@@ -1308,6 +1448,15 @@ Internet-Draft                    PCECC                        June 2018
               Hardwick, "Conveying path setup type in PCEP messages",
               draft-ietf-pce-lsp-setup-type-10 (work in progress), May
               2018.
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 26]
+
+Internet-Draft                    PCECC                        June 2018
+
 
    [I-D.ietf-pce-pcep-yang]
               Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
@@ -1341,7 +1490,26 @@ Internet-Draft                    PCECC                        June 2018
 
 
 
-Zhao, et al.            Expires December 3, 2018               [Page 24]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 27]
 
 Internet-Draft                    PCECC                        June 2018
 
@@ -1397,7 +1565,7 @@ Authors' Addresses
 
 
 
-Zhao, et al.            Expires December 3, 2018               [Page 25]
+Zhao, et al.            Expires December 6, 2018               [Page 28]
 
 Internet-Draft                    PCECC                        June 2018
 
@@ -1453,4 +1621,4 @@ Internet-Draft                    PCECC                        June 2018
 
 
 
-Zhao, et al.            Expires December 3, 2018               [Page 26]
+Zhao, et al.            Expires December 6, 2018               [Page 29]
