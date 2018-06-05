@@ -105,7 +105,7 @@ Table of Contents
      5.4.  PCEP session IP address and TEDB Router ID  . . . . . . .   7
      5.5.  LSP Operations  . . . . . . . . . . . . . . . . . . . . .   7
        5.5.1.  PCECC Segment Routing (SR)  . . . . . . . . . . . . .   8
-         5.5.1.1.  PCECC SR Node/Prefix Label allocation . . . . . .   8
+         5.5.1.1.  PCECC SR Node/Prefix SID allocation . . . . . . .   8
 
 
 
@@ -116,10 +116,10 @@ Internet-Draft                    PCECC                        June 2018
 
          5.5.1.2.  PCECC SR Adjacency Label allocation . . . . . . .   9
          5.5.1.3.  Redundant PCEs  . . . . . . . . . . . . . . . . .  10
-         5.5.1.4.  Session Termination . . . . . . . . . . . . . . .  11
+         5.5.1.4.  Re Delegation and Cleanup . . . . . . . . . . . .  10
          5.5.1.5.  Synchronization of Label Allocations  . . . . . .  11
    6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .  11
-     6.1.  Central Control Intructions . . . . . . . . . . . . . . .  11
+     6.1.  Central Control Instructions  . . . . . . . . . . . . . .  11
        6.1.1.  The PCInitiate message  . . . . . . . . . . . . . . .  11
        6.1.2.  The PCRpt message . . . . . . . . . . . . . . . . . .  12
    7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  13
@@ -127,19 +127,20 @@ Internet-Draft                    PCECC                        June 2018
        7.1.1.  PCECC Capability sub-TLV  . . . . . . . . . . . . . .  13
      7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  14
      7.3.  CCI Object  . . . . . . . . . . . . . . . . . . . . . . .  14
-     7.4.  FEC Object  . . . . . . . . . . . . . . . . . . . . . . .  16
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  18
-   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  18
-     9.1.  Control of Function and Policy  . . . . . . . . . . . . .  18
+     7.4.  FEC Object  . . . . . . . . . . . . . . . . . . . . . . .  15
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
+   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  17
+     9.1.  Control of Function and Policy  . . . . . . . . . . . . .  17
      9.2.  Information and Data Models . . . . . . . . . . . . . . .  18
      9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  18
      9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  18
      9.5.  Requirements On Other Protocols . . . . . . . . . . . . .  18
      9.6.  Impact On Network Operations  . . . . . . . . . . . . . .  18
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  19
-     10.1.  PCECC-CAPABILITY TLV . . . . . . . . . . . . . . . . . .  19
-     10.2.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  19
-     10.3.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  19
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
+     10.1.  PCECC-CAPABILITY TLV . . . . . . . . . . . . . . . . . .  18
+     10.2.  New Path Setup Type Registry . . . . . . . . . . . . . .  19
+     10.3.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  19
+     10.4.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  19
    11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  19
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  20
@@ -161,7 +162,6 @@ Internet-Draft                    PCECC                        June 2018
    so that software running in a centralized system, called a
    controller, can act to program the devices in the network to behave
    in specific ways.  A required element in an SDN architecture is a
-   component that plans how the network resources will be used and how
 
 
 
@@ -170,6 +170,7 @@ Zhao, et al.            Expires December 6, 2018                [Page 3]
 Internet-Draft                    PCECC                        June 2018
 
 
+   component that plans how the network resources will be used and how
    the devices will be programmed.  It is possible to view this
    component as performing specific computations to place traffic flows
    within the network given knowledge of the availability of network
@@ -220,7 +221,6 @@ Internet-Draft                    PCECC                        June 2018
 
 
 
-
 Zhao, et al.            Expires December 6, 2018                [Page 4]
 
 Internet-Draft                    PCECC                        June 2018
@@ -265,7 +265,7 @@ Internet-Draft                    PCECC                        June 2018
    [I-D.ietf-ospf-segment-routing-extensions].
 
    As per [RFC8283], PCE as a central controller can allocate and
-   provision the node/adjacency label (SID) via PCEP.
+   provision the node/prefix/adjacency label (SID) via PCEP.
 
    Rest of the processing is similar to existing stateful PCE with SR
    mechanism.
@@ -315,20 +315,20 @@ Internet-Draft                    PCECC                        June 2018
    are described in [I-D.zhao-pce-pcep-extension-for-pce-controller] for
    PCECC-SR as well.
 
-   PCEP messages PCRpt, PCInitiate, PCUpd are also used to send PCECC-SR
+   PCEP messages PCRpt, PCInitiate, PCUpd are also used to send LSP
    Reports, LSP setup and LSP update respectively.  The extended
    PCInitiate message described in
    [I-D.zhao-pce-pcep-extension-for-pce-controller] is used to download
-   or cleanup SR Label entry.  The extended PCRpt message described in
+   or cleanup central controller's instructions (CCIs) (SR SID in scope
+   of this document).  The extended PCRpt message described in
    [I-D.zhao-pce-pcep-extension-for-pce-controller] is also used to
-   report the label allocations for the SR Labels from PCC to PCE.
+   report the CCIs (SR SIDs) from PCC to PCE.
 
    [I-D.zhao-pce-pcep-extension-for-pce-controller] specify an object
    called CCI for the encoding of central controller's instructions.
    This document extends the CCI by defining a new object-type for
    segment routing.  The PCEP messages are extended in this document to
    handle the PCECC operations for SR.
-
 
 
 
@@ -380,8 +380,8 @@ Internet-Draft                    PCECC                        June 2018
 5.5.  LSP Operations
 
    The PCEP messages pertaining to PCECC-SR MUST include PATH-SETUP-TYPE
-   TLV [I-D.ietf-pce-lsp-setup-type] in the SRP object to clearly
-   identify the PCECC-SR LSP is intended.
+   TLV [I-D.ietf-pce-lsp-setup-type] with PST=TBD in the SRP object to
+   clearly identify the PCECC-SR LSP is intended.
 
 
 
@@ -401,17 +401,17 @@ Internet-Draft                    PCECC                        June 2018
    advertised by Interior Gateway Protocols (IGPs).  The SR-node
    allocates and advertises the SID (node, adj etc) and flood via the
    IGP.  This document proposes a new mechanism where PCE allocates the
-   SID (label) centrally and uses PCEP to advertise the SID.  In some
-   deployments PCE (and PCEP) are better suited than IGP because of
-   centralized nature of PCE and direct TCP based PCEP session to the
+   SID (label/index/SID) centrally and uses PCEP to advertise the SID.
+   In some deployments PCE (and PCEP) are better suited than IGP because
+   of centralized nature of PCE and direct TCP based PCEP session to the
    node.
 
-5.5.1.1.  PCECC SR Node/Prefix Label allocation
+5.5.1.1.  PCECC SR Node/Prefix SID allocation
 
-   Each node (PCC) is allocated a node-SID (label) by the PCECC.  The
-   PCECC sends PCInitiate message to update the label map of each node
-   to all the nodes in the domain.  The TE router ID is determined from
-   the TEDB or from "IPv4/IPv6 Router-ID" Sub-TLV
+   Each node (PCC) is allocated a node-SID by the PCECC.  The PCECC
+   sends PCInitiate message to update the label map of each node to all
+   the nodes in the domain.  The TE router ID is determined from the
+   TEDB or from "IPv4/IPv6 Router-ID" Sub-TLV
    [I-D.dhodylee-pce-pcep-ls], in the OPEN Object Section 5.4.
 
    It is RECOMMENDED that PCEP session with PCECC SR capability to use a
@@ -419,18 +419,18 @@ Internet-Draft                    PCECC                        June 2018
    the node Router ID in TEDB, to make sure that the PCEP session does
    not get impacted by the SR Node/Prefix Label maps (Section 5.4).
 
-   If a node (PCC) receives a PCInitiate message with a Label, out of
-   the range set aside for the global label, it MUST send a PCErr
-   message with Error-type=TBD (label download failure) and Error-
-   value=TBD (Label out of range) and MUST include the SRP object to
-   specify the error is for the corresponding label update via
-   PCInitiate message.
+   If a node (PCC) receives a PCInitiate message with a CCI encoding a
+   SID, out of the range set aside for the SRGB, it MUST send a PCErr
+   message with Error-type=TBD (PCECC failure) and Error-value=TBD (SID
+   out of range) and MUST include the SRP object to specify the error is
+   for the corresponding label update via PCInitiate message.
 
    On receiving the label map, each node (PCC) uses the local
    information to determine the next-hop and download the label
    forwarding instructions accordingly.  The PCInitiate message in this
    case MUST NOT have LSP object but uses the new FEC object defined in
    this document.
+
 
 
 
@@ -462,13 +462,16 @@ Internet-Draft                    PCECC                        June 2018
     +---------+ |       |                                   |
         |       |       |                                   |
         |<------- PCInitiate, FEC=192.0.2.1---------------- | Label Map
-        |       |       |      Label=X                      | update
+        |       |       |      CC-ID=X                      | update
+        |------- PCRpt,CC-ID=X  --------------------------->|
         |Find   |       |                                   |
         |Nexthop|<------- PCInitiate, FEC=192.0.2.1-------- | Label Map
-        |locally|       |             Label=X               | update
+        |locally|       |             CC-ID=Y               | update
+        |       |-----  PCRpt,CC-ID=Y  -------------------->|
         |       |       |                                   |
         |       |       |<--- PCInitiate, FEC=192.0.2.1---- | Label Map
-        |       |       |                 Label=X           | update
+        |       |       |                 CC-ID=Z           | update
+        |       |       |---- PCRpt,CC-ID=Z  -------------->|
         |       |       |                                   |
 
 
@@ -488,15 +491,12 @@ Internet-Draft                    PCECC                        June 2018
    networks.
 
    For PCECC SR, apart from node-SID, Adj-SID is used where each
-   adjacency is allocated an Adj-SID (label) by the PCECC.  The PCECC
-   sends PCInitiate message to update the label map of each Adj to the
+   adjacency is allocated an Adj-SID by the PCECC.  The PCECC sends
+   PCInitiate message to update the label map of each Adj to the
    corresponding nodes in the domain.  Each node (PCC) download the
    label forwarding instructions accordingly.  Similar to SR Node/Prefix
    Label allocation, the PCInitiate message in this case MUST NOT have
    LSP object but uses the new FEC object defined in this document.
-
-
-
 
 
 
@@ -518,21 +518,23 @@ Internet-Draft                    PCECC                        June 2018
       +---------+  |      |                                 |
           |        |      |                                 |
           |<------ PCInitiate, FEC=192.0.2.1 / ------------ | Label Map
-          |        |      |          192.0.2.2              | update
-          |        |      |      Label=A                    |
+          |        |      |        192.0.2.2                | update
+          |        |      |    CC-ID=A                      |
+          |------- PCRpt,CC-ID=A  ------------------------->|
           |        |      |                                 |
           |        |<----- PCInitiate, FEC=192.0.2.2------- | Label Map
-          |        |      |                 192.0.2.1       | update
-          |        |      |             Label=B             |
+          |        |      |                192.0.2.1        | update
+          |        |      |            CC-ID=B              |
+          |        |-----  PCRpt,CC-ID=B  ----------------->|
           |        |      |                                 |
 
 
    The forwarding behavior and the end result is similar to IGP based
    "Adj-SID" in SR.
 
-   The Path Setup Type for segment routing MUST be set for PCECC SR (see
-   Section 7.2).  All PCEP procedures and mechanism are similar to
-   [I-D.ietf-pce-segment-routing].
+   The Path Setup Type for segment routing MUST be set for PCECC SR =
+   TBD (see Section 7.2).  All PCEP procedures and mechanism are similar
+   to [I-D.ietf-pce-segment-routing].
 
    PCE relies on the Adj label cleanup using the same PCInitiate
    message.
@@ -540,19 +542,17 @@ Internet-Draft                    PCECC                        June 2018
 5.5.1.3.  Redundant PCEs
 
    [I-D.litkowski-pce-state-sync] describes synchronization mechanism
-   between the stateful PCEs.  The SR Labels allocated by a PCE should
-   also be synchronized among PCEs for PCECC SR state synchronization.
-   Note that the SR labels are downloaded independent to the PCECC LSP,
-   and remains intact till any topology change.  The redundant PCEs MUST
-   have a common view of all SR labels allocated in the domain.
+   between the stateful PCEs.  The SR SIDs allocated by a PCE MUST also
+   be synchronized among PCEs for PCECC SR state synchronization.  Note
+   that the SR SIDs are independent to the PCECC-SR LSP, and remains
+   intact till any topology change.  The redundant PCEs MUST have a
+   common view of all SR SIDs allocated in the domain.
 
-   In case the session to the PCE that allocated the SR labels is down,
-   similar to the LSP re-delegation mechanism, the SR labels are re-
-   delegated to a redundant PCE using the PCRpt message.  This is done
-   so that the SR labels remains intact and constant in case of session
-   disconnect.
+5.5.1.4.  Re Delegation and Cleanup
 
-
+   [I-D.zhao-pce-pcep-extension-for-pce-controller] describes the action
+   needed for CCIs for the Basic PCECC LSP on this terminated session.
+   Similarly actions should be applied for the SR SID as well.
 
 
 
@@ -562,27 +562,12 @@ Zhao, et al.            Expires December 6, 2018               [Page 10]
 Internet-Draft                    PCECC                        June 2018
 
 
-5.5.1.4.  Session Termination
-
-   [I-D.zhao-pce-pcep-extension-for-pce-controller] describes the action
-   needed for label provisioned for the Basic PCECC LSP on this
-   terminated session.  Similarly actions should be applied for SR
-   Labels as well.
-
-   Additionally, if PCC has any alternate PCEP session with another PCE,
-   then PCC MUST delegate the SR labels of this session to this
-   alternate PCE in a sequence of PCRpt message.  PCE can accept it and
-   can send PCInitiate message to add or clean the label.
-
-   Extensions for PCInitiate and PCRpt message for SR label are
-   described in Section 6.1.
-
 5.5.1.5.  Synchronization of Label Allocations
 
    [I-D.zhao-pce-pcep-extension-for-pce-controller] describes the
-   synchronization of Label allocations via LSP state synchronization as
-   described in [RFC8231] and [RFC8232].  Same procedures should be
-   applied for SR labels as well.
+   synchronization of Central Controller's Instructions (CCI) via LSP
+   state synchronization as described in [RFC8231] and [RFC8232].  Same
+   procedures should be applied for SR SIDs as well.
 
 6.  PCEP messages
 
@@ -595,7 +580,7 @@ Internet-Draft                    PCECC                        June 2018
    An implementation MUST form the PCEP messages using the object
    ordering specified in this document.
 
-6.1.  Central Control Intructions
+6.1.  Central Control Instructions
 
 6.1.1.  The PCInitiate message
 
@@ -604,6 +589,21 @@ Internet-Draft                    PCECC                        June 2018
    to support SR based central control instructions.
 
    The format of the extended PCInitiate message is as follows:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -702,12 +702,11 @@ Internet-Draft                    PCECC                        June 2018
          also defined in [RFC8231].
 
    When PCRpt message is used to report the label map allocations, the
-   SRP, FEC and CCI objects MUST be present.  The error handling for
-   missing SRP or CCI object is as per
-   [I-D.zhao-pce-pcep-extension-for-pce-controller].  If the FEC object
-   is missing, the receiving PCC MUST send a PCErr message with Error-
-   type=6 (Mandatory Object missing) and Error-value=TBD (FEC object
-   missing).
+   FEC and CCI objects MUST be present.  The error handling for CCI
+   object is as per [I-D.zhao-pce-pcep-extension-for-pce-controller].
+   If the FEC object is missing, the receiving PCC MUST send a PCErr
+   message with Error-type=6 (Mandatory Object missing) and Error-
+   value=TBD (FEC object missing).
 
 7.  PCEP Objects
 
@@ -719,6 +718,7 @@ Internet-Draft                    PCECC                        June 2018
    CAPABILITY TLV.
 
    A new S-bit is defined in PCECC-CAPABILITY sub-TLV for PCECC-SR:
+
 
 
 
@@ -746,14 +746,11 @@ Internet-Draft                    PCECC                        June 2018
 7.2.  PATH-SETUP-TYPE TLV
 
    The PATH-SETUP-TYPE TLV is defined in [I-D.ietf-pce-lsp-setup-type].
-   PST = 1 (defined in [I-D.ietf-pce-segment-routing]) can be reused
-   when Path is setup via PCECC SR mode.
+   PST = TBD is used when Path is setup via PCECC SR mode.
 
-   On a PCRpt/PCUpd/PCInitiate message, the PST=1 indicates that this
-   LSP was setup via a SR based mechanism where either the labels are
-   allocated by PCE via PCECC mechanism or advertised by IGP.  For the
-   label map download or cleanup the PST type is set to PCECC as per
-   [I-D.zhao-pce-pcep-extension-for-pce-controller].
+   On a PCRpt/PCUpd/PCInitiate message, the PST=TBD indicates that this
+   LSP was setup via a PCECC-SR based mechanism where either the SIDs
+   were allocated/instructed by PCE via PCECC mechanism.
 
 7.3.  CCI Object
 
@@ -765,16 +762,19 @@ Internet-Draft                    PCECC                        June 2018
    CCI Object-Type is TBD for SR as below -
 
 
-
-
-
-
-
-
-
-
-
-
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                            CC-ID                              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      MT-ID    |    Algorithm  |        Flags        |N|E|V|L|O|
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   //                  SID/Label/Index (variable)                 //
+   +---------------------------------------------------------------+
+   |                                                               |
+   //                        Optional TLV                         //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
 
@@ -784,21 +784,6 @@ Internet-Draft                    PCECC                        June 2018
 Zhao, et al.            Expires December 6, 2018               [Page 14]
 
 Internet-Draft                    PCECC                        June 2018
-
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                            CC-ID                              |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |      MT-ID    |    Algorithm  |        Flags      |N|E|B|V|L|O|
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   //                  SID/Label/Index (variable)                 //
-   +---------------------------------------------------------------+
-   |                                                               |
-   //                        Optional TLV                         //
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
    The field CC-ID is as described in
@@ -835,13 +820,6 @@ Internet-Draft                    PCECC                        June 2018
          A 32-bit index defining the offset in the SID/Label space
          advertised by this router.
 
-
-
-Zhao, et al.            Expires December 6, 2018               [Page 15]
-
-Internet-Draft                    PCECC                        June 2018
-
-
          A 24-bit label where the 20 rightmost bits are used for
          encoding the label value.
 
@@ -856,6 +834,14 @@ Internet-Draft                    PCECC                        June 2018
       FEC Object-Type is 1 'IPv4 Node ID'.
 
        0                   1                   2                   3
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 15]
+
+Internet-Draft                    PCECC                        June 2018
+
+
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       |                      IPv4 Node ID                             |
@@ -890,14 +876,6 @@ Internet-Draft                    PCECC                        June 2018
       |                                                               |
       //               Local IPv6 address (16 bytes)                 //
       |                                                               |
-
-
-
-Zhao, et al.            Expires December 6, 2018               [Page 16]
-
-Internet-Draft                    PCECC                        June 2018
-
-
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       |                                                               |
       //               Remote IPv6 address (16 bytes)                //
@@ -912,11 +890,20 @@ Internet-Draft                    PCECC                        June 2018
       |                      Local Node-ID                            |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       |                    Local Interface ID                         |
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 16]
+
+Internet-Draft                    PCECC                        June 2018
+
+
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       |                      Remote Node-ID                           |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       |                   Remote Interface ID                         |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 
 
    The FEC objects are as follows:
@@ -943,17 +930,6 @@ Internet-Draft                    PCECC                        June 2018
 
    Binding ID: TBD
 
-
-
-
-
-
-
-Zhao, et al.            Expires December 6, 2018               [Page 17]
-
-Internet-Draft                    PCECC                        June 2018
-
-
 8.  Security Considerations
 
    The security considerations described in
@@ -966,6 +942,17 @@ Internet-Draft                    PCECC                        June 2018
 
    A PCE or PCC implementation SHOULD allow to configure to enable/
    disable PCECC SR capability as a global configuration.
+
+
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 17]
+
+Internet-Draft                    PCECC                        June 2018
+
 
 9.2.  Information and Data Models
 
@@ -998,18 +985,6 @@ Internet-Draft                    PCECC                        June 2018
    PCLabelUpd messages sent by PCE and processed by PCC.  It SHOULD also
    allow sending a notification when a rate threshold is reached.
 
-
-
-
-
-
-
-
-Zhao, et al.            Expires December 6, 2018               [Page 18]
-
-Internet-Draft                    PCECC                        June 2018
-
-
 10.  IANA Considerations
 
 10.1.  PCECC-CAPABILITY TLV
@@ -1023,7 +998,29 @@ Internet-Draft                    PCECC                        June 2018
            Bit            Description              Reference
            31             S((PCECC-SR-CAPABILITY)) This document
 
-10.2.  PCEP Object
+
+
+
+
+
+
+
+Zhao, et al.            Expires December 6, 2018               [Page 18]
+
+Internet-Draft                    PCECC                        June 2018
+
+
+10.2.  New Path Setup Type Registry
+
+   IANA is requested to allocate new PST Field in PATH- SETUP-TYPE TLV.
+   The allocation policy for this new registry should be by IETF
+   Consensus.  The new registry should contain the following value:
+
+         Value          Description                 Reference
+         TBD            Traffic engineering path is This document
+                        setup using PCECC-SR mode
+
+10.3.  PCEP Object
 
    IANA is requested to allocate new registry for FEC PCEP object.
 
@@ -1036,7 +1033,7 @@ Internet-Draft                    PCECC                        June 2018
                           Object-Type : 5       Unnumbered Adjacency
                                                 with IPv4 NodeID
 
-10.3.  PCEP-Error Object
+10.4.  PCEP-Error Object
 
    IANA is requested to allocate new error types and error values within
    the "PCEP-ERROR Object Error Types and Values" sub-registry of the
@@ -1057,6 +1054,9 @@ Internet-Draft                    PCECC                        June 2018
 
    We would like to thank Robert Tao, Changjing Yan, Tieying Huang and
    Avantika for their useful comments and suggestions.
+
+
+
 
 
 

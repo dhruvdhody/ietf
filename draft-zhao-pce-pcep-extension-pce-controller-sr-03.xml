@@ -261,7 +261,7 @@
    <xref target='I-D.ietf-ospf-segment-routing-extensions'/>.</t> 
 
    <t>As per <xref target='RFC8283'/>, 
-   PCE as a central controller can allocate and provision the node/adjacency label (SID) via PCEP.</t> 
+   PCE as a central controller can allocate and provision the node/prefix/adjacency label (SID) via PCEP.</t> 
    <t>Rest of the
    processing is similar to existing stateful PCE with SR mechanism.</t>
    <t>For the purpose
@@ -313,11 +313,11 @@
    PCECC-SR as well.</t>
    
    <t>PCEP messages PCRpt, PCInitiate, PCUpd are also used to send
-   PCECC-SR Reports, LSP setup and LSP update respectively. The extended PCInitiate message described in
+   LSP Reports, LSP setup and LSP update respectively. The extended PCInitiate message described in
    <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> is used to download
-   or cleanup SR Label entry. The extended PCRpt message described in
+   or cleanup central controller's instructions (CCIs) (SR SID in scope of this document). The extended PCRpt message described in
    <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> is also used to report
-   the label allocations for the SR Labels from PCC to PCE.</t>
+   the CCIs (SR SIDs) from PCC to PCE.</t>
 
     <!--<t>[Editor's Note: <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
       PCLabelRpt. The authors and WG also debated on the use of existing PCEP messages. Further 
@@ -376,7 +376,7 @@
     <section title="LSP Operations"
              toc="default">
     <t> The PCEP messages pertaining to PCECC-SR MUST include PATH-SETUP-TYPE
-   TLV <xref target='I-D.ietf-pce-lsp-setup-type'/> in the SRP object
+   TLV <xref target='I-D.ietf-pce-lsp-setup-type'/> with PST=TBD in the SRP object
    to clearly identify the PCECC-SR LSP is intended.</t>
    
     <section title="PCECC Segment Routing (SR)"
@@ -387,15 +387,15 @@
    advertised by Interior Gateway Protocols (IGPs).  The SR-node
    allocates and advertises the SID (node, adj etc) and flood via the
    IGP.  This document proposes a new mechanism where PCE allocates the
-   SID (label) centrally and uses PCEP to advertise the SID.  In some
+   SID (label/index/SID) centrally and uses PCEP to advertise the SID.  In some
    deployments PCE (and PCEP) are better suited than IGP because of
    centralized nature of PCE and direct TCP based PCEP session to the
    node.</t>
    
-       <section title="PCECC SR Node/Prefix Label allocation"
+       <section title="PCECC SR Node/Prefix SID allocation"
              toc="default"
              anchor="SEC_NODE_ALLOC">
-        <t>Each node (PCC) is allocated a node-SID (label) by the PCECC.  The
+        <t>Each node (PCC) is allocated a node-SID by the PCECC.  The
          PCECC sends PCInitiate message to update the label map of each node to all
          the nodes in the domain.  The TE router ID is determined from the
          TEDB or from "IPv4/IPv6 Router-ID" Sub-TLV
@@ -409,9 +409,9 @@
          the node Router ID in TEDB, to make sure that the PCEP session does
          not get impacted by the SR Node/Prefix Label maps (<xref target="SEC_SESSION"/>).</t>
 
-         <t>If a node (PCC) receives a PCInitiate message with a Label, out
-      of the range set aside for the global label, it MUST send a PCErr message with Error-type=TBD
-   (label download failure) and Error-value=TBD (Label out of range) and MUST include the
+         <t>If a node (PCC) receives a PCInitiate message with a CCI encoding a SID, out
+      of the range set aside for the SRGB, it MUST send a PCErr message with Error-type=TBD
+   (PCECC failure) and Error-value=TBD (SID out of range) and MUST include the
    SRP object to specify the error is for the corresponding label update via PCInitiate message.</t>
 
         <t>On receiving the label map, each node (PCC) uses the local
@@ -446,13 +446,16 @@
  +---------+ |       |                                   |
      |       |       |                                   |
      |<------- PCInitiate, FEC=192.0.2.1---------------- | Label Map
-     |       |       |      Label=X                      | update
+     |       |       |      CC-ID=X                      | update
+     |------- PCRpt,CC-ID=X  --------------------------->|
      |Find   |       |                                   |
      |Nexthop|<------- PCInitiate, FEC=192.0.2.1-------- | Label Map
-     |locally|       |             Label=X               | update
+     |locally|       |             CC-ID=Y               | update
+     |       |-----  PCRpt,CC-ID=Y  -------------------->|
      |       |       |                                   |
      |       |       |<--- PCInitiate, FEC=192.0.2.1---- | Label Map
-     |       |       |                 Label=X           | update
+     |       |       |                 CC-ID=Z           | update
+     |       |       |---- PCRpt,CC-ID=Z  -------------->|
      |       |       |                                   |
 ]]>
         </artwork>
@@ -477,7 +480,7 @@
         networks.</t>
 
         <t>For PCECC SR, apart from node-SID, Adj-SID is used where each adjacency
-         is allocated an Adj-SID (label) by the PCECC.  The PCECC sends
+         is allocated an Adj-SID by the PCECC.  The PCECC sends
          PCInitiate message to update the label map of each Adj to the corresponding
          nodes in the domain.  Each node (PCC) download the label forwarding
          instructions accordingly.  Similar to SR Node/Prefix Label allocation, the
@@ -511,12 +514,14 @@
    +---------+  |      |                                 |
        |        |      |                                 |
        |<------ PCInitiate, FEC=192.0.2.1 / ------------ | Label Map
-       |        |      |          192.0.2.2              | update
-       |        |      |      Label=A                    |
+       |        |      |        192.0.2.2                | update
+       |        |      |    CC-ID=A                      |
+       |------- PCRpt,CC-ID=A  ------------------------->|
        |        |      |                                 |
        |        |<----- PCInitiate, FEC=192.0.2.2------- | Label Map
-       |        |      |                 192.0.2.1       | update
-       |        |      |             Label=B             |
+       |        |      |                192.0.2.1        | update
+       |        |      |            CC-ID=B              |
+       |        |-----  PCRpt,CC-ID=B  ----------------->|
        |        |      |                                 |
 ]]>
         </artwork>
@@ -525,7 +530,7 @@
         <t>The forwarding behavior and the end result is similar to IGP based
         "Adj-SID" in SR.</t>
 
-        <t>The Path Setup Type for segment routing MUST be set for PCECC SR
+        <t>The Path Setup Type for segment routing MUST be set for PCECC SR = TBD
          (see <xref target="SEC_PATH"/>).  All PCEP procedures and mechanism are similar to
         <xref target='I-D.ietf-pce-segment-routing'/>.</t>
 
@@ -538,42 +543,30 @@
              anchor="SEC_REDUND">
 
        <t><xref target='I-D.litkowski-pce-state-sync'/> describes synchronization
-       mechanism between the stateful PCEs. The SR Labels allocated by a PCE should also be 
-       synchronized among PCEs for PCECC SR state synchronization. Note that the SR labels
-       are downloaded independent to the PCECC LSP, and remains intact till any topology 
-       change. The redundant PCEs MUST have a common view of all SR labels allocated in the
+       mechanism between the stateful PCEs. The SR SIDs allocated by a PCE MUST also be 
+       synchronized among PCEs for PCECC SR state synchronization. Note that the SR SIDs
+       are independent to the PCECC-SR LSP, and remains intact till any topology 
+       change. The redundant PCEs MUST have a common view of all SR SIDs allocated in the
        domain.
      </t>
     
-       <t>In case the session to the PCE that allocated the SR labels is down, similar 
-        to the LSP re-delegation mechanism, the SR labels are re-delegated to a 
-        redundant PCE using the PCRpt message. This is done so that the SR labels
-        remains intact and constant in case of session disconnect. </t>             
        </section>     
        
-       <section title="Session Termination "
+       <section title="Re Delegation and Cleanup"
              toc="default"
              anchor="SEC_SES_TERMIN">
         <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> describes the action
-        needed for label provisioned for the Basic PCECC LSP on this terminated
-        session. Similarly actions should be applied for SR Labels as well.</t>
-   
-        <t>Additionally, if PCC has any alternate PCEP session with another PCE, then
-         PCC MUST delegate the SR labels of this session to this alternate PCE in a
-         sequence of PCRpt message. PCE can accept it and can send PCInitiate
-         message to add or clean the label.</t>
-
-        <t>Extensions for PCInitiate and PCRpt message for SR label are described
-         in <xref target="SEC_LabelOp"/>.</t>             
+        needed for CCIs for the Basic PCECC LSP on this terminated
+        session. Similarly actions should be applied for the SR SID as well.</t>
        </section>
 
        <section title="Synchronization of Label Allocations"
              toc="default"
              anchor="SEC_DB_SYNC">
-        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> describes the synchronization of Label allocations via LSP state synchronization 
+        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> describes the synchronization of Central Controller's Instructions (CCI) via LSP state synchronization 
    as described in <xref target='RFC8231'/> and 
    <xref target='RFC8232'/>.  
-        Same procedures should be applied for SR labels as well.</t>    
+        Same procedures should be applied for SR SIDs as well.</t>    
         <!--<t>See <xref target="I-D.palle-pce-controller-labeldb-sync"/> for the optimizations for LABEL-DB synchronization procedure.</t>          -->
        </section>       
        
@@ -593,7 +586,7 @@
    An implementation MUST form the PCEP messages using the object
    ordering specified in this document.</t>
    
-    <section title="Central Control Intructions"
+    <section title="Central Control Instructions"
              toc="default"
              anchor="SEC_LabelOp"> 
     <!--<t>[Editor's Note: <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
@@ -686,8 +679,8 @@
       also defined in [RFC8231].
 ]]></artwork>
         </figure></t>        
-        <t>When PCRpt message is used to report the label map allocations, the SRP, FEC and CCI objects MUST be present. 
-          The error handling for missing SRP or CCI object is as per <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. If the FEC object is
+        <t>When PCRpt message is used to report the label map allocations, the FEC and CCI objects MUST be present. 
+          The error handling for CCI object is as per <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. If the FEC object is
     missing, the receiving PCC MUST send a PCErr message with Error-type=6
     (Mandatory Object missing) and Error-value=TBD (FEC object missing).</t>
         
@@ -746,13 +739,12 @@
              anchor="SEC_PATH">
              
     <t>The PATH-SETUP-TYPE TLV is defined in <xref target='I-D.ietf-pce-lsp-setup-type'/>.
-   PST = 1 (defined in <xref target='I-D.ietf-pce-segment-routing'/>) can be reused
+   PST = TBD is used
    when Path is setup via PCECC SR mode.</t>
 
-   <t>On a PCRpt/PCUpd/PCInitiate message, the PST=1 indicates that this 
-   LSP was setup via a SR based mechanism where either the labels are 
-   allocated by PCE via PCECC mechanism or advertised by IGP. For the 
-   label map download or cleanup the PST type is set to PCECC as per <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. </t>
+   <t>On a PCRpt/PCUpd/PCInitiate message, the PST=TBD indicates that this 
+   LSP was setup via a PCECC-SR based mechanism where either the SIDs were 
+   allocated/instructed by PCE via PCECC mechanism.</t>
 
 
     </section>
@@ -782,7 +774,7 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                            CC-ID                              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      MT-ID    |    Algorithm  |        Flags      |N|E|B|V|L|O|
+|      MT-ID    |    Algorithm  |        Flags        |N|E|V|L|O|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                  SID/Label/Index (variable)                 //
 +---------------------------------------------------------------+
@@ -906,6 +898,7 @@
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                   Remote Interface ID                         |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 ]]>
         </artwork>
         </figure>
@@ -1002,6 +995,23 @@
        <c>S((PCECC-SR-CAPABILITY))</c>
        <c>This document</c>
      </texttable>         
+      </section>
+
+      <section title="New Path Setup Type Registry" toc="default">
+        <t>IANA is requested to allocate new PST Field in PATH-
+           SETUP-TYPE TLV.  The allocation policy for this new registry should
+           be by IETF Consensus. The new registry should contain the following value:</t>
+     <texttable anchor="PCEP-PATH-TYPE" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Value</ttcol>
+      <ttcol align="left" width="30%">Description</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>TBD</c>
+       <c>Traffic engineering path is</c>
+       <c>This document</c>
+       <c> </c>
+       <c>setup using PCECC-SR mode</c>
+       <c> </c>       
+     </texttable>      
       </section>
 
       <section title="PCEP Object" toc="default">
