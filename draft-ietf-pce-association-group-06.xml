@@ -275,7 +275,71 @@
       </section>
      </section><!-- Overview -->
 
+    <section anchor="Discovery" title="Discovery of Supported Association Types ">
+   <t>This section defines PCEP extensions so as to support
+   the capability advertisement of the association types supported by a PCEP speaker.</t>
 
+   <t>A new PCEP ASSOC-Type-List (Association Types list) TLV is defined.  The
+   PCEP ASSOC-Type-List TLV is carried within an OPEN object.  This way, during
+   PCEP session-setup phase, a PCEP speaker can advertise to a PCEP peer the list
+   of supported association-types.</t>
+   <section title="ASSOC-Type-List TLV">
+   <t>The PCEP ASSOC-Type-List TLV is optional.  It MAY be carried within an OPEN
+   object sent by a PCEP speaker in an Open message to a PCEP peer so as to
+   indicate the list of supported association-types.</t>
+
+   <t>The PCEP ASSOC-Type-List TLV format is compliant with the PCEP TLV format defined
+   in <xref target="RFC5440"/>.  That is, the TLV is composed of 2 octets for the type,
+   2 octets specifying the TLV length, and a Value field.  The Length
+   field defines the length of the value portion in octets.  The TLV is
+   padded to 4-octet alignment, and padding is not included in the
+   Length field (e.g., a 3-octet value would have a length of three, but
+   the total size of the TLV would be eight octets).</t>
+
+   <t>The PCEP ASSOC-Type-List TLV has the following format:    
+     <figure anchor="ASSOC-Type-List" title="The ASSOC-Type-List TLV format">
+     <artwork><![CDATA[    
+   TYPE:    TBD
+   LENGTH:  N * 2 (where N is the number of association types)
+   VALUE:   list of 2-byte association type code points, identifying
+            the association types supported by the sender of the Open
+            message.
+
+      0                   1                   2                   3
+      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |          Assoc-type #1        |      Assoc-type #2            |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     //                                                             //
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |          Assoc-type #N        |       padding                 |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+      ]]></artwork></figure>
+   </t>
+   <t>Assoc-type (2 bytes): Association type code point identifier.  IANA
+   manages the "ASSOCIATION Type Field" code point registry (see <xref target="iana_assoc_type"/>).</t>
+   <section title="Procedure">
+   <t>A PCEP speaker MAY include an ASSOC-Type-List TLV within an OPEN object in an Open
+   message sent to a PCEP peer in order to advertise a set of one or
+   more supported association types.  The ASSOC-Type-List TLV MUST NOT appear more than
+   once in an OPEN object.  If it appears more than once, the PCEP
+   session MUST be rejected with error type 1 and error value 1 (PCEP
+   session establishment failure / Reception of an invalid Open
+   message). As specified in <xref target="RFC5440"/>, a PCEP peer that does not recognize the
+   ASSOC-Type-List TLV will silently ignore it.</t>  
+
+   <t>The use of ASSOC-Type-List TLV is OPTIONAL. Thus the absence of the ASSOC-Type-List TLV in an OPEN object MUST be interpreted as an absence of information on the list of supported
+   association types (rather than the association-type is not supported). The PCEP speaker could still use the ASSOCIATION object, if the peer does not support the association, it
+   would react as per the procedure described in <xref target="Rules"/>.</t> 
+
+   <t>Association type (to be defined in other documents) can specify if the association type advertisement is mandatory for it. For a association type that specify that the advertisement is mandatory, a missing Assoc-type in the ASSOC-Type-List TLV (or missing ASSOC-Type-List TLV) is to be interpreted as the association type is not supported by the PCEP speaker.</t>   
+
+   <t>It is RECOMMENDED that the PCEP implementation include all supported association-types (including optional) to ease the operations of the PCEP peer.</t>
+       
+   </section>
+   </section>
+    </section>
     <section anchor="Range-tlv" title="Operator-configured Association Range TLV">
     <t>This section defines PCEP extension to support
    the advertisement of the Operator-configured Association Range used for an association-type by the PCEP speaker (as an association source).</t>
@@ -832,7 +896,9 @@ Where:
     <section title="PCEP Object">
 
         <t>The "PCEP Numbers" registry contains a subregistry "PCEP Objects".
-        This document request IANA to allocate code points from this registry.</t>
+          IANA is requested to confirm the early allocation of the following
+   code point in the PCEP Objects registry.
+        </t>
         <texttable anchor="Object-Code-Points" style="none" suppress-title="true">
           <ttcol align="center">Object-Class Value &nbsp;</ttcol>
           <ttcol align="left" width='50%'>Name </ttcol>
@@ -846,9 +912,9 @@ Where:
         </texttable>
    </section>
     <section title="PCEP TLV">
-   <t>IANA is requested to make the
-   assignment of the new code points for the existing "PCEP TLV Type Indicators"
-   registry as follows:</t>
+   <t>IANA is requested to confirm the early allocation of the following
+   code point in the "PCEP TLV Type Indicators registry".
+   </t>
 
         <texttable anchor="new-association-TLV-CP" style="none" suppress-title="true">
           <ttcol align="center" width='20%'>Value</ttcol>
@@ -858,6 +924,19 @@ Where:
           <c>30 (Early allocation by IANA)</c><c>&nbsp;Global Association Source</c><c>[This I-D]</c>
           <c>31 (Early allocation by IANA)</c><c>&nbsp;Extended Association Id</c><c>[This I-D]</c>
         </texttable>
+
+   <t>IANA is also requested to make a new assignment for
+   the existing "PCEP TLV Type Indicators" registry as follows:
+   </t>
+
+        <texttable anchor="new-association-TLV-CP-2" style="none" suppress-title="true">
+          <ttcol align="center" width='20%'>Value</ttcol>
+          <ttcol align="left" width='40%'>Meaning </ttcol>
+          <ttcol align="left" width='40%'>Reference </ttcol>
+          <c>TBD</c><c>&nbsp;ASSOC-Type-List</c><c>[This I-D]</c>
+        </texttable>
+
+
     </section>
     <section title="Association Flags">
         <t>This document requests IANA to create a subregistry of the "PCEP Numbers" for
@@ -897,7 +976,7 @@ Where:
         </section>  
               <section title="PCEP-Error Object"
                toc="default">
-        <t>IANA is requested to allocate new error values within
+        <t>IANA is requested to confirm the early allocation of the following code points within
    the "PCEP-ERROR Object Error Types and Values" sub-registry of the
    "PCEP Numbers" registry, as follows:</t>
         <figure title=""
@@ -945,7 +1024,7 @@ Where:
 
    <section anchor="Security" title="Security Considerations">
 
-     <t> The security considerations described in <xref target='RFC8231'></xref> and <xref target='RFC5440'/>
+     <t>The security considerations described in <xref target='RFC8231'></xref> and <xref target='RFC5440'/>
    apply to the extensions described in this document as well.  Additional
    considerations related to a malicious PCEP speaker are introduced, as associations could be spoofed and could be used as an
    attack vector. An attacker could report too many associations in an attempt to load the PCEP peer. The PCEP peer responds with 
@@ -969,8 +1048,6 @@ Where:
  <section title="Control of Function and Policy" toc="default">
  <t>
   A PCE or PCC implementation MUST allow operator-configured associations and SHOULD allow setting of the operator-configured association range (<xref target="Range"/>) as described in this document. 
-
-
   </t>
   </section>
  <section title="Information and Data Models" toc="default">
