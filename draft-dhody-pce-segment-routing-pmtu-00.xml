@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="no"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc ipr="trust200902" category="std" docName="draft-dhody-pce-segment-routing-pmtu-00" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+  <front>
+    <title abbrev="SR-PMTU">Support for Path MTU (PMTU) in the Path Computation Element Communication Protocol (PCEP) for Segment Routing (SR).</title>
+    <author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+    <author initials="C" surname="Li" fullname="Cheng Li">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+          <city>Beijing</city>
+          <region></region>
+          <code>100095</code>
+          <country>China</country>
+        </postal>
+        <email>chengli13@huawei.com</email>
+      </address>
+    </author>    
+    <date year="2018" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+   <t>The Source Packet Routing in Networking (SPRING) architecture
+   describes how Segment Routing (SR) can be used to steer packets
+   through an IPv6 or MPLS network using the source routing paradigm.
+   Segment Routing (SR) enables any head-end node to select any path
+   without relying on a hop-by-hop signaling technique (e.g., LDP or
+   RSVP-TE). It depends only on "segments" that are advertised by Link- State
+   Interior Gateway Protocols (IGPs).  A Segment Routed Path can be
+   derived from a variety of mechanisms, including an IGP Shortest Path
+   Tree (SPT), explicit configuration, or a Path Computation Element
+   (PCE).</t>
+
+   <t>Since the SR does not require signaling, the path MTU information for SR path is not available. This document specify the extension to PCEP
+   to carry SR path maximum transmission unit (MTU) in the PCEP messages.</t>
+   
+   </abstract>
+  </front>
+  <middle>
+    <section title="Introduction" toc="default">
+   <t><xref target="RFC5440"/> describes the Path Computation Element (PCE)
+      Communication Protocol (PCEP).  PCEP enables the communication between a Path Computation
+      Client (PCC) and a PCE, or between PCE and PCE,
+      for the purpose of computation of Multiprotocol Label Switching (MPLS) as well
+      as Generalzied MPLS (GMPLS) Traffic
+      Engineering Label Switched Path (TE LSP) characteristics.
+      </t>
+
+      <t><xref target='RFC8231'></xref>  specifies a
+      set of extensions to PCEP to enable stateful
+      control of TE LSPs within and across PCEP sessions in compliance with
+      <xref target="RFC4657"/>. It includes mechanisms to effect LSP State Synchronization between PCCs and PCEs,
+   delegation of control over LSPs to PCEs, and PCE control of timing
+   and sequence of path computations within and across PCEP sessions. The model of
+      operation where LSPs are initiated from the PCE is described in
+      <xref target='RFC8281'></xref>.
+      </t>
+
+   <t>As per <xref target='I-D.ietf-spring-segment-routing'/>, 
+      with Segment Routing (SR), a node steers a packet through an ordered
+   list of instructions, called segments.  A segment can represent any
+   instruction, topological or service-based.  A segment can have a
+   semantic local to an SR node or global within an SR domain.  SR
+   allows to enforce a flow through any path and service chain while
+   maintaining per-flow state only at the ingress node of the SR domain.
+   Segments can be
+   derived from different components: IGP, BGP, Services, Contexts,
+   Locators, etc. The SR architecture can be applied to the MPLS forwarding
+      plane without any change, in which case an SR path
+      corresponds to an MPLS Label Switching Path (LSP). The SR is
+      applied to IPV6 forwarding plane using SRH.
+    A SR path can be derived from an IGP Shortest Path Tree (SPT), 
+    but SR-TE paths may not follow IGP SPT. Such paths may be 
+    chosen by a suitable network planning tool, or a PCE and 
+    provisioned on the ingress node.
+</t>
+
+<t>As per 
+   <xref target='I-D.ietf-pce-segment-routing'/>, it is possible to use a stateful PCE for computing one or more SR-TE
+   paths taking into account various constraints and objective
+   functions.  Once a path is chosen, the stateful PCE can initiate an
+   SR-TE path on a PCC using PCEP extensions specified in
+   <xref target="RFC8281"/> using the SR specific PCEP
+   extensions specified in <xref target='I-D.ietf-pce-segment-routing'/>.  
+   <xref target='I-D.ietf-pce-segment-routing'/> specifies PCEP
+      extensions for supporting a SR-TE LSP for MPLS data
+      plane. <xref target='I-D.negi-pce-segment-routing-ipv6'/> extend PCEP 
+      to support SR for IPv6 data plane.</t>
+
+
+   <t>The maximum transmission unit (MTU) is the largest size packet or frame, in bytes, that can be sent in a network. An MTU that is too large might cause retransmissions. Too small an MTU might cause the router to send and handle relatively more header overhead and acknowledgments. When an LSP is created across a set of links with different MTU sizes, the ingress router need to know what the smallest MTU is on the LSP path. If this MTU is larger than the MTU of one of the intermediate links, traffic might be dropped, because MPLS packets cannot be fragmented. Also, the ingress router may not be aware of this type of traffic loss, because the control plane for the LSP would still function normally. <xref target="RFC3209"/> specify the mechanism of 
+   MTU signaling in RSVP.</t> 
+
+   <t>Since the SR does not require signaling, the path MTU information for SR path is not available. This document specify the extension to PCEP
+   to carry SR path MTU in the PCEP messages. It is assumed that the PCE is aware of the link MTU as part of the Traffic Engineering Database (TED) population. This could be done via IGP, BGP-LS or some other means. Thus the PCE can find the path MTU at the time of path computation and include this information as part of the PCEP messages.</t>
+          
+    </section>
+<section title="PCEP Extention" toc="default" anchor="SEC_EXT">
+  <section title="Stateless PCE" toc="default" >
+  </section>    
+  <section title="Stateful PCE" toc="default" >
+  </section>     
+  <section title="Path MTU TLV" toc="default" >
+  </section>
+ </section>
+      
+    <section title="Security Considerations" toc="default">
+    <t>This update in the IRO specification does not introduce any
+    new security considerations, apart from those mentioned in 
+    <xref target="RFC5440"/>.  Clarification in the 
+    supported IRO ordering or Loose hop bit handling will not have any negative security impact.
+     </t>
+     <t>It is worth noting that PCEP operates over TCP.  An analysis of the
+   security issues for routing protocols that use TCP (including PCEP)
+   is provided in <xref target="RFC6952"/>.</t>
+    </section>
+      
+    <section title="IANA Considerations" toc="default">
+    <t>This document makes no requests to IANA for action.</t>
+    </section>
+    
+    <section title="Acknowledgments" toc="default">
+
+    </section>    
+  </middle>
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119"?>
+      <?rfc include="reference.RFC.5440"?>
+      <?rfc include="reference.RFC.5511"?>
+      <?rfc include="reference.RFC.8174"?>
+      <?rfc include="reference.RFC.8231"?>
+      <?rfc include="reference.RFC.8281"?>
+      <?rfc include="reference.I-D.ietf-pce-segment-routing"?>
+      <?rfc include="reference.I-D.ietf-spring-segment-routing"?>
+      
+      <?rfc include="reference.I-D.ietf-pce-lsp-setup-type"?>
+      </references>
+    <references title="Informative References">
+      <?rfc include="reference.RFC.4657"?>      
+      <?rfc include="reference.RFC.7855"?>      
+    <?rfc include="reference.RFC.8051"?>    
+    <?rfc include="reference.I-D.ietf-6man-segment-routing-header"?>
+    <?rfc include="reference.I-D.ietf-spring-ipv6-use-cases"?>
+          <?rfc include="reference.I-D.ietf-isis-segment-routing-extensions"?>
+      <?rfc include="reference.I-D.ietf-ospf-ospfv3-segment-routing-extensions"?>
+      <?rfc include="reference.I-D.filsfils-spring-srv6-network-programming"?>
+
+      </references>
+    
+  </back>
+</rfc>
