@@ -58,6 +58,14 @@
    to carry SR path maximum transmission unit (MTU) in the PCEP messages.</t>
    
    </abstract>
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.
+      </t>
+    </note>   
   </front>
   <middle>
     <section title="Introduction" toc="default">
@@ -119,12 +127,69 @@
           
     </section>
 <section title="PCEP Extention" toc="default" anchor="SEC_EXT">
-  <section title="Stateless PCE" toc="default" >
-  </section>    
-  <section title="Stateful PCE" toc="default" >
-  </section>     
-  <section title="Path MTU TLV" toc="default" >
+  <section title="Extensions to METRIC Object" toc="default" >
+  <t>The METRIC object is defined in Section 7.8 of <xref target="RFC5440"/>, comprising
+   metric-value and metric-type (T field), and a flags field, comprising
+   a number of bit flags (B bit and C bit).  This document defines a
+   new type for the METRIC object for Path MTU.</t>  
+   <list style="symbols">
+   <t>T = TBD: Path MTU.</t>
+      <t>A network comprises of a set of N links {Li, (i=1...N)}.</t>
+      <t>A path P of a LSP is a list of K links {Lpi,(i=1...K)}.</t>
+      <t>A Link MTU of link L is denoted M(L).</t>
+      <t>A Path MTU metric for the path P = Min {M(Lpi), (i=1...K)}.</t>
+    </list>
+
+  <t>The Path MTU metric type of the
+   METRIC object in PCEP represents the minimum of the Link MTU of
+   all links along the path.</t>
+
+   <t>When PCE computes the path, it can also find the Path MTU (based on the above criteria) and include this 
+      information in the METRIC object with the above metric type in the PCEP message when replying to the PCC.
+      In a Path Computation Reply (PCRep) message, the PCE MAY insert the METRIC object with an
+   Explicit Route Object (ERO) so as to provide the METRIC (path MTU) for the computed path.  The PCE
+   MAY also insert the METRIC object with a NO-PATH object to indicate
+   that the metric constraint could not be satisfied.</t>
+
+   <t>Further, a PCC MAY use the Path MTU metric in a Path Computation Request
+   (PCReq) message to request a path meeting the MTU
+   requirement of the path.  In this case, the B bit MUST be set to suggest a bound
+   (a maximum) for the Path MTU metric that must not be exceeded for
+   the PCC to consider the computed path as acceptable.  The Path MTU
+   metric must be less than or equal to the value specified in the
+   metric-value field.</t>
+   <t>A PCC can also use this metric to ask PCE to optimize the path MTU
+   during path computation.  In this case, the B bit MUST be cleared.</t>
+
+   <t>The error handling and processing of the METRIC object is as specified in <xref target="RFC5440"/>.</t>
+    
   </section>
+  <section title="Stateful PCE and PCE Initiated LSPs" toc="default" >
+    <t>[RFC8231] specifies a set of extensions to PCEP to enable stateful
+   control of MPLS-TE and GMPLS LSPs via PCEP and the maintaining of
+   these LSPs at the stateful PCE.  It further distinguishes between an
+   active and a passive stateful PCE.  A passive stateful PCE uses LSP
+   state information learned from PCCs to optimize path computations but
+   does not actively update LSP state.  In contrast, an active stateful
+   PCE utilizes the LSP delegation mechanism to update LSP parameters in
+   those PCCs that delegated control over their LSPs to the PCE.
+   [PCE-INITIATED] describes the setup, maintenance, and teardown of
+   PCE-initiated LSPs under the stateful PCE model.  The document
+   defines the PCInitiate message that is used by a PCE to request a PCC
+   to set up a new LSP.</t>
+
+   <t>The new metric type and objective functions defined in this document
+   can also be used with the stateful PCE extensions.  The format of
+   PCEP messages described in [RFC8231] and [PCE-INITIATED] uses
+   &lt;intended-attribute-list&gt; and &lt;attribute-list&gt;, respectively, (where
+   the &lt;intended-attribute-list&gt; is the attribute-list defined in
+   Section 6.5 of [RFC5440] and extended in Section 5.2 of this
+   document) for the purpose of including the service-aware parameters.</t>
+
+   <t>The stateful PCE implementation MAY use the extension of PCReq and
+   PCRep messages as defined in Sections 5.1 and 5.2 to enable the use
+   of service-aware parameters during passive stateful operations.</t>
+  </section>     
  </section>
       
     <section title="Security Considerations" toc="default">
