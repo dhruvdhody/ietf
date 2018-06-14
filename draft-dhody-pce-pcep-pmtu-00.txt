@@ -28,7 +28,7 @@ Abstract
    Since the SR does not require signaling, the path maximum
    transmission unit (MTU) information for SR path is not available.
    This document specify the extension to PCE communication protocol
-   (PCEP) to carry path (MTU) in the PCEP messages.
+   (PCEP) to carry path MTU in the PCEP messages.
 
 Requirements Language
 
@@ -81,10 +81,10 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  PCEP Extention  . . . . . . . . . . . . . . . . . . . . . . .   4
+   2.  PCEP Extension  . . . . . . . . . . . . . . . . . . . . . . .   4
      2.1.  Extensions to METRIC Object . . . . . . . . . . . . . . .   4
      2.2.  Stateful PCE and PCE Initiated LSPs . . . . . . . . . . .   5
-     2.3.  Segement Routing  . . . . . . . . . . . . . . . . . . . .   5
+     2.3.  Segment Routing . . . . . . . . . . . . . . . . . . . . .   5
    3.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
      4.1.  METRIC Types  . . . . . . . . . . . . . . . . . . . . . .   6
@@ -180,7 +180,7 @@ Internet-Draft                    PMTU                         June 2018
    specified in this document) creates a new metric type for path MTU,
    making this a generic extension that can be used independent of SR.
 
-2.  PCEP Extention
+2.  PCEP Extension
 
 2.1.  Extensions to METRIC Object
 
@@ -258,7 +258,7 @@ Internet-Draft                    PMTU                         June 2018
    include the path MTU metric as a bound constraint or to indicate
    optimization criteria (similar to PCReq).
 
-2.3.  Segement Routing
+2.3.  Segment Routing
 
    A Segment Routed path (SR path) can be derived from an IGP Shortest
    Path Tree (SPT).  Segment Routed Traffic Engineering paths (SR-TE
@@ -283,7 +283,10 @@ Internet-Draft                    PMTU                         June 2018
 
 
    The new metric type for path MTU is applicable for the SR-TE path and
-   require no additional extensions.
+   require no additional extensions.  For SR paths with path setup type
+   (PST) [I-D.ietf-pce-lsp-setup-type] for SR or SRv6, this metric
+   SHOULD be included in the PCEP messages from the PCE by default,
+   unless overridden by local policy.
 
 3.  Security Considerations
 
@@ -326,10 +329,7 @@ Internet-Draft                    PMTU                         June 2018
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
-              Element (PCE) Communication Protocol (PCEP)", RFC 5440,
-              DOI 10.17487/RFC5440, March 2009,
-              <https://www.rfc-editor.org/info/rfc5440>.
+
 
 
 
@@ -337,6 +337,11 @@ Dhody & Li              Expires December 15, 2018               [Page 6]
 
 Internet-Draft                    PMTU                         June 2018
 
+
+   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
+              Element (PCE) Communication Protocol (PCEP)", RFC 5440,
+              DOI 10.17487/RFC5440, March 2009,
+              <https://www.rfc-editor.org/info/rfc5440>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -384,11 +389,6 @@ Internet-Draft                    PMTU                         June 2018
 
 
 
-
-
-
-
-
 Dhody & Li              Expires December 15, 2018               [Page 7]
 
 Internet-Draft                    PMTU                         June 2018
@@ -399,6 +399,12 @@ Internet-Draft                    PMTU                         June 2018
               Litkowski, S., and R. Shakir, "Segment Routing
               Architecture", draft-ietf-spring-segment-routing-15 (work
               in progress), January 2018.
+
+   [I-D.ietf-pce-lsp-setup-type]
+              Sivabalan, S., Tantsura, J., Minei, I., Varga, R., and J.
+              Hardwick, "Conveying path setup type in PCEP messages",
+              draft-ietf-pce-lsp-setup-type-10 (work in progress), May
+              2018.
 
    [I-D.negi-pce-segment-routing-ipv6]
               Negi, M., Kaladharan, P., Dhody, D., and S. Sivabalan,
@@ -424,12 +430,6 @@ Authors' Addresses
    China
 
    Email: chengli13@huawei.com
-
-
-
-
-
-
 
 
 

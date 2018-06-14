@@ -56,7 +56,7 @@
    (PCE).</t>
 
    <t>Since the SR does not require signaling, the path maximum transmission unit (MTU) information for SR path is not available. This document specify the extension to PCE communication protocol (PCEP)
-   to carry path (MTU) in the PCEP messages.</t>
+   to carry path MTU in the PCEP messages.</t>
    
    </abstract>
     <note title="Requirements Language">
@@ -129,7 +129,7 @@
    <t>Though the key use case for path MTU is SR, the PCEP extension (as specified in this document) creates a new metric type for path MTU, making this a generic extension that can be used independent of SR.</t>
           
     </section>
-<section title="PCEP Extention" toc="default" anchor="SEC_EXT">
+<section title="PCEP Extension" toc="default" anchor="SEC_EXT">
   <section title="Extensions to METRIC Object" toc="default" >
   <t>The METRIC object is defined in Section 7.8 of <xref target="RFC5440"/>, comprising
    metric-value and metric-type (T field), and a flags field, comprising
@@ -192,7 +192,7 @@
    <t>A PCE MAY include the path MTU metric in PCInitiate or PCUpd message to inform the PCC of the path MTU calculated for the path. A PCC MAY include the path MTU metric as a bound constraint or to indicate optimization criteria (similar to PCReq).</t>
 
   </section> 
-  <section title="Segement Routing" toc="default" >
+  <section title="Segment Routing" toc="default" >
     <t>A Segment Routed path (SR path) can be derived from an IGP Shortest
    Path Tree (SPT).  Segment Routed Traffic Engineering paths (SR-TE
    paths) may not follow IGP SPT.  Such paths may be chosen by a
@@ -206,7 +206,7 @@
    <xref target="I-D.ietf-pce-segment-routing"/>. Further, <xref target="I-D.negi-pce-segment-routing-ipv6"/> adds the
    support for IPv6 data plane in SR.</t>
 
-   <t>The new metric type for path MTU is applicable for the SR-TE path and require no additional extensions.</t> 
+   <t>The new metric type for path MTU is applicable for the SR-TE path and require no additional extensions. For SR paths with path setup type (PST) <xref target="I-D.ietf-pce-lsp-setup-type"/> for SR or SRv6, this metric SHOULD be included in the PCEP messages from the PCE by default, unless overridden by local policy.</t> 
   </section>    
  </section>
       
@@ -264,6 +264,7 @@ TBD                    Path MTU.                    This document
     <?rfc include="reference.RFC.8253"?>
       <?rfc include="reference.I-D.ietf-pce-segment-routing"?>
       <?rfc include="reference.I-D.ietf-spring-segment-routing"?>
+      <?rfc include="reference.I-D.ietf-pce-lsp-setup-type"?>
       
          
       <?rfc include="reference.I-D.negi-pce-segment-routing-ipv6"?>
