@@ -104,8 +104,8 @@ Table of Contents
        5.2.1.  PCE Controlled ID Spaces Advertisement  . . . . . . .  10
        5.2.2.  Ingress PCC request Path ID to PCE  . . . . . . . . .  10
        5.2.3.  PCE allocated Path ID on its own  . . . . . . . . . .  11
+     5.3.  Two Label Solution  . . . . . . . . . . . . . . . . . . .  12
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
 
 
 
@@ -114,11 +114,12 @@ Li, et al.              Expires December 17, 2018               [Page 2]
 Internet-Draft                   Path ID                       June 2018
 
 
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  12
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  12
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
+   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  13
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  13
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -161,7 +162,6 @@ Internet-Draft                   Path ID                       June 2018
    a PCC to request, report or delegate SR paths.
    [I-D.negi-pce-segment-routing-ipv6] extend PCEP to support SR for
    IPv6 data plane.
-
 
 
 
@@ -637,6 +637,25 @@ Internet-Draft                   Path ID                       June 2018
 
                 Figure 5: PCE allocated Path ID on its own
 
+5.3.  Two Label Solution
+
+   [I-D.cheng-spring-mpls-path-segment] describe a Path Segment to
+   uniquely identify an SR path in a specific context. (e.g., in the
+   context of the egress node or ingress node of an SR path, or within
+   an SR domain).  It further describes two solution based on 'one
+   label' or 'two labels' solution.  For the latter, two segments
+   (Source segment and Path segment) are used to identify an SR path
+   where the source segment is a global node segment which can uniquely
+   identify a node within the SR domain (it is be used for forwarding
+   and indicates that a Path segment immediately follows).  The
+   combination of Source segment and Path segment uniquely identify an
+   SR Path with an SR domain.
+
+   The procedure described in this document allocates and encode the
+   Path Segment only.  It is expected that the Egress PCC is aware of
+   the Source segment by some other procedure.  This procedure could be
+   IGP, PCECC-SR, or some other mechanism.
+
 6.  IANA Considerations
 
    TBA
@@ -644,6 +663,16 @@ Internet-Draft                   Path ID                       June 2018
 7.  Security Considerations
 
    TBA
+
+
+
+
+
+
+Li, et al.              Expires December 17, 2018              [Page 12]
+
+Internet-Draft                   Path ID                       June 2018
+
 
 8.  Acknowledgments
 
@@ -664,15 +693,6 @@ Internet-Draft                   Path ID                       June 2018
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-
-
-
-
-Li, et al.              Expires December 17, 2018              [Page 12]
-
-Internet-Draft                   Path ID                       June 2018
-
 
    [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
               Computation Element Communication Protocol (PCEP)
@@ -698,6 +718,18 @@ Internet-Draft                   Path ID                       June 2018
               draft-ietf-pce-segment-routing-11 (work in progress),
               November 2017.
 
+
+
+
+
+
+
+
+Li, et al.              Expires December 17, 2018              [Page 13]
+
+Internet-Draft                   Path ID                       June 2018
+
+
    [I-D.negi-pce-segment-routing-ipv6]
               Negi, M., Kaladharan, P., Dhody, D., and S. Sivabalan,
               "PCEP Extensions for Segment Routing leveraging the IPv6
@@ -717,18 +749,6 @@ Internet-Draft                   Path ID                       June 2018
               Using PCE as a Central Controller (PCECC) of SR-LSPs",
               draft-zhao-pce-pcep-extension-pce-controller-sr-02 (work
               in progress), March 2018.
-
-
-
-
-
-
-
-
-Li, et al.              Expires December 17, 2018              [Page 13]
-
-Internet-Draft                   Path ID                       June 2018
-
 
 9.2.  Informative References
 
@@ -754,6 +774,18 @@ Internet-Draft                   Path ID                       June 2018
               Policy Architecture", draft-ietf-spring-segment-routing-
               policy-01 (work in progress), June 2018.
 
+
+
+
+
+
+
+
+Li, et al.              Expires December 17, 2018              [Page 14]
+
+Internet-Draft                   Path ID                       June 2018
+
+
    [I-D.cheng-spring-mpls-path-segment]
               Cheng, W., Wang, L., Li, H., Chen, M., Zigler, R., and S.
               Zhan, "Path Segment in MPLS Based Sement Routing Network",
@@ -772,19 +804,6 @@ Internet-Draft                   Path ID                       June 2018
               progress), April 2018.
 
 Authors' Addresses
-
-
-
-
-
-
-
-
-
-Li, et al.              Expires December 17, 2018              [Page 14]
-
-Internet-Draft                   Path ID                       June 2018
-
 
    Cheng Li
    Huawei Technologies
@@ -813,6 +832,16 @@ Internet-Draft                   Path ID                       June 2018
    Email: jie.dong@huawei.com
 
 
+
+
+
+
+
+Li, et al.              Expires December 17, 2018              [Page 15]
+
+Internet-Draft                   Path ID                       June 2018
+
+
    Zhenbin Li
    Huawei Technologies
    Huawei Campus, No. 156 Beiqing Rd.
@@ -837,4 +866,31 @@ Internet-Draft                   Path ID                       June 2018
 
 
 
-Li, et al.              Expires December 17, 2018              [Page 15]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Li, et al.              Expires December 17, 2018              [Page 16]
