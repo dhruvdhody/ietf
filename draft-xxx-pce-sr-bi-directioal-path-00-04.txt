@@ -89,15 +89,15 @@ Table of Contents
    5.  Procedures of Bi-directional Path Computation . . . . . . . .   5
      5.1.  PCE Initiated SR Paths  . . . . . . . . . . . . . . . . .   6
      5.2.  PCC Initiated SR Paths  . . . . . . . . . . . . . . . . .   7
-     5.3.  Stateless PCE . . . . . . . . . . . . . . . . . . . . . .   9
-     5.4.  Error Handling  . . . . . . . . . . . . . . . . . . . . .   9
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  10
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  11
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
+     5.3.  Stateless PCE . . . . . . . . . . . . . . . . . . . . . .   8
+     5.4.  Error Handling  . . . . . . . . . . . . . . . . . . . . .   8
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   9
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -269,11 +269,11 @@ Internet-Draft        SR Bidirectional Association             June 2018
    pce-sr-path-segment] MUST also be included in the LSP object for
    these SR paths.
 
-   There MAY also be a need to include the reverse direction path in the
-   PCEP messages, to do this the PCE MAY inform the reverse SR path to
-   the ingress PCC and vice versa.  To achieve this a PCInitiate message
-   for the reverse SR path could be sent to the ingress PCC and a
-   PCInitiate message for the forward SR path to the egress PCC with the
+   There also a need to include the reverse direction path in the PCEP
+   messages, to do this the PCE SHOULD inform the reverse SR path to the
+   ingress PCC and vice versa.  To achieve this a PCInitiate message for
+   the reverse SR path is sent to the ingress PCC and a PCInitiate
+   message for the forward SR path is sent to the egress PCC (with the
 
 
 
@@ -282,7 +282,7 @@ Li, et al.              Expires December 17, 2018               [Page 5]
 Internet-Draft        SR Bidirectional Association             June 2018
 
 
-   same association group.  These PCInitiate message MUST not trigger
+   same association group).  These PCInitiate message MUST not trigger
    initiation of SR paths.  The information of reverse direction path
    can be used for several scenarios, such as directed BFD
    [I-D.ietf-mpls-bfd-directed].
@@ -306,26 +306,26 @@ Internet-Draft        SR Bidirectional Association             June 2018
    o  The Path-ID TLV MUST be included for each SR path in the LSP
       object.
 
-   o  The opposite direction SR path (LSP2(R) at S, LSP1(F) at D ) MAY
-      also be informed via PCInitiate message with the matching
+   o  The opposite direction SR path (LSP2(R) at S, LSP1(F) at D )
+      SHOULD be informed via PCInitiate message with the matching
       association group.
 
 
+                               +-----+
+                               | PCE |
+                               +-----+
+   PCUpd/PCInitiate            /    \         PCUpd/PCInitiate
+   Tunnel 1 (F)               /      \        Tunnel 2 (R)
+   (LSP1 (F), LSP2 (R))      /        \       (LSP2 (R), LSP1 (F))
+   Assoc#1                  /          \      Assoc#1
+                           /            \
+                          v              v
+                     +-----+    LSP1     +-----+
+                     |  S  |------------>|  D  |
+                     |     |<------------|     |
+                     +-----+    LSP2     +-----+
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    Figure 1: PCE-Initiated Double-sided Bidirectional SR Path
 
 
 
@@ -337,40 +337,6 @@ Li, et al.              Expires December 17, 2018               [Page 6]
 
 Internet-Draft        SR Bidirectional Association             June 2018
 
-
-                               +-----+
-                               | PCE |
-                               +-----+
-   PCUpd/PCInitiate            /    \         PCUpd/PCInitiate
-   Tunnel 1 (F)               /      \        Tunnel 2 (R)
-   (LSP1 (F))                /        \       (LSP2 (R))
-                            /          \
-                           /            \
-                          v              v
-                     +-----+    LSP1     +-----+
-                     |  S  |------------>|  D  |
-                     |     |<------------|     |
-                     +-----+    LSP2     +-----+
-
-
-    Figure 1a: PCE-Initiated Double-sided Bidirectional SR Path
-
-                               +-----+
-                               | PCE |
-                               +-----+
-   PCUpd/PCInitiate            /    \         PCUpd/PCInitiate
-   Tunnel 1 (F)               /      \        Tunnel 2 (R)
-   (LSP1 (F), LSP2 (R))      /        \       (LSP2 (R), LSP1 (F))
-                            /          \
-                           /            \
-                          v              v
-                     +-----+    LSP1     +-----+
-                     |  S  |------------>|  D  |
-                     |     |<------------|     |
-                     +-----+    LSP2     +-----+
-
-    Figure 1b: PCE-Initiated Double-sided Bidirectional SR Path
-               along with opposite direction SR path
 
 5.2.  PCC Initiated SR Paths
 
@@ -387,13 +353,6 @@ Internet-Draft        SR Bidirectional Association             June 2018
    o  PCC MUST report the change in the association group of an SR path
       to PCE(s) via PCRpt message.
 
-
-
-Li, et al.              Expires December 17, 2018               [Page 7]
-
-Internet-Draft        SR Bidirectional Association             June 2018
-
-
    o  PCC can report the forward and reverse SR paths independently to
       PCE(s) via PCRpt message.
 
@@ -407,8 +366,8 @@ Internet-Draft        SR Bidirectional Association             June 2018
    o  The Path-ID TLV MUST be handled as defined in [I-D.li-pce-sr-path-
       segment].
 
-   o  The opposite direction SR path (LSP2(R) at S, LSP1(F) at D ) MAY
-      also be informed via PCInitiate message with the matching
+   o  The opposite direction SR path (LSP2(R) at S, LSP1(F) at D )
+      SHOULD be informed via PCInitiate message with the matching
       association group.
 
 
@@ -430,22 +389,7 @@ Internet-Draft        SR Bidirectional Association             June 2018
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Li, et al.              Expires December 17, 2018               [Page 8]
+Li, et al.              Expires December 17, 2018               [Page 7]
 
 Internet-Draft        SR Bidirectional Association             June 2018
 
@@ -472,7 +416,7 @@ Internet-Draft        SR Bidirectional Association             June 2018
    PCUpd/PCInitiate            /    \         PCUpd/PCInitiate
    Tunnel 1 (F)               /      \        Tunnel 2 (R)
    (LSP1 (F), LSP2 (R))      /        \       (LSP2 (R), LSP1 (F))
-                            /          \
+   Assoc#1                  /          \      Assoc#1
                            /            \
                           v              v
                      +-----+    LSP1     +-----+
@@ -495,13 +439,13 @@ Internet-Draft        SR Bidirectional Association             June 2018
 
 5.4.  Error Handling
 
+   The error handling as described in [I-D.ietf-pce-association-bidir]
+   continue to apply.
 
 
 
 
-
-
-Li, et al.              Expires December 17, 2018               [Page 9]
+Li, et al.              Expires December 17, 2018               [Page 8]
 
 Internet-Draft        SR Bidirectional Association             June 2018
 
@@ -557,7 +501,7 @@ Internet-Draft        SR Bidirectional Association             June 2018
 
 
 
-Li, et al.              Expires December 17, 2018              [Page 10]
+Li, et al.              Expires December 17, 2018               [Page 9]
 
 Internet-Draft        SR Bidirectional Association             June 2018
 
@@ -613,7 +557,7 @@ Internet-Draft        SR Bidirectional Association             June 2018
 
 
 
-Li, et al.              Expires December 17, 2018              [Page 11]
+Li, et al.              Expires December 17, 2018              [Page 10]
 
 Internet-Draft        SR Bidirectional Association             June 2018
 
@@ -669,7 +613,7 @@ Authors' Addresses
 
 
 
-Li, et al.              Expires December 17, 2018              [Page 12]
+Li, et al.              Expires December 17, 2018              [Page 11]
 
 Internet-Draft        SR Bidirectional Association             June 2018
 
@@ -725,4 +669,4 @@ Internet-Draft        SR Bidirectional Association             June 2018
 
 
 
-Li, et al.              Expires December 17, 2018              [Page 13]
+Li, et al.              Expires December 17, 2018              [Page 12]

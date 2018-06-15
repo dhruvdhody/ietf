@@ -331,8 +331,8 @@
       associated together by including the Bi-directional SR Path Association Group in the PCEP messages. The PATH-ID TLV
       [draft-li-pce-sr-path-segment] MUST also be included in the LSP object for these SR paths.</t>
 
-      <t>There MAY also be a need to include the reverse direction path in the PCEP messages, to do this the PCE MAY inform the reverse SR path to the ingress PCC and vice versa. To achieve this
-        a PCInitiate message for the reverse SR path could be sent to the ingress PCC and a PCInitiate message for the forward SR path to the egress PCC with the same association group. These PCInitiate message MUST not trigger initiation of  SR paths. The information of reverse direction
+      <t>There also a need to include the reverse direction path in the PCEP messages, to do this the PCE SHOULD inform the reverse SR path to the ingress PCC and vice versa. To achieve this
+        a PCInitiate message for the reverse SR path is sent to the ingress PCC and a PCInitiate message for the forward SR path is sent to the egress PCC (with the same association group). These PCInitiate message MUST not trigger initiation of  SR paths. The information of reverse direction
       path can be used for several scenarios, such as directed BFD <xref
       target="I-D.ietf-mpls-bfd-directed"/>.</t> 
 
@@ -372,25 +372,9 @@
 
             <t>The Path-ID TLV MUST be included for each SR path in the LSP object.</t>
 
-            <t>The opposite direction SR path (LSP2(R) at S, LSP1(F) at D ) MAY also be informed via PCInitiate message with the matching association group.</t>
+            <t>The opposite direction SR path (LSP2(R) at S, LSP1(F) at D ) SHOULD be informed via PCInitiate message with the matching association group.</t>
           </list><figure>
             <artwork><![CDATA[
-                            +-----+
-                            | PCE |
-                            +-----+
-PCUpd/PCInitiate            /    \         PCUpd/PCInitiate
-Tunnel 1 (F)               /      \        Tunnel 2 (R)
-(LSP1 (F))                /        \       (LSP2 (R))
-                         /          \
-                        /            \
-                       v              v
-                  +-----+    LSP1     +-----+
-                  |  S  |------------>|  D  |
-                  |     |<------------|     |
-                  +-----+    LSP2     +-----+
-
-
- Figure 1a: PCE-Initiated Double-sided Bidirectional SR Path
 
                             +-----+
                             | PCE |
@@ -398,7 +382,7 @@ Tunnel 1 (F)               /      \        Tunnel 2 (R)
 PCUpd/PCInitiate            /    \         PCUpd/PCInitiate
 Tunnel 1 (F)               /      \        Tunnel 2 (R)
 (LSP1 (F), LSP2 (R))      /        \       (LSP2 (R), LSP1 (F))
-                         /          \
+Assoc#1                  /          \      Assoc#1
                         /            \
                        v              v
                   +-----+    LSP1     +-----+
@@ -406,8 +390,8 @@ Tunnel 1 (F)               /      \        Tunnel 2 (R)
                   |     |<------------|     |
                   +-----+    LSP2     +-----+
 
- Figure 1b: PCE-Initiated Double-sided Bidirectional SR Path
-            along with opposite direction SR path 
+ Figure 1: PCE-Initiated Double-sided Bidirectional SR Path
+           
 ]]></artwork>
           </figure></t>
       </section>
@@ -441,7 +425,7 @@ Tunnel 1 (F)               /      \        Tunnel 2 (R)
 
             <t>The Path-ID TLV MUST be handled as defined in [I-D.li-pce-sr-path-segment].</t>
 
-            <t>The opposite direction SR path (LSP2(R) at S, LSP1(F) at D ) MAY also be informed via PCInitiate message with the matching association group.</t>            
+            <t>The opposite direction SR path (LSP2(R) at S, LSP1(F) at D ) SHOULD be informed via PCInitiate message with the matching association group.</t>            
           </list><figure>
             <artwork><![CDATA[
                             +-----+
@@ -466,7 +450,7 @@ Tunnel 1 (F)               /      \        Tunnel 2 (R)
 PCUpd/PCInitiate            /    \         PCUpd/PCInitiate
 Tunnel 1 (F)               /      \        Tunnel 2 (R)
 (LSP1 (F), LSP2 (R))      /        \       (LSP2 (R), LSP1 (F))
-                         /          \
+Assoc#1                  /          \      Assoc#1
                         /            \
                        v              v
                   +-----+    LSP1     +-----+
@@ -492,7 +476,7 @@ Tunnel 1 (F)               /      \        Tunnel 2 (R)
       </section>
 
     <section title="Error Handling">
-      <t></t>
+      <t>The error handling as described in <xref target="I-D.ietf-pce-association-bidir"/> continue to apply.</t>
     </section>
 
     </section>
