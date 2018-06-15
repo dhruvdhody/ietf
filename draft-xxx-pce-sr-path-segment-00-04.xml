@@ -5,7 +5,7 @@
 <?rfc tocdepth="3"?>
 <?rfc tocindent="yes"?>
 <?rfc symrefs="yes"?>
-<?rfc sortrefs="yes"?>
+<?rfc sortrefs="no"?>
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
@@ -120,7 +120,19 @@
         <uri/>
       </address>
     </author>
-
+    <author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
     <date year="2018"/>
 
     <area>Routing Area</area>
@@ -179,6 +191,11 @@
       <xref target='RFC8281'></xref>.
       </t>
 
+      <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'></xref> specify the
+   procedures and PCEP protocol extensions for using the PCE as the
+   central controller for static LSPs, where LSPs can be provisioned as
+   explicit label instructions at each hop on the end-to-end path.</t>
+
       <t>Segment routing (SR) <xref target="I-D.ietf-spring-segment-routing"/>
       leverages the source routing and tunneling paradigms. SR supports 
       steering packets into an explicit forwarding path according to the Segment
@@ -201,13 +218,23 @@
       <xref target='I-D.negi-pce-segment-routing-ipv6'/> extend PCEP 
       to support SR for IPv6 data plane.</t>
 
+      <t><xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'></xref> specifies the procedures and PCEP protocol extensions
+   when a PCE-based controller is also responsible for configuring the
+   forwarding actions on the routers (SR SID distribution in this case),
+   in addition to computing the paths for packet flows in a segment
+   routing network and telling the edge routers what instructions to
+   attach to packets as they enter the network.</t>
+
       <t>This document specifies a mechanism to carry the SR path
       identification information in PCEP messages <xref target="RFC5440"/>
       <xref target="RFC8231"/> <xref target="RFC8281"/>. The path ID can be a
       path segment in SR-MPLS <xref
       target="I-D.cheng-spring-mpls-path-segment"/>, or a path ID in SRv6
       <xref target="I-D.li-spring-passive-pm-for-srv6-np"/>, or other IDs that
-      can identify the SR path.</t>
+      can identify the SR path. This document also extends the PCECC-SR mechanism to inform the path ID to the egress PCC.</t>
+
+
+
     </section>
 
     <section title="Terminology">
@@ -220,13 +247,21 @@
       extensions. For supporting path ID in PCEP, several TLVs and
       flags are defined. The formats of the objects and TLVs are described in
       <xref target="obj"/>. The procedures of path ID allocation are described in <xref target="pro"/>.</t>
-      <t>The path ID can be allocated by PCC itself and informed to the PCE. The PCC can also request PCE to allocate the path ID, in this case PCE allocates and inform the assigned path ID to the PCC using PCEP messages.</t>
+      <t>There are various modes of operations, such as - <list style="symbols">
+      <t>The path ID can be allocated by Ingress PCC itself and informed to the PCE. The PCE can then inform the egress PCC.</t>
+      <t>The PCC can also request PCE to allocate the path ID, in this case, the PCE would allocate and inform the assigned path ID to the ingress/egress PCC using PCEP messages.</t>
+      <t>For PCE can allocate a path ID on its own accord and inform the ingress/egress PCC , useful for PCE-initiated LSPs.</t> </list></t>
+      <t>The path ID information to the ingress PCC and PCE is exchanged via an extension to <xref target="I-D.ietf-pce-segment-routing"/> and <xref target="I-D.negi-pce-segment-routing-ipv6"/>. 
+        The path ID information to the egress PCC is informed via an extension to the PCECC-SR procedures <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
+      <t>For the PCE to allocate a path ID, the PCE MUST be aware of the path ID space from the PCCs. This is done via mechanism as described in [draft-li-pce-controlled-id-space].</t>  
+      <t>[Editor's note - There is currently no mechanism for the PCE to ask PCC to allocate path ID. Further discussion is needed to check if that would be useful in any way.]</t>  
     </section>
 
-    <section title="Objects and TLVs" anchro="obj">
+    <section title="Objects and TLVs" anchor="obj">
       <t/>
 
       <section title="The OPEN Object">
+
         <section title="The SR PCE Capability sub-TLV">
           <t><xref target="I-D.ietf-pce-segment-routing"/> defined a new Path Setup Type (PST) and SR-PCE-CAPABILITY sub-TLV for SR. PCEP
    speakers use this sub-TLV to exchange information about their SR
@@ -234,7 +269,7 @@
    <t>This document adds an additional flag for path ID allocation, as follows - 
     <list>
       <t>P (Path Identification bit): A PCEP speaker sets this flag to 1 to indicate that it has the capability to encode SR path identification (path segment, as per <xref
-      target="I-D.cheng-spring-mpls-path-segment"/>). 
+      target="I-D.cheng-spring-mpls-path-segment"/>). </t>
     </list></t>
          </section> 
         <section title="The SRv6 PCE Capability sub-TLV">
@@ -243,99 +278,20 @@
    capability. The TLV includes a Flags field and one bit (L-flag) was allocated in <xref target="I-D.negi-pce-segment-routing-ipv6"/>. </t>
    <t>This document adds an additional flag for path ID allocation, as follows - 
     <list>
-      <t>P (Path Identification bit): A PCEP speaker sets this flag to 1 to indicate that it has the capability to encode SRv6 path identification. 
+      <t>P (Path Identification bit): A PCEP speaker sets this flag to 1 to indicate that it has the capability to encode SRv6 path identification. </t>
     </list></t>
-    <!--<t>The P flag inside the SRv6-PCE-CAPABILITY sub-TLV is
-   meaningful only in the Open message sent from a PCE to a PCC.  As
-   such, a PCC MUST set the P flag to zero in an outbound
-   message to a PCE and a PCE MUST ignore it on receipt.</t>            -->
+
+        </section>
+        <section title="PCECC-CAPABILITY sub-TLV">
+        <t>The PCECC Capability as per <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> MUST also be advertised on the egress PCEP session, along with the SR sub-TLVs. This is needed to ensure that the PCE can inform the egress PCC of the path ID via PCECC mechanism as described in this document.</t>
+      </section>
+
+ 
         </section>
 
-        <!--<section title="SR-PATH-ID-ALLOCATION TLV">
-          <t>This document defines a new SR-PATH-ID-ALLOCATION TLV in Open
-          Object to advertise the capability of path ID allocation.</t>
+      
 
-          <t>The SR-PATH-ID-ALLOCATION TLV is an optional TLV for use in the
-          OPEN object for advertising PCE capability of path ID allocation.
-          Its format is shown in the following figure:</t>
-
-          <t><figure>
-              <artwork align="center"><![CDATA[
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |            Type=TBA           |            Length=4           |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                              Flags                            |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                       Figure 1. SR-PATH-ID-ALLOCATION TLV
-]]></artwork>
-            </figure></t>
-
-          <t>The type (16 bits) of the TLV is TBA. The length field is 16 bits
-          long and has a fixed value of 4.</t>
-
-          <t>The value comprises a single field - Flags (32 bits), and no
-          flag is defined yet. The Flags field MUST be set to 0 on
-          transmission and MUST be ignored on receipt.</t>
-        </section>-->
-
-      </section>
-
-      <!--<section title="P-Flag in the RP Object">
-        <t>To request for the path identification to be allocated by PCE for the SR path, a new flag is defined in the RP object, named the P (path identification) flag. 
-          This allows a </t>
-        <t>The format of the RP object is defined in <xref target="RFC5440"/>
-        and included here for easy reference with the addition of the PID-flag
-        and E-flag.</t>
-
-        <t><figure>
-            <artwork><![CDATA[        0                   1                   2                   3
-        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                          Flags                |P| |O|B|R| Pri |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                    Request-ID-number                          |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                                                               |
-       //                      Optional TLVs                          //
-       |                                                               |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                    Figure 2. The RP Object Format
-]]></artwork>
-          </figure></t>
-
-        <t>P-Flag: PID-flag, set when Path ID allocation is required for path
-        computation. </t>
-
-        <t>The rest fields are the same as defined in <xref
-        target="RFC5440"/>.</t>
-      </section>
-
-      <section title="P-Flag in the SRP Object">
-        <t>The format of the SRP object is defined in <xref target="RFC8231"/>
-        and included here for easy reference with the addition of the new
-        flags.</t>
-
-        <t><figure>
-            <artwork><![CDATA[        0                   1                   2                   3
-        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                          Flags                |P|             |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                        SRP-ID-number                          |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                                                               |
-       //                      Optional TLVs                          //
-       |                                                               |
-       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                    Figure 3. The SRP Object Format
-]]></artwork>
-          </figure></t>
-
-        <t>The definitions of the P-Flag in SRP are identical to the
-        definitions in RP object.</t>
-      </section>-->
+     
 
       <section title="LSP Object ">
         <t>The LSP Object is defined in Section 7.3 of <xref target="RFC8231"/>. This document adds the following flags to
@@ -346,55 +302,55 @@
  </t>
 
 
-        <section title="Path ID TLV">
+        <section title="Path ID TLV" anchor="path-id-tlv">
           <t>The PATH-ID TLV is an optional TLV for use in the LSP Object for
           path ID allocation. The type of this TLV is to be allocated by IANA.
           The format is shown below.</t>
 
           <t><figure title="The PATH-ID TLV Format" anchor="fig1">
               <artwork><![CDATA[
-      0                   1                   2                   3
-      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |             Type              |             Length            |
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |      IDT    |               Reserved                      |G|E|
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |                             Path ID                           |
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Type              |             Length            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       IDT     |             Flags                       |E|C|L|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             Path ID                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
                    
 
 ]]></artwork>
-            </figure>
+            </figure></t>
             <t>The type (16-bit) of the TLV is TBA (to be allocated by IANA).  The
    length (16-bit) has a fixed value of 8 octets. The value contains
    the following fields: <list>
-            <t>IDT: The IDT field specifies the type of the Path ID field, which
-          carries a Path ID corresponding to the SR path.</t>
-
-          <t><list style="symbols">
+            <t>IDT (The ID type - 8 bits): The IDT field specifies the type of the Path ID field, which
+          carries a Path ID corresponding to the SR path.<list style="symbols">
               <t>0: MPLS Path segment, which is an MPLS label as defined in
               <xref target="I-D.cheng-spring-mpls-path-segment"/>. The PST type MUST be set to SR (MPLS).</t>
 
               <t>1: SRv6 Path ID, which is a 4-octet integer as defined in
               <xref target="I-D.li-spring-passive-pm-for-srv6-np"/>. The PST type MUST be set to SRv6.</t>
-            </list>Reserved: MUST be set to zero on transmission and MUST be
-          ignored on receipt.</t>
-
-          <t>Flags: Two flags are currently defined:</t>
-
-          <t><list style="symbols">
-              <t>G-Flag: Global flag. This bit is set to 1, when the Path ID is global
-              within an SR domain. When G-flag is set, E-flag should be
-              ignored. In addition, it MUST NOT be set when E-flag is set.</t>
-
-              <t>E-Flag: Egress flag for local segment/ID. The E-flag is set
-              when a path segment/ID is a local segment/ID allocated by the
-              egress node. Else, the path segment/ID is a local segment/ID
-              allocated by the ingress node if the G-Flag is not set. When the
-              G-flag is set, meaning the Path segment/ID is global within an
-              SR domain, E-flag should be ignored.</t>
             </list></t>
+          <t>Flags (24 bits): Three flag is currently defined:
+
+          <list style="symbols">
+              <t>L-Bit (Local/Global - 1 bit): If set, then the Path ID carried by
+         the PATH-ID TLV has local significance.  If not set, then the
+         Path ID carried by this TLV has global significance (i.e. Path ID is global
+              within an SR domain).</t>
+              <t>C-bit (PCC/PCE - 1 bit): If set, then the Path ID carried by
+         the PATH-ID TLV has been allocated by the PCC.  If not set, then the
+         Path ID carried by this TLV has been allocated by the PCE.</t>
+         <t>E-bit (Egress/Ingress - 1 bit): If set, then the Path ID carried by
+         the PATH-ID TLV has been allocated from the Egress Path ID space.  If not set, then the
+         Path ID carried by this TLV has been allocated from the Ingress Path ID space.</t>
+              
+
+            <t>The unassigned bits MUST be set to 0 and MUST be ignored at receipt.</t>
+            </list></t>
+
             <t>Path ID: The path ID of an SR path. The path ID type is
           indicated by the ID Type field. It can be a path segment <xref
           target="I-D.cheng-spring-mpls-path-segment"/> in MPLS label format.
@@ -402,197 +358,157 @@
           target="I-D.li-spring-passive-pm-for-srv6-np"/> or other IDs that
           can identify a path.</t>
         </list></t>
+          <t>Only one instance of each TLV is processed, if more than one TLV of each type is included, the first one is processed and others MUST be ignored.</t>
 
-          <t>When the path ID allocation is enable, a PATH-ID TLV MUST be
-          included in the LSP object. If the path ID is allocated by the
-          ingress node, a PATH-ID TLV MUST be included in a LSP object in
+          <t>When the path ID allocation is enable, a PATH-ID TLV SHOULD be
+          included in the LSP object.</t>
+          <t>If the path ID is allocated by the
+          ingress node, a PATH-ID TLV MUST be included in a LSP object (with C-bit set and E-bit is unset) in
           the PCEP message from PCC. In this case the P flag in LSP object is set to 0.</t>
+          <t>If the PCC request the path ID to be allocated by the PCE, P flag in LSP object is set to 1 and Path ID TLV MAY be skipped. After the PCE has allocated a path ID, it MUST include the 
+           PATH-ID TLV in a LSP object (with C-bit unset), the E-bit is set by PCE based on the path ID space from which the allocation is made.
+          </t>
+          <t>If the PCE allocated the path ID on its own accord, a PATH-ID TLV MUST be included in a LSP object (with C-bit unset), the E-bit is set by PCE based on the path ID space from which the allocation is made. </t>
+
         </section>
+      </section>
+      <section title="FEC Object">
+       <t>The FEC Object <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> is used to specify the FEC information and MAY be
+   carried within PCInitiate or PCRpt message for the PCECC-SR operations. The PCE MUST inform the Path Identification information to the Egress PCC. To do this, this document extends the procedures of <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> by defining a new FEC object type for Path.</t>  
+   <t>FEC Object-Type is TBD 'Path'.</t>
+          <t><figure title="The path FEC object Format" anchor="fig2">
+              <artwork><![CDATA[   
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+//                           TLV(s)                            //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   
+]]></artwork>
+            </figure></t>
+            <t>One or more following TLV(s) are allowed in the 'path' FEC object - 
+              <list style="symbols">
+                <t>SYMBOLIC-PATH-NAME TLV: As defined in <xref target="RFC8231"/>, it is a human-readable string that identifies an
+                 LSP in the network.</t>
+                <t>LSP-IDENTIFIERS TLVs: As defined in <xref target="RFC8231"/>, it is optional for SR, but could be used to encode the source, destination and other identification information for the path.</t>
+                <t>SPEAKER-ENTITY-ID TLV: As defined in <xref target="RFC8232"/>, a unique identifier for the
+                PCEP speaker, it is used to identify the Ingress PCC.</t>
+
+              </list>
+            </t>
+            <t>Either SYMBOLIC-PATH-NAME TLV or LSP-IDENTIFIERS TLV MUST be included. SPEAKER-ENTITY-ID TLV is optional. Only one instance of each TLV is processed, if more than one TLV of each type is included, the first one is processed and others MUST be ignored.</t>
+      </section>
+      <section title="CCI Object">
+        <t>The Central Control Instructions (CCI) Object is used by the PCE to
+   specify the forwarding instructions is defined in
+   <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>. Further <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>
+   defined a CCI object type for SR.</t>
+   <t>The Path ID information is encoded directly in the CCI SR object. 
+    The Path ID TLV as described in the <xref target="path-id-tlv"/>, MAY also be included in the CCI SR object.</t>
       </section>
     </section>
 
     <section title="Operations" anchor="pro">
-
-      <!--<t>The rules defined in <xref target="RFC8231"/> and <xref
-      target="RFC5440"/> can apply to this document. For supporting path ID
-      allocation, additional operations are defined in this section.</t>-->
-      <t>The path ID allocation and encoding is as per the stateful PCE operations for segment routing. The procedures are as per the corresponding extensions defined in <xref target="I-D.ietf-pce-segment-routing"/> and <xref target="I-D.negi-pce-segment-routing-ipv6"/> (which are further based on <xref target="RFC8231"/> and <xref target="RFC8281"/>). The additional operations for path identification are defined in this section.</t>
-
-      <section title="Procedures of Path ID Allocation">
-        <!--<t>This document defines two options of path ID allocation for
-        different scenarios.</t>
-
-        <t>Option A is path ID delegation for stateful PCEs, while Optiona B
-        is Path ID request and reply for stateless PCEs.</t>
-
-        <t>In option A, ID delegation, PCCs need to advertise their PCE
-        controlled ID spaces to a PCE so that the stateful PCE can allocate ID
-        directly without requesting ID from PCCs. In this situation, a
-        stateful PCE can allocate the path ID directly instead of requesting
-        path IDs from the egress or ingress PCC. The procedure of path ID
-        delegation is described in [draft-li-pce-controlled-id-space].</t>
-
-        <t>In option B, when a path computation with path ID allocation
-        request is received by a stateless PCE, the stateless PCE needs to
-        request Path IDs from the egress PCC or the ingress PCC. This path ID
-        request and reply can be done by other out-of-band mechanisms such as
-        Netconf <xref target="RFC6241"/>. Out-of-band mechanisms are out of
-        scope of this document and will be discussed in other documents.</t>-->
-
-        <section title="Stateful PCE">
-          <t/>
-
-          <section title="PCE Controlled ID Spaces Advertisement">
-            <t>For allocating path IDs to SR paths by PCEs, the PCE controlled
-            ID Spaces should be advertised to PCEs. The PCE controlled ID
-            spaces advertisement is described in
-            [draft-li-pce-controlled-id-space].</t>
-          </section>
-
-          <section title="Passive Stateful PCE">
-            <t>As defined in <xref target="RFC8231"/>, a PCC needs to send a
-            PCReq messsage to a PCE to request a path computation, and the PCE
-            will reply the PCC the path computation result by PCRep message.
-            After that, the PCC will synchronize the states of LSPs to the
-            PCE. This procedure is called as Passive Stateful PCE Path
-            Computation Request/Response.</t>
-
-            <t>In order to allocate path ID for SR paths, a PCC should set the
-            SRP.PID flag in PCReq message. A PCE will compute the SR path
-            based on the parameters in PCReq message and then allocate a path
-            ID for this SR path. The path computation result with PATH-ID TLV
-            in a LSP object will be sent back to the PCC by PCRep message.</t>
-
-            <t>If there is no error occurs, a PCRpt will be sent to the PCE to
-            synchronize the LSP State. After receiving the PCRpt message, the
-            PCE should synchronize the path ID up with the egress PCC. It MAY
-            be done by the PCLabelUpd and PCLabelRpt messages defined in <xref
-            target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
-
-            <t>The procedures of passive stateful PCE path computation
-            request/response with path ID allocation are shown below:</t>
-
-            <t><figure>
-                <artwork><![CDATA[                  Ingress                                    Egress     
+            <t>The path ID allocation and encoding is as per the stateful PCE operations for segment routing. The procedures are as per the corresponding extensions defined in <xref target="I-D.ietf-pce-segment-routing"/> and <xref target="I-D.negi-pce-segment-routing-ipv6"/> (which are further based on <xref target="RFC8231"/> and <xref target="RFC8281"/>). The additional operations for path identification are defined in this section.</t>
+            <t>To notify the path ID to the Egress PCC, the procedures are as per the PCECC-SR <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> (which is based on <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>). The additional operations are defined in this section.</t> 
+      <section title="PCC Allocated Path ID">
+      <section title="Ingress PCC Allocated Path ID" anchor="Ingress">
+        <t>The Ingress PCC could allocate the Path ID and inform the PCE via the PCRpt message as per <xref target="RFC8231"/>. The PATH-ID TLV MUST be included in a LSP object in
+          the PCEP message from PCC. The P flag in LSP object is set to 0. On receiving this report, the PCE updates the information in its database. The active PCE (where the LSP is delegated) further informs the egress about the path ID allocated by the PCC using the PCInitiate message as described in <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
+            <t><figure title="Ingress PCC Allocated Path ID" anchor="fig3">
+                <artwork><![CDATA[
+                  Ingress                                    Egress     
                   +-+-+                +-+-+                 +-+-+
                   |PCC|                |PCE|                 |PCC|
                   +-+-+                +-+-+                 +-+-+
-                    |                    |                     |
-                    |---PID Delegation-->|0)<--PID Delegation--|
-   Passive stateful |                    |                     |
-1) Path computation |----  PCReq ---->   |                     |
-                    |     SRP.PID=1      |                     |           
-                    |                    |2)Path ID Allocation |
-                    |                    |                     |
-                    |                    |                     |
-                    |<----  PCRep ----   |3)Paths Reply        |
-                    |    PATH-ID TLV     |                     |
-                    |                    |                     |
-4) LSP state change |                    |                     |
-   event            |                    |                     |
-                    |                    |                     |
-5) LSP State Report |-----  PCRpt --->   |                     |
-   sent to all      |                    |6)-- Path ID Sync--> |
-   stateful PCEs    |                    |                     |
+1) LSP State        | ----  PCRpt ---->  |                     |
+   Delegate and     |     Delegate=1     |                     |              
+   Inform the       |     PATH-ID TLV    |2) PCE update        |
+   Path ID alloc    |                    |   the LSP-DB        |
+   by PCC           |                    |                     |   
+                    |3) PCE informs the  | --- PCInitiate ---> |
+                    |   Path ID to Egress|     FEC=Path        |
+                    |                    |                     |  
+                    |                    | <-------- PCRpt --- |
                     |                    |                     |
 
-    Figure 5: Passive Stateful PCE Path Computation Request/Response
-                        with Path ID Allocation
 ]]></artwork>
               </figure></t>
 
-            <t/>
+      </section>
+    </section>
+    <section title="PCE Allocated Path ID">
+      <section title="PCE Controlled ID Spaces Advertisement">
+            <t>For allocating the path IDs to SR paths by the PCEs, the PCE controlled
+            ID Spaces MUST be known at PCEs via configurations or any other mechanism. The PCE controlled ID
+            spaces MAY be advertised as described in
+            [draft-li-pce-controlled-id-space].</t>
           </section>
-
-          <section title="Active Stateful PCE">
-            <t>As defined in <xref target="RFC8231"/>, a stateful PCE can
-            update the LSP state actively if the LSP has been delegated to the
-            PCE.</t>
-
-            <t>If there is no error occurs in LSP update, a PCRpt will be sent
-            to the PCE to synchronize the LSP State. Else, the PCE should
-            release the path ID if it is not applied. After receiving the
-            PCRpt message, the PCE should synchronize the path ID up with the
-            egress PCC. It MAY be done by the PCLabelUpd and PCLabelRpt
-            messages defined in <xref
-            target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
-
-            <t>The procedures of active stateful PCE path update with path ID
-            allocation are shown below:</t>
-
-            <t><figure>
-                <artwork><![CDATA[                  Ingress                                    Egress     
+      <section title="Ingress PCC request Path ID to PCE" anchor="PCE_1">
+            <t>The ingress PCC could request the path ID to be allocated by the PCE via PCRpt message as per <xref target="RFC8231"/>. The delegate flag (D-flag) MUST also be set for this LSP.
+            The PATH-ID TLV MAY be included with Path ID set to 0x0000.  
+            The active PCE would allocated the path ID as per the PATH-ID flags and in case PATH-ID is not included, the PCE MUST act based on the local policy. The PCE would further respond 
+            to Ingress PCC with PCUpd message as per <xref target="RFC8231"/> and MUST include the 
+           PATH-ID TLV in a LSP object. The PCE would further inform the egress PCC about the path ID allocated by the PCE using the PCInitiate message as described in <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
+            <t><figure title="Ingress PCC request Path ID to PCE" anchor="fig4">
+                <artwork><![CDATA[
+                  Ingress                                    Egress     
                   +-+-+                +-+-+                 +-+-+
                   |PCC|                |PCE|                 |PCC|
                   +-+-+                +-+-+                 +-+-+
-                    |                    |                     |
-                    |---PID delegation-->|0)<--PID delegation--|
-                    |                    |                     |
 1) LSP State        | ----  PCRpt ---->  |                     |
-   Sync             |     Delegate=1     |                     |              
-                    |                    |2) PCE decides to    |
-                    |                    |   update the LSP    |
-                    |                    |                     |
+   Delegate         |     Delegate=1     |                     |              
+                    |     P=1            |2) PCE update        |
+                    |                    |   the LSP-DB and    |
+                    |                    |   allocate Path ID  |   
                     |<----  PCUpd ----   |3)Paths update with  |
                     |     PATH-ID TLV    |  Path ID            |
                     |                    |                     |
-                    |                    |                     |
 4) LSP State Report | -----  PCRpt --->  |                     |
-                    |                    |5)---Path ID Sync--> |
+                    |                    |                     | 
+                    |5) PCE informs the  | --- PCInitiate ---> |
+                    |   Path ID to Egress|     FEC=Path        |
+                    |                    |                     |  
+                    |                    | <-------- PCRpt --- |
                     |                    |                     |
 
-   Figure 5: Active Stateful PCE Path Update with Path ID Allocation
 ]]></artwork>
-              </figure></t>
-
-            <t>Also, a stateful PCE can initiate an SR path actively by
-            PCInitiate message. The procedure is shown below:</t>
-
-            <t><figure>
+              </figure></t>           
+      </section>
+      <section title="PCE allocated Path ID on its own" anchor="PCE_2">
+        <t>The PCE could allocate the path ID on its own accord for a PCE-Initiated (or delegated LSP). The allocated path ID needs to be informed to the Ingress and Egress PCC. 
+        The PCE would use the PCInitiate message <xref target="RFC8281"/> or PCUpd message <xref target="RFC8231"/> towards the Ingress PCC and MUST include the 
+           PATH-ID TLV in the LSP object. The PCE would further inform the egress PCC about the path ID allocated by the PCE using the PCInitiate message as described in <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
+            <t><figure title="PCE allocated Path ID on its own" anchor="fig5">
                 <artwork><![CDATA[
                   Ingress                                    Egress     
                   +-+-+                +-+-+                 +-+-+
                   |PCC|                |PCE|                 |PCC|
                   +-+-+                +-+-+                 +-+-+
                     |                    |                     |
-                    |---PID delegation-->|0)<--PID delegation--|
-                    |                    |                     |
-                    |                    |                     |
                     | <--PCInitiate---   |1)Initiate LSP with  |
                     |    PATH-ID TLV     |  Path ID            |
                     |                    |                     |
  2)LSP delegation   |---PCRpt, D=1--->   | (Confirm)           |
-                    |                    |                     |
-                    |                    |3) ---Path ID Sync-->|
-                    |                    |                     |
-                    |                    |4)Delete LSP         |
-                    |<-- PCInitiate ---  |                     |
-                    |   PLSP_ID=1, R=1   |                     |
-                    |                    |                     |
- 5)Confirm delete   |------PCRpt------>  |                     |
-                    |   PLSP_ID=1, R=1   |                     |
-                    |                    |6) ---Path ID Sync-->|
                     |                    |                     | 
+                    |3) PCE informs the  | --- PCInitiate ---> |
+                    |   Path ID to Egress|     FEC=Path        |
+                    |                    |                     |  
+                    |                    | <-------- PCRpt --- |
+                    |                    |                     |
 
-   Figure 5: Active Stateful PCE Path Initiation with Path ID Allocation
 ]]></artwork>
-              </figure></t>
-
-            <t>Path ID synchronization needs to be done after any path ID
-            changes. Thus, after receiving the PCC confirmation by PCRpt
-            messages, the PCE should synchronize with the egress PCC.
-            Likewise, when LSP is delegeted, the path ID sychronization should
-            be done as well.</t>
-          </section>
-        </section>
-
-        <!--<section title="Stateless PCE">
-          <t>This path ID request and reply in stateless mode can be done by
-          other out-of-band mechanisms such as Netconf <xref
-          target="RFC6241"/>. Out-of-band mechanisms are out of scope of this
-          document and will be discussed in other documents.</t>
-        </section>-->
+              </figure></t>              
       </section>
+    </section>
+
+
+
+
+      
+
+
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -603,7 +519,7 @@
       <t>TBA</t>
     </section>
 
-    <section anchor="Acknowledgements" title="Acknowledgements">
+    <section anchor="Acknowledgments" title="Acknowledgments">
       <t/>
 
       <t/>
@@ -612,44 +528,29 @@
 
   <back>
     <references title="Normative References">
+      
+
+      <?rfc include="reference.RFC.2119"?>
+      <?rfc include='reference.RFC.5440'?>
+      <?rfc include='reference.RFC.8174'?>
+      <?rfc include='reference.RFC.8231'?>
+      <?rfc include='reference.RFC.8232'?>
+      <?rfc include='reference.RFC.8281'?>
+      <?rfc include='reference.I-D.ietf-pce-segment-routing'?>
+      <?rfc include='reference.I-D.negi-pce-segment-routing-ipv6'?>
+      <?rfc include='reference.I-D.zhao-pce-pcep-extension-for-pce-controller'?>
       <?rfc include='reference.I-D.zhao-pce-pcep-extension-pce-controller-sr'?>
 
-      <?rfc include="reference.RFC.2119"
-?>
-
-      <?rfc include='reference.I-D.filsfils-spring-segment-routing-policy'?>
-
-      <?rfc include='reference.I-D.cheng-spring-mpls-path-segment'?>
-
-      <?rfc include='reference.I-D.li-spring-passive-pm-for-srv6-np'
-?>
-
-      <?rfc include='reference.RFC.8231'?>
-
-      <?rfc include='reference.RFC.5440'?>
-
-      <?rfc include='reference.I-D.ietf-pce-segment-routing'
-?>
-
-      <?rfc include='reference.I-D.negi-pce-segment-routing-ipv6'
-?>
-
-      <?rfc include='reference.I-D.ietf-spring-segment-routing'?>
-
-      <?rfc include="reference.RFC.8281"?>
-
-      <?rfc include='reference.I-D.li-idr-sr-policy-path-segment-distribution'
-?>
-
-      <?rfc include='reference.I-D.palle-pce-controller-labeldb-sync'?>
-
-      <?rfc ?>
     </references>
 
     <references title="Informative References">
-      <?rfc include="reference.RFC.6241"?>
-
-      <?rfc ?>
+      <?rfc include="reference.RFC.4655"?>
+      <?rfc include="reference.RFC.4657"?>
+      <?rfc include='reference.I-D.ietf-spring-segment-routing'?>
+      <?rfc include='reference.I-D.ietf-spring-segment-routing-policy'?>
+      <?rfc include='reference.I-D.cheng-spring-mpls-path-segment'?>
+      <?rfc include='reference.I-D.li-spring-passive-pm-for-srv6-np'?>
+      <?rfc include='reference.I-D.li-idr-sr-policy-path-segment-distribution'?>
     </references>
   </back>
 </rfc>
