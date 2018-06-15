@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc category="std" docName="draft-li-pce-sr-bidir-path-00" ipr="trust200902">
+  <front>
+    <title abbrev="Bi-didirectional SR Path in PCEP">PCEP Extension for
+    Segment Routing Bi-directional Path</title>
+
+    <author fullname="Cheng Li" initials="C." surname="Li">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>chengli13@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Mach(Guoyi) Chen" initials="M." surname="Chen">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>Mach.chen@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Dhruv Dhody" initials="D." surname="Dhody">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street> Divyashree Techno Park, Whitefield </street>
+
+          <city>Bangalore</city>
+
+          <region>Karnataka</region>
+
+          <code>560066</code>
+
+          <country>India </country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>dhruv.ietf@gmail.com </email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Zhenbin Li" initials="Z." surname="Li">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>lizhenbin@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Jie Dong" initials="J." surname="Dong">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>jie.dong@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <date day="8" month="April" year="2018"/>
+
+    <area>Routing Area</area>
+
+    <workgroup>Interdomain Routing Working Group</workgroup>
+
+    <abstract>
+      <t>The Path Computation Element Communication Protocol (PCEP) provides
+      mechanisms for Path Computation Elements (PCEs) to perform path
+      computations in response to Path Computation Clients (PCCs) requests.
+      The Stateful PCE extensions allow stateful control of Multiprotocol
+      Label Switching (MPLS) Traffic Engineering (TE) Label Switched Paths
+      (LSPs) using PCEP. Futhermore, PCEP can be used for computing
+      uni-directional Segment Routing path. However, Bi-directional SR path is
+      required to be supported in many scenarios like mobile backhaul
+      transport network. The bi-directional SR path is defined in <xref
+      target="I-D.cheng-spring-mpls-path-segment"/>.</t>
+
+      <t>For supporting SR bi-directional path computation, this document
+      specifies PCEP extensions for grouping two reverse unidirectional SR
+      paths into an Associated Bidirectional SR path when using a Stateful PCE
+      for both PCE-Initiated and PCC-Initiated LSPs as well as when using a
+      Stateless PCE.</t>
+
+      <t/>
+    </abstract>
+
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119">RFC 2119</xref>.</t>
+    </note>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>Segment routing (SR) <xref target="I-D.ietf-spring-segment-routing"/>
+      leverages the source routing and tunneling paradigms. SR supports to
+      steer packets into an explicit forwarding path according to the Segment
+      Routing Policy ( SR Policy) <xref
+      target="I-D.filsfils-spring-segment-routing-policy"/> at the ingress
+      node.</t>
+
+      <t>However, the SR Policies defined in <xref
+      target="I-D.filsfils-spring-segment-routing-policy"/> only supports
+      uni-directional SR paths. For supporting bi-directional paths <xref
+      target="I-D.cheng-spring-mpls-path-segment"/>, new SR policies carrying
+      Path ID and bi-directional path information are defined in <xref
+      target="I-D.li-idr-sr-policy-path-segment-distribution"/>.</t>
+
+      <t><xref target="I-D.ietf-pce-segment-routing"/> specifies extensions to
+      the Path Computation Element Protocol (PCEP) <xref target="RFC5440"/>
+      that allow a stateful PCE <xref target="RFC8231"/> to compute and
+      initiate Traffic Engineering (TE) paths, as well as a PCC to request a
+      path subject to certain constraint(s) and optimization criteria in SR
+      networks. </t>
+
+      <t>However, it does not support bi-directional SR path computation, so
+      new extensions are required. </t>
+
+      <t><xref target="I-D.ietf-pce-association-group"/> introduces a generic
+      mechanism to create a grouping of LSPs which can then be used to define
+      associations between a set of LSPs and/or a set of attributes, for
+      example primary and secondary LSP associations, and is equally
+      applicable to the active and passive modes of a Stateful PCE <xref
+      target="RFC8231"/> or a stateless PCE <xref target="RFC5440"/>.</t>
+
+      <t><xref target="I-D.ietf-pce-association-bidir"/> defines PCEP
+      extensions for grouping two reverse unidirectional MPLS TE LSPs into an
+      Associated Bidirectional LSP when using a Stateful PCE for both
+      PCE-Initiated and PCC-Initiated LSPs as well as when using a Stateless
+      PCE.</t>
+
+      <t/>
+
+      <t>This document specifies PCEP extensions for grouping two reverse
+      unidirectional SR paths into a bi-directional SR path when using a
+      Stateful PCE for both PCE-Initiated and PCC-Initiated paths as well as
+      when using a Stateless PCE. For binding SR paths, the PATH-ID TLV
+      [draft-li-pce-path-segment] MUST be included in the LSP object. The path
+      ID can be a path segment in SR-MPLS <xref
+      target="I-D.cheng-spring-mpls-path-segment"/>, or a path ID in SRv6
+      <xref target="I-D.li-spring-passive-pm-for-srv6-np"/>, or other IDs that
+      can identify an SR path.</t>
+
+      <t/>
+    </section>
+
+    <section title="Terminology">
+      <t>This memo makes use of the terms defined in <xref
+      target="I-D.ietf-pce-segment-routing"/>. The reader is assumed to be
+      familiar with the terminology defined in <xref target="RFC5440"/>, <xref
+      target="RFC8231"/>, <xref target="I-D.ietf-pce-association-bidir"/> and
+      <xref target="I-D.ietf-pce-association-group"/>.</t>
+    </section>
+
+    <section title="PCEP Extension for Bi-directional Path">
+      <t>This document describes the mechanism of carring bi-directional path
+      information in PCEP messages. For binding two SR paths into a single
+      bi-directional path, PATH-ID TLVs should be included in LSP objects as
+      described in [draft-li-pce-path-segment]. Futhermore, this document
+      defines an association group objects, Double-sided Bi-directional SR
+      Path Association Group object for associating SR paths.</t>
+
+      <section title="Double-sided Bi-directional SR Path Association Group Object">
+        <t>As defined in <xref target="I-D.ietf-pce-association-bidir"/>, two
+        LSPs are associated as a bi-directional LSP by a common bi-directional
+        LSP association group. For associating two SR paths, this document
+        defines a Double-sided Bi-directional SR Path Association Groups. The
+        Association Type of Double-sided Bidirectional SRv6 Path Association
+        Group is TBD.</t>
+
+        <t/>
+
+        <t>A member of the Double-sided Bi-directional SR Path Association
+        Group can take the role of a forward or reverse SR path and follows
+        the rules similar to the rules defined in <xref
+        target="I-D.ietf-pce-association-bidir"/> for LSPs.</t>
+
+        <t><list style="symbols">
+            <t>An SR path (forward or reverse) can not be part of more than
+            one Double-sided Bi-directional SR Path Association Group. More
+            than one forward SR and/ or reverse SR path can be part of a
+            Double-sided Bi-directional SR Association Group. </t>
+          </list></t>
+
+        <t>The SR paths belonging to this association are conveyed via PCEP
+        messages to the PCEP peer. The object endcoding follows the rules
+        defined in <xref target="I-D.ietf-pce-association-group"/>.</t>
+
+        <t>The Association ID, Association Source, optional Global Association
+        Source and optional Extended Association ID in the Bi-directional SR
+        Path Association Group Object are initialized using the procedures
+        defined in <xref target="I-D.ietf-pce-association-group"/> and <xref
+        target="RFC7551"/>. </t>
+
+        <t>For describing the SR paths in a association group, such as
+        direction and co-routed information, this document reuses the
+        Bi-directional LSP Association Group TLV defined in <xref
+        target="I-D.ietf-pce-association-bidir"/>. All fields and processing
+        rules are defined in <xref target="I-D.ietf-pce-association-bidir"/>.
+        </t>
+
+        <t> </t>
+      </section>
+    </section>
+
+    <section title="Procedures of Bi-directional Path Computation">
+      <t>As defined in <xref target="RFC5440"/>, the B-flag in RP object MUST
+      be set when the PCC specifies that the path computation request relates
+      to a bi-directional TE LSP. In this document, the B-flag also MUST be
+      set when the PCC specifies that the path computation request relates to
+      a bi-directional SR path. Likely, when a stateful PCE initiates or
+      updates a bi-directional paths including LSPs and SR paths, the B-flag
+      in SRP object <xref target="I-D.ietf-pce-pcep-stateful-pce-gmpls"/> MUST
+      be set as well.</t>
+
+      <t>The bi-directional path computation can be divided into two
+      uni-directional path computations. Thus the operations of path
+      computation and path ID allocation for uni-directional path as defined
+      in [draft-li-pce-sr-path-segment] can apply to bi-directional path
+      computation directly.</t>
+
+      <t>Two uni-directional paths can be associated by the association group
+      object <xref target="I-D.ietf-pce-association-group"/> with the same
+      association ID and the same association type. A bi-directional path
+      association group object has been defined in <xref
+      target="I-D.ietf-pce-association-bidir"/> for binding paths in MPLS. As
+      defined in this document, two SR paths with the PATH-ID TLV
+      [draft-li-pce-sr-path-segment] included in the LSP object can be
+      associated by a Bi-directional SR Path Association Group with the same
+      association ID.</t>
+
+      <t/>
+
+      <t>After path computation, the bi-directional path that combined by two
+      SR paths and associated by an association group object will be sent to
+      the source and destination PCC( as known as the ingress node and egress
+      node in SR) by PCRep or PCUdp or PCInitiate messages, respectively. </t>
+
+      <t>A PCEP message such as PCRep or PCUdp or PCInitiate, containing a
+      bi-directional path, sent to the PCC contains a forward direction path
+      beginning from itself to the remote PCC and a reverse path from the
+      remote PCC back to the PCC itself. The information of reverse direction
+      path can be used for several scenarios, such as directed BFD <xref
+      target="I-D.ietf-mpls-bfd-directed"/>.</t>
+
+      <t/>
+
+      <section title="PCE Initiated SR Paths">
+        <t>Being identical to the rules specified in <xref
+        target="I-D.ietf-pce-association-group"/> and <xref
+        target="I-D.ietf-pce-association-bidir"/>, Double-sided Bi-directional
+        SR Path Association Groups can be created by a Stateful PCE. </t>
+
+        <t><list style="symbols">
+            <t>Stateful PCE can create and update the forward and reverse SR
+            path independently for Double-sided Bi-directional SR Path
+            Association Groups.</t>
+
+            <t>Stateful PCE can establish and remove the association
+            relationship on a per SR path basis.</t>
+
+            <t>Stateful PCE can create and update the SR path and the
+            association on a PCC via PCInitiate and PCUpd messages,
+            respectively, using the procedures described in <xref
+            target="I-D.ietf-pce-association-group"/>.</t>
+          </list><figure>
+            <artwork><![CDATA[
+                                     +-----+
+                                     | PCE |
+                                     +-----+
+         PCUpd/PCInitiate            /    \         PCUpd/PCInitiate
+         Tunnel 1 (F)               /      \        Tunnel 2 (R)
+         (LSP1 (F), LSP2 (R))      /        \       (LSP2 (F), LSP1 (R))
+                                  /          \
+                                 /            \
+                                v              v
+                           +-----+    LSP1     +-----+
+                           |  S  |------------>|  D  |
+                           |     |<------------|     |
+                           +-----+    LSP2     +-----+
+
+          Figure 1: PCE-Initiated Double-sided Bidirectional SR Path
+
+
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="PCC Initiated SR Paths">
+        <t>Being identical to the rules specified in <xref
+        target="I-D.ietf-pce-association-group"/> and <xref
+        target="I-D.ietf-pce-association-bidir"/>, Double-sided Bi-directional
+        SR Path Association Groups can also be created by a PCC.</t>
+
+        <t><list style="symbols">
+            <t>PCC can create and update the forward and reverse SR paths
+            independently for Double-sided Bi-directional SR Path Association
+            Groups.</t>
+
+            <t>PCC can establish and remove the association relationship on a
+            per SR path basis.</t>
+
+            <t>PCC MUST report the change in the association group of an SR
+            path to PCE(s) via PCRpt message.</t>
+
+            <t>PCC can report the forward and reverse SR paths independently
+            to PCE(s) via PCRpt message.</t>
+
+            <t>PCC can delegate the forward and reverse SR paths independently
+            to a Stateful PCE, where PCE would control the SR paths.</t>
+
+            <t>Stateful PCE can update the SR paths in the Double-sided
+            Bi-directional SR Path Association Group via PCUpd message, using
+            the procedures described in <xref
+            target="I-D.ietf-pce-association-group"/>.</t>
+          </list><figure>
+            <artwork><![CDATA[
+                                     +-----+
+                                     | PCE |
+                                     +-----+
+         Reports/Delegates:          ^    ^       Reports/Delegates
+         Tunnel 1 (F)               /      \        Tunnel 2 (R)
+         (LSP1 (F), LSP2 (R))      /        \       (LSP2 (F), LSP1 (R))
+                                  /          \
+                                 /            \
+                                /              \
+                            +-----+    LSP1     +-----+
+                            |  S  |------------>|  D  |
+                            |     |<------------|     |
+                            +-----+    LSP2     +-----+
+
+           Figure 2: PCC-Initiated Double-sided Bidirectional SR Path
+
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="Stateless PCE">
+        <t>As defined in <xref target="I-D.ietf-pce-association-bidir"/>, for
+        a stateless PCE, it might be useful to associate a path computation
+        request to an association group, thus enabling it to associate a
+        common set of configuration parameters or behaviors with the request.
+        A PCC can request co-routed or non co-routed forward and reverse
+        direction paths from a stateless PCE for a bidirectional LSP
+        association group. </t>
+      </section>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>TBA</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>TBA</t>
+    </section>
+
+    <section anchor="Acknowledgements" title="Acknowledgements">
+      <t/>
+
+      <t/>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119"
+?>
+
+      <?rfc include='reference.I-D.filsfils-spring-segment-routing-policy'?>
+
+      <?rfc include='reference.I-D.cheng-spring-mpls-path-segment'?>
+
+      <?rfc include='reference.I-D.li-spring-passive-pm-for-srv6-np'
+?>
+
+      <?rfc include='reference.RFC.8231'?>
+
+      <?rfc include='reference.RFC.5440'?>
+
+      <?rfc include='reference.I-D.ietf-pce-segment-routing'
+?>
+
+      <?rfc include='reference.I-D.ietf-mpls-bfd-directed'
+?>
+
+      <?rfc include='reference.I-D.ietf-spring-segment-routing'?>
+
+      <?rfc include="reference.RFC.8281"?>
+
+      <?rfc include='reference.I-D.li-idr-sr-policy-path-segment-distribution'
+?>
+
+      <?rfc include='reference.I-D.ietf-pce-association-group'
+?>
+
+      <?rfc include='reference.I-D.ietf-pce-association-bidir'?>
+
+      <?rfc include='reference.I-D.ietf-pce-pcep-stateful-pce-gmpls'
+
+?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.RFC.3209'
+?>
+
+      <?rfc include='reference.RFC.7551'?>
+
+      <?rfc ?>
+    </references>
+  </back>
+</rfc>
