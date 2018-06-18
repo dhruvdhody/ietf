@@ -1,0 +1,1344 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902" category="std" docName="draft-ietf-pce-hierarchy-extensions-05" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+  <front>
+    <title abbrev="PCEP Extensions for H-PCE">Extensions to Path Computation Element Communication Protocol (PCEP) for
+              Hierarchical Path Computation Elements (PCE)</title>
+    <author initials="F" surname="Zhang" fullname="Fatai Zhang">
+      <organization>Huawei</organization>
+      <address>
+        <postal>
+          <street>Huawei Base, Bantian, Longgang District</street>
+          <city>Shenzhen</city>
+          <region></region>
+          <code>518129</code>
+          <country>China</country>
+        </postal>
+        <email>zhangfatai@huawei.com</email>
+      </address>
+    </author> 
+    <author initials="Q" surname="Zhao" fullname="Quintin Zhao">
+      <organization>Huawei</organization>
+      <address>
+        <postal>
+          <street>125 Nagog Technology Park</street>
+          <city>Acton</city>
+          <region>MA</region>
+          <code>01719</code>
+          <country>USA</country>
+        </postal>
+        <email>quintin.zhao@huawei.com</email>
+      </address>
+    </author> 
+
+   <!--<author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>-->
+ 
+    <author initials="O" surname="Gonzalez de Dios" fullname="Oscar Gonzalez de Dios">
+      <organization>Telefonica I+D</organization>
+      <address>
+        <postal>
+          <street>Don Ramon de la Cruz 82-84</street>
+          <city>Madrid</city>
+          <region></region>
+          <code>28045</code>
+          <country>Spain</country>
+        </postal>
+        <email>ogondio@tid.es</email>
+      </address>
+    </author>
+    <author initials="R" surname="Casellas" fullname="Ramon Casellas">
+      <organization>CTTC</organization>
+      <address>
+        <postal>
+          <street>Av. Carl Friedrich Gauss n.7</street>
+          <city>Barcelona</city>
+          <region>Castelldefels</region>
+          <code></code>
+          <country>Spain</country>
+        </postal>
+        <email>ramon.casellas@cttc.es</email>
+      </address>
+    </author>
+    <author initials="D" surname="King" fullname="Daniel King">
+      <organization>Old Dog Consulting</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country>UK</country>
+        </postal>
+        <email>daniel@olddog.co.uk</email>
+      </address>
+    </author>
+    <date year="2018" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+  
+<t>
+   The Hierarchical Path Computation Element (H-PCE) architecture RFC
+   6805, provides a mechanism to allow the optimum sequence of domains
+   to be selected, and the optimum end-to-end path to be derived through
+   the use of a hierarchical relationship between domains.</t>
+
+   <t>This document defines the Path Computation Element Protocol (PCEP)
+   extensions for the purpose of implementing necessary Hierarchical PCE
+   procedures and protocol extensions.</t>
+
+   </abstract>
+  </front>
+  <middle>
+   <section title="Introduction" toc="default">
+    <t>The Path Computation Element communication Protocol (PCEP) provides
+   mechanisms for Path Computation Elements (PCEs) to perform path
+   computations in response to Path Computation Clients' (PCCs)
+   requests.</t>
+   <t>The capability to compute the routes of end-to-end inter-domain MPLS
+   Traffic Engineering (MPLS-TE) and GMPLS Label Switched Paths (LSPs)
+   is expressed as requirements in <xref target="RFC4105"/> and <xref target="RFC4216"/>.  This
+   capability may be realized by a PCE <xref target="RFC4655"/>.  The methods for
+   establishing and controlling inter-domain MPLS-TE and GMPLS LSPs are
+   documented in <xref target="RFC4726"/>.</t>
+
+   <t><xref target="RFC6805"/> describes a Hierarchical PCE (H-PCE) architecture which can
+   be used for computing end-to-end paths for inter-domain MPLS Traffic
+   Engineering (TE) and GMPLS Label Switched Paths (LSPs).</t>
+
+   <t>Within the hierarchical PCE architecture, the parent PCE is used to
+   compute a multi-domain path based on the domain connectivity
+   information .  A child PCE may be responsible for a single domain or
+   multiple domains, it is used to compute the intra-domain path based
+   on its own domain topology information.</t>
+
+   <t>The H-PCE end-to-end domain path computation procedure is described
+   below:</t>
+
+   <t><list style="symbols">
+
+   <t>A path computation client (PCC) sends the inter-domain path
+      computation requests to the child PCE responsible for its domain;</t>
+
+   <t>The child PCE forwards the request to the parent PCE;</t>
+
+   <t>The parent PCE computes the likely domain paths from the ingress
+      domain to the egress domain;</t>
+
+   <t>The parent PCE sends the intra-domain path computation requests
+      (between the domain border nodes) to the child PCEs which are
+      responsible for the domains along the domain path;</t>
+
+   <t>The child PCEs return the intra-domain paths to the parent PCE;</t>
+
+   <t>The parent PCE constructs the end-to-end inter-domain path based
+      on the intra-domain paths;</t>
+
+   <t>The parent PCE returns the inter-domain path to the child PCE;</t>
+
+   <t>The child PCE forwards the inter-domain path to the PCC.</t>
+
+   </list></t>
+
+   <t>In addition, the parent PCE may be requested to provide only the
+   sequence of domains to a child PCE so that alternative inter-domain
+   path computation procedures, including Per Domain (PD) <xref target="RFC5152"/> and
+   Backwards Recursive Path Computation (BRPC) <xref target="RFC5441"/> may be used.</t>
+
+   <t>This document defines the PCEP extensions for the purpose of
+   implementing Hierarchical PCE procedures, which are described in
+   <xref target="RFC6805"/>.</t>
+
+<section title="Scope" toc="default">
+
+   <t>The following functions are out of scope of this document.
+   <list style="symbols"> 
+
+   <t>Determination of Destination Domain (section 4.5 of <xref target="RFC6805"/>)
+     <list style="symbols">  
+     <t>via collection of reachability information from child domain;</t>
+
+     <t>via requests to the child PCEs to discover if they contain the
+       destination node;</t>
+
+     <t>or any other methods.</t>
+   </list></t>
+
+   <t>Parent Traffic Engineering Database (TED) methods (section 4.4 of
+      <xref target="RFC6805"/>)</t>
+
+   <t>Learning of Domain connectivity and boundary nodes (BN) addresses.</t>
+   <t>Stateful PCE Operations. (Refer <xref target="I-D.ietf-pce-stateful-hpce"/>)</t>
+</list>
+</t>
+</section>
+   <section title="Terminology" toc="default">
+
+   <t>This document uses the terminology defined in <xref target="RFC4655"/>, <xref target="RFC5440"/>
+   and the additional terms defined in section 1.4 of <xref target="RFC6805"/>.</t>
+   </section>
+   
+   
+    <section title="Requirements Language" toc="default">
+         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all
+   capitals, as shown here.</t>
+   <!--
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described
+        in <xref target="RFC2119"/>.</t>-->
+      </section>
+    </section>
+
+<section title="Requirements for H-PCE" toc="default">    
+<t>This section compiles the set of requirements of the PCEP protocol to
+   support the H-PCE architecture and procedures.</t>
+
+   <t><xref target="RFC6805"/> identifies high-level requirements of PCEP extensions
+   required to support the hierarchical PCE model.</t>
+
+   <section title="Path Computation Request" toc="default"> 
+   <t>The Path Computation Request (PCReq) messages are used by a PCC or
+   PCE to make a path computation request to a PCE.  In order to achieve
+   the full functionality of the H-PCE procedures, the PCReq message
+   needs to include:
+   <list style="symbols">
+   <t>Qualification of PCE Requests;</t>
+
+   <t>Multi-domain Objective Functions (OF);</t>
+
+   <t>Multi-domain Metrics.</t>
+   </list></t>
+
+   <section title="Qualification of PCEP Requests" toc="default"> 
+
+   <t>As described in section 4.8.1 of <xref target="RFC6805"/>, the H-PCE architecture
+   introduces new request qualifications, which are:<list style="symbols">
+
+   <t>It MUST be possible for a child PCE to indicate that a path computation request sent
+      to a parent PCE should be satisfied by a domain sequence
+      only, that is, not by a full end-to-end path.  This allows the
+      child PCE to initiate a per-domain (PD) <xref target="RFC5152"/> or a backward
+      recursive path computation (BRPC) <xref target="RFC5441"/>.</t>
+
+   <t>As stated in <xref target="RFC6805"/>, section 4.5, if a PCC knows the egress
+      domain, it can supply this information as the path computation
+      request.  It SHOULD be possible to specify the destination domain
+      information in a PCEP request, if it is known.</t>
+
+   <t>It MAY be possible to indicate that the inter domain path computed
+      by parent PCE should disallow domain re-entry.</t>
+   </list></t>
+   </section>   
+   <section title="Multi-domain Objective Functions" toc="default">  
+
+   <t>For inter-domain path computation, there is one new objective
+   Function which is defined in section 1.3.1 and 4.1 of <xref target="RFC6805"/>:
+   <list style="symbols">
+
+   <t>Minimize the number of domains crossed.  A domain can be either an
+      Autonomous System (AS) or an Internal Gateway Protocol (IGP) area
+      depending on the type of multi-domain network hierarchical PCE is
+      applied to.</t>
+
+   </list></t>
+
+   <t>Another objective
+   Function to minimize the number of border nodes is also defined in this document.</t>
+   
+   <t>During the PCEP session establishment procedure, the parent PCE needs
+   to be capable of indicating the Objective Functions (OF) <xref target="RFC5541"/>
+   capability in the Open message.  This capability information may then
+   be announced by child PCEs, and used for selecting the PCE when a PCC
+   wants a path that satisfies one or multiple inter-domain objective
+   functions.</t>
+
+   <t>When a PCC requests a PCE to compute an inter-domain path, the PCC
+   needs to be capable of indicating the new objective functions
+   for inter-domain path.  Note that a given child PCE may also act as a
+   parent PCE (for some other child PCE).</t>
+
+   <t>For the reasons described previously, new OF codes need to be defined
+   for the new inter-domain objective functions.  Then the PCE can
+   notify its new inter-domain objective functions to the PCC by
+   carrying them in the OF-list TLV which is carried in the OPEN object.
+   The PCC can specify which objective function code to use, which is
+   carried in the OF object when requesting a PCE to compute an inter-
+   domain path.</t>
+
+   <t>A parent PCE MUST be capable of ensuring homogeneity, across domains,
+   when applying OF codes for strict OF intra-domain requests.</t>
+ </section>
+
+   <section title="Multi-domain Metrics" toc="default">  
+   <t>For inter-domain path computation, there are several path metrics of
+   interest.<list style="symbols">
+
+   <t>Domain count (number of domains crossed);</t>
+
+   <t>Border Node count.</t>
+   </list></t>
+
+   <t>A PCC may be able to limit the number of domains crossed by applying
+   a limit on these metrics. Details in <xref target="metric"/>.</t>
+ </section>
+
+
+
+   </section>
+   <section title="Parent PCE Capability Advertisement" toc="default"> 
+
+   <t>Parent and child PCE relationships are likely to be configured.
+   However, as mentioned in <xref target="RFC6805"/>, it would assist network operators
+   if the child and parent PCEs could indicate their H-PCE capabilities.</t>
+
+   <t>During the PCEP session establishment procedure, the child PCE needs
+   to be capable of indicating to the parent PCE whether it requests the
+   parent PCE capability or not.  Also, during the PCEP session
+   establishment procedure, the parent PCE needs to be capable of
+   indicating whether its parent capability can be provided or not.</t>
+
+   <t>A PCEP Speaker (Parent PCE or Child PCE or PCC) includes the "H-PCE
+   Capability" TLV, described in <xref target="cap_tlv"/>, in the OPEN Object to
+   advertise its support for PCEP extensions for H-PCE Capability.</t>
+   </section>
+   <section title="PCE Domain Discovery" toc="default"> 
+
+   <t>A PCE domain is a single domain with an associated PCE.  Although it
+   is possible for a PCE to manage multiple domains simultaneously.  The PCE domain could
+   be an IGP area or AS.</t>
+
+   <t>The PCE domain identifiers MAY be provided during the PCEP session
+   establishment procedure.</t>
+ </section>
+ <section title="Domain Diversity" toc="default"> 
+  <t>In a multi-domain environment, Domain Diversity is defined in
+   <xref target="RFC6805"/>.  A pair of paths are domain-diverse if they do not
+   traverse any of the same transit domains.  Domain diversity may be
+   maximized for a pair of paths by selecting paths that have the
+   smallest number of shared domains.  Path computation should
+   facilitate the selection of domain diverse paths as a way to reduce
+   the risk of shared failure and automatically helps to ensure path
+   diversity for most of the route of a pair of LSPs.</t>
+
+   <t>The main motivation behind domain diversity is to avoid fate sharing,
+   but it can also be because of some geo-political reasons and
+   commercial relationships that would require domain diversity.  for
+   example, a pair of paths should choose different transit Autonomous
+   System (AS) because of some policy considerations.</t>
+
+   <t>In case when full domain diversity could not be achieved, it is
+   helpful to minimize the common shared domains.  Also it is
+   interesting to note that other scope of diversity (node, link, SRLG
+   etc) can still be applied inside the common shared domains.</t>
+
+ </section>
+ </section><!--Requirements for H-PCE-->
+
+<section title="PCEP Extensions" toc="default">
+
+   <t>This section defines PCEP extensions to (<xref target="RFC5440"/>) so as to
+   support the H-PCE procedures.</t>
+   <section title="OPEN object" toc="default">
+
+   <t>Two new TLVs are defined in this document to be carried within an
+   OPEN object. This way, during PCEP session establishment, the H-PCE
+   capability and Domain information can be advertised.</t>
+
+   <section title="H-PCE capability TLV" toc="default" anchor="cap_tlv">
+
+   <t>The H-PCE-CAPABILITY TLV is an optional TLV associated with the OPEN
+   Object <xref target="RFC5440"/> to exchange H-PCE capability of PCEP speakers.</t>
+
+   <t>Its format is shown in the following figure:</t>
+<figure title="H-PCE-CAPABILITY TLV format" suppress-title="false" align="left" alt="" width="" height="" anchor="fig0">
+            <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               Type= TBD1      |            Length=4           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Flags                             |I|R|
++---------------------------------------------------------------+
+]]></artwork>
+          </figure>
+
+   <t>The type of the TLV is TBD1 (to be assigned by IANA) and it has a
+   fixed length of 4 octets.</t>
+
+   <t>The value comprises a single field - Flags (32 bits):
+   <list>
+   <t>R (Parent PCE Request bit): if set, will signal that the child
+   PCE wishes to use the peer PCE as a parent PCE.</t>
+
+   <t>I (Parent PCE Indication bit): if set, will signal that the PCE can
+   be used as a parent PCE by the peer PCE.</t></list></t>
+
+   <t>The inclusion of this TLV in an OPEN object indicate that the H-PCE
+   extensions are supported by the PCEP speaker. The PCC MAY include
+   this TLV to indicate that it understands the H-PCE extensions. The
+   Child PCE MUST include this TLV and set the R flag (and unset the I
+   flag) on the PCEP session towards the Parent PCE. The Parent PCE MUST
+   include this TLV and set the I flag and unset the R flag on the
+   PCEP session towards the child PCE. The parent-child PCEP session is
+   set to be established only when this capability is advertised.</t>
+
+   <t>If such capability is not exchanged and the parent PCE receive a "H-
+   PCE path computation request", it MUST send a PCErr message with
+   Error-Type=TBD8 (H-PCE error) and Error-Value=1 (Parent PCE
+   Capability not advertised). </t>
+   </section>
+
+   <section title="Domain-ID TLV" toc="default" anchor="Domain-ID">
+
+   <t>The Domain-ID TLV when used in OPEN object identify the domain(s)
+   served by the PCE. The child PCE uses this mechanism to inform the
+   domain information to the parent PCE.</t>
+
+   <t>The Domain-ID TLV is defined below:</t>
+<figure title="Domain-ID TLV format" suppress-title="false" align="left" alt="" width="" height="" anchor="fig1">
+            <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               Type= TBD2      |            Length             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Domain Type   |                  Reserved                     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Domain ID                               |
+//                                                             //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+          </figure>
+
+   <t>The type of the TLV is TBD2 (to be assigned by IANA) and it has a
+   variable Length of the value portion. The value part comprises of -
+   <list>
+
+   <t>Domain Type (8 bits): Indicates the domain type.  Four types of
+   domain are currently defined:<list style="symbols">
+
+   <t>Type=1: the Domain ID field carries a 2-byte AS number. Padded
+      with trailing zeros to a 4-byte boundary.</t>
+
+   <t>Type=2: the Domain ID field carries a 4-byte AS number.</t>
+
+   <t>Type=3: the Domain ID field carries an 4-byte OSPF area ID.</t>
+
+   <t>Type=4: the Domain ID field carries (2-byte Area-Len, variable
+      length IS-IS area ID). Padded with trailing zeros to a 4-byte
+      boundary.</t></list></t>
+
+   <t>Reserved:  Zero at transmission; ignored at receipt.</t>
+
+   <t>Domain ID (variable): Indicates an IGP Area ID or AS number.  It can
+   be 2 bytes, 4 bytes or variable length depending on the domain
+   identifier used. It is padded with trailing zeros to a 4-byte
+   boundary.</t></list></t>
+
+   <t>In case a PCE serves more than one domain, multiple Domain-ID TLV is
+   included for each domain it serves.</t>
+ </section>
+</section>
+<section title="RP object" toc="default">
+  <section title="H-PCE-FLAG TLV" toc="default">
+   <t>The H-PCE-FLAG TLV is an optional TLV associated with the RP Object
+   <xref target="RFC5440"/> to indicate the H-PCE path computation request and
+   options.</t>
+
+   <t>Its format is shown in the following figure:</t>
+<figure title="H-PCE-FLAG TLV format" suppress-title="false" align="left" alt="" width="" height="" anchor="fig2">
+            <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[   
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               Type= TBD3      |             Length=4          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Flags                             |D|S|
++---------------------------------------------------------------+
+]]></artwork>
+          </figure>
+
+   <t>The type of the TLV is TBD3 (to be assigned by IANA) and it has a
+   fixed length of 4 octets.</t>
+
+   <t>The value comprises a single field - Flags (32 bits):
+   <list>
+   <t>S (Domain Sequence bit): if set, will signal that the child PCE
+   wishes to get only the domain sequence in the path computation reply. 
+   Refer section 3.7 of <xref target="RFC7897"/> for details.</t>
+
+   <t>D (Disallow Domain Re-entry bit): if set, will signal that the
+   computed path does not enter a domain more than once.</t>
+ </list></t>
+   </section>
+
+   <section title="Domain-ID TLV" toc="default">
+   <t>The usage of Domain-ID TLV carried in an OPEN object is used to
+   indicate a (list of) managed domains and is described in <xref target="Domain-ID"/>. This TLV when carried in a RP object, indicates the
+   destination domain ID.  If a PCC knows the egress domain, it can
+   supply this information in the PCReq message.  The format and procedure of this
+   TLV is defined in <xref target="Domain-ID"/>.</t>
+ </section>
+
+
+</section>
+<section title="Objective Functions" toc="default">
+
+ <section title="OF Codes" toc="default" anchor="of_codes">
+
+   <t><xref target="RFC5541"/> defines a mechanism to specify an objective function that
+   is used by a PCE when it computes a path. Two new objective functions 
+   are defined for the H-PCE experiment. 
+   <list style="symbols">
+   <t>MTD<list style="symbols">
+
+      <t>Name: Minimize the number of Transit Domains (MTD)</t>
+
+      <t>Objective Function Code - TBD4 (to be assigned by IANA)</t>
+
+      <t>Description: Find a path P such that it passes through the
+         least number of transit domains. </t>
+
+   <t>Objective functions are formulated using the following terminology:<list style="symbols">
+
+   <t>A network comprises a set of N domains {Di, (i=1...N)}.</t>
+
+   <t>A path P passes through K domains {Dpi,(i=1...K)}.</t>
+
+   <t>Find a path P such that the value of K is minimized.</t></list></t></list></t>
+
+   <t>MBN<list style="symbols">
+
+      <t>Name: Minimize the number of border nodes.</t>
+
+      <t>Objective Function Code - TBD5 (to be assigned by IANA)</t>
+
+      <t>Description: Find a path P such that it passes through the
+         least number of border nodes.</t>
+
+      <t>Objective functions are formulated using the following 
+      terminology:<list style="symbols">
+
+   <t>A network comprises a set of N nodes {Ni, (i=1...N)}.</t>
+
+   <t>A path P is a list of K nodes {Npi,(i=1...K)}.</t>
+
+   <t>B(N) if a function that determine if the node is a border node. 
+     B(Ni) = 1 if Ni is border node; B(Nk) = 0 if Nk is not a border 
+     node.</t>
+
+   <t>The number of border node in a path P is denoted by B(P), where 
+     B(P) = sum{B(Npi),(i=1...K)}.</t>
+     
+     <t>Find a path P such that B(P) is minimized.</t></list></t></list></t></list></t>
+
+
+  <t>MCTD<list style="symbols">
+  <t>Name:  Minimize the number of Common Transit Domains.</t>
+
+   <t>Objective Function Code:  TBD13</t>
+
+   <t>Description:  Find a set of paths such that it passes through the
+      least number of common transit domains.</t>
+
+    
+  </list></t>
+
+</section>
+<section title="OF Object" toc="default" anchor="of">
+   <t>The OF (Objective Function) object <xref target="RFC5541"/> is carried within a 
+   PCReq message so as to indicate the desired/required objective 
+   function to be applied by the PCE during path computation. As per 
+   section 3.2 of <xref target="RFC5541"/> a single OF object may be included in 
+   a path computation request. </t>
+
+   <t>The new OF code described in <xref target="of_codes"/> are applicable at the 
+   inter-domain level (parent), it is also necessary to specify the OF 
+   code that may be applied at the intra-domain (child) path computation 
+   level. To accommodate this, the OF-List TLV (described in section 
+   2.1. of <xref target="RFC5541"/>) is included in the OF object as an optional TLV. </t>
+
+   <t>OF-List TLV allow encoding of multiple OF codes. When this TLV is 
+   included inside the OF object, only the first OF-code in the OF-LIST 
+   TLV is considered. The parent PCE MUST use this OF code in the OF 
+   object when sending the intra domain path computation request to the 
+   child PCE. </t> 
+
+   <t>If the objective functions defined in this document are unknown/
+   unsupported by a PCE, then the procedure as defined in <xref target="RFC5541"/> is
+   followed.</t>
+  </section>
+</section>
+
+<section title="Metric Object" toc="default" anchor="metric">
+  <t>The METRIC object is defined in section 7.8 of <xref target="RFC5440"/>, comprising
+   metric-value, metric-type (T field) and flags.  This document defines
+   the following types for the METRIC object for H-PCE:<list style="symbols">    
+
+   <t>T=TBD6: Domain count metric (number of domains crossed);</t>
+
+   <t>T=TBD7: Border Node count metric (number of border nodes crossed).</t></list></t>
+
+   <t>The domain count metric type of the METRIC object encodes the number 
+   of domain crossed in the path. The border node count metric type of 
+   the METRIC object encodes the number of border nodes in the path.</t> 
+
+   <t>A PCC or child PCE MAY use these metric in PCReq message an inter-
+   domain path meeting the number of domain or border nodes requirement. 
+   As per <xref target="RFC5440"/>, in this case, the B bit is set to suggest a bound (a maximum) 
+   for the metric that must not be exceeded for the PCC to consider the
+   computed path as acceptable. </t>
+
+   <t>A PCC or child PCE MAY also use this metric to ask the PCE to 
+   optimize the metric during inter-domain path computation.  In this 
+   case, the B flag is cleared.</t>
+
+   <t>The Parent PCE MAY use these metric in a PCRep message along with a
+   NO-PATH object in the case where the PCE cannot compute a path
+   meeting this constraint.  A PCE MAY also use this metric to send the
+   computed end to end metric in a reply message.</t>
+</section>
+<section title="SVEC Object" toc="default">
+  <t><xref target="RFC5440"/> defines SVEC object which includes flags for the potential
+   dependency between the set of path computation requests (Link, Node
+   and SRLG diverse).  This document proposes a new flag O for domain
+   diversity.</t>
+
+   <t>Following new bit is added in the Flags field:<list style="symbols"> 
+
+   <t>O (Domain diverse) bit - TBD12 :  when set, this indicates that the computed
+      paths corresponding to the requests specified by the following RP
+      objects MUST NOT have any transit domain(s) in common.</t></list></t>
+
+   <t>The Domain Diverse O-bit can be used in Hierarchical PCE path
+   computation to compute synchronized domain diverse end to end path or
+   diverse domain sequences.</t>
+
+   <t>When domain diverse O bit is set, it is applied to the transit
+   domains.  The other bit in SVEC object (N, L, S etc) MAY be set and MUST
+   still be applied in the ingress and egress shared domain.</t>
+  </section>
+
+<section title="PCEP-ERROR object" toc="default" anchor="error">
+
+<section title="Hierarchy PCE Error-Type" toc="default">
+
+   <t>A new PCEP Error-Type <xref target="RFC5440"/> is used for the H-PCE extension as
+   defined below:</t>
+<figure title="H-PCE error" suppress-title="false" align="left" alt="" width="" height="" anchor="fig4">
+            <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[ 
+ +------------+-----------------------------------------+
+ | Error-Type | Meaning                                 |
+ +------------+-----------------------------------------+
+ | TBD8       | H-PCE error                             |
+ |            | Error-value=1: parent PCE capability    |
+ |            | was not advertised                      |
+ |            | Error-value=2: parent PCE capability    |
+ |            | cannot be provided                      |  
+ +------------+-----------------------------------------+
+
+]]></artwork>
+          </figure> 
+
+</section>
+</section>
+<section title="NO-PATH Object" toc="default" anchor="no-path">
+
+   <t>To communicate the reason(s) for not being able to find a multi-
+   domain path or domain sequence, the NO-PATH object can be used in the
+   PCRep message.  <xref target="RFC5440"/> defines the format of the NO-PATH object.
+   The object may contain a NO-PATH-VECTOR TLV to provide additional
+   information about why a path computation has failed.</t>
+
+   <t>Three new bit flags are defined to be carried in the Flags field in
+   the NO-PATH-VECTOR TLV carried in the NO-PATH Object.<list style="symbols">
+
+   <t>Bit number TBD9: When set, the parent PCE indicates that 
+   destination domain unknown;</t>
+
+   <t>Bit number TBD10: When set, the parent PCE indicates unresponsive 
+   child PCE(s);</t>
+
+   <t>Bit number TBD11: When set, the parent PCE indicates no available 
+   resource available in one or more domain(s).</t></list></t>
+
+</section>
+</section>
+
+
+<section title="H-PCE Procedures" toc="default">
+
+<section title="OPEN Procedure between Child PCE and Parent PCE" toc="default">
+
+   <t>If a child PCE wants to use the peer PCE as a parent, it MUST set the
+   R (parent PCE request flag) in the H-PCE-CAPABILITY TLV inside the 
+   OPEN object carried in the Open message
+   during the PCEP session initialization procedure.</t>  
+
+
+   <t>If the parent PCE can provide the parent function to the peer PCE, it 
+   MUST set the I (parent PCE indication flag) in the H-PCE-CAPABILITY 
+   TLV inside the OPEN object carried in
+   the Open message during the PCEP session creation procedure.</t>
+
+   <t>The child PCE MAY also report its list of domain IDs to the parent PCE
+   by specifying them in the Domain-ID TLVs in the OPEN object 
+   carried in the Open message during the PCEP session initialization 
+   procedure.</t>
+
+   <t>The OF codes defined in this document can be carried in the OF-list
+   TLV of the OPEN object.  If the OF-list TLV carries the OF codes, it
+   means that the PCE is capable of implementing the corresponding
+   objective functions.  This information can be used for selecting a
+   proper parent PCE when a child PCE wants to get a path that satisfies
+   a certain objective function.</t>
+
+   <t>When a specific child PCE sends a PCReq to a peer PCE that requires
+   parental activity and H-PCE capability flags were not set in the 
+   session establishment procedure as described above, the peer PCE 
+   should send a PCErr message to the child PCE and
+   specify the error-type=TBD (H-PCE error) and error-value=1 (parent 
+   PCE capability was not advertised) in the PCEP-ERROR object.</t>
+
+   <t>When a specific child PCE sends a PCReq to a peer PCE that requires
+   parental activity and the peer PCE does not want to act as the parent
+   for it, the peer PCE should send a PCErr message to the child PCE and
+   specify the error-type=TBD (H-PCE error) and error-value=2 (parent 
+   PCE capability cannot be provided) in the PCEP-ERROR object.</t>
+ </section>
+<section title="Procedure to obtain Domain Sequence" toc="default">
+
+   <t>If a child PCE only wants to get the domain sequence for a multi-
+   domain path computation from a parent PCE, it can set the Domain Path
+   Request bit in the H-PCE-FLAG TLV in the RP object carried 
+   in a PCReq message.  The parent PCE which receives the PCReq message 
+   tries to compute a domain sequence for it (instead for E2E path).  If the domain path 
+   computation succeeds the parent PCE sends a PCRep message which 
+   carries the domain sequence in the ERO to the child PCE.  Refer 
+   <xref target="RFC7897"/> for more details about domain sub-objects in the ERO.
+   Otherwise it sends a PCReq message which carries the NO-PATH object 
+   to the child PCE.</t>
+
+</section>
+</section>
+
+<section title="Error Handling" toc="default">
+
+
+   <t>A PCE that is capable of acting as a parent PCE might not be
+   configured or willing to act as the parent for a specific child PCE.
+   This fact could be determined when the child sends a PCReq that
+   requires parental activity, and could result in a negative response 
+   in a PCEP Error (PCErr) message and indicate the hierarchy PCE error-
+   type=TBD8 (H-PCE error) and suitable error-value. (<xref target="error"/>) </t>
+
+   <t>Additionally, the parent PCE may fail to find the multi-domain path
+   or domain sequence due to one or more of the following reasons:<list style="symbols">
+
+   <t>A child PCE cannot find a suitable path to the egress;</t>
+
+   <t>The parent PCE do not hear from a child PCE for a specified time;</t>
+
+   <t>The objective functions specified in the path request cannot be
+      met.</t></list></t>
+
+   <t>In this case, the parent PCE MAY need to send a negative path
+   computation reply specifying the reason.  This can be achieved by
+   including NO-PATH object in the PCRep message.  Extension to NO-PATH
+   object is needed to include the aforementioned reasons described in 
+   <xref target="no-path"/>. </t>
+ </section>
+
+<section title="Manageability Considerations" toc="default">
+   <t>General PCE and PCEP management considerations are discussed in 
+   <xref target="RFC4655"/> and <xref target="RFC5440"/>. There are additional management 
+   considerations for H-PCE which are described in <xref target="RFC6805"/>, and 
+   repeated in this section. </t>
+ 
+   <t>The administrative entity responsible for the management of the
+   parent PCEs must be determined for the following cases:<list style="symbols">  
+   
+   <t>multi-domains (e.g., IGP areas or multiple ASes) within a single 
+   service provider network, the management responsibility for the 
+   parent PCE would most likely be handled by the service provider,</t>  
+   
+   <t>multiple ASes within different service provider networks, it may 
+   be necessary for a third party to manage the parent PCEs according 
+   to commercial and policy agreements from each of the participating 
+   service providers.</t></list></t>
+      <section title="Control of Function and Policy" toc="default">
+        <t>Control and function will need to be carefully managed in a H-PCE 
+   network. A child PCE will need to be configured with the
+   address of its parent PCE. It is expected that there will only be 
+   one or two parents of any child.</t>
+
+   <t>The parent PCE also needs to be aware of the child PCEs for all child
+   domains that it can see.  This information is most likely to be
+   configured (as part of the administrative definition of each domain).</t>
+
+   <t>Discovery of the relationships between parent PCEs and child PCEs
+   does not form part of the hierarchical PCE architecture.  Mechanisms
+   that rely on advertising or querying PCE locations across domain or
+   provider boundaries are undesirable for security, scaling,
+   commercial, and confidentiality reasons.
+   Specific behavior of the child and parent PCE are described in the 
+   following sub-sections.</t>
+
+   <section title="Child PCE" toc="default">
+
+   <t>Support of the hierarchical procedure will be controlled by the
+   management organization responsible for each child PCE. A child 
+   PCE must be configured with the address of its parent PCE in order 
+   for it to interact with its parent PCE.  The child PCE must also 
+   be authorized to peer with the parent PCE.</t>
+ </section>
+
+   <section title="Parent PCE" toc="default">
+
+   <t>The parent PCE must only accept path computation requests from
+   authorized child PCEs.  If a parent PCE receives requests from an
+   unauthorized child PCE, the request should be dropped. This means 
+   that a parent PCE must be configured with the identities and 
+   security credentials of all of its child PCEs, or there must be
+   some form of shared secret that allows an unknown child PCE to be
+   authorized by the parent PCE.</t>
+ </section>
+
+   <section title="Policy Control" toc="default">
+   <t>It may be necessary to maintain a policy module on the parent PCE
+   <xref target="RFC5394"/>.  This would allow the parent PCE to apply commercially
+   relevant constraints such as SLAs, security, peering preferences, and
+   monetary costs.</t>
+
+   <t>It may also be necessary for the parent PCE to limit end-to-end path
+   selection by including or excluding specific domains based on
+   commercial relationships, security implications, and reliability.</t>
+ </section>
+
+
+      </section>
+      <section title="Information and Data Models" toc="default">
+   <t>A MIB module for PCEP was published as RFC 7420 <xref target="RFC7420"/> that 
+   describes managed objects for modeling of PCEP communication. A 
+   YANG module for PCEP has also been proposed <xref target="I-D.ietf-pce-pcep-yang"/>.</t>
+   
+   <t>A H-PCE MIB module, or additional data model, will be required to 
+   report parent PCE and child PCE information, including:<list style="symbols">
+
+   <t>parent PCE configuration and status,</t>
+
+   <t>child PCE configuration and information,</t>
+
+   <t>notifications to indicate session changes between parent PCEs and
+      child PCEs, and</t>
+
+   <t>notification of parent PCE TED updates and changes.</t></list></t>
+
+      </section>
+      <section title="Liveness Detection and Monitoring" toc="default">
+        <t>
+   The hierarchical procedure requires interaction with multiple PCEs.
+   Once a child PCE requests an end-to-end path, a sequence of events
+   occurs that requires interaction between the parent PCE and each
+   child PCE.  If a child PCE is not operational, and an alternate
+   transit domain is not available, then a failure must be reported.</t>
+      </section>
+      <section title="Verify Correct Operations" toc="default">
+        <t>Verifying the correct operation of a parent PCE can be performed by
+   monitoring a set of parameters.  The parent PCE implementation should
+   provide the following parameters monitored by the parent PCE:<list style="symbols">
+
+   <t>number of child PCE requests,</t>
+
+   <t>number of successful hierarchical PCE procedures completions on a
+      per-PCE-peer basis,</t>
+
+   <t>number of hierarchical PCE procedure completion failures on a per-
+      PCE-peer basis, and</t>
+
+   <t>number of hierarchical PCE procedure requests from unauthorized
+      child PCEs.</t></list></t>
+      </section>
+      <section title="Requirements On Other Protocols" toc="default">
+        <t>Mechanisms defined in this document do not imply any new requirements
+        on other protocols.</t>
+      </section>
+      <section title="Impact On Network Operations" toc="default">
+        <t>The hierarchical PCE procedure is a multiple-PCE path computation
+   scheme.  Subsequent requests to and from the child and parent PCEs do
+   not differ from other path computation requests and should not have
+   any significant impact on network operations.</t>
+      </section>
+    </section>
+    
+<section title="IANA Considerations" toc="default">
+  <section title="PCEP TLV Type Indicators" toc="default">
+      <t>IANA Manages the PCEP TLV code point registry (see <xref target="RFC5440"/>).  This
+   is maintained as the "PCEP TLV Type Indicators" sub-registry of the
+   "Path Computation Element Protocol (PCEP) Numbers" registry.</t>
+
+   <t>This document defines three new PCEP TLVs. IANA is requested to make 
+   the following allocation:</t>
+<t>
+ <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+      Type      TLV name                  References
+      -----------------------------------------------
+      TBD1      H-PCE-CAPABILITY TLV      This I-D
+      TBD2      Domain-ID TLV             This I-D
+      TBD3      H-PCE-FLAG TLV            This I-D
+]]></artwork>
+        </figure>
+      </t>   
+    </section>
+
+    <section title="H-PCE-CAPABILITY TLV Flags" toc="default">
+    <t>This document requests that a new sub-registry, named " H-PCE-
+   CAPABILITY TLV Flag Field", is created within the "Path Computation
+   Element Protocol (PCEP) Numbers" registry to manage the Flag field in
+   the H-PCE-CAPABILITY TLV of the PCEP OPEN object.</t>
+   
+   <t>New values are to be assigned by Standards Action <xref target="RFC5226"/>.  Each
+   bit should be tracked with the following qualities:<list style="symbols">
+
+   <t>Bit number (counting from bit 0 as the most significant bit)</t>
+
+   <t>Capability description</t>
+
+   <t>Defining RFC</t></list></t>
+
+   <t>The following values are defined in this document:</t>
+<t>
+ <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+      Bit     Description                      Reference
+      --------------------------------------------------
+      31      R (Parent PCE Request bit)       This I.D. 
+      30      I  (Parent PCE Indication bit)   This I.D. 
+]]></artwork>
+        </figure>
+      </t>
+    </section>
+    <section title="Domain-ID TLV Domain type" toc="default">
+
+   <t>This document requests that a new sub-registry, named " Domain-ID TLV 
+   Domain type", is created within the "Path Computation Element 
+   Protocol (PCEP) Numbers" registry to manage the Domain-Type 
+   field of the Domain-ID TLV.</t>
+<figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[   
+      
+      Value     Meaning
+      -----------------------------------------------
+       1        2-byte AS number
+       2        4-byte AS number
+       3        4-byte OSPF area ID
+       4        Variable length IS-IS area ID 
+]]></artwork>
+        </figure>
+
+
+    
+    </section>
+    <section title="H-PCE-FLAG TLV Flags" toc="default">
+   <t>This document requests that a new sub-registry, named "H-PCE-FLAGS 
+   TLV Flag Field", is created within the "Path Computation Element 
+   Protocol (PCEP) Numbers" registry to manage the Flag field in
+   the H-PCE-FLAGS TLV of the PCEP RP object. New values 
+   are to be assigned by Standards Action <xref target="RFC5226"/>.  Each bit should be 
+   tracked with the following qualities:<list style="symbols">
+
+   <t>Bit number (counting from bit 0 as the most significant bit)</t>
+
+   <t>Capability description</t>
+
+   <t>Defining RFC</t></list></t>
+
+   <t>The following values are defined in this document:</t>
+   <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[ 
+
+      Bit     Description           Reference
+      -----------------------------------------------
+      31      S (Domain             This I.D. 
+                 Sequence bit)  
+      30      D (Disallow Domain    This I.D. 
+                 Re-entry bit)
+]]></artwork>
+        </figure>
+
+  </section>
+
+  <section title="OF Codes" toc="default">
+
+   <t>IANA maintains registry of Objective Function (described in
+   <xref target="RFC5541"/>) at the sub-registry "Objective Function".  Two new
+   Objective Functions have been defined in this document.</t>
+
+   <t>IANA is requested to make the following allocations:</t>
+<figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+    Code
+    Point    Name                           Reference
+    ------------------------------------------------------
+    TBD4     Minimum number of Transit      This I.D. 
+             Domains (MTD)
+    TBD5     Minimize number of Border      This I.D.
+             Nodes (MBN)
+    TBD13    Minimize the number of         This I.D.  
+             Common Transit Domains. 
+             (MCTD)           
+    ]]></artwork>
+        </figure>
+      </section>
+      <section title="METRIC Types" toc="default">
+       <t>IANA maintains one sub-registry for "METRIC object T field".  Two new
+   metric types are defined in this document for the METRIC object
+   (specified in <xref target="RFC5440"/>).</t>
+
+   <t>IANA is requested to make the following allocations:</t>
+   <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+
+    Value    Description                    Reference
+    ----------------------------------------------------------
+    TBD6     Domain Count metric            This I.D.
+    TBD7     Border Node Count metric       This I.D.
+        ]]></artwork>
+        </figure>
+      </section>
+      <section title="New PCEP Error-Types and Values" toc="default">
+
+   <t>IANA maintains a registry of Error-Types and Error-values for use in
+   PCEP messages.  This is maintained as the "PCEP-ERROR Object Error
+   Types and Values" sub-registry of the "Path Computation Element
+   Protocol (PCEP) Numbers" registry.</t>
+
+   <t>IANA is requested to make the following allocations:</t>
+   <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+
+    Error-Type    Meaning and error values  Reference
+    ------------------------------------------------------
+    TBD8     H-PCE Error                    This I.D.
+             
+             Error-value=1 Parent PCE       
+             Capability not advertised
+
+             Error-value=2 Parent PCE       
+             Capability not supported
+                     ]]></artwork>
+        </figure>
+    </section>
+    <section title="New NO-PATH-VECTOR TLV Bit Flag" toc="default">
+   <t>IANA maintains a registry of bit flags carried in the PCEP NO-PATH-
+   VECTOR TLV in the PCEP NO-PATH object as defined in <xref target="RFC5440"/>.  IANA
+   Is requested to assign three new bit flag as follows:</t>
+   <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+   Bit Number      Name Flag                   Reference   
+   ------------------------------------------------------
+   TBD9            Destination Domain unknown  This I.D.
+   TBD10           Unresponsive child PCE(s)   This I.D.
+   TBD11           No available resource in    This I.D.
+                   one or more domain
+                                        ]]></artwork>
+        </figure>
+    </section>
+<section title="SVEC Flag" toc="default">
+   <t>IANA maintains a registry of bit flags carried in the PCEP SVEC object as defined in <xref target="RFC5440"/>.  IANA
+   Is requested to assign one new bit flag as follows:</t>
+   <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+   Bit Number      Name Flag                   Reference   
+   ------------------------------------------------------
+   TBD13           Domain Diverse              This I.D.
+
+                                        ]]></artwork>
+        </figure>
+    </section>
+
+
+    </section>
+
+
+
+
+
+
+    <section title="Security Considerations" toc="default">
+   <t>The hierarchical PCE procedure relies on PCEP and inherits the
+   security requirements defined in <xref target="RFC5440"/>. As PCEP operates 
+   over TCP, it may also make use of TCP security mechanisms, such as
+   TCP-AO or <xref target='RFC8253'/>.</t>
+   
+   <t>H-PCE operation also relies on information used to build the TED.
+   Attacks on a parent or child PCE may be achieved by falsifying 
+   or impeding this flow of information. If the child PCE listens to 
+   the IGP or BGP-LS for populating the TED, then normal IGP or BGP-LS 
+   security measures may be applied, and it should be noted that an IGP 
+   routing system is generally assumed to be a trusted domain such that 
+   router subversion is not a risk. The parent PCE TED is constructed as 
+   described in this document and may involve:<list style="symbols">
+
+   <t>multiple parent-child relationships using PCEP </t>
+
+   <t>the parent PCE listening to child domain IGPs (with the same
+     security features as a child PCE listening to its IGP)</t>
+
+   <t>an external mechanism (such as <xref target="RFC7752"/>), which will need to be
+     authorized and secured.</t></list></t>
+
+   <t>Any multi-domain operation necessarily involves the exchange of
+   information across domain boundaries.  This is bound to represent a
+   significant security and confidentiality risk especially when the
+   child domains are controlled by different commercial concerns.  PCEP
+   allows individual PCEs to maintain confidentiality of their domain
+   path information using path-keys <xref target="RFC5520"/>, and the H-PCE  
+   architecture is specifically designed to enable as much isolation of
+   domain topology and capabilities information as is possible.</t>
+
+   <t>For further considerations of the security issues related to inter-AS
+   path computation, see <xref target="RFC5376"/>.</t>
+
+
+   
+    </section>
+    <section title="Implementation Status" toc="default">
+
+
+   <t>The H-PCE architecture and protocol procedures describe in this I-D 
+   were implemented and tested for a variety of optical research 
+   applications.</t> 
+   
+    <section title="Inter-layer traffic engineering with H-PCE" toc="default"> 
+    <t>This work was led by:<list style="symbols">
+
+   <t>Ramon Casellas [ramon.casellas@cttc.es]</t>
+   <t>Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)</t></list></t>
+
+   <t>The H-PCE instances (parent and child) were multi-threaded 
+   asynchronous processes. Implemented in C++11, using C++ Boost 
+   Libraries. The targeted system used to deploy and run H-PCE
+   applications was a  POSIX system (Debian GNU/Linux operating 
+   system). </t>
+   
+   <t>Some parts of the software may require a Linux Kernel, the 
+   availability of a Routing Controller running collocated in the same 
+   host and the usage of libnetfilter / libipq and GNU/Linux 
+   firewalling capabilities. Most of the functionality, including 
+   algorithms is done by means of plugins (e.g., as shared libraries  
+   or .so files in Unix systems). </t>
+   
+   <t>The CTTC PCE supports the H-PCE architecture, but also supports 
+   stateful PCE with active capabilities, as an OpenFlow controller, 
+   and has dedicated plugins to support monitoring, BRPC, P2MP, path 
+   keys, back end PCEs. Management of the H-PCE entities was supported 
+   via HTTP and CLI via Telnet. </t>
+
+   <t>Further details of the H-PCE prototyping and experimentation can be 
+   found in the following scientific papers:<list>
+
+   <t>R. Casellas, R. Martinez, R. Munoz, L. Liu, T. Tsuritani, I. 
+   Morita, "Inter-layer traffic engineering with hierarchical-PCE in 
+   MPLS-TP over wavelength switched optical networks" , Optics 
+   Express, Vol. 20, No. 28, December 2012.</t>
+   
+   <t>R. Casellas, R. Martinez, R. Munoz, L. Liu, T. Tsuritani, I. Morita,
+   M. Msurusawa, "Dynamic virtual link mesh topology aggregation in 
+   multi-domain translucent WSON with hierarchical-PCE", Optics Express 
+   Journal, Vol. 19, No. 26, December 2011.</t>
+   
+   <t>R. Casellas, R. Munoz, R. Martinez, R. Vilalta, L. Liu, T. Tsuritani,
+   I. Morita, V. Lopez, O. Gonzalez de Dios, J. P. Fernandez-Palacios, 
+   "SDN based Provisioning Orchestration of OpenFlow/GMPLS Flexi-grid
+   Networks with a Stateful Hierarchical PCE", in Proceedings of Optical 
+   Fiber Communication Conference and Exposition (OFC), 9-13 March, 
+   2014, San Francisco (EEUU). Extended Version to appear in Journal 
+   Of Optical Communications and Networking January 2015</t>
+   
+   <t>F. Paolucci, O. Gonzalez de Dios, R. Casellas, S. Duhovnikov, P. 
+   Castoldi, R. Munoz, R. Martinez, "Experimenting Hierarchical PCE 
+   Architecture in a Distributed Multi-Platform Control Plane Testbed" , 
+   in Proceedings of Optical Fiber Communication Conference and 
+   Exposition (OFC) and The National Fiber Optic Engineers Conference 
+   (NFOEC), 4-8 March, 2012, Los Angeles, California (USA).</t>
+   
+   <t>R. Casellas, R. Martinez, R. Munoz, L. Liu, T. Tsuritani, I. Morita,
+   M. Tsurusawa, "Dynamic Virtual Link Mesh Topology Aggregation in 
+   Multi-Domain Translucent WSON with Hierarchical-PCE", in 
+   Proceedings of 37th European Conference and Exhibition on Optical 
+   Communication (ECOC 2011), 18-22 September 2011, Geneve ( 
+   Switzerland).</t>
+   
+   <t>R. Casellas, R. Munoz, R. Martinez, "Lab Trial of Multi-Domain Path 
+   Computation in GMPLS Controlled WSON Using a Hierarchical PCE", in 
+   Proceedings of OFC/NFOEC Conference (OFC2011), 10 March 2011, Los 
+   Angeles (USA).</t></list></t>
+    
+    </section>
+    <section title="Telefonica Netphony (Open Source PCE)" toc="default"> 
+   <t>The Telefonica Netphony PCE is an open source Java-based 
+   implementation of a Path Computation Element, with several flavours, 
+   and a Path Computation Client. The PCE follows a modular architecture 
+   and allows to add customized algorithms. The PCE has also stateful 
+   and remote initiation capabilities. In current version, three 
+   components can be built, a domain PCE (aka child PCE), a parent PCE 
+   (ready for the H-PCE architecture) and a PCC (path computation 
+   client).</t>
+
+   <t>This work was led by:<list style="symbols">
+
+   <t>Oscar Gonzalez de Dios [oscar.gonzalezdedios@telefonica.com]</t>
+   <t>Victor Lopez Alvarez [victor.lopezalvarez@telefonica.com]</t>
+   <t>Telefonica I+D, Madrid, Spain</t></list></t>
+
+   <t>The PCE code is publicly available in a GitHub repository:<list style="symbols">
+   <t>https://github.com/telefonicaid/netphony-pce</t></list></t>
+  
+   <t>The PCEP protocol encodings are located in the following repository:<list style="symbols">
+      <t>https://github.com/telefonicaid/netphony-network protocols</t></list></t>
+  
+   <t>The traffic engineering database and a BGP-LS speaker to fill the 
+   database is located in:<list style="symbols">
+     <t>https://github.com/telefonicaid/netphony-topology</t></list></t>
+
+   <t>The parent and child PCE are multi-threaded java applications. The 
+   path computation uses the jgrapht free Java class library (0.9.1) 
+   that provides mathematical graph-theory objects and algorithms. 
+   Current version of netphony PCE runs on java 1.7 and 1.8, and has 
+   been tested in GNU/Linux, Mac OS-X and Windows environments. The 
+   management of the parent and domain PCEs is supported though CLI via 
+   Telnet, and configured via XML files.</t>
+
+   <t>Further details of the netphony H-PCE prototyping and experimentation 
+   can be found in the following research papers:<list style="symbols">
+
+   <t>O. Gonzalez de Dios, R. Casellas, F. Paolucci, A. Napoli, L. Gifre, 
+   A. Dupas, E, Hugues-Salas, R. Morro, S. Belotti, G. Meloni, T. 
+   Rahman, V.P Lopez, R. Martinez, F. Fresi, M. Bohn, S. Yan, L. 
+   Velasco, . Layec and J. P. Fernandez-Palacios: Experimental 
+   Demonstration of Multivendor and Multidomain EON With Data and 
+   Control Interoperability Over a Pan-European Test Bed, in Journal of 
+   Lightwave Technology, Dec. 2016, Vol. 34, Issue 7, pp. 1610-1617.</t>
+
+   <t>O. Gonzalez de Dios, R. Casellas, R. Morro, F. Paolucci, V. Lopez, 
+   R. Martinez, R. Munoz, R. Villalta, P. Castoldi: "Multi-partner 
+   Demonstration of BGP-LS enabled multi-domain EON, in Journal of 
+   Optical Communications and Networking, Dec. 2015, Vol. 7, Issue 12, 
+   pp. B153-B162.</t>
+   
+   <t>F. Paolucci, O. Gonzalez de Dios, R. Casellas, S. Duhovnikov, P.  
+   Castoldi, R. Munoz, R. Martinez, "Experimenting Hierarchical PCE  
+   Architecture in a Distributed Multi-Platform Control Plane Testbed" ,  
+   in Proceedings of Optical Fiber Communication Conference and  
+   Exposition (OFC) and The National Fiber Optic Engineers Conference   
+   (NFOEC), 4-8 March, 2012, Los Angeles, California (USA).</t></list></t> 
+    </section>
+<section title="Implementation 3: H-PCE Proof of Concept developed by Huawei" toc="default">
+   <t>Huawei developed this H-PCE on the Huawei Versatile Routing Platform 
+   (VRP) to experiment with the hierarchy of PCE. Both end to end path 
+   computation as well as computation for domain-sequence are supported. </t>
+
+   <t>This work was led by:<list style="symbols">
+
+   <t>Udayasree Pallee [udayasreereddy@gmail.com]</t>
+   <t>Dhruv Dhody [dhruv.ietf@gmail.com]</t>
+   <t>Huawei Technologies, Bangalore, India</t> </list></t>
+
+   <t>Further work on stateful H-PCE <xref target="I-D.ietf-pce-stateful-hpce"/> is being carried out on ONOS.</t>
+
+
+    </section></section>
+
+    
+
+    <section title="Contributing Authors" toc="default">
+  <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+   <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[     
+   Xian Zhang
+   Huawei
+   EMail: zhang.xian@huawei.com
+
+
+   Dhruv Dhody 
+   Huawei Technologies
+   Divyashree Techno Park, Whitefield
+   Bangalore, Karnataka  560066
+   India
+
+   EMail: dhruv.ietf@gmail.com
+                                           ]]></artwork>
+        </figure>
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+    <?rfc include="reference.RFC.2119.xml" ?>
+    <?rfc include="reference.RFC.5152.xml"?>
+    
+    <?rfc include="reference.RFC.5440.xml" ?>
+     <?rfc include="reference.RFC.5541.xml" ?>
+    <?rfc include="reference.RFC.8174.xml" ?>
+    
+    
+    </references>
+    <references title="Informative References">
+     <?rfc include="reference.RFC.4105.xml" ?>
+     <?rfc include="reference.RFC.4216.xml" ?>
+     <?rfc include="reference.RFC.4655.xml" ?>
+     <?rfc include="reference.RFC.4726.xml" ?>
+     <?rfc include="reference.RFC.5226.xml" ?>
+     <?rfc include="reference.RFC.5376.xml" ?>
+
+     <?rfc include="reference.RFC.5394.xml" ?>
+     <?rfc include="reference.RFC.5520.xml" ?>
+     <?rfc include="reference.RFC.5441.xml" ?>
+ 
+
+     <?rfc include="reference.RFC.6805.xml" ?>
+     
+     <?rfc include="reference.RFC.7420.xml" ?>
+     
+     <?rfc include="reference.RFC.7752.xml" ?>
+     <?rfc include="reference.RFC.7897.xml"?>
+     <?rfc include="reference.RFC.8253.xml"?>
+  
+     <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
+     <?rfc include="reference.I-D.ietf-pce-stateful-hpce"?>
+
+
+    </references>
+
+
+  </back>
+</rfc>
