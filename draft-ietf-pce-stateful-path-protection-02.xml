@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="no"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+    <rfc category="std" docName="draft-ietf-pce-stateful-path-protection-02" ipr="trust200902">
+  <front>
+    <title abbrev="Stateful PCE LSP Path Protection">PCEP Extensions for Associating Working and Protection LSPs with Stateful PCE</title>
+    <author fullname="Hariharan Ananthakrishnan" initials="H." surname="Ananthakrishnan">
+      <organization>Packet Design</organization>
+      <address>
+        <postal>
+            <street>1 South Almaden Blvd, #1150,</street>
+          <city>San Jose, CA, 95113</city>
+          <country>USA</country>
+        </postal>
+        <email>hari@packetdesign.com</email>
+      </address>
+    </author>
+    
+    <author fullname="Siva Sivabalan" initials="S."  surname="Sivabalan">
+        <organization>Cisco</organization>
+        <address>
+            <postal>
+                <street>2000 Innovation Drive</street>
+                <city>Kananta, Ontaria K2K 3E8</city>
+                <country>Canada</country>
+            </postal>
+            <email>msiva@cisco.com</email>
+        </address>
+    </author>
+    
+    <author fullname="Colby Barth" initials="C."  surname="Barth">
+        <organization>Juniper Networks</organization>
+        <address>
+            <postal>
+                <street>1194 N Mathilda Ave,</street>
+                <city>Sunnyvale, CA, 94086</city>
+                <country>USA</country>
+            </postal>
+            <email>cbarth@juniper.net</email>
+        </address>
+    </author>
+    
+    <author fullname="Raveendra Torvi" initials="R."   surname="Torvi">
+        <organization>Juniper Networks</organization>
+        <address>
+            <postal>
+                <street>1194 N Mathilda Ave,</street>
+                <city>Sunnyvale, CA, 94086</city>
+                <country>USA</country>
+            </postal>
+            <email>rtorvi@juniper.net</email>
+        </address>
+    </author>
+    
+    <author fullname="Ina Minei" initials="I." surname="Minei">
+        <organization>Google, Inc</organization>
+        <address>
+            <postal>
+                <street>1600 Amphitheatre Parkway</street>
+                <city>Mountain View, CA, 94043</city>
+                <country>USA</country>
+            </postal>
+            <email>inaminei@google.com</email>
+        </address>
+    </author>
+    <author fullname="Edward Crabbe" initials="E." surname="Crabbe">
+        <organization>Individual Contributor</organization>
+        <address>
+            <email>edward.crabbe@gmail.com</email>
+        </address>
+    </author>
+    <author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>    
+    <!-- month and day will be generated automatically by XML2RFC;
+be sure the year is current.-->
+
+    <date  year="2018" /> <!--02 as uploaded-->
+
+    <workgroup>PCE Working Group</workgroup>
+
+    <keyword>PCEP</keyword>
+
+<abstract>
+<t> A stateful Path Computation Element (PCE) is capable of computing as well as controlling via 
+Path Computation Element Protocol (PCEP) Multiprotocol Label Switching Traffic Engineering Label Switched Paths (MPLS LSP).  
+Furthermore, it is also possible for a stateful PCE to create, maintain, and delete LSPs. This document describes 
+PCEP extension to associate two or more LSPs to provide end-to-end path protection.</t>
+</abstract>
+ 
+</front>
+
+<middle>
+
+<section title="Introduction">
+
+<t> <xref target="RFC5440"/> describes PCEP for communication between a Path Computation Client (PCC) and a PCE or 
+between one a pair of PCEs as per <xref target="RFC4655"/>.  A PCE computes paths for MPLS-TE LSPs based on various constraints and optimization criteria. </t>
+
+ <t> Stateful pce <xref target="RFC8231"/> specifies a set of extensions to PCEP to enable 
+stateful control of paths such as MPLS TE LSPs between and across PCEP sessions in compliance with <xref target="RFC4657"/>. 
+It includes mechanisms to effect LSP state synchronization between PCCs and PCEs, delegation of control of LSPs 
+to PCEs, and PCE control of timing and sequence of path computations within and across PCEP sessions and focuses 
+on a model where LSPs are configured on the PCC and control over them is delegated to the PCE. Furthermore, a 
+mechanism to dynamically instantiate LSPs on a PCC based on the requests from a stateful PCE or a controller 
+using stateful PCE, is specified in <xref target="RFC8281"/>.</t>
+
+<t>Path protection <xref target="RFC4427"/> refers to a paradigm in which the working LSP is protected by one or more protection LSP(s). 
+When the working LSP fails, protection LSP(s) is/are activated. When the working LSPs are computed and controlled 
+by the PCE, there is benefit in a mode of operation where protection LSPs are as well. </t>
+
+<t>This document specifies a stateful PCEP extension to associate two or more LSPs for the purpose of setting up 
+path protection. The proposed extension covers the following scenarios:
+    <list style="symbols">
+    <t>A PCC initiates a protection LSP and retains the control of the LSP. The PCC computes the path itself or makes a 
+        request for path computation to a PCE. After the path setup, it reports the information and state of the path to the PCE. 
+        This includes the association group identifying the working and protection LSPs.
+        This is the passive stateful mode <xref target="RFC8051"/>.
+    </t>
+    <t>A PCC initiates a protection LSP and delegates the control of the LSP to a stateful PCE. During delegation the association group identifying the working and protection LSPs is included. The PCE 
+    computes the path for the protection LSP and update the PCC with the information about the path as long as it controls the LSP. 
+    This is the active stateful mode <xref target="RFC8051"/>.
+    </t>
+
+    <t>A protection LSP could be initiated by a stateful PCE, which retains the control of the LSP. 
+    The PCE is responsible for computing the path of the LSP and updating to the PCC with the information about the path. 
+    This is the PCE Initiated mode <xref target="RFC8281"/>.
+    </t> 
+    
+    
+      </list>
+
+Note that protection LSP can be established (signaled) prior to the failure (in which case the LSP is said to be in standby mode <xref target="RFC4427"/> or a Primary LSP <xref target="RFC4872"/>) or post failure of the corresponding working LSP according to the operator choice/policy (known as secondary LSP <xref target="RFC4872"/>).
+
+</t>
+<t><xref target="I-D.ietf-pce-association-group"/> introduces a generic mechanism to
+   create a grouping of LSPs which can then be used to define
+   associations between a set of LSPs that is equally applicable to
+   stateful PCE (active and passive modes) and stateless PCE.</t>
+
+   <t>This document specifies a PCEP extension to associate one working LSP with one or more
+   protection LSPs using the generic association mechanism.</t>
+
+   <t>This document describes a PCEP
+   extension to associate protection LSPs by creating Path Protection Association Group (PPAG)
+   and encoding this association in PCEP messages for stateful PCEP
+   sessions.
+   </t>
+    <section title="Requirements Language" toc="default">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.</t>
+      </section>
+</section> <!-- Introduction --> 
+
+<section title="Terminology">
+
+<t>The following terminologies are used in this document:
+      <list style="hanging">
+        <t hangText="ERO:"> Explicit Route Object.</t>
+        <t hangText="LSP:"> Label Switched Path.</t>
+        <t hangText="PCC:"> Path Computation Client.</t>
+        <t hangText="PCE:"> Path Computation Element</t>
+        <t hangText="PCEP:"> Path Computation Element Protocol.</t>
+        <t hangText="PPAG:"> Path Protection Association Group.</t>
+        <t hangText="TLV:"> Type, Length, and Value.</t>
+      </list>
+      </t>
+</section> <!-- Terminology --> 
+    
+<section anchor="Extension-Overview" title="PCEP Extensions">
+
+<section anchor="Path-Protection-Association-Type" title="Path Protection Association Type">
+
+<t>LSPs are not associated by listing the other LSPs with which they interact, but rather by making them 
+belong to an association group referred to as "Path Protection Association Group" (PPAG) in this document. 
+All LSPs join a PPAG individually. PPAG is based on the generic Association object used to associate two 
+or more LSPs specified in <xref target='I-D.ietf-pce-association-group'></xref>. A member of a PPAG can 
+take the role of working or protection LSP. This document defines a new association type called 
+"Path Protection Association Type" of value TBD1. A PPAG can have one working LSP and/or one or more
+protection LSPs. The source, destination and Tunnel ID (as carried in LSP-IDENTIFIERS TLV <xref target="RFC8231"/>, with description as per <xref target="RFC3209"/>) of all LSPs within a PPAG MUST be the same. As per <xref target="RFC3209"/>, TE tunnel is used to associate a set of LSPs during reroute or to spread a traffic trunk over multiple paths.</t>
+
+<t>The format of the Association object used for PPAG is specified in 
+<xref target='I-D.ietf-pce-association-group'></xref>.</t>
+
+
+<!--<figure anchor="PPAG-IPv4-Association-Object-Fmt" title="PPAG IPv4 ASSOCIATION Object format">
+<artwork><![CDATA[
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Reserved            |              Flags            |R|
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Association type = TBD1    |          Association            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                IPv4 Association Source                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   //            Optional TLVs                                    //
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+          ]]></artwork>
+        </figure>
+       
+<figure anchor="PPAG-IPv6-Association-Object-Fmt" title="PPAG IPv6 ASSOCIATION Object format">
+        <artwork><![CDATA[
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |         Reserved            |              Flags            |R|
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  | Association Type = TBD1     |          Association            |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                                                               |
+  |                IPv6 Association Source                        |
+  |                                                               |
+  |                                                               |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  //            Optional TLVs                                    //
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                
+            ]]></artwork>
+        </figure>
+-->    
+
+       <t>This document defines a new Association type, the Path Protection Association type, 
+       value will be assigned by IANA (TBD1).
+       </t> 
+   <t><xref target='I-D.ietf-pce-association-group'></xref> specify the mechanism for the
+   capability advertisement of the association types supported by a PCEP
+   speaker by defining a ASSOC-Type-List TLV to be carried within an
+   OPEN object.  This capability exchange for the association type
+   described in this document (i.e.  Path Protection Association Type) MAY be
+   done before using the policy association, i.e., the PCEP speaker MAY
+   include the Path Protection Association Type (TBD1) in the ASSOC-Type-List TLV
+   before using the PPAG in the PCEP messages.</t>
+   <t>This Association-Type is dynamic in nature and created by the PCC or PCE for
+   the LSPs belonging to the same TE tunnel (as described in <xref target="RFC3209"/>) originating at the same head node and terminating at the same destination. 
+   These associations are
+   conveyed via PCEP messages to the PCEP peer.  Operator-configured
+   Association Range MUST NOT be set for this association-type and
+   MUST be ignored.</t>
+
+</section> 
+
+<section anchor="Path-Protection-Association-TLV" title="Path Protection Association TLV">
+<t>The Path Protection Association TLV is an optional TLV for use with the Path Protection
+Association Object Type. The Path Protection Association TLV MUST NOT be present more than once. 
+If it appears more than once,
+only the first occurrence is processed and any others MUST be ignored. </t>
+
+<t> The Path Protection Association TLV follows the PCEP TLV format of <xref target="RFC5440" />. </t> 
+
+<t> The type (16 bits) of the TLV is to be assigned by IANA. The length 
+field is 16 bit-long and has a fixed value of 4.</t> 
+<t>The value comprises of a single field, the Path Protection Association
+   Flags (32 bits), where each bit represents a flag option.</t>
+<!--<t>The value comprises of two fields, the Protection Scheme (PS) (6 bits) and the Path Protection Association Flags (26 bits) (where each bit represents a
+flag option). </t>-->
+
+<t> The format of the <xref target="PPAG-TLV-Fmt"> Path Protection Association TLV</xref> is as follows:</t>
+
+<figure anchor="PPAG-TLV-Fmt" title="Path Protection Association TLV format">
+        <artwork><![CDATA[
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |         Type = TBD2         |              Length             |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |   PT      |     Path Protection Association Flags         |S|P|
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+            ]]></artwork>
+        </figure>
+
+    <t>Path Protection Association Flags (32 bits) -  Following flags are currently defined - 
+    <list>
+    <t>P (PROTECTION-LSP 1 bit) - Indicates whether the LSP associated with the PPAG is working or 
+    protection LSP. If this flag is set, the LSP is a protection LSP.</t>
+    <t>S (STANDBY 1 bit)-  When the  P flag is set, the S flag indicates whether the protection LSP associated
+    with the PPAG is in standby mode. The S flag is ignored if the P flag is not set. When the S flag is set, 
+    it indicates that the LSP is fully established and resource allocations are committed at data plane (known as Primary LSP); where
+    as when the S flag is unset, it indicates that the LSP is secondary LSP that has been provisioned in control plane only. See <xref target="RFC4872"/> for more details.</t>
+     <t>PT (Protection Type 6 bits) Flags - Indicates the Protection Type as per <xref target="RFC4872"/>. Following values are currently defined:
+    <list style="symbols">
+      <t>0x00: Unprotected</t>
+      <t>0x01: (Full) Rerouting</t>
+      <t>0x02: Rerouting without Extra-Traffic</t>
+      <t>0x04: 1:N Protection with Extra-Traffic</t>
+      <t>0x08: 1+1 Unidirectional Protection</t>
+      <t>0x10: 1+1 Bidirectional Protection</t>
+    </list>  
+    </t>
+    <t>Unassigned bits are considered reserved.  They MUST be set to 0 on
+   transmission and MUST be ignored on receipt. </t>
+ </list></t>
+    
+<t>If the TLV is missing, it is considered that the LSP is the working LSP (i.e. P bit is unset).</t>
+</section> <!-- PPAG TLV -->
+</section> <!-- PCEP extensions --> 
+
+<section anchor="Operation" title="Operation">
+    <t>An LSP is associated with
+   other LSPs with which they interact by adding them to a common
+   association group via the ASSOCIATION object. All procedures and error-handling for the ASSOCIATION 
+   object is as per <xref target="I-D.ietf-pce-association-group"/>.</t>
+
+<section anchor="Operation-State-Sync" title="State Synchronization"> 
+
+  <t>During state synchronization, a PCC MUST report all the existing path protection association groups 
+  as well as any path protection flags to PCE(s) as per <xref target='I-D.ietf-pce-association-group'></xref>.</t>
+
+    </section> <!-- State Synchronization --> 
+
+
+    <section anchor="Operation-PCC-Init" title="PCC Initiated LSPs"> 
+
+  <t>A PCC can associate a set of LSPs under its control for path protection purpose. Similarly, the PCC can 
+  remove on or more LSPs under its control from the corresponding PPAG. In both cases, the PCC would report 
+  the change in association to PCE(s) via PCRpt message. A PCC can also delegate the working and protection 
+  LSPs to a stateful PCE, where PCE would control the LSPs. The stateful PCE could update the paths and attributes of the LSPs in the association group 
+  via PCUpd message. A PCE could also update the association to PCC via PCUpd message. These procedures are described in <xref target='I-D.ietf-pce-association-group'></xref>.
+</t>
+<t>It is expected that both working and protection LSP are delegated together (and to the same PCE) to avoid any race conditions. Refer <xref target='I-D.litkowski-pce-state-sync'></xref> for the problem description.</t>
+
+</section> <!-- PCC Initiated LSPs --> 
+
+    <section anchor="Operation-PCE-Init" title="PCE Initiated LSPs"> 
+
+    <t>A PCE can create/update working and protection LSPs independently. 
+    As specified in <xref target='I-D.ietf-pce-association-group'></xref>, 
+    Association Groups can be created by both PCE and PCC. 
+    Further, a PCE can remove a protection LSP from a PPAG as specified in 
+    <xref target='I-D.ietf-pce-association-group'></xref>. The PCE uses PCUpd 
+    or PCInitiate message to communicate the association information to the PCC.</t>
+
+    </section> <!-- PCE Initiated LSPs --> 
+
+
+
+
+    <section anchor="Session-Termination" title="Session Termination"> 
+
+  <t>As per <xref target='I-D.ietf-pce-association-group'></xref> the association information is cleared along with the LSP state
+   information.  When a PCEP
+   session is terminated, after expiry of State Timeout Interval at PCC,
+   the LSP state associated with that PCEP session is reverted to
+   operator-defined default parameters or behaviors as per <xref target='RFC8231'></xref>.  Same procedure is
+   also followed for the association information.  On session
+   termination at the PCE, when the LSP state reported by PCC is
+   cleared, the association information is also cleared as per <xref target='I-D.ietf-pce-association-group'></xref>.  Where there
+   are no LSPs in a association group, the association is considered to
+   be deleted..</t>
+
+    </section> <!-- State Synchronization --> 
+
+<section anchor="Operation-Error-Handling" title="Error Handling"> 
+  <t>As per the processing rules specified in section 5.4 of
+   <xref target='I-D.ietf-pce-association-group'></xref>, if a PCEP speaker does not support
+   this Path Protection association-type, it would return a PCErr message with
+   Error-Type 26 (Early allocation by IANA) "Association Error" and
+   Error-Value 1 "Association-type is not supported".</t> 
+  <t>All LSPs (working or protection) within a PPAG MUST belong to the same TE Tunnel (as described in <xref target="RFC3209"/>) and have the same source and destination. 
+  If a PCEP speaker attempts to add an LSP to a PPAG and the Tunnel ID (as carried in LSP-IDENTIFIERS TLV <xref target="RFC8231"/>, with description as per <xref target="RFC3209"/>) or source or destination of the LSP is different from 
+  the LSP(s) in the PPAG, the PCC MUST send PCErr with Error-Type= 29 (Early allocation by IANA) (Association Error) <xref target='I-D.ietf-pce-association-group'></xref>
+  and Error-Value = TBD3 (Tunnel ID or End points mismatch for Path Protection Association). In case of Path Protection, LSP-IDENTIFIERS TLV SHOULD be included for all LSPs (including segment routing (SR) <xref target='I-D.ietf-pce-segment-routing'></xref>.</t>
+
+  <t>When the protection type is set to 1+1 or 1:N (with N=1),  there MUST be only one working LSP and protection LSP within a PPAG. If a PCEP Speaker attempts to add another working/protection LSP,
+  the PCEP peer MUST send PCErr with Error-Type=29 (Early allocation by IANA) (Association Error) <xref target='I-D.ietf-pce-association-group'></xref> 
+  and Error-Value = TBD4
+  (Attempt to add another working/protection LSP for Path Protection Association).</t>
+  <t>All processing as per section 5.4 of
+   <xref target='I-D.ietf-pce-association-group'></xref> continue to apply.</t>
+    </section> <!-- Error Handling --> 
+
+
+</section> <!-- Operation --> 
+<section title="Other considerations">
+    <t>The working and protection LSPs are
+   typically resource disjoint (e.g., node, SRLG disjoint).  This
+   ensures that a single failure will not affect both the working and
+   protection LSPs.The disjoint requirement for a group of LSPs is handled via another association type called
+        "Disjointness Association", as described in <xref target="I-D.ietf-pce-association-diversity"/>. 
+        The diversity requirements for the the protection LSP are also handled by including both ASSOCIATION
+        object identifying both the protection association group and disjoint association group for the group of LSPs.</t>
+</section>    
+<section title="IANA considerations">
+
+    <section title="Association Type">
+
+    <t>This document defines a new association type, originally
+    defined in <xref target='I-D.ietf-pce-association-group'/>, for path protection. 
+    IANA is requested to make the assignment of a new value for the
+    sub-registry "ASSOCIATION Type Field" (request to be created in <xref target='I-D.ietf-pce-association-group'/>), as follows: </t>
+            <texttable>
+            <ttcol>Association Type Value</ttcol><ttcol>Association Name    </ttcol><ttcol>Reference</ttcol>
+            <c> TBD1 </c><c> Path Protection Association</c> <c> This     document </c>
+            </texttable>
+    
+    </section>
+    
+    <section title="PPAG TLV">
+
+      <t> This document defines a new TLV for carrying additional information of LSPs within a path protection association group.
+      IANA is requested to make the assignment of a new value for the
+   existing "PCEP TLV Type Indicators" registry as follows:</t>
+
+        <texttable>
+        <ttcol>TLV Type Value</ttcol><ttcol>TLV Name</ttcol><ttcol> Reference</ttcol>
+        <c> TBD2 </c><c>Path Protection Association Group TLV</c> <c> This document </c>
+        </texttable>
+
+<t> This document requests that a new sub-registry, named "Path protection Association Group TLV Flag Field", 
+is created within the "Path Computation
+   Element Protocol (PCEP) Numbers" registry to manage the Flag field in
+   the Path Protection Association Group TLV.
+   New values are to be assigned by Standards Action <xref target="RFC8126"/>.  Each
+   bit should be tracked with the following qualities:
+</t> 
+<t> Each bit should be tracked with the following qualities:</t>
+<t>
+<list style="symbols">
+    <t>Bit number (count from 0 as the most significant bit) </t>
+    <t>Name flag </t> 
+    <t>Reference </t> 
+</list>
+</t>
+   
+<texttable anchor="PPAG-TLV-Table-IANA" title="PPAG TLV">
+    <ttcol align="center">Bit Number</ttcol>
+    <ttcol align="center">Name</ttcol>
+    <ttcol align="center">Reference</ttcol>
+    <c>31</c>
+    <c>P - PROTECTION-LSP</c>
+    <c>This document </c>
+    <c>30</c>
+    <c>S - STANDBY</c>
+    <c>This document</c>
+    <c>0-5</c>
+    <c>Protection Type Flags</c>
+    <c>This document </c>
+</texttable>
+
+    </section>
+
+      <section title="PCEP Errors">
+
+    <t>This document defines new Error-Type and Error-Value related to  path protection association. 
+        IANA is requested to allocate new error values within the "PCEP-ERROR
+   Object Error Types and Values" sub-registry of the PCEP Numbers
+   registry, as follows:</t>
+          <texttable>
+           <ttcol> Error-Type </ttcol><ttcol> Meaning </ttcol><ttcol> Reference </ttcol>
+           <c> 29 </c> <c> Association error</c> <c><xref target='I-D.ietf-pce-association-group'></xref></c>
+           <c></c><c> Error-value=TBD3: Tunnel ID or End points mismatch for Path Protection Association</c> <c> This document</c>
+           <c></c><c> Error-value=TBD4: Attempt to add another working/protection LSP for Path Protection Association</c> <c> This document</c>
+          </texttable>
+
+      </section>
+
+    </section>
+
+    <section title="Security Considerations">
+        <t>
+               The security considerations described in <xref target="RFC8231"/>, 
+               <xref target="RFC8281"/>, and <xref target="RFC5440"/> 
+               apply to the extensions described in this document as
+   well.  Additional considerations related to associations where 
+   a malicious PCEP speaker could be spoofed and could be used as
+   an attack vector by creating associations is described in <xref target='I-D.ietf-pce-association-group'></xref>. 
+   Thus securing the PCEP session using
+   Transport Layer Security (TLS) <xref target="RFC8253"/>, as per the
+   recommendations and best current practices in <xref target="RFC7525"/>, is
+   RECOMMENDED.
+        </t>
+    </section>
+    <section title="Manageability Considerations" toc="default">
+      <section title="Control of Function and Policy" toc="default">
+        <t>Mechanisms defined in this document do not imply any control or policy 
+            requirements in addition to those already listed in
+        <xref target="RFC5440"/>, <xref target="RFC8231"/>, and 
+        <xref target="RFC8281"/>.</t>
+      </section>
+      <section title="Information and Data Models" toc="default">
+        <t><xref target="RFC7420"/> describes the PCEP MIB, there are no new MIB Objects
+        for this document.</t>
+        <t>The PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> supports
+        associations.</t>
+      </section>
+      <section title="Liveness Detection and Monitoring" toc="default">
+        <t>Mechanisms defined in this document do not imply any new liveness detection
+        and monitoring requirements in addition to those already listed in
+        <xref target="RFC5440"/>, <xref target="RFC8231"/>, and 
+        <xref target="RFC8281"/>.</t>
+      </section>
+      <section title="Verify Correct Operations" toc="default">
+        <t>Mechanisms defined in this document do not imply any new operation
+        verification requirements in addition to those already listed in
+        <xref target="RFC5440"/>, <xref target="RFC8231"/>, and 
+        <xref target="RFC8281"/>.</t>
+      </section>
+      <section title="Requirements On Other Protocols" toc="default">
+        <t>Mechanisms defined in this document do not imply any new requirements
+        on other protocols.</t>
+      </section>
+      <section title="Impact On Network Operations" toc="default">
+        <t>Mechanisms defined in this document do not have any impact on
+        network operations in addition to those already listed in
+        <xref target="RFC5440"/>, <xref target="RFC8231"/>, and 
+        <xref target="RFC8281"/>.</t>
+      </section>
+    </section>
+    <section title="Acknowledgments">
+    <t>We would like to thank Jeff Tantsura, Xian Zhang and Greg Mirsky for their contributions to this document.</t>
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+    
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3209"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4872"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8126"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8231"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8281"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-association-group"?>        
+    </references>
+    <references title="Information References">
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4427"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4655"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4657"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7420"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7525"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8051"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8253"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-association-diversity"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-segment-routing"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.litkowski-pce-state-sync"?>
+    </references>
+  </back>
+</rfc>
