@@ -685,33 +685,33 @@ Internet-Draft                    PCECC                        June 2018
    The PCE Initiated PCECC LSP setup sequence is shown below -
 
 
-                  +-------+                              +-------+
-                  |PCC    |                              |  PCE  |
-                  |Ingress|                              +-------+
-           +------|       |                                  |
-           | PCC  +-------+                                  |
-           | Transit| |                                      |
-    +------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD,D=1---| PCECC LSP
-    |PCC   +--------+ |                                      | Initiate
-    |Egress  |  |     |--- PCRpt,PLSP-ID=2,P=1,D=1,C=1--->   | PCECC LSP
-    +--------+  |     |       (GOING-UP)                     |
-        |       |     |                                      |
-        |<------ PCInitiate,CC-ID=X,PLSP-ID=2 -------------- | Label
-        |       |     |                                      | download
-        |------- PCRpt,CC-ID=X,PLSP-ID=2  ------------------>|
-        |       |     |                                      |
-        |       |<----- PCInitiate,CC-ID=Y,PLSP-ID=2 ------- | Label
-        |       |     |                                      | download
-        |       |-----  PCRpt,CC-ID=Y,PLSP-ID=2  ----------->|
-        |       |     |                                      |
-        |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=2 --- | Label
-        |       |     |                                      | download
-        |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=2  ------->|
-        |       |     |                                      |
-        |       |     |<-- PCUpd, PLSP-ID=2, PST=TBD, D=1--- | PCECC LSP
-        |       |     |      (UP)                            | Update
-        |       |     |--- PCRpt,PLSP-ID=2,P=1,D=1,C=1--->   |
-        |       |     |      (UP)                            |
+                 +-------+                              +-------+
+                 |PCC    |                              |  PCE  |
+                 |Ingress|                              +-------+
+          +------|       |                                  |
+          | PCC  +-------+                                  |
+          | Transit| |                                      |
+   +------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD,D=1---| PCECC LSP
+   |PCC   +--------+ |                                      | Initiate
+   |Egress  |  |     |--- PCRpt,PLSP-ID=2,P=1,D=1,C=1--->   | PCECC LSP
+   +--------+  |     |       (GOING-UP)                     |
+       |       |     |                                      |
+       |<------ PCInitiate,CC-ID=X,PLSP-ID=2 -------------- | Label
+       |       |     |                                      | download
+       |------- PCRpt,CC-ID=X,PLSP-ID=2  ------------------>|
+       |       |     |                                      |
+       |       |<----- PCInitiate,CC-ID=Y,PLSP-ID=2 ------- | Label
+       |       |     |                                      | download
+       |       |-----  PCRpt,CC-ID=Y,PLSP-ID=2  ----------->|
+       |       |     |                                      |
+       |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=2 --- | Label
+       |       |     |                                      | download
+       |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=2  ------->|
+       |       |     |                                      |
+       |       |     |<-- PCUpd, PLSP-ID=2, PST=TBD, D=1--- | PCECC LSP
+       |       |     |      (UP)                            | Update
+       |       |     |--- PCRpt,PLSP-ID=2,P=1,D=1,C=1--->   |
+       |       |     |      (UP)                            |
 
 
    Once the label operations are completed, the PCE SHOULD send the
@@ -786,53 +786,53 @@ Zhao, et al.            Expires December 20, 2018              [Page 14]
 Internet-Draft                    PCECC                        June 2018
 
 
-               +-------+                             +-------+
-               |PCC    |                             |  PCE  |
-               |Ingress|                             +-------+
-        +------|       |                                 |
-        | PCC  +-------+                                 |
-        | Transit| |                                     |
- +------|        | |                                     |
- |PCC   +--------+ |                                     |
- |Egress  |  |     |                                     |
- +--------+  |     |                                     |
-     |       |     |                                     | New Path for LSP
-     |<------ PCInitiate,CC-ID=XX,PLSP-ID=1 -----------  | trigger new
-     |       |     |                                     | instructions
-     |------- PCRpt,CC-ID=XX,PLSP-ID=1  ---------------->|
-     |       |     |                                     |
-     |       |<----- PCInitiate,CC-ID=YY,PLSP-ID=1------ | Label
-     |       |     |                                     | download
-     |       |-----  PCRpt,CC-ID=YY,PLSP-ID=1  --------->|
-     |       |     |                                     |
-     |       |     |<--- PCInitiate,CC-ID=ZZ,PLSP-ID=1 - | Label
-     |       |     |                                     | download
-     |       |     |---- PCRpt,CC-ID=ZZ,PLSP-ID=1  ----->|
-     |       |     |                                     |
-     |       |     |<-- PCUpd, PLSP-ID=1, PST=TBD, D=1-- | PCECC
-     |       |     |    SRP=S                            | LSP Update
-     |       |     |                                     |
-     |       |     |-- PCRpt,PLSP-ID=1,PST=TBD,D=1    -->| Trigger Delete
-     |       |     |       (SRP=S)                       | old instructions
-     |       |     |                                     |
-     |<------ PCInitiate,CC-ID=X, PLSP-ID=1 -----------  | Label
-     |       |     |                    R=1              | cleanup
-     |------- PCRpt,CC-ID=X, PLSP-ID=1  ---------------->|
-     |       |     |                                     |
-     |       |<----- PCInitiate,CC-ID=Y, PLSP-ID=1 ----- | Label
-     |       |     |                           R=1       | cleanup
-     |       |-----  PCRpt,CC-ID=Y, PLSP-ID=1  --------->|
-     |       |     |                                     |
-     |       |     |<--- PCInitiate,CC-ID=Z, PLSP-ID=1 - | Label
-     |       |     |                               R=1   | cleanup
-     |       |     |---- PCRpt,CC-ID=Z, PLSP-ID=1  ----->|
-     |       |     |                                     |
+                +-------+                             +-------+
+                |PCC    |                             |  PCE  |
+                |Ingress|                             +-------+
+         +------|       |                                 |
+         | PCC  +-------+                                 |
+         | Transit| |                                     |
+  +------|        | |                                     |
+  |PCC   +--------+ |                                     |
+  |Egress  |  |     |                                     |
+  +--------+  |     |                                     |
+      |       |     |                                     | New Path for
+      |<------ PCInitiate,CC-ID=XX,PLSP-ID=1 -----------  | LSP trigger
+      |       |     |                                     | new instruct
+      |------- PCRpt,CC-ID=XX,PLSP-ID=1  ---------------->|
+      |       |     |                                     |
+      |       |<----- PCInitiate,CC-ID=YY,PLSP-ID=1------ | Label
+      |       |     |                                     | download
+      |       |-----  PCRpt,CC-ID=YY,PLSP-ID=1  --------->|
+      |       |     |                                     |
+      |       |     |<--- PCInitiate,CC-ID=ZZ,PLSP-ID=1 - | Label
+      |       |     |                                     | download
+      |       |     |---- PCRpt,CC-ID=ZZ,PLSP-ID=1  ----->|
+      |       |     |                                     |
+      |       |     |<-- PCUpd, PLSP-ID=1, PST=TBD, D=1-- | PCECC
+      |       |     |    SRP=S                            | LSP Update
+      |       |     |                                     |
+      |       |     |-- PCRpt,PLSP-ID=1,PST=TBD,D=1    -->| Trigger
+      |       |     |       (SRP=S)                       | Delete old
+      |       |     |                                     | instruct
+      |       |     |                                     |
+      |<------ PCInitiate,CC-ID=X, PLSP-ID=1 -----------  | Label
+      |       |     |                    R=1              | cleanup
+      |------- PCRpt,CC-ID=X, PLSP-ID=1  ---------------->|
+      |       |     |                                     |
+      |       |<----- PCInitiate,CC-ID=Y, PLSP-ID=1 ----- | Label
+      |       |     |                           R=1       | cleanup
+      |       |-----  PCRpt,CC-ID=Y, PLSP-ID=1  --------->|
+      |       |     |                                     |
+      |       |     |<--- PCInitiate,CC-ID=Z, PLSP-ID=1 - | Label
+      |       |     |                               R=1   | cleanup
+      |       |     |---- PCRpt,CC-ID=Z, PLSP-ID=1  ----->|
+      |       |     |                                     |
 
 
    The modified PCECC LSP are considered to be 'up' by default.  The
    Ingress MAY further choose to deploy a data plane check mechanism and
    report the status back to the PCE via PCRpt message.
-
 
 
 
