@@ -852,19 +852,19 @@
     <section title="The PCRpt Message">
       <t>Path Computation State Report (PCRpt) is a PCEP message sent by a PCC
       to a PCE to report the status of one or more LSPs as per <xref target="RFC8231"/>.  Each LSP State
-      Report in a PCRpt message MAY contain the actual LSP's path,
+      Report in a PCRpt message contains the actual LSP's path,
       bandwidth, operational and administrative status, etc.  An LSP
       Status Report carried on a PCRpt message is also used in
       delegation or revocation of control of an LSP to/from a PCE.  In case of 
       scheduled LSP, the scheduled TLVs MUST be carried in the LSP
       object and the ERO conveys the intended path for the scheduled LSP. The scheduled LSP 
       MUST be delegated to a PCE. This message is also 
-      used to synchronize the scheduled LSPs to other PCE as described in <xref target="I-D.litkowski-pce-state-sync"/>. </t>
+      used to synchronize the scheduled LSPs to other PCE as described in <xref target="RFC8231"/> and <xref target="I-D.litkowski-pce-state-sync"/>. </t>
         </section>
         <section title="The PCUpd Message">
           <t>Path Computation Update Request (PCUpd) is a PCEP message sent by a
       PCE to a PCC to update LSP parameters, on one or more LSPs as per <xref target="RFC8231"/>. Each
-      LSP Update Request on a PCUpd message MUST contain all LSP
+      LSP Update Request on a PCUpd message contains all LSP
       parameters that a PCE wishes to be set for a given LSP. In case of 
       scheduled LSP, the scheduled TLVs MUST be carried in the LSP
       object and the ERO conveys the intended path for the scheduled LSP. In case
@@ -902,8 +902,8 @@
         </section>
         <section title="The PCReq message">
           <t>The Path Computation Request (PCReq) message is a PCEP message sent 
-            by a PCC to a PCE to request a path computation <xref target="RFC5440"/> and it MAY 
-            contain the LSP object to identify the LSP for which the path 
+            by a PCC to a PCE to request a path computation <xref target="RFC5440"/> and it may 
+            contain the LSP object <xref target="RFC8231"/> to identify the LSP for which the path 
             computation is requested. In case of scheduled LSP, the scheduled TLVs 
             MUST be carried in the LSP object in PCReq message to request the 
             path computation based on scheduled TED and LSP-DB. A PCC MAY use
@@ -933,7 +933,9 @@
 
         <section title="The PCRep Message">
           <t>The Path Computation Reply (PCRep) message is a PCEP message sent by a PCE to a PCC in reply to a path
-      computation request <xref target="RFC5440"/>.  A PCRep message can contain either a set of
+      computation request <xref target="RFC5440"/> and it may 
+            contain the LSP object <xref target="RFC8231"/> to identify the LSP for which the path 
+            is computed.  A PCRep message can contain either a set of
       computed paths if the request can be satisfied, or a negative
       reply if not.  The negative reply may indicate the reason why no
       path could be found. In case of scheduled LSP, the scheduled TLVs 
@@ -962,11 +964,31 @@
           PCE SHALL return a PCRep message with NO PATH back to the PCC.</t>-->
         </section>
         <section title="The PCErr Message">
-          <t>[Editor's Note - Error Handling will be taken up in the next revision
-            of the draft]</t>
+          <t>The Path Computation Error (PCErr) message is a PCEP message as described in <xref target="RFC5440"/> for error reporting. The current document defines new error values
+   for several error types to cover failures specific to scheduling and reuse the applicable error types and error values of <xref target="RFC5440"/> and <xref target="RFC8231"/>
+   wherever appropriate.</t>
+   <t>The PCEP extensions for scheduling MUST NOT be used if one or both
+   PCEP speakers have not set the corresponding bits in the STATEFUL-PCE-CAPABILITY TLV in
+   their respective OPEN message.  If the PCEP speaker 
+   supports the extensions of this specification but did not advertise
+   this capability, then upon receipt of LSP object with the scheduled TLV,
+   it MUST generate a PCEP Error (PCErr) with Error-type=19 (Invalid
+   Operation) and error-value TBD6 (Attempted LSP Scheduling if the
+   scheduling capability was not advertised), and it
+   SHOULD terminate the PCEP session. As per Section 7.1 of <xref target="RFC5440"/>, a legacy PCEP implementation that does not understand this specification, would consider the scheduled TLVs as unknown and ignore them.</t>
+   <t>If the PCC
+   decides that the scheduling parameters proposed in the PCUpd/PCInitiate message are
+   unacceptable, it MUST report this error by including the
+   LSP-ERROR-CODE TLV (Section 7.3.3) with LSP error-value="Unacceptable
+   parameters" in the LSP object (with scheduled TLVs) in the PCRpt message to the PCE.</t>
+   <t>The scheduled TLVs MUST be included in the LSP object for the scheduled LSPs, if the TLV is
+   missing, the receiving PCEP speaker MUST send a PCErr message with
+   Error-type=6 (Mandatory Object missing) and Error-value TBD5 (Scheduled TLV
+   missing).</t>
         </section>
       </section>
 
+    
     <section title="Security Considerations">
       <t>This document defines LSP-SCHEDULING-CAPABILITY TLV and SCHED-
       LSP-ATTRIBUTE TLV which does not add any new security concerns beyond
@@ -1064,7 +1086,27 @@ Bit    Description                                    Reference
 1      C-bit                                          This document
 2      A-bit                                          This document</artwork>
           </figure></t>
-    </section></section>
+    </section>
+    <section title="PCEP-Error Object">
+      <t>IANA is requested to allocate the following new error types to the existing error values 
+   within the "PCEP-ERROR Object Error Types and Values" subregistry of
+   the "Path Computation Element Protocol (PCEP) Numbers" registry:<figure><artwork>
+   Error-Type  Meaning
+      6        Mandatory Object missing
+
+                Error-value
+                TBD5:  Scheduled TLV missing
+
+      19       Invalid Operation
+
+                Error-value
+                TBD6: Attempted LSP Scheduling if the scheduling
+                      capability was not advertised
+</artwork></figure>
+ </t>
+
+    </section>
+  </section>
 
     <section title="Acknowledgments">
       <t>The authors of this document would also like to thank Rafal
@@ -1095,9 +1137,7 @@ Bit    Description                                    Reference
     <!-- Normative -->
 
     <references title="Informative References">
-      <?rfc include="reference.I-D.ietf-teas-scheduled-resources"?>
-      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
-      <?rfc include="reference.I-D.litkowski-pce-state-sync"?>
+      
       
 
       <!--<?rfc include='reference.RFC.5226'?>-->
@@ -1109,6 +1149,9 @@ Bit    Description                                    Reference
       <!--<?rfc include='reference.RFC.7420'?>-->
 
       <?rfc include="reference.RFC.8253"?>
+<?rfc include="reference.I-D.ietf-teas-scheduled-resources"?>
+      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
+      <?rfc include="reference.I-D.litkowski-pce-state-sync"?>      
     </references>
 
     <section title="Scheduled LSP information synchronization">
