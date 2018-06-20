@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc category="exp" docName="draft-xxx-pce-controlled-id-space-00"
+     ipr="trust200902">
+  <front>
+    <title abbrev="PCE Controlled ID Space">PCE Controlled ID Space</title>
+
+    <author fullname="Cheng Li" initials="C." surname="Li">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>chengli13@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Mach(Guoyi) Chen" initials="M." surname="Chen">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>Mach.chen@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Jie Dong" initials="J." surname="Dong">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>jie.dong@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Zhenbin Li" initials="Z." surname="Li">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>lizhenbin@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <date day="11" month="May" year="2018"/>
+
+    <abstract>
+      <t>In some use cases, such as binding SID and SR path SID allocation, a
+      stateful PCE may need to dynamically allocate new labels or Segment IDs
+      that come from a PCC's label space. However, in the existing documents,
+      the label range to be used by a PCE is assumed to to be known and set on
+      both PCEP peers, so the mechanism of label range delegation is required.
+      This document describes a mechanism to advertise specific PCE controlled
+      ID spaces to PCEs via PCEP channel. The type of ID can be MPLS label,
+      SRv6 path ID or other ID.</t>
+    </abstract>
+
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119">RFC 2119</xref>.</t>
+    </note>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t><xref target="RFC5440"/> defines the stateless Path Computation
+      Element communication Protocol (PCEP) for Path Computation Elements
+      (PCEs) to perform path computations in response to Path Computation
+      Clients (PCCs) requests. For supporting stateful operations, <xref
+      target="RFC8231"/> specifies a set of extensions to PCEP to enable
+      stateful control of LSPs within and across PCEP sessions in compliance
+      with <xref target="RFC4657"/>. Futhermore, <xref target="RFC8281"/>
+      describes the setup, maintenance, and teardown of PCE-initiated LSPs
+      under the stateful PCE model, without the need for local configuration
+      on the PCC, thus allowing for a dynamic network that is centrally
+      controlled and deployed. </t>
+
+      <t/>
+
+      <t><xref target="RFC8283"/> introduces the architecture for PCE as a
+      central controller, examines the motivations and applicability for PCEP
+      as a control protocol in this environment, and introduces the
+      implications for the protocol. Also, <xref
+      target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> specifies the
+      procedures and PCEP protocol extensions for using the PCE as the central
+      controller, where LSPs are calculated/setup/initiated and label
+      forwarding entries are downloaded through extending PCEP.</t>
+
+      <t>However, these documents do not describe the mechanisms for PCEs to
+      manage the space of MPLS label and allocate MPLS label for each of the
+      routers that it controls. The label range to be used by a PCE is assumed
+      to be known and set on both PCEP peers <xref
+      target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>.</t>
+
+      <t>For solving this problem, this document describes a mechanism to
+      advertise the range of MPLS label, SRv6 path ID <xref
+      target="I-D.li-spring-passive-pm-for-srv6-np"/> via PCEP extensions. The
+      ID space range information can be advertised via the TLVs in the Open
+      message. The detailed procedures will be described in section 4, and the
+      objects' format will be introduced in section 5.</t>
+    </section>
+
+    <section title="Terminology">
+      <t>This memo makes use of the terms defined in <xref target="RFC5440"/>
+      and <xref target="I-D.ietf-spring-segment-routing"/>.</t>
+    </section>
+
+    <section title="Use cases">
+      <t/>
+
+      <section title="Binding SID Allocation">
+        <t>As defined in <xref target="I-D.ietf-spring-segment-routing"/>, the
+        binding SID is bound to an SR policy, instantiation of which may
+        involve a list of SIDs. In several scenarios, SR policies need to be
+        dynamically updated according to the network status and operation
+        policies. Therefore, a PCE needs to obtain the authority to allocate
+        labels actively from the PCC's specific label space.</t>
+      </section>
+
+      <section title="Path ID Allocation">
+        <t>For indicating an SR path, an SR Path Segment and SRv6 path ID are
+        defined in <xref target="I-D.cheng-spring-mpls-path-segment"/> and
+        <xref target="I-D.li-spring-passive-pm-for-srv6-np"/>
+        respectively.</t>
+
+        <t>An SR path ID will be allocated dynamically triggered by a SR path
+        computation. A PCE needs to obtain the authority so that it can
+        allocate path IDs actively from the PCC's specific path ID space.</t>
+      </section>
+    </section>
+
+    <section title="Overview of ID delegation">
+      <t>When a PCEP session is establishing, Open messages will be sent
+      between PCCs and PCEs. Capabilities can be conveied by the Capabiliies
+      TLVs in the Open message. For delegating ID space to a stateful PCE, a
+      PCC MUST include ID Space TLVs in Open messages to inform the PCE the
+      range of ID space. This document defines LABEL-SPACE-DELEGATION and
+      SRv6-PATH-ID-SPACE-DELEGATION TLVs.</t>
+
+      <t>For delegating multiple types of ID space, multiple ID space TLVs
+      will be included in a Open message. Each type of ID space TLV will be
+      included only once in a Open Message. The ID type can be MPLS label,
+      SRv6 path ID <xref target="I-D.li-spring-passive-pm-for-srv6-np"/> or
+      other ID.</t>
+
+      <t>The procedure of ID space delegation is shown below:</t>
+
+      <t><figure>
+          <artwork align="center"><![CDATA[
+             +-+-+                                   +-+-+
+             |PCC|                                   |PCE|
+             +-+-+                                   +-+-+
+               |                                       |
+               |                                       |
+1) Open        | ---------------- Open --------------> |
+ PCC->PCE      |   LABEL-SPACE/SRv6-PATH-ID-SPACE TLV  |
+               |                                       |
+               | <------------- KeepAlive -----------  |
+               |                                       |
+               |                                       |
+
+                 Figure 5: ID Delegation Procedures
+]]></artwork>
+        </figure></t>
+
+      <t>If the delegation is successful, the PCE will return a KeepAlive
+      message to the PCC. If there is any error in processing ID delegation,
+      an Error (PCErr) message will be sent to the PCC.</t>
+
+      <t>If the PCE can not process ID space delegation TLVs, then the PCE
+      should send a PCErr message with Error-type=1 (PCEP session
+      establishment failure) and and Error-value=1 (reception of an invalid
+      Open message or a non Open message).</t>
+
+      <t>After ID delegation, a stateful PCE can learn the PCE controlled ID
+      spaces delegated from PCCs and then it can allocate IDs within the
+      delegated ID space actively. For example, a PCE can actively allocate
+      global or local labels/IDs such as binding segments <xref
+      target="I-D.ietf-spring-segment-routing"/> and path ID <xref
+      target="I-D.cheng-spring-mpls-path-segment"/> <xref
+      target="I-D.li-spring-passive-pm-for-srv6-np"/> according to the
+      delegated ID space and the SRGB and SRLB information of a PCC. SRGB and
+      SRLB information of a PCC can be learned from IGP synchronization or
+      other ways. This is out of scope of this document.</t>
+    </section>
+
+    <section title="Objects">
+      <t/>
+
+      <section title="Open Object">
+        <t>For advertising the PCE controlled ID space to a PCE, this document
+        defines several TLVs within the Open object.</t>
+
+        <section title="LABEL-SPACE-DELEGATION TLV">
+          <t>For advertising PCE controlled label spaces to a PCE, this
+          document defines a LABEL-SPACE-DELEGATION TLV.</t>
+
+          <t>The LABEL-SPACE-DELEGATION TLV is an optional TLV for use in the
+          OPEN object, and its format is shown in the following figure:</t>
+
+          <t><figure>
+              <artwork align="center"><![CDATA[
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |            Type=TBA           |            Length             |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                             Flags                           |A|
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Start 1                            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Range 1                            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                              ...                              |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                              ...                              |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Start n                            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Range n                            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                     Figure 2. LABEL-SPACE-DELEGATION TLV
+]]></artwork>
+            </figure></t>
+
+          <t>The type (16 bits) of the TLV is TBA. The length field is a 16
+          bits variable.</t>
+
+          <t>Flags (24 bits):</t>
+
+          <t><list style="symbols">
+              <t>A-flag: All space flag, set when all the label space is
+              delegated to a PCE. When A-flag is set, the pair of Start and
+              End SHOULD NOT appear unless the PCC needs to notify the entire
+              ID space to a PCE.</t>
+            </list></t>
+
+          <t>The rest bits of Flags field MUST be set to 0 on transmission and
+          MUST be ignored on receipt.</t>
+
+          <t>Start n: indicates the beginning of the label block n.</t>
+
+          <t>Range n: indicates the range of the label block n.</t>
+
+          <t>The numbuer of label blocks can be calculated according to value
+          of the length filed.</t>
+
+          <t>A stateful PCE can actively allocate labels to an LSP or an SR
+          Policy. For example, binding SIDs <xref
+          target="I-D.ietf-spring-segment-routing"/> can be seleted from the
+          delegated label space and then allocated by a stateful PCE actively.
+          Also, Path segment <xref
+          target="I-D.cheng-spring-mpls-path-segment"/> can be allocated by a
+          stateful PCE in the same way.</t>
+        </section>
+
+        <section title="SRv6-PATH-ID-SPACE-DELEGATION TLV">
+          <t>For advertising the delegated SRv6 Path ID <xref
+          target="I-D.li-spring-passive-pm-for-srv6-np"/> space to a PCE, this
+          document defines an SRv6-PATH-ID-SPACE-DELEGATION TLV.</t>
+
+          <t>The SRv6-PATH-ID-SPACE-DELEGATION TLV is an optional TLV for use
+          in the OPEN object, and its format is shown in the following
+          figure:</t>
+
+          <t><figure>
+              <artwork align="center"><![CDATA[
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |            Type=TBA           |            Length             |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                             Flags                           |A|
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Start 1                            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Range 1                            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                              ...                              |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                              ...                              |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Start n                            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                            Range n                            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                    Figure 2. SRv6-PATH-ID-SPACE-DELEGATION TLV
+
+]]></artwork>
+            </figure></t>
+
+          <t>The type (16 bits) of the TLV is TBA. The length field is a 16
+          bits variable.</t>
+
+          <t>Flags (24 bits):</t>
+
+          <t><list style="symbols">
+              <t>A-flag: All Space flag, set when all the ID space is
+              delegated to a PCE. When A-flag is set, the pair of Start and
+              End SHOULD NOT appear unless PCC needs to notify the entire ID
+              space to a PCE.</t>
+            </list></t>
+
+          <t>The rest bits of Flags field MUST be set to 0 on transmission and
+          MUST be ignored on receipt.</t>
+
+          <t>Start n: indicates the beginning of the SRv6 Path ID block n.</t>
+
+          <t>Range n: indicates the range of the SRv6 Path ID block n.</t>
+
+          <t>The numbuer of ID blocks can be calculated according to the
+          length filed. Given the controlled ID spaces, a stateful PCE can
+          actively allocate path IDs to SR paths by selecting from the
+          controlled ID spaces. </t>
+        </section>
+      </section>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>TBA.</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>TBA.</t>
+    </section>
+
+    <section anchor="Acknowledgements" title="Acknowledgements">
+      <t>TBA.</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119"
+?>
+
+      <?rfc include='reference.I-D.cheng-spring-mpls-path-segment'?>
+
+      <?rfc include='reference.I-D.li-spring-passive-pm-for-srv6-np'
+?>
+
+      <?rfc include='reference.RFC.8231'?>
+
+      <?rfc include='reference.RFC.5440'?>
+
+      <?rfc ?>
+
+      <?rfc ?>
+
+      <?rfc include='reference.I-D.ietf-spring-segment-routing'?>
+
+      <?rfc include="reference.RFC.8281"?>
+
+      <?rfc ?>
+
+      <?rfc include='reference.RFC.4657'
+?>
+
+      <?rfc include='reference.I-D.zhao-pce-pcep-extension-for-pce-controller'?>
+
+      <?rfc include='reference.RFC.8283'?>
+    </references>
+  </back>
+</rfc>
