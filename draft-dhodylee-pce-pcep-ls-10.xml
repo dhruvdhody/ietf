@@ -66,6 +66,14 @@
    <t>This document  extends the Path Computation Element Communication
    Protocol (PCEP) with Link-State and TE Information. </t>
     </abstract>
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.
+      </t>
+    </note>    
   </front>
   <middle>
     <section title="Introduction" toc="default">
@@ -156,12 +164,6 @@
    The mechanism described in this document are on top of the existing LSP
    state synchronization.</t>
 
-      <section title="Requirements Language" toc="default">
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
-        "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
-        and "OPTIONAL" in this document are to be interpreted as
-        described in <xref target="RFC2119"/>.</t>
-      </section>
     </section>
     <section title="Terminology" toc="default">
       <t>The terminology is as per <xref target="RFC4655"/> and <xref target="RFC5440"/>.</t>
@@ -182,19 +184,17 @@
    </t>
    <t>Where there is a need for transporting (abstract) Link-State
    and TE information from child PCE to a Parent PCE in H-PCE <xref target="RFC6805"/>;
-   as well as for Provisioning Network Controller (PNC) to Multi-Domain Service Coordinator
+   as well as for Physical Network Controller (PNC) to Multi-Domain Service Coordinator
    (MDSC) in Abstraction and Control of TE Networks (ACTN) <xref target="I-D.ietf-teas-actn-framework"/>. 
    </t>
+   <t>Where there is an existing PCEP session between the nodes and the PCE-based central controller <xref target="RFC8283"/>, and the operator would like to use a single protocol between the controller and the nodes.</t>
    </list>
    </t>
    <t>A PCC may further choose to send only local information or both local and remote learned information. </t>
    <t>How a PCE manages the link-state (and TE) information is implementation specific and thus out of scope of this document.</t>
    <t>The prefix information in PCEP-LS can also help in determining the domain of the endpoints in H-PCE (and ACTN).
    Section 4.5 of <xref target="RFC6805"/> describe various mechanism and procedures that might be used, PCEP-LS provides a simple mechanism
-   to exchange this information within PCEP.  <xref target="I-D.ietf-teas-actn-framework"/> defines three types of
-   topology abstraction - (1) Native/White Topology; (2) Black Topology;
-   and (3) Grey Topology.  Based on the local policy, the PNC (or child PCE) would share the domain topology to the MDSC (or Parent PCE)
-   based on the abstraction type.  The protocol extention defined in this document can carry any type of topology abstraction.</t>
+   to exchange this information. </t>
    
 
    </section>
@@ -236,7 +236,7 @@
    either from a PCC towards a PCE (C-E) or from a PCE towards a PCC (E-C).
     The new functions are:
    <list style="symbols">
-   <t>Capability advertisement (E-C,C-E): both the PCC and the PCE MUST announce during PCEP session establishment that they support PCEP extensions for distribution of link-state (and TE) information defined in this document.</t>
+   <t>Capability advertisement (E-C,C-E): both the PCC and the PCE must announce during PCEP session establishment that they support PCEP extensions for distribution of link-state (and TE) information defined in this document.</t>
 
    <t>Link-State (and TE) synchronization (C-E): after the session between the PCC and a PCE is initialized, the PCE must learn Link-State (and TE) information before it can perform path computations.  In case of stateful PCE it is RECOMENDED that this operation be done before LSP state synchronization.</t>
 
@@ -272,7 +272,7 @@
    LS Capability TLV in PCE's OPEN message
    indicates that the PCE is interested in receiving LS Reports
    whenever local link-state (and TE) information changes.</t>
-   <t>The PCEP extensions for LS (and TE) distribution MUST NOT be used if
+   <t>The PCEP protocol extensions for LS (and TE) distribution MUST NOT be used if
    one or both PCEP Speakers have not included the LS
    Capability TLV in their respective OPEN message. If the PCE that
    supports the extensions of this draft but did not advertise this
@@ -323,7 +323,7 @@
    Synchronization Error) and error-value 2 (indicating an
    internal PCC error) to the PCE and terminate the session.</t>
 
-   <t>The PCE does not send positive acknowledgements for properly received
+   <t>The PCE does not send positive acknowledgments for properly received
    LS synchronization messages.  It MUST respond with a PCErr message with
    error-type TBD2 (LS Synchronization Error) and error-value 1
    (indicating an error in processing the LSRpt) if it
@@ -533,7 +533,7 @@ Where:
 
    <t>The value comprises a single field - Flags (32 bits):
    <list style="symbols">
-   <t>R (remote allowed - 1 bit): if set to 1 by a PCC, the R Flag
+   <t>R (remote - 1 bit): if set to 1 by a PCC, the R Flag
       indicates that the PCC allows reporting of remote LS information
       learned via other means like IGP and BGP-LS; if
       set to 1 by a PCE, the R Flag indicates that the PCE is capable of
@@ -610,8 +610,8 @@ Where:
 |      4      | Direct                           |
 |      5      | Static configuration             |
 |      6      | OSPFv3                           |
-|      7      | BGP-LS                           |
-|      8      | PCEP-LS                          |
+|      7      | BGP                              |
+|      8      | PCEP                             |
 |      9      | Abstraction                      |
 |      10     | Unspecified                      |    
 +-------------+----------------------------------+
@@ -682,7 +682,6 @@ Where:
 | Identifier | Routing Universe                  |
 +------------+-----------------------------------+
 |     0      | Default Layer 3 Routing topology  |
-|    1-31    | Reserved                          |
 +------------+-----------------------------------+
             ]]></artwork>
           </figure>
@@ -1164,11 +1163,6 @@ Where:
       RECOMMENDED that these PCEP extensions only be activated on
       authenticated and encrypted sessions belonging to the same
       administrative authority.</t>
-                 <t>Further, as stated in <xref target="RFC6952"/>, PCEP implementations SHOULD support the
-   TCP-AO <xref target="RFC5925"/> and not use TCP MD5 because of TCP MD5's known
-   vulnerabilities and weakness. PCEP also support Transport Layer Security (TLS)
-      <xref target="RFC8253"/> as per the recommendations and best current practices
-      in <xref target="RFC7525"/>.</t>
     </section>
     <section title="Manageability Considerations" toc="default">
       <t>All manageability requirements and considerations listed in <xref target="RFC5440"/>
@@ -1561,6 +1555,7 @@ Value     Meaning                        Reference
 
     <?rfc include="reference.RFC.7752"?>
     <?rfc include="reference.RFC.7810"?>
+    <?rfc include="reference.RFC.8174"?>
     </references>
     <references title="Informative References">
       <?rfc include="reference.RFC.3630.xml" ?>
@@ -1571,19 +1566,17 @@ Value     Meaning                        Reference
       
       <?rfc include="reference.RFC.5316.xml" ?>
       <?rfc include="reference.RFC.5392.xml" ?>
-      <?rfc include="reference.RFC.5925.xml" ?>
 
       <?rfc include="reference.RFC.6549.xml" ?>
       <?rfc include="reference.RFC.6805.xml" ?>
-      <?rfc include="reference.RFC.6952.xml" ?>
       
 
-      <?rfc include="reference.RFC.7525.xml" ?>
       <?rfc include="reference.RFC.8126.xml" ?>
       <?rfc include="reference.RFC.8202.xml" ?>
       <?rfc include="reference.RFC.8231.xml"?>
-      <?rfc include="reference.RFC.8281.xml"?>
       <?rfc include="reference.RFC.8253.xml"?>
+      <?rfc include="reference.RFC.8281.xml"?>
+      <?rfc include="reference.RFC.8283.xml"?>
       <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
       <?rfc include="reference.I-D.ietf-pce-applicability-actn"?>
       <?rfc include="reference.I-D.ietf-teas-actn-framework"?>
@@ -1611,6 +1604,24 @@ Value     Meaning                        Reference
 
 
     </references>
+    <section title="Reusing BGP-LS codepoints" toc="default">
+      <t>This document creates a new registry for the PCEP-LS sub-TLVs (<xref target="subtlv"/>. Another approach could be to use the BGP-LS which are already defined for use in BGP. 
+      This is possible because the "BGP-LS Node Descriptor, Link Descriptor, Prefix Descriptor, and
+      Attribute TLVs" registry marks 0-255 as reserved. Thus the space of the sub-TLV values for the Type field is partitioned as shown below - 
+      <figure><artwork>
+Range          |
+---------------+---------------------------------------------
+0              | Reserved - must not be allocated.
+               |
+1 .. 255       | New PCEP sub-TLV allocated according to the
+               | registry defined in this document.
+               |
+256 ..   65535 | Per BGP registry defined by [RFC7752].
+               | Not to be allocated in this registry.
+</artwork></figure></t>
+<t>[Editor's Note - If this approach is agreed by the WG the document would be updated accordingly.]</t>
+
+    </section>
     <section title="Relevant OSPF TLV and sub-TLV" toc="default">
     <t>This section list the relevant TLVs and sub-TLVs defined for
     OSPF.</t>

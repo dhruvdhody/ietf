@@ -5,9 +5,9 @@
 PCE Working Group                                               D. Dhody
 Internet-Draft                                                    Y. Lee
 Intended status: Standards Track                     Huawei Technologies
-Expires: September 5, 2018                                 D. Ceccarelli
+Expires: December 22, 2018                                 D. Ceccarelli
                                                                 Ericsson
-                                                           March 4, 2018
+                                                           June 20, 2018
 
 
    PCEP Extension for Distribution of Link-State and TE Information.
@@ -24,6 +24,14 @@ Abstract
    This document extends the Path Computation Element Communication
    Protocol (PCEP) with Link-State and TE Information.
 
+Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
 Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
@@ -39,7 +47,16 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 5, 2018.
+   This Internet-Draft will expire on December 22, 2018.
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018               [Page 1]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
 Copyright Notice
 
@@ -50,14 +67,6 @@ Copyright Notice
    Provisions Relating to IETF Documents
    (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
-
-
-
-Dhody, et al.           Expires September 5, 2018               [Page 1]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
@@ -67,7 +76,6 @@ Internet-Draft                   PCEP-LS                      March 2018
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   5
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   5
    3.  Applicability . . . . . . . . . . . . . . . . . . . . . . . .   5
    4.  Requirements for PCEP extension . . . . . . . . . . . . . . .   6
@@ -92,12 +100,20 @@ Table of Contents
        9.3.3.  Virtual Network TLV . . . . . . . . . . . . . . . . .  17
        9.3.4.  Local Node Descriptors TLV  . . . . . . . . . . . . .  17
        9.3.5.  Remote Node Descriptors TLV . . . . . . . . . . . . .  18
-       9.3.6.  Node Descriptors Sub-TLVs . . . . . . . . . . . . . .  19
+       9.3.6.  Node Descriptors Sub-TLVs . . . . . . . . . . . . . .  18
        9.3.7.  Link Descriptors TLV  . . . . . . . . . . . . . . . .  19
        9.3.8.  Prefix Descriptors TLV  . . . . . . . . . . . . . . .  20
        9.3.9.  PCEP-LS Attributes  . . . . . . . . . . . . . . . . .  21
          9.3.9.1.  Node Attributes TLV . . . . . . . . . . . . . . .  21
          9.3.9.2.  Link Attributes TLV . . . . . . . . . . . . . . .  22
+
+
+
+Dhody, et al.           Expires December 22, 2018               [Page 2]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
          9.3.9.3.  Prefix Attributes TLV . . . . . . . . . . . . . .  24
        9.3.10. Removal of an Attribute . . . . . . . . . . . . . . .  25
    10. Other Considerations  . . . . . . . . . . . . . . . . . . . .  25
@@ -106,15 +122,7 @@ Table of Contents
    12. Manageability Considerations  . . . . . . . . . . . . . . . .  25
      12.1.  Control of Function and Policy . . . . . . . . . . . . .  26
      12.2.  Information and Data Models  . . . . . . . . . . . . . .  26
-
-
-
-Dhody, et al.           Expires September 5, 2018               [Page 2]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
-     12.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  27
+     12.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  26
      12.4.  Verify Correct Operations  . . . . . . . . . . . . . . .  27
      12.5.  Requirements On Other Protocols  . . . . . . . . . . . .  27
      12.6.  Impact On Network Operations . . . . . . . . . . . . . .  27
@@ -122,24 +130,25 @@ Internet-Draft                   PCEP-LS                      March 2018
      13.1.  PCEP Messages  . . . . . . . . . . . . . . . . . . . . .  27
      13.2.  PCEP Objects . . . . . . . . . . . . . . . . . . . . . .  27
      13.3.  LS Object  . . . . . . . . . . . . . . . . . . . . . . .  28
-     13.4.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  29
+     13.4.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  28
      13.5.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  29
-     13.6.  PCEP-LS Sub-TLV Type Indicators  . . . . . . . . . . . .  30
+     13.6.  PCEP-LS Sub-TLV Type Indicators  . . . . . . . . . . . .  29
    14. TLV/Sub-TLV Code Points Summary . . . . . . . . . . . . . . .  32
-   15. Implementation Status . . . . . . . . . . . . . . . . . . . .  33
-     15.1.  Hierarchical Transport PCE controllers . . . . . . . . .  33
+   15. Implementation Status . . . . . . . . . . . . . . . . . . . .  32
+     15.1.  Hierarchical Transport PCE controllers . . . . . . . . .  32
      15.2.  ONOS-based Controller (MDSC and PNC) . . . . . . . . . .  33
    16. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  33
-   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  34
-     17.1.  Normative References . . . . . . . . . . . . . . . . . .  34
-     17.2.  Informative References . . . . . . . . . . . . . . . . .  35
-   Appendix A.  Relevant OSPF TLV and sub-TLV  . . . . . . . . . . .  38
-   Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  39
-     B.1.  All Nodes . . . . . . . . . . . . . . . . . . . . . . . .  39
-     B.2.  Designated Node . . . . . . . . . . . . . . . . . . . . .  40
-     B.3.  Between PCEs  . . . . . . . . . . . . . . . . . . . . . .  40
-   Appendix C.  Contributor Addresses  . . . . . . . . . . . . . . .  42
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  42
+   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  33
+     17.1.  Normative References . . . . . . . . . . . . . . . . . .  33
+     17.2.  Informative References . . . . . . . . . . . . . . . . .  34
+   Appendix A.  Reusing BGP-LS codepoints  . . . . . . . . . . . . .  38
+   Appendix B.  Relevant OSPF TLV and sub-TLV  . . . . . . . . . . .  38
+   Appendix C.  Examples . . . . . . . . . . . . . . . . . . . . . .  39
+     C.1.  All Nodes . . . . . . . . . . . . . . . . . . . . . . . .  39
+     C.2.  Designated Node . . . . . . . . . . . . . . . . . . . . .  41
+     C.3.  Between PCEs  . . . . . . . . . . . . . . . . . . . . . .  41
+   Appendix D.  Contributor Addresses  . . . . . . . . . . . . . . .  43
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  43
 
 1.  Introduction
 
@@ -153,6 +162,14 @@ Internet-Draft                   PCEP-LS                      March 2018
 
    In MPLS and GMPLS, interior gateway routing protocols (IGPs) have
    been used to create and maintain a copy of the TED at each node
+
+
+
+Dhody, et al.           Expires December 22, 2018               [Page 3]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
    running the IGP.  One of the benefits of the PCE architecture
    [RFC4655] is the use of computationally more sophisticated path
    computation algorithms and the realization that these may need
@@ -162,14 +179,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    Section 4.3 of [RFC4655] describes the potential load of the TED on a
    network node and proposes an architecture where the TED is maintained
    by the PCE rather than the network nodes.  However, it does not
-
-
-
-Dhody, et al.           Expires September 5, 2018               [Page 3]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    describe how a PCE would obtain the information needed to populate
    its TED.  PCE may construct its TED by participating in the IGP
    ([RFC3630]  and [RFC5305]  for MPLS-TE; [RFC4203]  and [RFC5307] for
@@ -209,6 +218,14 @@ Internet-Draft                   PCEP-LS                      March 2018
    and TE information about nodes and links in any given area.  Link
    attributes stored in these databases include: local/remote IP
    addresses, local/ remote interface identifiers, link metric and TE
+
+
+
+Dhody, et al.           Expires December 22, 2018               [Page 4]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
    metric, link bandwidth, reservable bandwidth, per CoS class
    reservation state, preemption and Shared Risk Link Groups (SRLG).
    The node's PCEP process can retrieve topology from these databases
@@ -218,14 +235,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    Further [RFC6805] describes Hierarchical-PCE architecture, where a
    parent PCE maintains a domain topology map.  To build this domain
    topology map, the child PCE can carry the border nodes and inter-
-
-
-
-Dhody, et al.           Expires September 5, 2018               [Page 4]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    domain link information to the parent PCE using the mechanism
    described in this document.  Further as described in
    [I-D.ietf-pce-applicability-actn], the child PCE can also transport
@@ -237,12 +246,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    case of stateful PCE.  This document does not make any change to the
    LSP state synchronization process.  The mechanism described in this
    document are on top of the existing LSP state synchronization.
-
-1.1.  Requirements Language
-
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in [RFC2119].
 
 2.  Terminology
 
@@ -270,20 +273,25 @@ Internet-Draft                   PCEP-LS                      March 2018
       *  A PCE may receive full information from both existing mechanism
          (IGP or BGP) and PCEP.
 
+
+
+
+
+Dhody, et al.           Expires December 22, 2018               [Page 5]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
    o  Where there is a need for transporting (abstract) Link-State and
       TE information from child PCE to a Parent PCE in H-PCE [RFC6805];
-      as well as for Provisioning Network Controller (PNC) to Multi-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018               [Page 5]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
-      Domain Service Coordinator (MDSC) in Abstraction and Control of TE
+      as well as for Physical Network Controller (PNC) to Multi-Domain
+      Service Coordinator (MDSC) in Abstraction and Control of TE
       Networks (ACTN) [I-D.ietf-teas-actn-framework].
+
+   o  Where there is an existing PCEP session between the nodes and the
+      PCE-based central controller [RFC8283], and the operator would
+      like to use a single protocol between the controller and the
+      nodes.
 
    A PCC may further choose to send only local information or both local
    and remote learned information.
@@ -295,13 +303,7 @@ Internet-Draft                   PCEP-LS                      March 2018
    domain of the endpoints in H-PCE (and ACTN).  Section 4.5 of
    [RFC6805] describe various mechanism and procedures that might be
    used, PCEP-LS provides a simple mechanism to exchange this
-   information within PCEP.  [I-D.ietf-teas-actn-framework] defines
-   three types of topology abstraction - (1) Native/White Topology; (2)
-   Black Topology; and (3) Grey Topology.  Based on the local policy,
-   the PNC (or child PCE) would share the domain topology to the MDSC
-   (or Parent PCE) based on the abstraction type.  The protocol
-   extention defined in this document can carry any type of topology
-   abstraction.
+   information.
 
 4.  Requirements for PCEP extension
 
@@ -331,11 +333,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-
-
-Dhody, et al.           Expires September 5, 2018               [Page 6]
+Dhody, et al.           Expires December 22, 2018               [Page 6]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    5.  The same mechanism should be used for both MPLS TE as well as
@@ -351,7 +351,7 @@ Internet-Draft                   PCEP-LS                      March 2018
    from a PCC towards a PCE (C-E) or from a PCE towards a PCC (E-C).
    The new functions are:
 
-   o  Capability advertisement (E-C,C-E): both the PCC and the PCE MUST
+   o  Capability advertisement (E-C,C-E): both the PCC and the PCE must
       announce during PCEP session establishment that they support PCEP
       extensions for distribution of link-state (and TE) information
       defined in this document.
@@ -389,9 +389,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018               [Page 7]
+Dhody, et al.           Expires December 22, 2018               [Page 7]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
 6.2.  Capability Advertisement
@@ -407,9 +407,9 @@ Internet-Draft                   PCEP-LS                      March 2018
    that the PCE is interested in receiving LS Reports whenever local
    link-state (and TE) information changes.
 
-   The PCEP extensions for LS (and TE) distribution MUST NOT be used if
-   one or both PCEP Speakers have not included the LS Capability TLV in
-   their respective OPEN message.  If the PCE that supports the
+   The PCEP protocol extensions for LS (and TE) distribution MUST NOT be
+   used if one or both PCEP Speakers have not included the LS Capability
+   TLV in their respective OPEN message.  If the PCE that supports the
    extensions of this draft but did not advertise this capability, then
    upon receipt of a LSRpt message from the PCC, it SHOULD generate a
    PCErr with error-type 19 (Invalid Operation), error-value TBD1
@@ -445,9 +445,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018               [Page 8]
+Dhody, et al.           Expires December 22, 2018               [Page 8]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    Either the PCE or the PCC MAY terminate the session using the PCEP
@@ -462,7 +462,7 @@ Internet-Draft                   PCEP-LS                      March 2018
    (LS Synchronization Error) and error-value 2 (indicating an internal
    PCC error) to the PCE and terminate the session.
 
-   The PCE does not send positive acknowledgements for properly received
+   The PCE does not send positive acknowledgments for properly received
    LS synchronization messages.  It MUST respond with a PCErr message
    with error-type TBD2 (LS Synchronization Error) and error-value 1
    (indicating an error in processing the LSRpt) if it encounters a
@@ -501,9 +501,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018               [Page 9]
+Dhody, et al.           Expires December 22, 2018               [Page 9]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    The sequence where the PCE fails during the LS Synchronization phase
@@ -557,9 +557,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 10]
+Dhody, et al.           Expires December 22, 2018              [Page 10]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
 6.3.1.  Optimizations for LS Synchronization
@@ -613,9 +613,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 11]
+Dhody, et al.           Expires December 22, 2018              [Page 11]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    <LSRpt Message> ::= <Common Header>
@@ -669,9 +669,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 12]
+Dhody, et al.           Expires December 22, 2018              [Page 12]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
 9.  Objects and TLV
@@ -709,11 +709,11 @@ Internet-Draft                   PCEP-LS                      March 2018
 
    The value comprises a single field - Flags (32 bits):
 
-   o  R (remote allowed - 1 bit): if set to 1 by a PCC, the R Flag
-      indicates that the PCC allows reporting of remote LS information
-      learned via other means like IGP and BGP-LS; if set to 1 by a PCE,
-      the R Flag indicates that the PCE is capable of receiving remote
-      LS information (from the PCC point of view).  The R Flag must be
+   o  R (remote - 1 bit): if set to 1 by a PCC, the R Flag indicates
+      that the PCC allows reporting of remote LS information learned via
+      other means like IGP and BGP-LS; if set to 1 by a PCE, the R Flag
+      indicates that the PCE is capable of receiving remote LS
+      information (from the PCC point of view).  The R Flag must be
       advertised by both a PCC and a PCE for LSRpt messages to report
       remote as well as local LS information on a PCEP session.  The
       TLVs related to IGP/BGP-LS identifier MUST be encoded when both
@@ -725,9 +725,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 13]
+Dhody, et al.           Expires December 22, 2018              [Page 13]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    Advertisement of the LS capability implies support of local link-
@@ -781,9 +781,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 14]
+Dhody, et al.           Expires December 22, 2018              [Page 14]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
             +-------------+----------------------------------+
@@ -795,8 +795,8 @@ Internet-Draft                   PCEP-LS                      March 2018
             |      4      | Direct                           |
             |      5      | Static configuration             |
             |      6      | OSPFv3                           |
-            |      7      | BGP-LS                           |
-            |      8      | PCEP-LS                          |
+            |      7      | BGP                              |
+            |      8      | PCEP                             |
             |      9      | Abstraction                      |
             |      10     | Unspecified                      |
             +-------------+----------------------------------+
@@ -837,9 +837,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 15]
+Dhody, et al.           Expires December 22, 2018              [Page 15]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    independent "routing universes".  The 64-Bit 'Identifier' field is
@@ -868,7 +868,6 @@ Internet-Draft                   PCEP-LS                      March 2018
             | Identifier | Routing Universe                  |
             +------------+-----------------------------------+
             |     0      | Default Layer 3 Routing topology  |
-            |    1-31    | Reserved                          |
             +------------+-----------------------------------+
 
    If this TLV is not present the default value 0 is assumed.
@@ -883,21 +882,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    The format of the optional ROUTE-DISTINGUISHER TLV is shown in the
    following figure:
 
-
-
-
-
-
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 16]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -906,6 +890,13 @@ Internet-Draft                   PCEP-LS                      March 2018
      |                     Route Distinguisher                       |
      |                                                               |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 16]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
    The format of RD is as per [RFC4364].
 
@@ -946,14 +937,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    The Local Node Descriptors TLV contains Node Descriptors for the node
    anchoring the local end of the link.  This TLV MUST be included in
    the LS Report when during a given PCEP session a node/link/prefix is
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 17]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    first reported to a PCE.  A PCC sends to a PCE the first LS Report
    either during State Synchronization, or when a new node/link/prefix
    is learned at the PCC.  The value contains one or more Node
@@ -962,6 +945,14 @@ Internet-Draft                   PCEP-LS                      March 2018
    the node/link/prefix is ensured.
 
    This TLV is applicable for all LS Object-Type.
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 17]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -998,22 +989,26 @@ Internet-Draft                   PCEP-LS                      March 2018
      |                                                               |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-
-
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 18]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
 9.3.6.  Node Descriptors Sub-TLVs
 
    The Node Descriptor Sub-TLV type Type and lengths are listed in the
    following table:
+
+
+
+
+
+
+
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 18]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
        +----------+-------------------+----------+----------------+
        | Sub-TLV  | Description       |   Length |Value defined in|
@@ -1061,9 +1056,14 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 19]
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 19]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
       0                   1                   2                   3
@@ -1117,9 +1117,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 20]
+Dhody, et al.           Expires December 22, 2018              [Page 20]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    Report either during State Synchronization, or when a new prefix is
@@ -1173,9 +1173,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 21]
+Dhody, et al.           Expires December 22, 2018              [Page 21]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    The Node Attributes Sub-TLV type and lengths are listed in the
@@ -1229,9 +1229,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 22]
+Dhody, et al.           Expires December 22, 2018              [Page 22]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    |           |                     |  BGP-LS TLV  |                  |
@@ -1285,9 +1285,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 23]
+Dhody, et al.           Expires December 22, 2018              [Page 23]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    |           | Bandwidth           |              |                  |
@@ -1341,9 +1341,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 24]
+Dhody, et al.           Expires December 22, 2018              [Page 24]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
 9.3.10.  Removal of an Attribute
@@ -1383,27 +1383,24 @@ Internet-Draft                   PCEP-LS                      March 2018
    extensions only be activated on authenticated and encrypted sessions
    belonging to the same administrative authority.
 
-   Further, as stated in [RFC6952], PCEP implementations SHOULD support
-   the TCP-AO [RFC5925] and not use TCP MD5 because of TCP MD5's known
-   vulnerabilities and weakness.  PCEP also support Transport Layer
-   Security (TLS) [RFC8253] as per the recommendations and best current
-   practices in [RFC7525].
-
 12.  Manageability Considerations
 
    All manageability requirements and considerations listed in [RFC5440]
    apply to PCEP protocol extensions defined in this document.  In
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 25]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    addition, requirements and considerations listed in this section
    apply.
+
+
+
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 25]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
 12.1.  Control of Function and Policy
 
@@ -1446,23 +1443,20 @@ Internet-Draft                   PCEP-LS                      March 2018
    "drop all LSRpt from a particular peers" as well provide means to
    limit inbound LSRpts.
 
-
-
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 26]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
 12.3.  Liveness Detection and Monitoring
 
    Mechanisms defined in this document do not imply any new liveness
    detection and monitoring requirements in addition to those already
    listed in [RFC5440]".
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 26]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
 12.4.  Verify Correct Operations
 
@@ -1498,22 +1492,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    This document defines the following new PCEP Object-classes and
    Object-values:
 
-
-
-
-
-
-
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 27]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
           Object-Class Value  Name                    Reference
                TBD6           LS Object               [This I-D]
                               Object-Type=1
@@ -1524,6 +1502,17 @@ Internet-Draft                   PCEP-LS                      March 2018
                               (LS IPv4 Prefix)
                               Object-Type=4
                               (LS IPv6 Prefix)
+
+
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 27]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
 13.3.  LS Object
 
@@ -1560,16 +1549,6 @@ Internet-Draft                   PCEP-LS                      March 2018
 
    The following values are defined in this document:
 
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 28]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
                  Bit     Description           Reference
                  0-21    Unassigned
                  22      R (Remove bit)        [This I-D]
@@ -1579,6 +1558,17 @@ Internet-Draft                   PCEP-LS                      March 2018
 
    IANA is requested to make the following allocation in the "PCEP-ERROR
    Object Error Types and Values" registry.
+
+
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 28]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
            Error-Type Meaning                        Reference
            6          Mandatory Object missing       [RFC5440]
@@ -1617,15 +1607,6 @@ Internet-Draft                   PCEP-LS                      March 2018
              TBD14    Prefix Attributes TLV          [This I-D]
 
 
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 29]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
 13.6.  PCEP-LS Sub-TLV Type Indicators
 
    This document specifies the PCEP-LS Sub-TLVs.  IANA is requested to
@@ -1637,6 +1618,14 @@ Internet-Draft                   PCEP-LS                      March 2018
 
    +-----------+---------------------+---------------+-----------------+
    |  Sub-TLV  | Description         |     Ref       | Value defined   |
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 29]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
    |           |                     |     Sub-TLV   | in:             |
    +-----------+---------------------+---------------+-----------------+
    |    1      | Autonomous System   |      512      | [RFC7752]       |
@@ -1674,14 +1663,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    |    17     | IPv4 Router-ID of   |      134/--   | [RFC5305]/4.3   |
    |           | Local Node          |               |                 |
    |    18     | IPv6 Router-ID of   |      140/--   | [RFC6119]/4.1   |
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 30]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    |           | Local Node          |               |                 |
    |    19     | IPv4 Router-ID of   |      134/--   | [RFC5305]/4.3   |
    |           | Remote Node         |               |                 |
@@ -1693,6 +1674,14 @@ Internet-Draft                   PCEP-LS                      March 2018
    |           | bandwidth           |               |                 |
    |    24     | Max. reservable     |    22/10      | [RFC5305]/3.5   |
    |           | link bandwidth      |               |                 |
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 30]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
    |    25     | Unreserved          |    22/11      | [RFC5305]/3.6   |
    |           | bandwidth           |               |                 |
    |    26     | TE Default Metric   |    22/18      | [RFC7752]       |
@@ -1730,14 +1719,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    |    41     | IGP Flags           |     1152      | [RFC7752]       |
    |           |                     |               | /3.3.3.1        |
    |    42     | Route Tag           |     1153      | [RFC7752]       |
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 31]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    |           |                     |               | /3.3.3.2        |
    |    43     | Extended Tag        |     1154      | [RFC7752]       |
    |           |                     |               | /3.3.3.3        |
@@ -1748,6 +1729,14 @@ Internet-Draft                   PCEP-LS                      March 2018
    |    46     | Opaque Prefix       |     1157      | [RFC7752]       |
    |           | Attribute           |               | /3.3.3.6        |
    +-----------+---------------------+---------------+-----------------+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 31]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
    New values are to be assigned by Standards Action [RFC8126].
 
@@ -1782,18 +1771,6 @@ Internet-Draft                   PCEP-LS                      March 2018
 
    Refer Section 13.6 for the table of Sub-TLVs.
 
-
-
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 32]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
 15.  Implementation Status
 
    The PCEP-LS protocol extension as described in this I-D were
@@ -1809,6 +1786,14 @@ Internet-Draft                   PCEP-LS                      March 2018
 
       - connectivity services on the ACTN based recursive hierarchical
       SDN/PCE platform that has the three tier level SDN controllers
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 32]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
       (two-tier level MDSC and PNC) on the top of the PTN systems
       managed by EMS.
 
@@ -1842,14 +1827,6 @@ Internet-Draft                   PCEP-LS                      March 2018
    This document borrows some of the structure and text from the
    [RFC7752].
 
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 33]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    Thanks to Eric Wu, Venugopal Kondreddy, Mahendra Singh Negi,
    Avantika, and Zhengbin Li for the reviews.
 
@@ -1864,6 +1841,14 @@ Internet-Draft                   PCEP-LS                      March 2018
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 33]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
    [RFC5305]  Li, T. and H. Smit, "IS-IS Extensions for Traffic
               Engineering", RFC 5305, DOI 10.17487/RFC5305, October
@@ -1894,17 +1879,9 @@ Internet-Draft                   PCEP-LS                      March 2018
               RFC 7810, DOI 10.17487/RFC7810, May 2016,
               <https://www.rfc-editor.org/info/rfc7810>.
 
-
-
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 34]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
 17.2.  Informative References
 
@@ -1922,6 +1899,13 @@ Internet-Draft                   PCEP-LS                      March 2018
               Networks (VPNs)", RFC 4364, DOI 10.17487/RFC4364, February
               2006, <https://www.rfc-editor.org/info/rfc4364>.
 
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 34]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
    [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
               Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
@@ -1937,10 +1921,6 @@ Internet-Draft                   PCEP-LS                      March 2018
               Traffic Engineering", RFC 5392, DOI 10.17487/RFC5392,
               January 2009, <https://www.rfc-editor.org/info/rfc5392>.
 
-   [RFC5925]  Touch, J., Mankin, A., and R. Bonica, "The TCP
-              Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
-              June 2010, <https://www.rfc-editor.org/info/rfc5925>.
-
    [RFC6549]  Lindem, A., Roy, A., and S. Mirtorabi, "OSPFv2 Multi-
               Instance Extensions", RFC 6549, DOI 10.17487/RFC6549,
               March 2012, <https://www.rfc-editor.org/info/rfc6549>.
@@ -1950,29 +1930,6 @@ Internet-Draft                   PCEP-LS                      March 2018
               of a Sequence of Domains in MPLS and GMPLS", RFC 6805,
               DOI 10.17487/RFC6805, November 2012,
               <https://www.rfc-editor.org/info/rfc6805>.
-
-
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 35]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
-   [RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of
-              BGP, LDP, PCEP, and MSDP Issues According to the Keying
-              and Authentication for Routing Protocols (KARP) Design
-              Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,
-              <https://www.rfc-editor.org/info/rfc6952>.
-
-   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
-              "Recommendations for Secure Use of Transport Layer
-              Security (TLS) and Datagram Transport Layer Security
-              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
-              2015, <https://www.rfc-editor.org/info/rfc7525>.
 
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
@@ -1989,45 +1946,50 @@ Internet-Draft                   PCEP-LS                      March 2018
               DOI 10.17487/RFC8231, September 2017,
               <https://www.rfc-editor.org/info/rfc8231>.
 
-   [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
-              Computation Element Communication Protocol (PCEP)
-              Extensions for PCE-Initiated LSP Setup in a Stateful PCE
-              Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
-              <https://www.rfc-editor.org/info/rfc8281>.
-
    [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
               "PCEPS: Usage of TLS to Provide a Secure Transport for the
               Path Computation Element Communication Protocol (PCEP)",
               RFC 8253, DOI 10.17487/RFC8253, October 2017,
               <https://www.rfc-editor.org/info/rfc8253>.
 
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 35]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
+   [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for PCE-Initiated LSP Setup in a Stateful PCE
+              Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
+              <https://www.rfc-editor.org/info/rfc8281>.
+
+   [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
+              Architecture for Use of PCE and the PCE Communication
+              Protocol (PCEP) in a Network with Central Control",
+              RFC 8283, DOI 10.17487/RFC8283, December 2017,
+              <https://www.rfc-editor.org/info/rfc8283>.
+
    [I-D.ietf-pce-pcep-yang]
               Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
               YANG Data Model for Path Computation Element
               Communications Protocol (PCEP)", draft-ietf-pce-pcep-
-              yang-06 (work in progress), January 2018.
-
-
-
-
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 36]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
+              yang-07 (work in progress), March 2018.
 
    [I-D.ietf-pce-applicability-actn]
               Dhody, D., Lee, Y., and D. Ceccarelli, "Applicability of
               Path Computation Element (PCE) for Abstraction and Control
               of TE Networks (ACTN)", draft-ietf-pce-applicability-
-              actn-03 (work in progress), March 2018.
+              actn-06 (work in progress), June 2018.
 
    [I-D.ietf-teas-actn-framework]
               Ceccarelli, D. and Y. Lee, "Framework for Abstraction and
               Control of Traffic Engineered Networks", draft-ietf-teas-
-              actn-framework-11 (work in progress), October 2017.
+              actn-framework-15 (work in progress), May 2018.
 
    [I-D.ietf-teas-actn-requirements]
               Lee, Y., Ceccarelli, D., Miyasaka, T., Shin, J., and K.
@@ -2046,6 +2008,15 @@ Internet-Draft                   PCEP-LS                      March 2018
               Extensions for Establishing Relationships Between Sets of
               LSPs and Virtual Networks", draft-leedhody-pce-vn-
               association-04 (work in progress), February 2018.
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 36]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
 
    [ONOS-PCEP]
               "Support for PCEP in ONOS",
@@ -2069,12 +2040,63 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 37]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 37]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
-Appendix A.  Relevant OSPF TLV and sub-TLV
+Appendix A.  Reusing BGP-LS codepoints
+
+   This document creates a new registry for the PCEP-LS sub-TLVs
+   (Section 13.6.  Another approach could be to use the BGP-LS which are
+   already defined for use in BGP.  This is possible because the "BGP-LS
+   Node Descriptor, Link Descriptor, Prefix Descriptor, and Attribute
+   TLVs" registry marks 0-255 as reserved.  Thus the space of the sub-
+   TLV values for the Type field is partitioned as shown below -
+
+   Range          |
+   ---------------+---------------------------------------------
+   0              | Reserved - must not be allocated.
+                  |
+   1 .. 255       | New PCEP sub-TLV allocated according to the
+                  | registry defined in this document.
+                  |
+   256 ..   65535 | Per BGP registry defined by [RFC7752].
+                  | Not to be allocated in this registry.
+
+   [Editor's Note - If this approach is agreed by the WG the document
+   would be updated accordingly.]
+
+Appendix B.  Relevant OSPF TLV and sub-TLV
 
    This section list the relevant TLVs and sub-TLVs defined for OSPF.
 
@@ -2100,6 +2122,14 @@ Appendix A.  Relevant OSPF TLV and sub-TLV
    |           | Remote Node         |               |                 |
    |    20     | IPv6 Router-ID of   |      3        | [RFC5329]/3     |
    |           | Remote Node         |               |                 |
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 38]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
    |    22     | Administrative      |      9        | [RFC3630]/2.5.9 |
    |           | group (color)       |               |                 |
    |    23     | Maximum link        |      6        | [RFC3630]/2.5.6 |
@@ -2122,14 +2152,6 @@ Appendix A.  Relevant OSPF TLV and sub-TLV
    |    36     | Unidirectional      |      30       | [RFC7471]/4.4   |
    |           | Link Loss           |               |                 |
    |    37     | Unidirectional      |      31       | [RFC7471]/4.5   |
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 38]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
    |           | Residual Bandwidth  |               |                 |
    |    38     | Unidirectional      |      32       | [RFC7471]/4.6   |
    |           | Available Bandwidth |               |                 |
@@ -2140,13 +2162,13 @@ Internet-Draft                   PCEP-LS                      March 2018
    |           | Group (EAG)         |               |                 |
    +-----------+---------------------+---------------+-----------------+
 
-Appendix B.  Examples
+Appendix C.  Examples
 
    These examples are for illustration purposes only to show how the new
    PCEP-LS message could be encoded.  They are not meant to be an
    exhaustive list of all possible use cases and combinations.
 
-B.1.  All Nodes
+C.1.  All Nodes
 
    Each node (PCC) in the network chooses to provide its own local node
    and link information, and in this way PCE can build the full link
@@ -2156,6 +2178,14 @@ B.1.  All Nodes
    |                    |                    |                    |
    |     RTA            |10.1.1.1            |     RTB            |
    |     1.1.1.1        |--------------------|     2.2.2.2        |
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 39]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
    |     Area 0         |            10.1.1.2|     Area 0         |
    |                    |                    |                    |
    +--------------------+                    +--------------------+
@@ -2178,14 +2208,6 @@ B.1.  All Nodes
           Sub-TLV - 4: Router-ID: 2.2.2.2
       TLV - Link Descriptors
           Sub-TLV - 7: IPv4 interface: 10.1.1.1
-
-
-
-Dhody, et al.           Expires September 5, 2018              [Page 39]
-
-Internet-Draft                   PCEP-LS                      March 2018
-
-
           Sub-TLV - 8: IPv4 neighbor: 10.1.1.2
       TLV - Link Attributes TLV
           Sub-TLV(s)
@@ -2212,17 +2234,25 @@ Internet-Draft                   PCEP-LS                      March 2018
       TLV - Link Attributes TLV
           Sub-TLV(s)
 
-B.2.  Designated Node
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 40]
+
+Internet-Draft                   PCEP-LS                       June 2018
+
+
+C.2.  Designated Node
 
    A designated node(s) in the network will provide its own local node
    as well as all learned remote information, and in this way PCE can
    build the full link state and TE information.
 
-   As described in Appendix B.1, the same LS Node and Link objects will
+   As described in Appendix C.1, the same LS Node and Link objects will
    be generated with a difference that it would be a designated router
    say RTA that generate all this information.
 
-B.3.  Between PCEs
+C.3.  Between PCEs
 
    As per Hierarchical-PCE [RFC6805], Parent PCE builds an abstract
    domain topology map with each domain as an abstract node and inter-
@@ -2237,9 +2267,35 @@ B.3.  Between PCEs
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 40]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Dhody, et al.           Expires December 22, 2018              [Page 41]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    PCE1
@@ -2293,9 +2349,9 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 41]
+Dhody, et al.           Expires December 22, 2018              [Page 42]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    Further the exact border nodes and abstract internal path between the
@@ -2303,7 +2359,7 @@ Internet-Draft                   PCEP-LS                      March 2018
    as described in [I-D.ietf-pce-applicability-actn] using the similar
    LS node and link objects encodings.
 
-Appendix C.  Contributor Addresses
+Appendix D.  Contributor Addresses
 
    Udayasree Palle
    Huawei Technologies
@@ -2349,9 +2405,9 @@ Authors' Addresses
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 42]
+Dhody, et al.           Expires December 22, 2018              [Page 43]
 
-Internet-Draft                   PCEP-LS                      March 2018
+Internet-Draft                   PCEP-LS                       June 2018
 
 
    Young Lee
@@ -2405,4 +2461,4 @@ Internet-Draft                   PCEP-LS                      March 2018
 
 
 
-Dhody, et al.           Expires September 5, 2018              [Page 43]
+Dhody, et al.           Expires December 22, 2018              [Page 44]
