@@ -110,7 +110,7 @@
     <section title="Usage Example" toc="default">
     <t>The PCRpt message is used to report the current state of an LSP. As part of the message both the &lt;intended-attribute-list&gt; and &lt;actual-attribute-list&gt; is encoded. 
       The &lt;intended-attribute-list&gt; could include the METRIC object to indicate a limiting constraint (B flag set) for the Path Delay Variation metric <xref target="RFC8233"/>. In some scenarios it would be useful to state that this limiting constraint can be relaxed by the PCE, in case it cannot find a path. Similarly in case of an association groups <xref target='I-D.ietf-pce-association-group'/> such as Disjoint Association <xref target="I-D.ietf-pce-association-diversity"/>, the PCE may need to completely relax the  
-        disjointness constraint in order to provide a path to all the LSPs that are part of the association. In these case it would be useful mark the objects as optional and could be ignored by the PCEP peer. Also it would be used for the PCEP speaker to learn if the PCEP peer has relaxed the constraint and ignored the processing of the PCEP object.</t>  
+        disjointness constraint in order to provide a path to all the LSPs that are part of the association. In these case it would be useful to mark the objects as 'optional' and it could be ignored by the PCEP peer. Also it would be used for the PCEP speaker to learn if the PCEP peer has relaxed the constraint and ignored the processing of the PCEP object.</t>  
 
      <t>Thus, this document simply clarifies how the already existing P and I flag in PCEP common object header could be used during stateful PCEP exchanges.</t>   
     </section>
@@ -131,7 +131,7 @@
       <t>The P flag in the PCRpt message <xref target="RFC8231"/> allows a PCC to specify
       to a PCE whether the object must be taken
       into account by the PCE (during path computation or re-optimization) or is just
-      optional.  When the P flag is set, the object MUST be taken into
+      optional.  When the P flag is set in PCRpt message, the object MUST be taken into
       account by the PCE.  Conversely, when the P flag is cleared, the
       object is optional and the PCE is free to ignore it. The P flag for the
       mandatory objects LSP and ERO (intended path) MUST be set in the 
@@ -148,7 +148,7 @@
       <t>The P flag in the PCUpd message <xref target="RFC8231"/> and the PCInitiate message <xref target="RFC8281"/> allows a PCE to specify
       to a PCC whether the object must be taken
       into account by the PCC (during path setup) or is just
-      optional.  When the P flag is set, the object MUST be taken into
+      optional.  When the P flag is set in PCUpd/PCInitiate, the object MUST be taken into
       account by the PCC.  Conversely, when the P flag is cleared, the
       object is optional and the PCC is free to ignore it. The P flag for the
       mandatory objects SRP, LSP and ERO (intended path) MUST be set in the 
@@ -169,9 +169,7 @@
       processed.  The PCE MAY include the ignored optional object in its
       update request and set the I flag to indicate that the optional object was
       ignored.  When the I flag is cleared, the
-      PCE indicates that the optional object was processed. Note that 
-      for the delegated LSPs, the PCE can update and mark some object as
-      ignored even when the PCC had set the P flag during delegation.</t>
+      PCE indicates that the optional object was processed. </t>
   </section>    
   <section title="The PCRpt message" toc="default">
    <t>The I flag in the PCRpt message <xref target="RFC8231"/> allows a PCC to 
@@ -181,13 +179,22 @@
       ignored at PCC.  When the I flag is cleared, the
       PCC indicates that the optional object was processed. 
       The I flag has no meaning if the PCRpt message is not in response to a 
-      PCUpd or PCInitiate message.
+      PCUpd or PCInitiate message (i.e. without the SRP object in PCRpt message).
       </t>
     </section>
     <section title="The PCInitiate message" toc="default">
       <t>The I flag has no meaning in the PCinitiate message <xref target="RFC8281"/>.</t>
     </section>
 </section>
+<section title="Delegation" toc="default">
+<t>Delegation is an operation to grant a PCE temporary rights to modify a
+      subset of LSP parameters on one or more LSPs of a PCC as described in
+      <xref target="RFC8051"/>. Note that 
+      for the delegated LSPs, the PCE can update and mark some object as
+      ignored even when the PCC had set the P flag during delegation. Similarly, the PCE can update and mark some object as a must to process even when the PCC had not set the P flag during delegation.</t>
+      <t>The PCC MUST confirm this by sending the PCRpt message with the P flag set as per the PCE expectation for the corresponding object. In case PCC cannot except this, it would reach as per the processing rules in <xref target="RFC8231"/>.</t>
+
+      </section>
 <section title="Unknown Object Handling" toc="default">
   <t>This document updates the handling of unknown objects in stateful PCEP messages as per the setting of P flag in the common object header in a similar way as <xref target="RFC5440"/>, i.e. if a PCEP speaker does not understand an object with the P flag set or
    understands the object but decides to ignore the object, the entire
@@ -197,7 +204,6 @@
    to convey error information. This document does not change that procedure. </t>
   </section>
 </section>
-
 
     <section title="Security Considerations" toc="default">
       <t>This documents clarifies how the already existing P and I flag in PCEP common object header could be used during stateful PCEP exchanges. It updates the
@@ -273,12 +279,14 @@ TBD1      RELAX bit                   [This I.D.]
      <?rfc include="reference.RFC.5925.xml" ?>
      <?rfc include="reference.RFC.6952.xml" ?>
      <?rfc include="reference.RFC.7525.xml" ?>
+     <?rfc include="reference.RFC.8051.xml"?>
      <?rfc include="reference.RFC.8233.xml"?>
      <?rfc include="reference.RFC.8253.xml"?>
      <?rfc include="reference.RFC.8281.xml"?>
      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
-     <?rfc include="reference.I-D.ietf-pce-association-diversity"?>
      <?rfc include="reference.I-D.ietf-pce-association-group"?>
+     <?rfc include="reference.I-D.ietf-pce-association-diversity"?>
+     
      
 
 
