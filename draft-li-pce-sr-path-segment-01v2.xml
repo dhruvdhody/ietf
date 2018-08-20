@@ -533,7 +533,7 @@
         <t>This document adds the following flags to the CCI Object: 
           <list style="symbols">
             <t>P (PCC Allocation bit): If the bit is set to 1, it indicates that the allocation needs to be done by the PCC for this central controller instruction. A PCE set this bit to request the
-              PCC to make an allocation from its SR label/ID space. A PCC would set this bit to indicate that it has allocated the CC-ID and report it to the PCE.               
+              PCC to make an allocation from its SR label/ID space. A PCC would set this bit to indicate that it has allocated the CC-ID and report it to the PCE. </t>              
           </list>
         </t>      
           
@@ -623,11 +623,11 @@
 
           <t>If the egress PCC wishes to withdraw or modify a previously reported path
           ID value, it MUST send a PCRpt message without any PATH-ID TLV or
-          with the PATH-ID TLV containing the new path ID respectively in the CCI object.</t>
+          with the PATH-ID TLV containing the new path ID respectively in the CCI object. The PCE would further trigger the removal of the central controller instruction as per <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
 
           <t>If a PCE wishes to modify a previously requested path ID value,
-          it MUST send a new PCInitiate message with CC-ID/PATH-ID TLV containing the new
-          path ID value and P flag is set. The PCE should trigger the removal of the older path ID next.</t>
+          it MUST send a new PCInitiate message with an allocation request CC-ID/PATH-ID TLV containing the new
+          path ID value and P flag is set. The PCE should trigger the removal of the older path ID next as per <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>
 
 <!--          <t>If a PCC receives a valid path ID value from a PCE which is
           different than the current path ID, it MUST try to allocate the new
@@ -727,9 +727,9 @@
                     |                    |   the LSP-DB and    |
                     |                    |   request Path ID   |   
                     |                    |                     |
-                    |                    | --- PCInitiate ---> | 
-                    |                    |      PATH-ID TLV in | 
-                    |                    |      LSP Object     |  
+                    |                    | --- PCInitiate ---> | Egress allocates
+                    |                    |      PATH-ID TLV in | a Path-ID from
+                    |                    |      LSP Object     | its space  
                     |                    |                     |
                     |                    | <----- PCRpt ------ |
                     |                    |       Path ID       |
