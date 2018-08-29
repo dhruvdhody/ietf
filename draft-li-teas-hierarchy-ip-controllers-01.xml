@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902" category="info" docName="draft-li-teas-hierarchy-ip-controllers-01" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+  <front>
+    <title abbrev="HIC">Hierarchy of IP Controllers (HIC)</title>
+    <author initials="Z" surname="Li" fullname="Zhenbin Li">
+    <organization>Huawei Technologies</organization>
+    <address>
+        <postal>
+          <street>Huawei Bld., No.156 Beiqing Rd.</street>
+          <city>Beijing</city>
+          <region></region>
+          <code>100095</code>        
+          <country>China</country>
+        </postal>
+        <email>lizhenbin@huawei.com</email>
+      </address>
+    </author>
+
+    <author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+    
+    
+    <author initials="H" surname="Chen" fullname="Huaimo Chen">
+    <organization>Huawei Technologies</organization>
+    <address>
+        <postal>
+          <street></street>
+          <city>Boston</city>
+          <region>MA</region>
+          <code></code>        
+          <country>USA</country>
+        </postal>
+        <email>huaimo.chen@huawei.com</email>
+      </address>
+    </author>
+    <date year="2018" />
+    <area>Routing</area>
+    <workgroup>TEAS Working Group</workgroup>
+    <keyword>HIC</keyword>
+    <abstract>
+   <t>    
+   This document describes the interactions between various IP controllers in a hierarchical fashion to provide various IP services. It describes how the 
+   Abstraction and Control of Traffic Engineered Networks (ACTN) framework is applied to the Hierarchy of IP controllers (HIC) as well as document the interactions with other protocols 
+   like BGP, Path Computation Element Communication Protocol (PCEP) to provide end to end dynamic services spanning multiple domains and controllers (e.g. Layer 3 Virtual Private Network (L3VPN), Seamless MPLS etc). 
+   </t>  
+   </abstract>
+   <!--
+  <note title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
+    </note>   -->
+  </front>
+  <middle>
+    <section title="Introduction" toc="default">
+   <t>
+   Software-Defined Networking (SDN) refers to a separation between the
+   control elements and the forwarding components so that software
+   running in a centralized system called a controller, can act to
+   program the devices in the network to behave in specific ways.  A
+   required element in an SDN architecture is a component that plans how
+   the network resources will be used and how the devices will be
+   programmed.  It is possible to view this component as performing
+   specific computations to place flows within the network given
+   knowledge of the availability of network resources, how other
+   forwarding devices are programmed, and the way that other flows are
+   routed. The Application-Based Network Operation (ABNO) <xref target="RFC7491"/> 
+   describes how various components and technologies fit together. 
+   </t>
+   <t>
+   A domain <xref target="RFC4655"/> is any collection of network
+        elements within a common sphere of address management or path
+        computation responsibility.  Specifically within this document
+        we mean a part of an operator's network that is under common
+        management.  Network elements will often be grouped into
+        domains based on technology types, vendor profiles, and
+        geographic proximity and under a domain controller. 
+   </t> 
+   <t>
+    Multiple such domains in the network are interconnected, and a path 
+    is established through a series of connected domains to form an end-to-end 
+    path over which various services are offered. Each domain is under the 
+    control of the domain controller (or lower-level controller), and a "super controller" (or high-level controller) 
+    takes responsibility for a high-level view of the network before distributing tasks to domain controllers (or lower-level controllers).
+    It is possible for each of the domain to use a different tunneling mechanism (eg RSVP-TE, Segment Routing (SR) etc).
+   </t>
+   <t>
+   <xref target="I-D.ietf-teas-actn-framework"/> describes the framework for 
+   Abstraction and Control of Traffic Engineered Networks (ACTN) as well as a set of management and control functions
+   used to operate multiple TE networks. This documents would apply the ACTN principles to Hierarchy of IP controllers (HIC)
+   and focus on the applicability and interactions with other protocol and technologies (specific to IP packet domains).
+   </t> 
+   <t>
+   Sometimes, service (such as Layer 3 Virtual Private Network (L3VPN), Layer 2 Virtual Private Network (L2VPN), Ethernet VPN (EVPN), Seamless MPLS) require sites attached to different 
+   domains (under the control of different domain controller) to be interconnected as part of the VPN 
+   service. This require multi-domain coordination between domain controllers to compute and setup 
+   E2E path for the VPN service. 
+   </t> 
+   <t>    
+   This document describes the interactions between various IP controllers in a hierarchical fashion to provide various IP services. It describes how the 
+   Abstraction and Control of Traffic Engineered Networks (ACTN) framework is applied to the Hierarchy of IP controllers (HIC) as well as document the interactions with control plane protocols 
+   (like BGP, Path Computation Element Communication Protocol (PCEP)) and management plane aspects (Yang models) to provide end to end dynamic services spanning multiple domains and controllers (e.g. L3VPN, Seamless MPLS etc). 
+   </t>  
+   </section>
+
+   <section title="Overview" toc="default" anchor="sec_overview">
+    <t><xref target="fig_ex"/> show examples of multi-domain IP domains under hierarchy of IP controllers. 
+        <figure title="Example: Hierarchy of IP controllers (HIC) " anchor="fig_ex">
+          <artwork><![CDATA[
+
+                          |
+                    +------------+
+                    |  SuperCo   |  
+                    +------------+
+                          | 
+          ----------------------------------                
+          |               |                |
+   +------------+   +------------+   +------------+
+   |   DoCo#1   |   |   DoCo#2   |   |   DoCo#3   |
+   +------------+   +------------+   +------------+
+     
+
+   +--Domain#1--+   +--Domain#2--+   +--Domain#3--+
+   |            |   |            |   |            |
+   |     B------+---+---D-----E--+---+------J     |
+   |    /       |   |    \   /   |   |       \    |
+   |   /        |   |     \ /    |   |        \   |
+   |  A         |   |      H     |   |         L  |
+   |   \        |   |     / \    |   |        /   |
+   |    \       |   |    /   \   |   |       /    |
+   |     C------+---+---F-----G--+---+------K     |
+   |            |   |            |   |            |
+   +------------+   +------------+   +------------+             
+          ]]>
+          </artwork>
+          </figure>         
+    </t>        
+    <t>The IP "Super Controller" receives request from the network/service orchestrator to setup dynamic services spanning multiple domains. The IP "Super Controller" breaks down and assigns tasks to the domain controllers, responsible for communicating to network devices in the domain. It further coordinates between the controller to provide a unified view of the multi-domain network.</t>
+    <section title="Mapping to ACTN" toc="default" anchor="sec_actn">
+        <t>
+        As per <xref target="I-D.ietf-teas-actn-framework"/>, ACTN has following main functions -
+        <list style="symbols">
+            <t>Multi-domain coordination</t>
+            <t>Virtualization/Abstraction</t>
+            <t>Customer mapping/translation</t>
+            <t>Virtual service coordination</t>
+        </list> 
+        </t>
+        <t>These functions are part of Multi Domain Service Coordinator (MDSC) and/or Provisioning Network Controller (PNC). Further these functions are part of the controller / orchestrator.</t>
+        <t>The HIC is an instantiation of ACTN framework for IP packet network. The IP domain (lower-level) controllers implements the PNC functionalities for configuring, controlling and monitoring the IP domain. The "super controller" (high-level controller) implements the MDSC functionalities for coordination between multiple domains as well as maintaining an abstracted view of multiple domains. It also takes care of the service related functionalities of customer mapping/translation and virtual service coordination.</t>
+        <t>The ACTN functions are part of the IP controllers and responsible for the TE topology and E2E path computation/setup. There are other functions along with ACTN that are needed to manage multiple IP domain networks.</t>
+    </section>
+    <section title="Interface between Super Controller and Domain Controller in HIC" toc="default" anchor="sec_interface">
+        <t>The interaction between super controller and domain controller in HIC is a combination of Control Plane and Management Plane interface as shown in <xref target="fig_int"/>. 
+        BGP <xref target="RFC4271"/> and PCEP <xref target="RFC5440"/> are example of the control plane interface; where as NETCONF <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/> 
+        are example of management plane interface.
+       <figure title="Interface between Super Controller and Domain Controller " anchor="fig_int">
+          <artwork><![CDATA[
+
+   +----------------------------------------------+
+   |                Super Controller              |
+   |                                              |
+   |                                              | 
+   +------------------*------#---------------------+
+                      *      #
+                      *      #
+                   ************************* 
+                   *         #             *  
+             ######*###############        *
+             #     *              #        *
+   +---------#-----*--+        +--#--------*------+
+   | Domain           |        | Domain           |
+   | Controller       |        | Controller       |
+   +--#------------*--+        +--#------------*--+
+      #            *              #            *
+      #            *              #            * 
+
+
+    * -> Control Plane Interface
+    # -> Management Plane Interface
+
+          ]]>
+          </artwork>
+          </figure> </t>
+          <t>Note that ACTN's MDSC-PNC Interface (MPI) could be implemented via management plane interface using Yang models <xref target="I-D.ietf-teas-actn-yang"/> or via PCEP control plane interface 
+          <xref target="I-D.ietf-pce-applicability-actn"/>.</t>
+    </section>      
+    </section>  
+
+   <section title="Key Concepts" toc="default" anchor="sec_key">
+   <section title="Topology" toc="default" anchor="sec_topo">
+   <t>The Domain Controller is expected to be aware of the topology of the network devices in its domain. The domain controller could participate in the IGP (<xref target="RFC3630"/> and <xref target="RFC5305"/>) or use
+   BGP-LS <xref target="RFC7752"/> by which link-state and TE information is collected and shared with domain controller using the BGP routing protocol. </t> 
+   <t>An alternate approach would be to rely on the management plane interface which uses the YANG model for network/TE Topology as per <xref target="I-D.ietf-i2rs-yang-network-topo"/> and <xref target="I-D.ietf-teas-yang-te-topo"/>.</t>
+   <t>The domain controller is expected to share the domain topology to the Super Controller as aligned to ACTN (where PNC abstract the topology towards MDSC). A level of abstraction is usually applied while presenting the topology to a higher level controller. Topology abstraction is described in <xref target="RFC7926"/> as well as <xref target="I-D.ietf-teas-actn-framework"/>. BGP-LS, PCEP-LS <xref target="I-D.dhodylee-pce-pcep-ls"/> or management plane interface based on the abstracted network/TE Topology could be used to carry the abstract topology to the super-controller. At minimum the border nodes and inter-domain links are exposed to the super-controller. </t>
+   <t>Further <xref target="I-D.ietf-teas-actn-framework"/> defines three types of topology abstraction - (1) Native/White Topology; (2) Black Topology; and (3) Grey Topology. Based on the local policy, the domain controller would share the domain topology to the Super Controller based on the abstraction type. Note that any of the control plane or management plane mechanism could be used to carry abstracted domain topology. The Super Controller's MDSC function is expected to manage a E2E topology by coordinating the abstracted domain topology received from the domain controllers.</t>
+   </section> 
+   <section title="Path Computation/Path instantiation" toc="default" anchor="sec_pc">
+    <t>The Domain Controller is responsible for computing and setup of path when the source and destination is in the same domain, otherwise the Super Controller coordinates the multi-domain path computation and setup with the help of the domain controller. This is aligned to ACTN.</t> 
+    <t>PCEP <xref target="RFC5440"/> provides mechanisms for Path Computation Elements (PCEs) <xref target="RFC4655"/> to
+   perform path computations in response to Path Computation Clients
+   (PCCs) requests. Since then, the role and function of the PCE has grown to allow
+   delegated control <xref target="RFC8231"/> and PCE-initiated use of network
+   resources <xref target="RFC8281"/>.</t>
+
+    <t>Further, <xref target="RFC6805"/> and <xref target="I-D.ietf-pce-stateful-hpce"/> describes a hierarchy of
+    PCE with Parent PCE coordinating multi-domain path computation function between Child PCE(s). This fits well 
+    with HIC as described in this document.</t> 
+    <t>Note that a management plane interface which uses the YANG model for path computation/setup (<xref target="I-D.ietf-teas-yang-path-computation"/> and <xref target="I-D.ietf-teas-yang-te"/>) could be used in place of PCEP.</t>
+    <t>In case there is a need to stitch per domain tunnels into an E2E tunnel, mechanism are described in <xref target="I-D.lee-pce-lsp-stitching-hpce"/> and <xref target="I-D.dugeon-pce-stateful-interdomain"/>.</t>
+   </section>
+   <section title="BGP considerations" toc="default" anchor="sec_bgp">
+   <t><xref target="RFC4456"/> describes the concept of route-reflection where a "route reflector" (RR) reflects the routes to avoid full mesh connection between Internal BGP (IBGP) peers. The IP domain
+   controller can play the role of RR in its domain. The super controller can further act as RR to towards the domain controller.</t>
+
+        <t>BGP can provide routing policies for the traffic management, like
+        route preference, AS-path filter policy, IP-prefix filter policy and
+        route aggregation. The controller can distribute these BGP Policy into the
+        routers in a single IP domain. For the scenario of multiple domains,
+        the super controller can distribute per BGP Policy into each IP domain
+        controller. Then the IP domain controller trickles down the BGP Policy
+        to the network devices.</t>
+
+        <t><xref target="RFC5575"/> describes the concept of BGP Flowspec that
+        can be used to distribute traffic flow specifications. A flow
+        specification is an n-tuple consisting of several matching criteria
+        that can be applied to IP traffic. The controller can originate the flow specifications and disseminate to the routers. The flow action includes the redirection to a specific TE tunnel. Also, the IP domain controller could be
+        responsible for collecting the flow sample in its domain and the super
+        controller can act as the Flow Analysis Server.</t>
+
+        <t><xref target="RFC7854"/> describes the BGP Monitoring Protocol
+        (BMP) to monitor BGP sessions. BMP is used to obtain the route views
+        with a flexible way. In the fashion of hierarchical architecture, the
+        IP domain controller can be used as the domain Monitoring Station.
+        Meanwhile, the super controller is responsible for a high-level view
+        of the global network state.</t>
+
+
+   </section>
+   </section>
+
+   <section title="VPN Service" toc="default" anchor="sec_vpn">
+    <section title="Seamless MPLS" toc="default" anchor="sec_smpls">
+    <t><xref target="I-D.ietf-mpls-seamless-mpls">Seamless MPLS</xref>
+      describes an architecture which can be used to extend MPLS networks to
+      integrate access and core/aggregation networks into a single MPLS
+      domain.In the
+      seamless MPLS for mobile backhaul, since there are multiple domains
+      including the core network and multiple mobile backhaul networks, 
+      for each domain there is a domain controller. In order
+      to implement the end-to-end network service provision, there should be
+      coordination among multiple domain controllers.</t>        
+      <t></t>
+        <figure title="Seamless MPLS" anchor="fig_smpls">
+          <artwork><![CDATA[
+
+                             | 
+                             | 
+                             | 
+                          +----------+
+           |--------------|Super     |---------|
+           |              |Controller|         |
+           |              +----------+         |
+           |                 |                 |
+           |                 |                 |
+           |                 |                 |
+       +------+           +------+          +------+
+  |----|DoCo  |----|  |---|DoCo  |--|  |----|DoCo  |---| 
+  |    |#X1   |    |  |   |#Y    |  |  |    |#X2   |   | 
+  |    +------+    |  |   +------+  |  |    +------+   | 
+  |                |  |             |  |               | 
+  |                |  |             |  |               | 
+  |                |  |             |  |               | 
+  |               +----+           +----+              |       
+  |           ....|ABR1|...........|ABR3|....          |       
++----+   .....    +----+           +----+    .....   +----+
+| PE |...                                         ...| PE |
++----+   .....                                       +----+
+              ....+----+           +----+    .....           
+                  |ABR2|...........|ABR4|....                  
+                  +----+           +----+                    
+
+  |      IGP-X1     |      IGP-Y     |       IGP-X2     |
+  |       (MBH)     |      (Core)    |       (MBH)      |
+  |                 |                |                  |
+  |-----BGP LSP-----|-----BGP LSP----|------BGP LSP-----|
+  |                 |                |                  |
+  |---LDP/TE LSP----|----LDP/TE LSP--|-----LDP/TE LSP---| 
+  |                 |                |                  |
+
+         
+]]></artwork>
+        </figure>
+    <t>Super Controller is responsible for setting the seamless MPLS service. It should break down the service model to network configuration model <xref target="RFC8309"/> and the domain controller further break it to the device configuration model to the PE/ASBR to make the E2E seamless MPLS service. The selection of appropriate ASBRs and handling of intra-domain tunnels is coordinated by the Super Controller in the similar fashion as shown in <xref target="sec_l3vpn"/>.</t>
+    <t>By enabling BGP sessions between Domain Controller and Super Controller, BGP labeled routes can also be learned at Super Controller. As Super Controller is aware of the (abstract) topology, it could make intelligent decisions regarding E2E BGP LSP to optimize based on the overall traffic information.</t>
+    </section>    
+    <section title="L3VPN" toc="default" anchor="sec_l3vpn">
+    <t>
+    A Layer 3 IP VPN service is a collection of sites that are authorized
+   to exchange traffic between each other over a shared IP
+   infrastructure. <xref target="RFC4110"/> provides a framework for Layer 3 Provider-Provisioned
+   Virtual Private Networks (PPVPNs). <xref target="RFC8299"/> provides a L3VPN
+   service delivery YANG model for PE-based VPNs. The Super controller is expected to implement the L3SM model
+   and translate it to network models towards the domain controller, which in turn translate it to the device model. 
+   See <xref target="RFC8309"/> for more details.   
+    </t>        
+    <t>
+<figure title="L3VPN" anchor="fig_l3vpn">
+<artwork><![CDATA[        
+                                  | L3SM 
+                                  V
+                       +--------------------+
+                       |  Super Controller  |
+                       +--------------------+
+                                  |
+                  +-------------------------------+
+                  |                               |
+                  V                               V
+               +--------+                   +--------+
+               | DoCo#1 |                   | DoCo#2 |
+               |        |                   |        |
+               +--------+                   +--------+
+
+         CE                                                   CE
+          \     AS 100                          AS 200       /
+           \                                               /
+            A----B----C----ASBR1------ASBR2----D----E----F
+           /    /    /       /          /     /    /    /
+          /    /    /       /          /     /    /    / 
+   CE----G----H----I----ASBR3------ASBR4----J----K----L------CE    
+]]></artwork></figure>                 
+    </t>
+    <t>Based on the user data in L3SM model, the network configurations need to be trickle down to the network device to setup the L3VPN.</t>
+    <t>Based on the QoS or Policy requirement for the L3VPN service, the Super Controller may - 
+        <list style="symbols">
+            <t>Set the tunnel selection policy at the PE/ASBR routers so that they could select the existing tunnels</t>
+            <t>Select an existing tunnels at the controller level and bind it to the VPN service</t>
+            <t>Initiate the process of creating a new tunnel based on the QoS requirement and bind it the VPN service</t>
+            <t>Initiate the process of creating a new tunnel based on the the policy</t>
+        </list>
+    </t>
+    <t>Refer <xref target="I-D.lee-teas-te-service-mapping-yang"/> for more details from ACTN perspective.</t>
+    <t>Apart from the Management plane interface based on respective YANG models, the control plane interface PCEP could be used for path computation and setup. </t>
+    </section>         
+
+    
+    <section title="L2VPN and EVPN service" toc="default" anchor="sec_l2">
+    	<t>There are two fundamentally different kinds of Layer 2 VPN service
+   that a service provider could offer to a customer: Virtual Private
+   Wire Service (VPWS) and Virtual Private LAN Service (VPLS) <xref target="RFC4664"/>.
+   A VPWS is a VPN service that supplies an L2 point-to-point service. 
+   A VPLS is an L2 service that emulates LAN service across a Wide Area
+   Network (WAN). A BGP MPLS-based Ethernet VPN (EVPN) <xref target="RFC7432"/> addresses 
+   some of the limitations when it
+   comes to multihoming and redundancy, multicast optimization,
+   provisioning simplicity, flow-based load balancing, and multipathing etc. 
+   </t>
+   <t>The handling of L2VPN/EVPN service is done in a similar fashion as shown in <xref target="sec_l3vpn"/>.</t>
+    </section>
+   </section>  
+
+   
+    <section title="Possible Features/Extensions" toc="default" anchor="sec_ext">
+    <t>This sections list some of the possible features or protocol extensions that could be worked on to deploy HIC in a multi-domain packet network.
+    	<list style="numbers">
+    		<t>Simplify the initial configurations needed to setup the relationship between the super controller and the domain controllers. Note that 
+    			this could be done via exchanges during initial session establishment, discovery via other protocols, service discovery (such as DNS) etc.</t>
+    		<t>The (higher-level controller, lower-level controller) relationship or the the role of the controller. </t>	
+    		<t>The learning and handling of various capabilities of the Super Controller and Domain Controller. </t>
+    		<t>Handling of multiple instances of controller at each level for high availability.</t>
+    		
+    	</list>
+    </t>
+    <t>[Editor's Note - This list is expected to be updated in next version with more details]</t>     
+    </section>  
+
+<section title="Other Considerations" toc="default">
+   <section title="Control Plane" toc="default" anchor="sec_cp">
+    <section title="PCE / PCEP" toc="default" anchor="sec_pce">
+    <t>The Path Computation Element communication Protocol (PCEP) <xref target="RFC5440"/> provides
+   mechanisms for Path Computation Elements (PCEs) <xref target="RFC4655"/> to perform path
+   computations in response to Path Computation Clients (PCCs) requests.</t>
+   
+   <t>The ability to compute shortest constrained TE LSPs in Multiprotocol
+   Label Switching (MPLS) and Generalized MPLS (GMPLS) networks across
+   multiple domains has been identified as a key motivation for PCE
+   development.</t>
+   
+   <t>A stateful PCE <xref target="RFC8231"/> is capable of considering, for the purposes of
+   path computation, not only the network state in terms of links and
+   nodes (referred to as the Traffic Engineering Database or TED) but
+   also the status of active services (previously computed paths,
+   and currently reserved resources, stored in the Label Switched
+   Paths Database (LSPDB).</t>
+
+   <t><xref target="RFC8051"/> describes general considerations for
+   a stateful PCE deployment and examines its applicability and
+   benefits, as well as its challenges and limitations through a number
+   of use cases.</t>
+
+   <t><xref target="RFC8231"/> describes a set of extensions to PCEP to
+   provide stateful control.  A stateful PCE has access to not only the
+   information carried by the network's Interior Gateway Protocol (IGP),
+   but also the set of active paths and their reserved resources for its
+   computations.  The additional state allows the PCE to compute
+   constrained paths while considering individual LSPs and their
+   interactions.  <xref target="RFC8281"/> describes the setup,
+   maintenance and teardown of PCE-initiated LSPs under the stateful PCE
+   model.</t>
+
+   <t><xref target="RFC8231"/> also describes the active stateful PCE.
+   The active PCE functionality allows a PCE to reroute an existing
+   LSP or make changes to the attributes of an existing LSP, or a PCC to delegate
+   control of specific LSPs to a new PCE.</t>
+
+   <t>Computing paths across large multi-domain environments
+   require special computational components and cooperation between
+   entities in different domains capable of complex path computation.
+   The PCE provides an architecture and a set of functional components 
+   to address this problem space. A PCE may be used to compute 
+   end-to-end paths across multi-domain
+   environments using a per-domain path computation technique <xref target="RFC5152"/>.
+   The Backward recursive PCE based path computation (BRPC) mechanism
+   <xref target="RFC5441"/> defines a PCE-based path computation procedure to compute
+   inter-domain constrained  MPLS and
+   GMPLS TE networks. However,
+   both per-domain and BRPC techniques assume that the sequence of
+   domains to be crossed from source to destination is known, either
+   fixed by the network operator or obtained by other means.</t>
+   <t><xref target="RFC6805"/> describes a Hierarchical PCE (H-PCE)
+   architecture which can be used for computing end-to-end paths for
+   inter-domain MPLS Traffic Engineering (TE) and GMPLS Label Switched
+   Paths (LSPs) when the domain sequence is not known.  
+   Within the Hierarchical PCE (H-PCE) architecture, 
+   the Parent PCE (P-PCE) is used to compute a multi-domain
+   path based on the domain connectivity information.  A Child PCE
+   (C-PCE) may be responsible for a single domain or multiple domains,
+   it is used to compute the intra-domain path based on its domain
+   topology information.</t>
+   
+   <t><xref target="I-D.ietf-pce-stateful-hpce"/> state the considerations for stateful PCE(s) in
+   hierarchical PCE architecture.  In particular, the behavior changes
+   and additions to the existing stateful PCE mechanisms (including PCE-
+   initiated LSP setup and active PCE usage) in the context of networks
+   using the H-PCE architecture.</t> 
+   <t><xref target="I-D.ietf-pce-applicability-actn"/> examines the applicability of PCE/PCEP to the ACTN
+   framework in detail.</t>
+    </section>
+    <section title="BGP" toc="default" anchor="sec_bgp_cons">
+    	<t> <xref target="RFC7752"/> describes an optional, non-transitive
+          BGP attribute, BGP-LS that is used to carry link, node, and prefix
+          parameters and attributes. BGP-LS is a new approach to collect the
+          network topology information. It is an extension to BGP for
+          distribution the network's link-state (LS) topology to external
+          entities, such as the SDN controller. Network's link-state topology
+          model consists of nodes and links in which a set of attributes is
+          also contained. The link-state topology model is distributed among
+          the IGP domain. The specific protocol used in an IGP domain is OSPF
+          <xref target="RFC2238"/> or IS-IS <xref target="RFC1142"/>. But the
+          detailed link-state models of these two protocols are not identical.
+          Therefore, BGP-LS can provide a more abstract topology model which
+          can map the IGP models to its own model.</t>
+
+          <t>The domain controller can play the role of BGP speaker to
+          retrieve the link-state informaiton from IGP LSDBs in its domain.
+          Then the super controller can also further act as BGP speaker to
+          collect global link-state information from the domain
+          controllers.</t>
+
+          <t>BGP-Flowspec is a solution for preventing distributed
+          Denial-of-service (DDoS) attack. BGP-Flowspec distributes
+          specification rules into neighbors. [RFC5575] defines a new BGP NLRI
+          encoding format that can be used to distribute traffic flow
+          specifications. Additionally, it defines two applications of that
+          encoding format: one that can be used to automate inter-domain
+          coordination of traffic filtering, such as what is required in order
+          to mitigate DDoS attacks; and a second application to provide
+          traffic filtering in the context of BGP/MPLS VPN service.</t>
+
+          <t>The IP domain controller can act as the traffic sampling node.
+          The super controller can act as the traffic analysis server. When
+          the super controller finds the attack happened, the super controller
+          should distribute the flow rules to associated IP domain
+          controllers. And each IP domain controller should distribute the
+          flow rules into the ingress routers.</t>
+
+          <t><xref target="I-D.luo-grow-bgp-controller-based-ts"/> describes
+          the traffic steering based on BGP controller. The traditional method
+          for traffic steering depends on static configuration which is time
+          consuming and inefficient. With the hierarchical IP controller, the
+          IP domain controller can have the domain network topology view and
+          routing information while the super controller can have the global
+          network topology view and routing information. The super controller
+          can compute the end-to-end paths to satisfy the differentiated
+          service requirement. The IP domain controller may be used to
+          distribute the routing policy into the routers. BGP policy varies in
+          many aspects. Its goal is to meet the customer application and
+          connectivity requirement, and specific service transport needs. So
+          the super BGP controller is responsible for the coordination of
+          multiple domain BGP Policy. And then distribute Policy to related IP
+          domain controller. The IP domain controller is responsible for
+          distributing the policy to its network nodes.</t>
+
+          <t><xref target="I-D.ietf-idr-rtc-hierarchical-rr"/> describes the
+          route target (RT) constrain mechanism in the hierarchical route
+          reflection (RR) scenario. <xref target="RFC4684"/> describes the
+          route target constrain mechanism to build a route distribution graph
+          in order to restrict the propagation of Virtual Private Network
+          (VPN) routes. <xref target="I-D.ietf-idr-rtc-hierarchical-rr"/>
+          proposes a solution to address the RT constrain issue in the
+          hierarchical RR scenarios. The super controller corresponding to
+          higher level RR can receive the RT-constrain routes from the lower
+          level RR, which is acted by the IP domain controller. The higher
+          level RR will select one of the received routes as the best route.
+          then it should advertise the best route to all the lower level RR to
+          build the route distribution graph. This fits well with the HIC as
+          described in this document.</t>
+    </section>
+    </section>  
+
+   <section title="Management Plane" toc="default" anchor="sec_mp">
+    <section title="YANG Models" toc="default" anchor="sec_Yang">
+    <t>This is an non-exhaustive list of possible yang models developed or in-development that could be used for HIC.
+    <list>
+    	<t>Topology: <xref target="I-D.ietf-i2rs-yang-network-topo"/> defines a generic YANG data model for
+        network topology. <xref target="I-D.ietf-teas-yang-te-topo"/> defines a YANG data model for representing, retrieving
+        and manipulating Traffic Engineering (TE) Topologies. </t>
+    	<t>Tunnel: <xref target="I-D.ietf-teas-yang-te"/> defines a YANG data model for the configuration and
+        management of Traffic Engineering (TE) interfaces, tunnels and Label
+        Switched Paths (LSPs).</t>
+    	<t>L3VPN: The Layer 3 service model (L3SM) is defined in <xref target="RFC8299"/>, which is a YANG data model that can be used for
+   communication between customers and network operators and to deliver
+   a Layer 3 provider-provisioned VPN service. <xref target="I-D.ietf-bess-l3vpn-yang"/> defines a YANG data model that can be used to configure
+   and manage BGP Layer 3 VPNs at the device. Note that a network configuration model at the Domain Controller level needs to be developed.</t>
+    	<t>L2VPN/EVPN: <xref target="I-D.ietf-l2sm-l2vpn-service-model"/> defines a YANG data model that can be used to configure
+   a Layer 2 Provider Provisioned VPN service. This model is intended to be instantiated at management system to
+   deliver the overall service. <xref target="I-D.ietf-bess-l2vpn-yang"/> and <xref target="I-D.ietf-bess-evpn-yang"/> defines a YANG data model to 
+   configure and manage L2VPN and EVPN service respectively. Note that a network configuration model at the Domain Controller level needs to be developed.</t>
+    	<t>OAM: TBD</t>
+      <t>BGP Policy: <xref target="I-D.ietf-idr-bgp-model"/> defines a
+              YANG data model that can be used to configure BGP Policy based
+              on data center, carrier and content provider operational
+              requirements. The model is intended to be vendor-neutral, in
+              order to allow operators to manage BGP configuration in
+              heterogeneous environments with routers supplied by multiple
+              vendors. Note that a network configuration model at the Domain
+              Controller level needs to be developed.</t>
+
+              <t>BGP Flowspec: <xref target="I-D.wu-idr-flowspec-yang-cfg"/>
+              defines a YANG data model for Flow Specification
+              implementations. The configuration data is described as flow
+              specification rules that can be distributed as BGP NLRI to a
+              network element. The rules can be used to filter Distributed
+              Denial of Service attacks (DDoS) besides other use cases. Note
+              that a network configuration model at the Domain Controller
+              level needs to be developed.</t>
+    </list>	
+    </t>
+    <t>[Editor's Note - the above list should be extended.]</t>
+    </section>     
+    <section title="Protocol Considerations" toc="default" anchor="sec_netconf">
+    <t>The Network Configuration Protocol (NETCONF) <xref target="RFC6241"/> provides mechanisms to install, manipulate, and delete the
+   configuration of network devices. The RESTCONF <xref target="RFC8040"/> describes an HTTP-based protocol that provides a
+   programmatic interface for accessing data defined in YANG, using the
+   data-store concepts defined in NETCONF. </t>
+   <t>Some other mechanism like gRPC/gNMI could also be used between controllers using the same YANG data models.</t>	
+    </section>
+    </section>  
+    </section>
+    <section title="IANA Considerations" toc="default" anchor="sec_iana">
+    <t>There are no IANA concerns in this document.</t>     
+    </section>  
+    
+    
+    <section title="Security Considerations" toc="default">
+    <t>There are no new security concerns in this document.</t>
+
+    </section>
+      
+    
+    
+    <section title="Acknowledgments" toc="default">
+
+    </section>
+        
+  </middle>
+  <back>
+    <references title="Normative References">
+    <!--<?rfc include="reference.RFC.2119.xml" ?>-->
+    <?rfc include="reference.I-D.ietf-teas-actn-framework.xml"?>
+    </references>
+    <references title="Informative References">
+      <?rfc include="reference.RFC.1142.xml"?>
+
+      <?rfc include="reference.RFC.2238.xml"?>
+
+      <?rfc include="reference.RFC.3630.xml"?>
+
+      <?rfc include="reference.RFC.4110.xml"?>
+
+      <?rfc include="reference.RFC.4271.xml"?>
+
+      <?rfc include="reference.RFC.4456.xml"?>
+
+      <?rfc include="reference.RFC.4655.xml" ?>
+
+      <?rfc include="reference.RFC.4664.xml" ?>
+
+      <?rfc include="reference.RFC.4684.xml"?>
+
+      <?rfc include="reference.RFC.5152.xml"?>
+
+      <?rfc include="reference.RFC.5305.xml"?>
+
+      <?rfc include="reference.RFC.5440.xml"?>
+
+      <?rfc include="reference.RFC.5441.xml"?>
+
+      <?rfc include="reference.RFC.5575.xml"?>
+
+      <?rfc include="reference.RFC.6241.xml"?>
+
+      <?rfc include="reference.RFC.6805.xml"?>
+
+      <?rfc include="reference.RFC.7432.xml" ?>
+
+      <?rfc include="reference.RFC.7491.xml" ?>
+
+      <?rfc include="reference.RFC.7752.xml" ?>
+
+      <?rfc include="reference.RFC.7854.xml"?>
+
+      <?rfc include="reference.RFC.7926.xml" ?>
+
+      <?rfc include="reference.RFC.8040.xml"?>
+
+      <?rfc include="reference.RFC.8051.xml"?>
+
+      <?rfc include="reference.RFC.8231.xml"?>
+
+      <?rfc include="reference.RFC.8281.xml"?>
+
+      <?rfc include="reference.RFC.8299.xml"?>
+
+      <?rfc include="reference.RFC.8309.xml"?>
+
+      <?rfc include="reference.I-D.ietf-teas-actn-yang.xml"?>
+
+      <?rfc include="reference.I-D.ietf-pce-applicability-actn.xml"?>
+
+      <?rfc include="reference.I-D.ietf-teas-yang-te.xml"?>
+
+      <?rfc include="reference.I-D.ietf-teas-yang-te-topo.xml"?>
+
+      <?rfc include="reference.I-D.ietf-i2rs-yang-network-topo.xml"?>
+
+      <?rfc include="reference.I-D.ietf-pce-stateful-hpce.xml"?>
+
+      <?rfc include="reference.I-D.ietf-teas-yang-path-computation.xml"?>
+
+      <?rfc include="reference.I-D.ietf-mpls-seamless-mpls.xml"?>
+
+      <?rfc include="reference.I-D.ietf-bess-evpn-yang.xml"?>
+
+      <?rfc include="reference.I-D.ietf-bess-l2vpn-yang.xml"?>
+
+      <?rfc include="reference.I-D.ietf-bess-l3vpn-yang.xml"?>
+
+      <?rfc include="reference.I-D.ietf-l2sm-l2vpn-service-model.xml"?>
+
+      <?rfc include="reference.I-D.dhodylee-pce-pcep-ls.xml"?>
+
+      <?rfc include="reference.I-D.lee-teas-te-service-mapping-yang.xml"?>
+
+      <?rfc include="reference.I-D.lee-pce-lsp-stitching-hpce.xml"?>
+
+      <?rfc include="reference.I-D.dugeon-pce-stateful-interdomain.xml"?>
+
+      <?rfc include="reference.I-D.luo-grow-bgp-controller-based-ts.xml"?>
+
+      <?rfc include="reference.I-D.ietf-idr-rtc-hierarchical-rr.xml"?>
+
+      <?rfc include="reference.I-D.ietf-idr-bgp-model.xml"?>
+
+      <?rfc include="reference.I-D.wu-idr-flowspec-yang-cfg.xml"?>
+    </references>
+    
+  </back>
+</rfc>
