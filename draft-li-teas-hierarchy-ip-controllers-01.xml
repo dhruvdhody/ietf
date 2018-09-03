@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
-<?rfc toc="yes" ?>
+<?rfc toc="yes" ?> 
 <?rfc tocompact="yes"?>
 <?rfc tocdepth="4"?>
 <?rfc tocindent="yes"?>
@@ -106,7 +106,7 @@
     It is possible for each of the domain to use a different tunneling mechanism (eg RSVP-TE, Segment Routing (SR) etc).
    </t>
    <t>
-   <xref target="I-D.ietf-teas-actn-framework"/> describes the framework for 
+   <xref target="RFC8453"/> describes the framework for 
    Abstraction and Control of Traffic Engineered Networks (ACTN) as well as a set of management and control functions
    used to operate multiple TE networks. This documents would apply the ACTN principles to Hierarchy of IP controllers (HIC)
    and focus on the applicability and interactions with other protocol and technologies (specific to IP packet domains).
@@ -159,7 +159,7 @@
     <t>The IP "Super Controller" receives request from the network/service orchestrator to setup dynamic services spanning multiple domains. The IP "Super Controller" breaks down and assigns tasks to the domain controllers, responsible for communicating to network devices in the domain. It further coordinates between the controller to provide a unified view of the multi-domain network.</t>
     <section title="Mapping to ACTN" toc="default" anchor="sec_actn">
         <t>
-        As per <xref target="I-D.ietf-teas-actn-framework"/>, ACTN has following main functions -
+        As per <xref target="RFC8453"/>, ACTN has following main functions -
         <list style="symbols">
             <t>Multi-domain coordination</t>
             <t>Virtualization/Abstraction</t>
@@ -212,9 +212,9 @@
    <section title="Topology" toc="default" anchor="sec_topo">
    <t>The Domain Controller is expected to be aware of the topology of the network devices in its domain. The domain controller could participate in the IGP (<xref target="RFC3630"/> and <xref target="RFC5305"/>) or use
    BGP-LS <xref target="RFC7752"/> by which link-state and TE information is collected and shared with domain controller using the BGP routing protocol. </t> 
-   <t>An alternate approach would be to rely on the management plane interface which uses the YANG model for network/TE Topology as per <xref target="I-D.ietf-i2rs-yang-network-topo"/> and <xref target="I-D.ietf-teas-yang-te-topo"/>.</t>
-   <t>The domain controller is expected to share the domain topology to the Super Controller as aligned to ACTN (where PNC abstract the topology towards MDSC). A level of abstraction is usually applied while presenting the topology to a higher level controller. Topology abstraction is described in <xref target="RFC7926"/> as well as <xref target="I-D.ietf-teas-actn-framework"/>. BGP-LS, PCEP-LS <xref target="I-D.dhodylee-pce-pcep-ls"/> or management plane interface based on the abstracted network/TE Topology could be used to carry the abstract topology to the super-controller. At minimum the border nodes and inter-domain links are exposed to the super-controller. </t>
-   <t>Further <xref target="I-D.ietf-teas-actn-framework"/> defines three types of topology abstraction - (1) Native/White Topology; (2) Black Topology; and (3) Grey Topology. Based on the local policy, the domain controller would share the domain topology to the Super Controller based on the abstraction type. Note that any of the control plane or management plane mechanism could be used to carry abstracted domain topology. The Super Controller's MDSC function is expected to manage a E2E topology by coordinating the abstracted domain topology received from the domain controllers.</t>
+   <t>An alternate approach would be to rely on the management plane interface which uses the YANG model for network/TE Topology as per <xref target="RFC8345"/> and <xref target="I-D.ietf-teas-yang-te-topo"/>.</t>
+   <t>The domain controller is expected to share the domain topology to the Super Controller as aligned to ACTN (where PNC abstract the topology towards MDSC). A level of abstraction is usually applied while presenting the topology to a higher level controller. Topology abstraction is described in <xref target="RFC7926"/> as well as <xref target="RFC8453"/>. BGP-LS, PCEP-LS <xref target="I-D.dhodylee-pce-pcep-ls"/> or management plane interface based on the abstracted network/TE Topology could be used to carry the abstract topology to the super-controller. At minimum the border nodes and inter-domain links are exposed to the super-controller. </t>
+   <t>Further <xref target="RFC8453"/> defines three types of topology abstraction - (1) Native/White Topology; (2) Black Topology; and (3) Grey Topology. Based on the local policy, the domain controller would share the domain topology to the Super Controller based on the abstraction type. Note that any of the control plane or management plane mechanism could be used to carry abstracted domain topology. The Super Controller's MDSC function is expected to manage a E2E topology by coordinating the abstracted domain topology received from the domain controllers.</t>
    </section> 
    <section title="Path Computation/Path instantiation" toc="default" anchor="sec_pc">
     <t>The Domain Controller is responsible for computing and setup of path when the source and destination is in the same domain, otherwise the Super Controller coordinates the multi-domain path computation and setup with the help of the domain controller. This is aligned to ACTN.</t> 
@@ -468,27 +468,33 @@
    framework in detail.</t>
     </section>
     <section title="BGP" toc="default" anchor="sec_bgp_cons">
-    	<t> <xref target="RFC7752"/> describes an optional, non-transitive
-          BGP attribute, BGP-LS that is used to carry link, node, and prefix
-          parameters and attributes. BGP-LS is a new approach to collect the
+    	<t> <xref target="RFC7752"/> describes a mechanism by which link-state and TE
+   information can be collected from networks and shared with external
+   components using the BGP routing protocol. This is
+   achieved using a new BGP Network Layer Reachability Information
+   (NLRI) encoding format and a new BGP path attribute (BGP-LS
+   attribute) that carries link, node, and prefix
+          parameters and attributes.</t>
+           <t>BGP-LS is a new approach to collect the
           network topology information. It is an extension to BGP for
           distribution the network's link-state (LS) topology to external
           entities, such as the SDN controller. Network's link-state topology
-          model consists of nodes and links in which a set of attributes is
-          also contained. The link-state topology model is distributed among
-          the IGP domain. The specific protocol used in an IGP domain is OSPF
-          <xref target="RFC2238"/> or IS-IS <xref target="RFC1142"/>. But the
+          consists of nodes and links and a set of attributes. 
+          The link-state topology  is distributed among
+          the IGP domain. The specific protocol used in an IGP domain could be OSPF
+          <xref target="RFC2238"/> or IS-IS <xref target="ISO10589"/>. Note that, the
           detailed link-state models of these two protocols are not identical.
           Therefore, BGP-LS can provide a more abstract topology model which
-          can map the IGP models to its own model.</t>
+          can map the IGP models.</t>
 
-          <t>The domain controller can play the role of BGP speaker to
-          retrieve the link-state informaiton from IGP LSDBs in its domain.
+          <!--<t>The domain controller can play the role of BGP speaker to
+          retrieve the link-state information from IGP LSDBs in its domain, in case the domain controller participate in the IGP.
           Then the super controller can also further act as BGP speaker to
           collect global link-state information from the domain
-          controllers.</t>
+          controllers.</t>-->
+          <t>The domain controller acts as a consumer to collect the domain's link-state and TE information via BGP-LS. The domain controller would usually abstract the domain information towards the super-controller and further send it via BGP-LS. </t>
 
-          <t>BGP-Flowspec is a solution for preventing distributed
+          <t>BGP-Flowspec is a solution devised for preventing distributed
           Denial-of-service (DDoS) attack. BGP-Flowspec distributes
           specification rules into neighbors. [RFC5575] defines a new BGP NLRI
           encoding format that can be used to distribute traffic flow
@@ -503,7 +509,7 @@
           the super controller finds the attack happened, the super controller
           should distribute the flow rules to associated IP domain
           controllers. And each IP domain controller should distribute the
-          flow rules into the ingress routers.</t>
+          flow rules into the ingress routers. Additionally one of the actions taken could be "redirect" where flow could be redirected to the TE tunnels created by the controller. </t>
 
           <t><xref target="I-D.luo-grow-bgp-controller-based-ts"/> describes
           the traffic steering based on BGP controller. The traditional method
@@ -543,7 +549,7 @@
     <section title="YANG Models" toc="default" anchor="sec_Yang">
     <t>This is an non-exhaustive list of possible yang models developed or in-development that could be used for HIC.
     <list>
-    	<t>Topology: <xref target="I-D.ietf-i2rs-yang-network-topo"/> defines a generic YANG data model for
+    	<t>Topology: <xref target="RFC8345"/> defines a generic YANG data model for
         network topology. <xref target="I-D.ietf-teas-yang-te-topo"/> defines a YANG data model for representing, retrieving
         and manipulating Traffic Engineering (TE) Topologies. </t>
     	<t>Tunnel: <xref target="I-D.ietf-teas-yang-te"/> defines a YANG data model for the configuration and
@@ -603,15 +609,27 @@
     <section title="Acknowledgments" toc="default">
 
     </section>
-        
+    <section title="Contributing Authors" toc="default">
+    <t>
+<figure>
+<artwork><![CDATA[       
+Dailongfei (Larry)
+Huawei Technologies,
+Beijing, China
+
+Email: larry.dai@huawei.com
+]]></artwork></figure></t>
+
+    </section>    
   </middle>
   <back>
     <references title="Normative References">
     <!--<?rfc include="reference.RFC.2119.xml" ?>-->
-    <?rfc include="reference.I-D.ietf-teas-actn-framework.xml"?>
+    <?rfc include="reference.RFC.8453.xml"?>
+    
     </references>
     <references title="Informative References">
-      <?rfc include="reference.RFC.1142.xml"?>
+      
 
       <?rfc include="reference.RFC.2238.xml"?>
 
@@ -665,6 +683,10 @@
 
       <?rfc include="reference.RFC.8309.xml"?>
 
+      <?rfc include="reference.RFC.8345.xml"?>
+
+
+
       <?rfc include="reference.I-D.ietf-teas-actn-yang.xml"?>
 
       <?rfc include="reference.I-D.ietf-pce-applicability-actn.xml"?>
@@ -673,7 +695,7 @@
 
       <?rfc include="reference.I-D.ietf-teas-yang-te-topo.xml"?>
 
-      <?rfc include="reference.I-D.ietf-i2rs-yang-network-topo.xml"?>
+      
 
       <?rfc include="reference.I-D.ietf-pce-stateful-hpce.xml"?>
 
@@ -704,6 +726,25 @@
       <?rfc include="reference.I-D.ietf-idr-bgp-model.xml"?>
 
       <?rfc include="reference.I-D.wu-idr-flowspec-yang-cfg.xml"?>
+
+<!--ISO-->
+      <reference anchor="ISO10589">
+        <front>
+          <title>
+            Intermediate system to Intermediate system routing information
+            exchange protocol for use in conjunction with the Protocol for
+            providing the Connectionless-mode Network Service (ISO
+            8473)
+          </title>
+          <author fullname="ISO">
+            <organization >ISO</organization>
+          </author>
+          <date month="" year="1992"/>
+        </front>
+        <seriesInfo name="ISO/IEC" value="10589:2002"/>
+      </reference>
+
+
     </references>
     
   </back>
