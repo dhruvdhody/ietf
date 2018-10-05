@@ -211,7 +211,7 @@ Internet-Draft     PCEP Extensions for Segment Routing    September 2018
    This specification provides a mechanism for a network controller
    (acting as a PCE) to instantiate candidate paths for an SR Policy
    onto a head-end node (acting as a PCC) using PCEP.  For more
-   information on the SR Policiy Architecture, see
+   information on the SR Policy Architecture, see
    [I-D.ietf-spring-segment-routing-policy].
 
 
@@ -307,7 +307,7 @@ Internet-Draft     PCEP Extensions for Segment Routing    September 2018
    (PCRpt) messages defined in [RFC8231].
 
    When a PCEP session between a PCC and a PCE is established, both PCEP
-   speakers exchange their capabilites to indicate their ability to
+   speakers exchange their capabilities to indicate their ability to
    support SR-specific functionality.
 
    An PCE can update an LSP that is initially established via RSVP-TE
@@ -495,7 +495,7 @@ Internet-Draft     PCEP Extensions for Segment Routing    September 2018
 
    Length:  Contains the total length of the subobject in octets,
       including the L, Type and Length fields.  The Length MUST be at
-      least 8, and MUST be a multiple of 4.  As mentioned earlier, an
+      least 8, and MUST be a multiple of 4.  An
       SR-ERO subobject MUST contain at least one of a SID or an NAI.
       The length should include the SID and NAI fields if and only if
 
@@ -889,7 +889,7 @@ Internet-Draft     PCEP Extensions for Segment Routing    September 2018
    If both M and C bits of an SR-ERO subobject are set to 1, and if a
    PCC finds erroneous setting in one or more of TC, S, and TTL fields,
    it MAY overwrite those fields with values chosen according to its own
-   policy.  If the PCC does not overwite them, it MUST send a PCErr
+   policy.  If the PCC does not overwrite them, it MUST send a PCErr
 
 
 
@@ -1031,6 +1031,9 @@ Internet-Draft     PCEP Extensions for Segment Routing    September 2018
    and if it does not support such an RRO, it MUST send a PCErr message
    with Error-Type = 10 ("Reception of an invalid object") and Error-
    Value = 10 ("Non-identical RRO subobjects").
+
+[Dhruv]: Since we want to re-use the error codes from SR-ERO as it is, maybe we should make the description of the error-codes generic to allow both SR-ERO/SR-RRO. 
+
 
 7.  Backward Compatibility
 
@@ -1222,7 +1225,7 @@ Internet-Draft     PCEP Extensions for Segment Routing    September 2018
       (local policy, equipment capability etc.)
 
    o  If a PCEP speaker rejects a segment routed path, then it SHOULD
-      create a log to inform the operator, giving the reson for the
+      create a log to inform the operator, giving the reason for the
       decision (local policy, MSD exceeded etc.)
 
 
