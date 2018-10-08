@@ -5,7 +5,7 @@
 PCE Working Group                                           S. Sivabalan
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                             J. Tantsura
-Expires: March 7, 2019                                    Nuage Networks
+Expires: April 11, 2019                                   Nuage Networks
                                                              C. Filsfils
                                                               S. Previdi
                                                      Cisco Systems, Inc.
@@ -13,7 +13,7 @@ Expires: March 7, 2019                                    Nuage Networks
                                                      Metaswitch Networks
                                                                 D. Dhody
                                                      Huawei Technologies
-                                                       September 3, 2018
+                                                         October 8, 2018
 
 
         Carrying Binding Label/Segment-ID in PCE-based Networks.
@@ -53,9 +53,9 @@ Status of This Memo
 
 
 
-Sivabalan, et al.         Expires March 7, 2019                 [Page 1]
+Sivabalan, et al.        Expires April 11, 2019                 [Page 1]
 
-Internet-Draft          Binding Label/Segment-ID          September 2018
+Internet-Draft          Binding Label/Segment-ID            October 2018
 
 
    Internet-Drafts are draft documents valid for a maximum of six months
@@ -63,7 +63,7 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 7, 2019.
+   This Internet-Draft will expire on April 11, 2019.
 
 Copyright Notice
 
@@ -87,15 +87,15 @@ Table of Contents
    3.  Path Binding TLV  . . . . . . . . . . . . . . . . . . . . . .   5
    4.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   6
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-     6.1.  PCEP TLV Type Indicators  . . . . . . . . . . . . . . . .   7
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+     6.1.  PCEP TLV Type Indicators  . . . . . . . . . . . . . . . .   8
        6.1.1.  TE-PATH-BINDING TLV . . . . . . . . . . . . . . . . .   8
      6.2.  PCEP Error Type and Value . . . . . . . . . . . . . . . .   8
    7.  Manageability Considerations  . . . . . . . . . . . . . . . .   8
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  10
    Appendix A.  PCE based Central Controller . . . . . . . . . . . .  11
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Sivabalan, et al.         Expires March 7, 2019                 [Page 2]
+Sivabalan, et al.        Expires April 11, 2019                 [Page 2]
 
-Internet-Draft          Binding Label/Segment-ID          September 2018
+Internet-Draft          Binding Label/Segment-ID            October 2018
 
 
    As per [RFC8402] SR allows a headend node to steer a packet flow
@@ -127,9 +127,9 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
    a list of SIDs.  Any packets received with an active segment equal to
    BSID are steered onto the bound SR Policy.  A BSID may be either a
    local (SRLB) or a global (SRGB) SID.  As per
-   [I-D.ietf-spring-segment-routing-policy] a BSID can be associated
-   with any type of interfaces or tunnel to enable the use of a non-SR
-   interface or tunnels as segments in a SID-list.
+   [I-D.ietf-spring-segment-routing-policy] a BSID can also be
+   associated with any type of interfaces or tunnel to enable the use of
+   a non-SR interface or tunnels as segments in a SID-list.
 
    [RFC5440] describes the Path Computation Element Protocol (PCEP) for
    communication between a Path Computation Client (PCC) and a PCE or
@@ -165,9 +165,9 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
 
 
 
-Sivabalan, et al.         Expires March 7, 2019                 [Page 3]
+Sivabalan, et al.        Expires April 11, 2019                 [Page 3]
 
-Internet-Draft          Binding Label/Segment-ID          September 2018
+Internet-Draft          Binding Label/Segment-ID            October 2018
 
 
            SID stack
@@ -221,9 +221,9 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
 
 
 
-Sivabalan, et al.         Expires March 7, 2019                 [Page 4]
+Sivabalan, et al.        Expires April 11, 2019                 [Page 4]
 
-Internet-Draft          Binding Label/Segment-ID          September 2018
+Internet-Draft          Binding Label/Segment-ID            October 2018
 
 
 2.  Terminology
@@ -244,9 +244,15 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
 
    PCEP:  Path Computation Element Protocol.
 
+   RSVP-TE:  Resource ReserVation Protocol-Traffic Engineering.
+
    SID:  Segment Identifier.
 
    SR:  Segment Routing.
+
+   SRGB:  Segment Routing Global Block.
+
+   SRLB:  Segment Routing Local Block.
 
    TLV:  Type, Length, and Value.
 
@@ -269,19 +275,17 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
 
                        Figure 2: TE-PATH-BINDING TLV
 
+
+
+Sivabalan, et al.        Expires April 11, 2019                 [Page 5]
+
+Internet-Draft          Binding Label/Segment-ID            October 2018
+
+
    TE-PATH-BINDING TLV is a generic TLV such that it is able to carry
    MPLS label binding as well as other types of future bindings (e.g.,
    SRv6 path).  It is formatted according to the rules specified in
    [RFC5440].  The two byte Binding Type (BT) field identifies the type
-
-
-
-
-Sivabalan, et al.         Expires March 7, 2019                 [Page 5]
-
-Internet-Draft          Binding Label/Segment-ID          September 2018
-
-
    of binding included in the TLV.  This document specifies the
    following BT values:
 
@@ -326,17 +330,16 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
    message with Error-Type = TBD ("Binding label/SID failure") and Error
    Value = TBD ("Invalid SID").  If the binding value is valid, but the
    PCC is unable to allocate the binding value, it MUST send a PCErr
+
+
+
+Sivabalan, et al.        Expires April 11, 2019                 [Page 6]
+
+Internet-Draft          Binding Label/Segment-ID            October 2018
+
+
    message with Error-Type = TBD ("Binding label/SID failure") and Error
    Value = TBD ("Unable to allocate the specified label/SID").
-
-
-
-
-
-Sivabalan, et al.         Expires March 7, 2019                 [Page 6]
-
-Internet-Draft          Binding Label/Segment-ID          September 2018
-
 
    If a PCC receives TE-PATH-BINDING TLV in any message other than PCUpd
    or PCInitiate, it MUST close the corresponding PCEP session with the
@@ -374,9 +377,22 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
 
 5.  Security Considerations
 
-   The security considerations described in ([RFC5440]) and ([RFC8281])
-   are applicable to this specification.  No additional security measure
-   is required.
+   The security considerations described in [RFC5440], [RFC8231],
+   [RFC8281] and [I-D.ietf-pce-segment-routing] are applicable to this
+   specification.  No additional security measure is required.
+
+   As described [I-D.ietf-pce-segment-routing], SR allows a network
+   controller to instantiate and control paths in the network.  Note
+   that if the security mechanisms of [RFC5440] and [RFC8281] are not
+   used, then the protocol described in this document could be attacked
+   via manipulation of BSID.
+
+
+
+Sivabalan, et al.        Expires April 11, 2019                 [Page 7]
+
+Internet-Draft          Binding Label/Segment-ID            October 2018
+
 
 6.  IANA Considerations
 
@@ -385,14 +401,6 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
    This document defines a new PCEP TLV; IANA is requested to make the
    following allocations from the "PCEP TLV Type Indicators" sub-
    registry of the PCEP Numbers registry, as follows:
-
-
-
-
-Sivabalan, et al.         Expires March 7, 2019                 [Page 7]
-
-Internet-Draft          Binding Label/Segment-ID          September 2018
-
 
                 Value    Name                  Reference
 
@@ -430,6 +438,18 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
 
    TBD
 
+
+
+
+
+
+
+
+Sivabalan, et al.        Expires April 11, 2019                 [Page 8]
+
+Internet-Draft          Binding Label/Segment-ID            October 2018
+
+
 8.  Acknowledgements
 
    We like to thank Milos Fabian for his valuable comments.
@@ -442,13 +462,6 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-Sivabalan, et al.         Expires March 7, 2019                 [Page 8]
-
-Internet-Draft          Binding Label/Segment-ID          September 2018
-
 
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
@@ -481,6 +494,18 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
               Routing Architecture", RFC 8402, DOI 10.17487/RFC8402,
               July 2018, <https://www.rfc-editor.org/info/rfc8402>.
 
+
+
+
+
+
+
+
+Sivabalan, et al.        Expires April 11, 2019                 [Page 9]
+
+Internet-Draft          Binding Label/Segment-ID            October 2018
+
+
    [I-D.ietf-pce-segment-routing]
               Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,
               and J. Hardwick, "PCEP Extensions for Segment Routing",
@@ -493,18 +518,6 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
               Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
               <https://www.rfc-editor.org/info/rfc4655>.
-
-
-
-
-
-
-
-
-Sivabalan, et al.         Expires March 7, 2019                 [Page 9]
-
-Internet-Draft          Binding Label/Segment-ID          September 2018
-
 
    [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
               Architecture for Use of PCE and the PCE Communication
@@ -525,11 +538,11 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
               June 2018.
 
    [I-D.li-pce-sr-path-segment]
-              Li, C., Chen, M., Dong, J., Li, Z., and D. Dhody, "Path
-              Computation Element Communication Protocol (PCEP)
-              Extension for Path Identification in Segment Routing
-              (SR)", draft-li-pce-sr-path-segment-01 (work in progress),
-              August 2018.
+              Li, C., Chen, M., Dhody, D., Cheng, W., Dong, J., Li, Z.,
+              and R. Gandhi, "Path Computation Element Communication
+              Protocol (PCEP) Extension for Path Identification in
+              Segment Routing (SR)", draft-li-pce-sr-path-segment-02
+              (work in progress), September 2018.
 
    [I-D.zhao-pce-pcep-extension-pce-controller-sr]
               Zhao, Q., Li, Z., Dhody, D., Karunanithi, S., Farrel, A.,
@@ -544,22 +557,9 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Sivabalan, et al.         Expires March 7, 2019                [Page 10]
+Sivabalan, et al.        Expires April 11, 2019                [Page 10]
 
-Internet-Draft          Binding Label/Segment-ID          September 2018
+Internet-Draft          Binding Label/Segment-ID            October 2018
 
 
 Appendix A.  PCE based Central Controller
@@ -613,9 +613,9 @@ Appendix A.  PCE based Central Controller
 
 
 
-Sivabalan, et al.         Expires March 7, 2019                [Page 11]
+Sivabalan, et al.        Expires April 11, 2019                [Page 11]
 
-Internet-Draft          Binding Label/Segment-ID          September 2018
+Internet-Draft          Binding Label/Segment-ID            October 2018
 
 
 Authors' Addresses
@@ -669,9 +669,9 @@ Authors' Addresses
 
 
 
-Sivabalan, et al.         Expires March 7, 2019                [Page 12]
+Sivabalan, et al.        Expires April 11, 2019                [Page 12]
 
-Internet-Draft          Binding Label/Segment-ID          September 2018
+Internet-Draft          Binding Label/Segment-ID            October 2018
 
 
    Dhruv Dhody
@@ -725,4 +725,4 @@ Internet-Draft          Binding Label/Segment-ID          September 2018
 
 
 
-Sivabalan, et al.         Expires March 7, 2019                [Page 13]
+Sivabalan, et al.        Expires April 11, 2019                [Page 13]

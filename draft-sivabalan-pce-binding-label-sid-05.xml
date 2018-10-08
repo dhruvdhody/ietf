@@ -137,7 +137,7 @@
   <t>As described in <xref target="RFC8402"/>, Binding Segment Identifier (BSID) is bound to an Segment Routed (SR) Policy,
    instantiation of which may involve a list of SIDs.  Any packets
    received with an active segment equal to BSID are steered onto the
-   bound SR Policy.  A BSID may be either a local (SRLB) or a global (SRGB) SID. As per <xref target="I-D.ietf-spring-segment-routing-policy"/> a BSID can be associated with any type of interfaces or tunnel to enable the use of a non-SR interface or tunnels as segments in a SID-list.</t>
+   bound SR Policy.  A BSID may be either a local (SRLB) or a global (SRGB) SID. As per <xref target="I-D.ietf-spring-segment-routing-policy"/> a BSID can also be associated with any type of interfaces or tunnel to enable the use of a non-SR interface or tunnels as segments in a SID-list.</t>
 
 
 <!--<t>Similar to assigning label to a Forwarding Equivalence Class (FEC) via Label Distribution Protocol (LDP), a binding label can be assigned to a RSVP-TE LSP. If the topmost label of an incoming packet is the binding label, the packet is steered onto the RSVP-TE LSP.
@@ -196,8 +196,11 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
      <t hangText="PCC:"> Path Computation Client.</t>
      <t hangText="PCE:"> Path Computation Element</t>
      <t hangText="PCEP:"> Path Computation Element Protocol.</t>
+     <t hangText="RSVP-TE:"> Resource ReserVation Protocol-Traffic Engineering.</t>
      <t hangText="SID:"> Segment Identifier.</t>
      <t hangText="SR:"> Segment Routing.</t>
+     <t hangText="SRGB:"> Segment Routing Global Block.</t>
+     <t hangText="SRLB:"> Segment Routing Local Block.</t>
      <t hangText="TLV:"> Type, Length, and Value.</t>
       </list>
 </t>
@@ -254,8 +257,11 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
 <section anchor="Security" title="Security Considerations">
 
-<t>The security considerations described in (<xref target="RFC5440"/>) and (<xref target="RFC8281"/>)
+<t>The security considerations described in <xref target="RFC5440"/>, <xref target="RFC8231"/>, <xref target="RFC8281"/> and <xref target="I-D.ietf-pce-segment-routing"/>
 are applicable to this specification. No additional security measure is required.</t>
+
+<t>As described <xref target="I-D.ietf-pce-segment-routing"/>, SR allows a network controller to instantiate and control paths in the network. Note that if the security mechanisms of <xref target="RFC5440"/> and <xref target="RFC8281"/> are not used, then the protocol described in this document could be
+   attacked via manipulation of BSID.</t>
 
 </section>
 
