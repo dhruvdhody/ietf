@@ -15,6 +15,7 @@
 
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC4760 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4760.xml">
 <!ENTITY RFC5440 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440.xml">
 <!ENTITY RFC5575 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5575.xml">
 <!ENTITY RFC4364 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4364.xml">
@@ -347,7 +348,7 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                            FS-ID                              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                          Reserved                           |R|
+|         AFI                   |        Flags                |R|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 |                   Flow Filter TLV (variable)                  |
@@ -363,11 +364,18 @@
     PCEP session.  All subsequent PCEP messages can identify the FlowSpec using the
     FS-ID.  The values 0 and 0xFFFFFFFF are reserved and MUST NOT be used.</t>
 
- <t>Reserved bits: MUST be set to zero on transmission and ignored on receipt.</t>
+ <t>AFI (16-bits): Address Family Identifier as used in BGP <xref target="RFC4760"/> 
+ (AFI=1 for IPv4 or VPNv4, AFI=2 for IPv6 and VPNv6 as per as per <xref target="I-D.ietf-idr-flow-spec-v6"/>).
+</t>   
 
+ <t>Flags (16-bits): One flag is assigned - 
+ <list>
  <t>R bit: The Remove bit is set when a PCEP Flow Spec Object is included in a PCEP
     message to indicate removal of the Flow Specification from the associated tunnel.
     If the bit is clear, the Flow Specification is being added or modified.</t>
+
+ <t>Unassigned bits MUST be set to zero on transmission and ignored on receipt.</t>   
+</list></t>
 
  <t>Flow Filter TLV (variable): One TLV MAY be included.</t>
 
@@ -425,7 +433,7 @@ Range          |
    </artwork>
  </figure>
 
- <t>The content of the Value field in each TLV is specific to the type and describes the parameters
+ <t>The content of the Value field in each TLV is specific to the type/AFI and describes the parameters
     of the Flow Specification.  The definition of the format of many of these Value fields is inherited
     from BGP specifications as shown in <xref target="tlvFig" />.  Specifically, the inheritance is from
     <xref target="RFC5575"/> and <xref target="I-D.ietf-idr-flow-spec-v6"/>, but may also be inherited
@@ -439,10 +447,10 @@ Range          |
     that it does not recognize or does not support MUST respond with a PCErr message with error-type TBD8
     (FlowSpec Error), error-value 1 (Unsupported FlowSpec) and MUST NOT install the Flow Specification.</t>
 
- <t>When used in other protocols (such as BGP) these Flow Specifications are also associated with actions
+ <!--<t>When used in other protocols (such as BGP) these Flow Specifications are also associated with actions
     to indicate how traffic matching the Flow Specification should be treated.  In PCEP, however, the only
     action is to associate the traffic with a tunnel and to forward matching traffic on to that path, so
-    no encoding of an action is needed.</t>
+    no encoding of an action is needed.</t>-->
 
  <t><xref target="priorities" /> describes how overlapping Flow Specifications are prioritized and
     handled.</t>
@@ -456,9 +464,15 @@ Range          |
 +-------+-------------------------+-----------------------------+
 | *     | Destination IPv4 Prefix | [RFC5575]                   |
 +-------+-------------------------+-----------------------------+
+| *     | Destination IPv6 Prefix | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
 | *     | Source IPv4 Prefix      | [RFC5575]                   |
 +-------+-------------------------+-----------------------------+
+| *     | Source IPv6 Prefix      | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
 | *     | IP Protocol             | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Next Header             | [I-D.ietf-idr-flow-spec-v6] |
 +-------+-------------------------+-----------------------------+
 | *     | Port                    | [RFC5575]                   |
 +-------+-------------------------+-----------------------------+
@@ -480,11 +494,41 @@ Range          |
 +-------+-------------------------+-----------------------------+
 | *     | Flow Label              | [I-D.ietf-idr-flow-spec-v6] |
 +-------+-------------------------+-----------------------------+
-| *     | Destination IPv6 Prefix | [I-D.ietf-idr-flow-spec-v6] |
+| *     | Ethernet Type           | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
 +-------+-------------------------+-----------------------------+
-| *     | Source IPv6 Prefix      | [I-D.ietf-idr-flow-spec-v6] |
+| *     | Source MAC              | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
 +-------+-------------------------+-----------------------------+
-| *     | Next Header             | [I-D.ietf-idr-flow-spec-v6] |
+| *     | Destination MAC         | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | DSAP in LLC             | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | SSAP in LLC             | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | Control field in LLC    | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | SNAP                    | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | VLAN ID                 | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | VLAN COS                | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | Inner VLAN ID           | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | Inner VLAN COS          | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | MPLS Label              | [I-D.ietf-idr-flowspec-mpls-|
+|       |                         | match]                      |  
 +-------+-------------------------+-----------------------------+
 | TBD5  | Route Distinguisher     | [I-D.dhodylee-pce-pcep-ls]  |
 +-------+-------------------------+-----------------------------+
@@ -495,13 +539,14 @@ Range          |
 
   * Indicates that the TLV Type value comes from the value used
     in BGP.
+    This is a non-exhaustive list. 
      ]]>
    </artwork>
  </figure>
 
  <t>All Flow Specification TLVs with Types in the range 1 to 255 have Values defined
-    for use in BGP (for example, in <xref target="RFC5575"/> and
-    <xref target="I-D.ietf-idr-flow-spec-v6"/>) and are set using the BGP encoding,
+    for use in BGP (for example, in <xref target="RFC5575"/>, 
+    <xref target="I-D.ietf-idr-flow-spec-v6"/>, and <xref target="I-D.ietf-idr-flowspec-l2vpn"/>) and are set using the BGP encoding,
     but without the type or length octets (the relevant information is in the
     Type and Length fields of the TLV).  The Value field is padded with trailing
     zeros to achieve 4-byte alignment.</t>
@@ -542,6 +587,65 @@ Range          |
     set to zero and ignored on receipt.</t>
 
 </section>
+<section title="Flow Action TLV" anchor="action">
+ <t>The Flow Filter TLV carries one or more Flow Action TLV.  The Flow Action TLV
+    follows the format of all PCEP TLVs as defined in <xref target="RFC5440" />. This is optional, the default action is to accept traffic that matches the rule and direct over the tunnel. To allow QoS related actions this TLV is included in the Flow Filter TLV.</t>
+
+  <figure title="Flow Action TLV Encoding">
+   <artwork>
+     <![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Type=TBD9             |          Length               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                   BGP Extended Community Type                 |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//         BGP Extended Community Encoding (variable)          //
++---------------------------------------------------------------+
+
+     ]]>
+   </artwork>
+ </figure>	
+ <t>The type of the TLV is TBD9 and it has a variable length. The Value field consists of - 
+ 	<list>
+ 		<t>BGP Extended Community Type: The extended community value as per <xref target="RFC5575"/> and other BGP specification.</t>
+ 		<t>BGP Extended Community Encoding: The encoding is as per the BGP specification.</t>
+ 	</list>
+ </t>
+ <figure title="Table of Extended Community Types">
+   <artwork>
+     <![CDATA[
++-------+-------------------------+-----------------------------+
+| Type  | Description             | Encoding defined in         |
+|       |                         |                             |
++-------+-------------------------+-----------------------------+
+| *     | traffic-rate            | [RFC5575]                   |     
++-------+-------------------------+-----------------------------+
+| *     | traffic-action          | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | traffic-marking         | [RFC5575]                   |
++-------+-------------------------+-----------------------------+ 
+
+  * Indicates that the Type comes from the value used in BGP.
+    This is a non-exhaustive list. 
+     ]]>
+    </artwork>
+ </figure>
+ <t>An implementation that receives a PCEP message carrying a Flow Action TLV with an extended community type value
+    that it does not recognize or does not support MUST respond with a PCErr message with error-type TBD8
+    (FlowSpec Error), error-value 1 (Unsupported FlowSpec) and MUST NOT install the Flow Specification.</t>
+  <t>The content of the BGP Extended Community Encoding field is specific to the type
+   and describes the action of the Flow Specification.  The
+   definition of the format of many of these Value fields is inherited
+   from BGP specifications.  Specifically, the
+   inheritance is from <xref target="RFC5575"/> but
+   may also be inherited from future BGP specifications.</t>
+   <t>This TLV MAY appear more than once when multiple actions are needed. It MUST NOT appear more than once for the same 
+   type. If it appears more than once for the same type, only
+   the first occurrence is processed and any others MUST be ignored.</t>
+  
+</section>
 
 <section title="Detailed Procedures" anchor="detailed">
 
@@ -557,7 +661,7 @@ Range          |
     <t>In this case it is a local matter (such as through configuration) how tunnel head ends
        are instructed what traffic to place on a tunnel.</t>
 
-    <t><xref target="RFC5440" />describes how receivers respond when they see unknown PCEP
+    <t><xref target="RFC5440"/> describes how receivers respond when they see unknown PCEP
        objects.</t>
 
  </section>
@@ -735,7 +839,7 @@ Where:
    </artwork>
  </figure>
 
- <t>The PCReq message is defined in [RFC5440] and updated in <xref target="RFC8231" />,
+ <t>The PCReq message is defined in <xref target="RFC5440"/> and updated in <xref target="RFC8231"/>,
     it is further updated below for flow specification:</t>
 
  <figure>
@@ -831,6 +935,7 @@ Value   | Meaning                      | Reference
 --------+------------------------------+-------------
  TBD2   | PCE-FLOWSPEC-CAPABILITY TLV  | [This.I-D]
  TBD4   | FLOW FILTER TLV              | [This.I-D]
+ TBD9   | FLOW ACTION TLV              | [This.I-D]
        ]]>
      </artwork>
    </figure>
@@ -961,12 +1066,14 @@ Range          | Assignment policy
 
 <references title="Normative References">
   &RFC2119;
+  &RFC4760;
   &RFC5440;
   &RFC5511;
   &RFC5575;
   &RFC8174;
   &RFC8253;
  <?rfc include='reference.I-D.ietf-idr-flow-spec-v6'?>
+ <?rfc include='reference.I-D.ietf-idr-flowspec-l2vpn'?>
  <?rfc include='reference.I-D.dhodylee-pce-pcep-ls'?>
 </references>
 
@@ -984,6 +1091,7 @@ Range          | Assignment policy
   &RFC8281;
   &RFC8283;
  <?rfc include='reference.I-D.ietf-pce-segment-routing'?>
+ <?rfc include='reference.I-D.ietf-idr-flowspec-mpls-match'?>
 </references>
 
 <section title="Contributors" toc="default">
