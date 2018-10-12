@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc category="std"
+     docName="draft-negi-pce-segment-routing-ipv6-03"
+     ipr="trust200902">
+  <front>
+    <title abbrev="PCEP Extensions for SRv6">PCEP
+    Extensions for Segment Routing leveraging the IPv6 data plane</title>
+    <author initials="M" surname="Negi" fullname="Mahendra Singh Negi">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>mahendrasingh@huawei.com</email>
+      </address>
+    </author>
+    <author initials="P" surname="Kaladharan" fullname="Prejeeth Kaladharan">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>prejeeth.k@huawei.com</email>
+      </address>
+    </author>
+    <author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+    <author initials="S" surname="Sivabalan" fullname="Siva Sivabalan">
+      <organization>Cisco Systems</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>msiva@cisco.com</email>
+      </address>
+    </author>
+    <date year="2018" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+      <t>The Source Packet Routing in Networking (SPRING) architecture
+   describes how Segment Routing (SR) can be used to steer packets through an
+   IPv6 or MPLS network using the source routing paradigm. 
+   Segment Routing (SR) enables any head-end node to select
+      any path without relying on a hop-by-hop signaling technique
+      (e.g., LDP or RSVP-TE).</t>
+      <t>It depends only on "segments" that are advertised by Link-
+      State IGPs. A Segment Routed
+      Path can be derived from a variety of mechanisms, including
+      an IGP Shortest Path Tree (SPT), explicit configuration, or a
+      Path Computation Element (PCE).</t>
+      <t>Since, Segment Routing can be applied to both MPLS and IPv6
+      forwarding plane, a PCE should be able to compute SR-Path for
+      both MPLS and IPv6 forwarding plane. This draft describes the
+      extensions required for Segment Routing support for IPv6
+      data plane in Path Computation Element communication Protocol (PCEP).</t>
+    </abstract>
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.
+      </t>
+    </note>
+  </front>
+  <middle>
+    <section title="Introduction">
+      <t>As per <xref target='RFC8402'/>, 
+      with Segment Routing (SR), a node steers a packet through an ordered
+   list of instructions, called segments.  A segment can represent any
+   instruction, topological or service-based.  A segment can have a
+   semantic local to an SR node or global within an SR domain.  SR
+   allows to enforce a flow through any path and service chain while
+   maintaining per-flow state only at the ingress node of the SR domain.
+   Segments can be
+   derived from different components: IGP, BGP, Services, Contexts,
+   Locater, etc.  The list of segment forming the path is called the
+   Segment List and is encoded in the packet header.
+   Segment Routing can be applied to the IPv6 architecture
+   with the Segment Routing Header (SRH) <xref target='I-D.ietf-6man-segment-routing-header'/>. 
+   A segment is encoded as an IPv6
+   address.  An ordered list of segments is encoded as an ordered list
+   of IPv6 addresses in the routing header. The active segment is
+   indicated by the Destination Address of the packet.  Upon completion
+   of a segment, a pointer in the new routing header is incremented and
+   indicates the next segment. </t>
+
+   <t>Segment Routing use cases are described in <xref target='RFC7855'/> and
+   <xref target='RFC8354'/>. 
+   Segment Routing protocol extensions are defined in
+   <xref target='I-D.ietf-isis-segment-routing-extensions'/>, and
+   <xref target='I-D.ietf-ospf-ospfv3-segment-routing-extensions'/>.</t>
+
+   <t>As per <xref target='I-D.ietf-6man-segment-routing-header'/>, 
+   an SRv6 Segment is a 128-bit value.  "SRv6 SID" or simply "SID" are
+   often used as a shorter reference for "SRv6 Segment". Further details
+   are in an illustration provided in
+   <xref target='I-D.filsfils-spring-srv6-network-programming'/>.</t>
+
+       
+      <t>The SR architecture can be applied to the MPLS forwarding
+      plane without any change, in which case an SR path
+      corresponds to an MPLS Label Switching Path (LSP). The SR is
+      applied to IPV6 forwarding plane using SRH.
+	  A SR path can be derived from an IGP Shortest Path Tree (SPT), 
+	  but SR-TE paths may not follow IGP SPT. Such paths may be 
+	  chosen by a suitable network planning tool, or a PCE and 
+	  provisioned on the ingress node.</t>      
+
+      <t><xref target='RFC5440'/> describes Path Computation Element communication Protocol
+      (PCEP) for communication between a Path Computation Client
+      (PCC) and a Path Computation Element (PCE) or between a
+      pair of PCEs. A PCE or a PCC operating as a PCE (in
+      hierarchical PCE environment) computes paths for MPLS Traffic
+      Engineering LSPs (MPLS-TE LSPs) based on various constraints
+      and optimization criteria. <xref target='RFC8231'/>
+      specifies extensions to PCEP that allow a stateful PCE to
+      compute and recommend network paths in compliance with
+      <xref target="RFC4657"/> and defines objects and TLVs for MPLS-TE LSPs.
+      Stateful PCEP extensions provide synchronization of LSP state
+      between a PCC and a PCE or between a pair of PCEs, delegation
+      of LSP control, reporting of LSP state from a PCC to a PCE,
+      controlling the setup and path routing of an LSP from a PCE
+      to a PCC. Stateful PCEP extensions are intended for an
+      operational model in which LSPs are configured on the PCC,
+      and control over them is delegated to the PCE.</t>
+
+      <t>A mechanism to dynamically initiate LSPs on a PCC based on the
+   requests from a stateful PCE or a controller using stateful PCE is
+   specified in <xref target="RFC8281"/>. As per 
+   <xref target='I-D.ietf-pce-segment-routing'/>, it is possible to use a stateful PCE for computing one or more SR-TE
+   paths taking into account various constraints and objective
+   functions.  Once a path is chosen, the stateful PCE can initiate an
+   SR-TE path on a PCC using PCEP extensions specified in
+   <xref target="RFC8281"/> using the SR specific PCEP
+   extensions specified in <xref target='I-D.ietf-pce-segment-routing'/>.  
+   <xref target='I-D.ietf-pce-segment-routing'/> specifies PCEP
+      extensions for supporting a SR-TE LSP for MPLS data
+      plane. This document extends <xref target='I-D.ietf-pce-segment-routing' />
+      to support SR for IPv6 data plane. Additionally, using
+   procedures described in this document, a PCC can request an SRv6 path
+   from either stateful or a stateless PCE.  This specification relies
+   on the PATH-SETUP-TYPE TLV and procedures specified in
+   <xref target='RFC8408' />.</t>
+      
+      
+    </section>
+    <!-- Introduction -->
+    <section title="Terminology">
+      <t>This document uses the following terms defined in 
+      <xref target="RFC5440" />: PCC, PCE, PCEP Peer.</t>
+      <t>This document uses the following terms defined in 
+      <xref target="RFC8051" />: Stateful PCE, Delegation.</t>
+      <t>The message formats in this document are specified using
+      Routing Backus-Naur Format (RBNF) encoding as specified in 
+      <xref target="RFC5511" />.</t>
+      <t>
+        <list style="hanging">
+          <t hangText="NAI:">Node or Adjacency Identifier.</t>
+          <t hangText="PCC:">Path Computation Client.</t>
+          <t hangText="PCE:">Path Computation Element.</t>
+          <t hangText="PCEP:">Path Computation Element
+          Protocol.</t>
+          <t hangText="SR:">Segment Routing.</t>
+          <t hangText="SID:">Segment Identifier.</t>
+          <t hangText="SRv6:">Segment Routing for IPv6
+          forwarding plane.</t>
+          <t hangText="SRH:">IPv6 Segment Routing Header.</t>
+          <t hangText="SR Path:">IPv6 Segment (List of IPv6 SID
+          representing a path in IPv6 SR domain)</t>
+        </list>
+      </t>
+    </section>
+    <!-- Terminology -->
+    <section anchor="Overview"
+             title="Overview of PCEP Operation in SRv6 Networks">
+      <t>Basic operations for PCEP speakers is as per
+      <xref target='I-D.ietf-pce-segment-routing'/>. SRv6 Paths computed by a
+      PCE can be represented as an ordered list of SRv6 segments of 128-bit
+      value. "SRv6 SID" or simply "SID" are often used as a shorter reference 
+      for "SRv6 Segment" in this document.</t>
+
+      <t><xref target='I-D.ietf-pce-segment-routing'/> defined 
+      a new ERO subobject denoted by "SR-ERO subobject" capable of 
+      carrying a SID as well as the identity of the node/adjacency 
+      represented by the SID. SR-capable PCEP speakers
+   should be able to generate and/or process such ERO subobject. An ERO
+   containing SR-ERO subobjects can be included in the PCEP Path
+   Computation Reply (PCRep) message defined in <xref target='RFC5440'/>, the PCEP LSP
+   Initiate Request message (PCInitiate) defined in
+   <xref target='RFC8281'/>, as well as in the PCEP LSP Update
+   Request (PCUpd) and PCEP LSP State Report (PCRpt) messages defined in
+   defined in <xref target='RFC8231'/>.</t> 
+
+      <t>This document extends the "SR-ERO subobject" defined in
+      <xref target='I-D.ietf-pce-segment-routing'/> to carry IPv6 SID(s)
+      (IPv6 Addresses). SRv6-capable PCEP speakers MUST be able to
+      generate and/or process this.</t>
+
+      <t>When a PCEP session between a PCC and a PCE is
+      established, both PCEP speakers exchange their capabilities to
+      indicate their ability to support SRv6 specific
+      functionality.</t>
+
+      <t>In summary, this document:<list style="symbols">
+        <t>Defines a new PCEP capability for SRv6</t>
+        <t>Update the SR-ERO and SR-RRO sub-object for SRv6</t>
+        <t>Defines a new path setup type carried in the PATH-SETUP-TYPE
+        and PATH-SETUP-TYPE-CAPABILITY TLVs.</t>
+      </list></t>
+ 
+            
+      <section anchor="Operation-overview" title="Operation Overview">
+        <t>In SR networks, an ingress node of an SR path appends
+        all outgoing packets with an SR header consisting of a list
+        of SIDs (IPv6
+        Prefix in case of SRv6). The header has all necessary
+        information to guide the packets from the ingress node to
+        the egress node of the path, and hence there is no need for
+        any signaling protocol.</t>
+        <t>For IPv6 in control plane with MPLS data-plane, mechanism remains same as
+        <xref target='I-D.ietf-pce-segment-routing' /></t>
+        <t>This document describes extensions to SR path for IPv6
+        data plane. SRv6 Path (i.e. ERO) consists of an ordered set
+        of SRv6 SIDs(see details in <xref target="SR-ERO-Subobject-Format"/>).</t>
+        <t>A PCC or PCE indicates its ability to support SRv6 
+        during the PCEP session Initialization Phase via a
+        new SRv6-PCE-CAPABILITY sub-TLV (see details in 
+        <xref target="SRv6-PCE-Capability-sub-TLV" />).</t>
+      </section>
+      <!-- Operation Overview -->
+      <section anchor="SRv6-Specific-PCEP-Message-Extensions" title="SRv6-Specific PCEP Message Extensions"> 
+<t>
+   As defined in <xref target='RFC5440'/>, a PCEP message consists of a common header
+   followed by a variable length body made up of mandatory and/or
+   optional objects.  This document does not require any changes in the
+   format of PCReq and PCRep messages specified in <xref target='RFC5440'/>, PCInitiate
+   message specified in <xref target='RFC8281' />, and PCRpt and
+   PCUpd messages specified in <xref target='RFC8231' />.  However,
+   PCEP messages pertaining to SRv6 MUST include PATH-SETUP-TYPE
+   TLV in the RP or SRP object to clearly identify that SRv6 is
+   intended.  <!--In other words, a PCEP speaker MUST NOT infer whether or
+   not a PCEP message pertains to SRv6 from any other object or
+   TLV.--></t>
+
+    </section>
+    <!-- Overview -->
+    <section anchor="Object-Formats"
+             title="Object Formats">
+      <section anchor="The-OPEN-Object"
+               title="The OPEN Object">
+        <!--<t>This document defines a new optional TLV for use in the OPEN Object.</t>-->
+        <section anchor="SRv6-PCE-Capability-sub-TLV"
+                 title="The SRv6 PCE Capability sub-TLV">
+ <t>This document defines a new Path Setup Type (PST) <xref target='RFC8408'/> for SRv6, as follows:<list style="symbols">
+
+   <t>PST = TBD2: Path is setup using SRv6.</t></list></t>
+
+   <t>A PCEP speaker SHOULD indicate its support of the function described
+   in this document by sending a PATH-SETUP-TYPE-CAPABILITY TLV in the
+   OPEN object with this new PST included in the PST list.</t>
+
+   <t>This document also defines the SRv6-PCE-CAPABILITY sub-TLV.  PCEP
+   speakers use this sub-TLV to exchange information about their SRv6
+   capability.  If a PCEP speaker includes PST=TBD2 in the PST List of the
+   PATH-SETUP-TYPE-CAPABILITY TLV then it MUST also include the SRv6-PCE-
+   CAPABILITY sub-TLV inside the PATH-SETUP-TYPE-CAPABILITY TLV. </t>                
+          <t>The format of the SRv6-PCE-CAPABILITY sub-TLV is shown in the following  
+     figure:</t>
+          <figure anchor="SRv6-PCE-CAPABILITY-sub-TLV-format"
+                  title="SRv6-PCE-CAPABILITY sub-TLV format">
+            <artwork>
+              <![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Type=TBD1          |            Length=4           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      max-SL   |  Reserved     |             Flags           |L|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+           ]]>
+</artwork>
+          </figure>
+          <t>The code point for the TLV type (TBD1) is to be defined by
+          IANA. The TLV length is 4 octets.</t>
+          <t>The 4-octet value comprise of -
+            <list>
+              <t>max-SL: 1 octet, this field specifies the maximum value of the "Segments Left (SL)" in the SRH <xref target='I-D.ietf-6man-segment-routing-header'/>.</t>
+              <t>Reserved: 1 octet, this field MUST be set to 0 on transmission, and ignored on receipt.</t>
+              <t>Flags: 2 octet, one bit is currently assigned in this document.
+              <list>
+                <t>L bit: A PCC sets this bit to 1 to indicate that it does not impose any limit on SL.</t>
+              </list></t> 
+            </list>
+          </t>
+          <t>Unassigned bits MUST be set to 0 and ignored on receipt.</t>
+          <!--<t>The 32-bit value is formatted as follows. The "Maximum
+          SID Depth" (1 octet) field (MSD) specifies the maximum
+          number of SIDs a PCC is capable of imposing as MPLS
+          labels. The "SRH MSD" (2 octets) field (SRH MSD)
+          specifies the maximum number of SIDs a PCC is capable of
+          imposing as next headers in SRH. "Flags" field is 1
+          octet long, and this document defines the following
+          flag:</t>
+          <t>o L-flag: A PCC sets this flag to 1 to indicate that
+          it does not impose any limit on MSD.</t>-->
+          <!--<t>[Editor's Note - draft-bashandy-isis-srv6-extensions defines other fields like Max-End-Pop-SRH, Max-T-Ins-SRH, Max-T-Encap-SRH, max-End-D-SRH - should we follow the same?]</t>-->
+        </section>
+        <!-- SR PCE Capability TLV -->
+        <section anchor="Exchanging-SRv6-Capability"
+                 title="Exchanging the SRv6 Capability">
+<t>A PCC indicates that it is capable of supporting the head-end
+   functions for SRv6 by including the SRv6-PCE-CAPABILITY sub-TLV in
+   the Open message that it sends to a PCE.  A PCE indicates that it is
+   capable of computing SRv6 paths by including the SRv6-PCE-CAPABILITY
+   sub-TLV in the Open message that it sends to a PCC.</t>
+
+
+   <t>If a PCEP speaker receives a PATH-SETUP-TYPE-CAPABILITY TLV with a
+   PST list containing PST=TBD2, but the SRv6-PCE-CAPABILITY sub-TLV is
+   absent, then the PCEP speaker MUST send a PCErr message with Error-
+   Type 10 (Reception of an invalid object) and Error-Value TBD5 (to be
+   assigned by IANA) (Missing PCE-SRv6-CAPABILITY sub-TLV) and MUST then
+   close the PCEP session.  If a PCEP speaker receives a PATH-SETUP-
+   TYPE-CAPABILITY TLV with a SRv6-PCE-CAPABILITY sub-TLV, but the PST
+   list does not contain PST=TBD2, then the PCEP speaker MUST ignore the
+   SRv6-PCE-CAPABILITY sub-TLV.</t>
+
+   <t>The number of SRv6 SIDs that can be imposed on a packet depends on the
+   PCC's IPv6 data plane's capability.  If a PCC sets the L flag to 1 then
+   the max-SL is not used and MUST be set to zero.  If a PCE receives an
+   SRv6-PCE-CAPABILITY sub-TLV with the L flag set to 1 then it MUST
+   ignore the max-SL field and MUST assume that the sender can impose a SL
+    of any length.  If a PCC sets the L flag to zero, then it sets
+   the max-SL field to the maximum number of SIDs that it can impose on a
+   packet.  If a PCE receives an SRv6-PCE-CAPABILITY sub-TLV with the L
+   flag and max-SL both set to zero then it MUST assume that the PCC is not
+   capable of imposing a SL of any length and hence is not SRv6
+   capable, unless it learns a non-zero max-SL for the PCC through some
+   other means.</t>
+
+   <t>Note that the max-SL value exchanged via the SRv6-PCE-CAPABILITY sub-TLV
+   indicates the SRv6 SID imposition limit for the PCC node.  However,
+   if a PCE learns the max-SL value of a PCC node via different means, e.g
+   routing protocols, as specified in:
+   <xref target='I-D.li-ospf-ospfv3-srv6-extensions' />;
+   <xref target='I-D.bashandy-isis-srv6-extensions' />;
+   <xref target='I-D.dawra-idr-bgpls-srv6-ext' />, then it ignores the max-SL
+   value in the SRv6-PCE-CAPABILITY sub-TLV.  Furthermore, whenever a PCE
+   learns the other advanced max-SL via different means, it MUST use that value
+   regardless of the max-SL value exchanged in the SRv6-PCE-CAPABILITY sub-TLV.</t>
+
+
+   <t>Once an SRv6-capable PCEP session is established with a non-zero max-SL
+   value, the corresponding PCE MUST NOT send SRv6 paths with a number
+   of SIDs exceeding that max-SL value.  If a PCC needs to modify the max-SL
+   value, it MUST close the PCEP session and re-establish it with the
+   new max-SL value.  If a PCEP session is established with a non-zero max-SL
+   value, and the PCC receives an SRv6 path containing more SIDs than
+   specified in the max-SL value, the PCC MUST send a PCErr message with
+   Error-Type 10 (Reception of an invalid object) and Error-Value 3
+   (Unsupported number of Segment ERO subobjects).  If a PCEP session is
+   established with an max-SL value of zero, then the PCC MAY specify an
+   max-SL for each path computation request that it sends to the PCE, by
+   including a "maximum SID depth" metric object on the request similar
+   to <xref target='I-D.ietf-pce-segment-routing' />.</t>
+
+   <t>The L flag and Max-SL value inside the SRv6-PCE-CAPABILITY sub-TLV are
+   meaningful only in the Open message sent from a PCC to a PCE.  As
+   such, a PCE MUST set the L flag and Max-SL value to zero in an outbound
+   message to a PCC.  Similarly, a PCC MUST ignore any max-SL value
+   received from a PCE.  If a PCE receives multiple SRv6-PCE-CAPABILITY
+   sub-TLVs in an Open message, it processes only the first sub-TLV
+   received.</t>
+
+        </section>
+        <!-- Exchanging SR Capability -->
+      </section>
+      <!-- The OPEN Object -->
+      <section anchor="The-SRP-Object"
+               title="The RP/SRP Object">
+        <t>In order to indicate the SRv6 path, RP or SRP
+        object MUST include the PATH-SETUP-TYPE TLV specified in
+        <xref target='RFC8408'/>. This document defines a new
+        Path Setup Type (PST=TBD2) for SRv6.</t>
+
+        <t>The LSP-IDENTIFIERS TLV MAY be present for the above PST type.</t>
+
+      </section>
+      <!-- The SRP Object -->
+      <section anchor="ERO-Object"
+               title="ERO Object">
+        <t>In order to support SRv6, the SR-ERO subobject is
+        used <xref target='I-D.ietf-pce-segment-routing'/>. This documents extends the SR-ERO subobject. All the 
+        processing rules remains the same.</t>
+        <section anchor="SR-ERO-Subobject" title="SR-ERO Subobject">
+          <t>For supporting SRv6, a new NAI Type (NT) is defined, the format of 
+          SR-ERO sub object remains the same as defined in <xref target='I-D.ietf-pce-segment-routing'/>.</t> 
+
+            <t>When the NAI Type (NT) indicates SRv6, then the 
+          SR-ERO subobject represent a SRv6 segment and include a field 
+          SRv6I (SRv6 Identifier) in place of NAI (Node or Adjacency Identifier) defined in <xref target='I-D.ietf-pce-segment-routing'/>. 
+          The 32 bit SID is not used for SRv6 and MUST NOT be included. The format of SR-ERO subobject is reproduced with the SRv6I field as shown below:</t>
+          <figure anchor="SR-ERO-Subobject-Format" title="SR-ERO Subobject Format">
+            <artwork>
+              <![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|L|    Type     |     Length    |  NT   |     Flags     |F|S|C|M|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     SID (not included)                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//                     SRv6I (variable)                        //
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     ]]>
+</artwork>
+          </figure>
+          <!--<t>A following new flag is added:</t>
+      <t>* I: When this bit is set, the SR-ERO sub-object represents a SRv6 segment.</t>-->
+      <t>The description of all the flags and fields is as per <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+      <t>For SRv6 segments, a new NT (NAI Type) is assigned by IANA as TBD3.</t>
+      <!--<t>[Editor's Note - More ST values can be defined in a future document update,
+        matching with other functions as described in <xref target='I-D.filsfils-spring-srv6-network-programming'/>. 
+        More discussions are needed here.] </t>-->
+      <t>For SRv6 segments (when NT is TBD3), M and C flag MUST NOT be set. The S flag MUST be set and SID field MUST NOT be included.
+      The F bit MUST NOT be set. <!--The Length is 28. The NAI, depending on ST, could be of format 'IPv6 Node ID' or 'IPv6 Adjacency' as 
+      described in <xref target='I-D.ietf-pce-segment-routing'/>.--></t>    
+
+      <t>If these flags are not set properly, the subobject MUST be considered malformed and the PCEP speaker react as per the error handling described in <xref target="ERO-Processing"/>.</t>     
+
+      <t>The SRv6I format is as shown below:</t>
+          <figure anchor="SRv6I-Format" title="SR-ERO Subobject's SRv6I Format">
+            <artwork>
+              <![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                      SRv6 Identifier                          |
+|                         (128-bit)                             |
+|                                                               | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| SRv6NT|         Flags           |       Function Code         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//                        NAI (variable)                       //
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+      
+     ]]>
+</artwork>
+          </figure>
+          <t><list>
+          <t>SRv6 Identifier is the 128 bit IPv6 addresses representing SRv6 segment.</t>
+          <t>SRv6NT is the SRv6 NAI Type which indicates the interpretation for NAI (Node or Adjacency Identifier) as per <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+          <t>Flags is the 12 bit field, no flag bits are currently defined in this document. This MUST be set to 0 and ignored on receipt.</t>
+          <t>Function Code is is the 16 bit field representing supported functions
+          associated with SRv6 SIDs. This information is optional and included only for maintainability.
+          <!--[Editor's Note - The authors needs to finalize if this functionality be removed for now, with a possibility for addition in another extension as the <xref target='I-D.filsfils-spring-srv6-network-programming'/> progresses].--> Following function codes are currently defined -
+          <list>
+            <t>0: Reserved</t>
+            <t>1: End Function</t>
+            <t>2: End.DX6 Function</t>
+            <t>3: End.DT6 Function</t>
+            <t>4: End.X Function</t>
+          </list></t>
+
+          
+              <t>NAI field <xref target='I-D.ietf-pce-segment-routing'/> contains the NAI associated with the SRv6 Identifier.  Depending on the value of SRv6NT, 
+                the NAI can have different formats. 
+                <list>
+                  <t>When SRv6NT value is 1, the NAI is as per the 'IPv6 Node ID' format defined in <xref target='I-D.ietf-pce-segment-routing'/>, which specify an IPv6 address. This is used to
+                  identify the owner of the SRv6 Identifier. This is optional, as the LOC (the locater portion) of the SRv6 SID serves a similar purpose.</t>
+                  <t>When SRv6NT value is 2, the NAI is as per the 'IPv6 Adjacency' format defined in <xref target='I-D.ietf-pce-segment-routing'/>, which specify a pair of IPv6 addresses. This is used to
+                  identify the IPv6 Adjacency and used with the SRv6 Adj-SID.</t>
+                  <t>Note that when SRv6NT value is 0, NAI is not included and MUST be NULL. </t>
+                </list></t>
+            </list></t>
+
+      <!--If M bit is set I bit MUST not be set and vice-versa, 
+      otherwise PCEP speaker MUST send a PCErr message with 
+      Error-Type = 10 ("Reception of an invalid object") and 
+      Error Value = TBD ("Bad SID Format").</t>
+          <t>The definition of all other bits and fields is as per <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+          <t>SID Type (ST) indicates the type of information
+          associated with the SID contained in the object body. ST
+          values are defined in draft-ietf-pce-segment-routing. For
+          SRH path, valid ST values are 2 and 4.</t>
+          <t>Flags is used to carry any additional information
+          pertaining to SID. In this draft new bit(I) is
+          defined.</t>
+          <t>* M: When this bit is set, the SID value represents an
+          MPLS label stack entry as specified in [RFC5462] where
+          only the label value is specified by the PCE.</t>
+          
+          <t>Other bits are as defined in draft-ietf-pce-segment-routing.</t>
+          <t>SID Type (ST) indicates the type of information
+          associated with the SID contained in the object body. ST
+          values are defined in draft-ietf-pce-segment-routing. For
+          SRTE-IPv6 or SRH-IPv6 valid ST values are 2 and 4.</t>-->
+        </section>
+        <!-- SRIPv6-ERO Subobject Format -->
+        <section anchor="ERO-Processing"
+                 title="ERO Processing">
+          <t>The ERO and SR-ERO subobject processing remains 
+            as per <xref target='RFC5440'/> and <xref target='I-D.ietf-pce-segment-routing'/>. </t>
+            <t>The NT MUST only be TDB3, if the PST=TBD3 is set in the PCEP message and SRv6-PCE-CAPABILITY sub-TLV is exchanged with the PCEP peer. 
+    In case a PCEP speaker receives the SR-ERO subobject with NT indicating SRv6 segment, when the PST is not set to TBD3 or SRv6-PCE-CAPABILITY sub-TLV
+    was not exchanged, it MUST send a PCErr message with Error-Type = 19 ("Invalid Operation") and
+    Error-Value = TBD4 ("Attempted SRv6 when the capability was not advertised").
+    A PCEP speaker that does not recognize the NT value, it would behave as per <xref target='I-D.ietf-pce-segment-routing'/>. </t>
+   
+   <t> If a PCC receives a list of SRv6 segments, and the number of
+   SRv6 segments exceeds the max-SL that the PCC can impose on
+   the packet (SRH), it MAY send a PCErr message with Error-Type = 10
+   ("Reception of an invalid object") and Error-Value = TBD
+   ("Unsupported number of Segment ERO subobjects") as per
+   <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+
+   <t>When a PCEP speaker detects that all subobjects of ERO are not
+   identical to SRv6, and if it does not handle such ERO, it MUST send a PCErr
+   message with Error-Type = 10 ("Reception of an invalid object") and
+   Error-Value = TBD ("Non-identical ERO subobjects")as per
+   <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+   
+            <t>When a PCEP speaker receives an SR-ERO subobject for SRv6 segment,
+   M, C and F flag MUST NOT be set and S flag MUST be set.  Otherwise, it MUST
+   consider the entire ERO object invalid and send a PCErr message with
+   Error-Type = 10 ("Reception of an invalid object") and Error-Value =
+   TBD ("Malformed object") as per <xref target='I-D.ietf-pce-segment-routing'/>.  The PCEP speaker MAY include the malformed
+   SR-ERO object in the PCErr message as well. <!--In case ST value, other than 
+   those used for SRv6 is received with I flag set, the PCEP speaker MUST
+   send a PCErr message with Error-Type = 10 ("Reception of an invalid
+   object") and Error-Value = TBD4 ("Bad SID Type").--></t>
+
+
+
+
+
+            <!--same except processing for new
+          flag bit(I) defined and variable SID(i.e.PrefixSID), if a
+          PCEP speaker does not support PrefixSID it MUST send
+          PCErr message with Error-Type = 4 (Not supported object)
+          and Error-Value = 2 (Not supported object Type).</t>
+          <t>If M bit is set I bit MUST not be set and vice-versa,
+          otherwise PCEP speaker MUST send a PCErr message with
+          Error-Type = 10 ("Reception of an invalid object") and
+          Error Value = TBD ("Bad SID Format").</t>
+		  <t>If SID is zero, PCC is responsible for choosing SID value 
+		  by link-state database lookup.</t>
+          <t>Other Error codes will be defined in later version of
+          this draft.</t>-->
+        <section title="Interpreting the SR-ERO">          
+
+   <t>The SR-ERO contains a sequence of subobjects.  According to
+   <xref target='I-D.ietf-spring-segment-routing-policy'/>, each SR-ERO subobject in
+   the sequence identifies a segment that the traffic will be directed
+   to, in the order given.  That is, the first subobject identifies the
+   first segment the traffic will be directed to, the second SR-ERO
+   subobject represents the second segment, and so on.</t>
+
+   <t>The PCC interprets the SR-ERO by converting it to an SRv6 SRH
+   plus a next hop.  The PCC sends packets along the segment routed path
+   by prepending the SRH onto the packets and sending the
+   resulting, modified packet to the next hop.</t>
+
+   <t></t>
+        </section>
+
+        </section>
+        <!-- ERO Processing -->
+      </section>
+      <!-- ERO Object -->
+      <section anchor="RRO-Object"
+               title="RRO Object">
+        <t>In order to support SRv6, the SR-RRO Subobject is
+        used <xref target='I-D.ietf-pce-segment-routing'/>. All other 
+        processing rules remains the same.</t>
+        <section anchor="SR-RRO-Subobject" title="SR-RRO Subobject">
+          <t>For SRv6 segments, a new NT (NAI Type) is assigned by IANA as TBD3, the format of 
+          SR-RRO sub object remains the same as the SR-ERO subobject, but without the L flag
+          <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+          <!--<t>For supporting IPv6 SID(s) for SRv6, a new bit (I) is defined in
+          existing SR-RRO sub object. If the I bit is set then
+          SR-RRO sub object represent a SRv6 segment encoded via the 
+          NAI. The 32 bit SID MUST be set to zero on transit and ignored
+          on receipt. The format of SR-RRO subobject is reproduced with the I flag as shown below:</t>-->
+          <!--<t>An SRIPv6-ERO subobject consists of a 32-bit header
+          followed by the variable(SID) PrefixSID and the NAI
+          associated with the PrefixSID.</t>-->
+
+          <t>When the NAI Type (NT) indicates SRv6, then the 
+          SR-RRO subobject represent a SRv6 segment and include a field 
+          SRv6I (SRv6 Identifier) in place of NAI (Node or Adjacency Identifier) defined in <xref target='I-D.ietf-pce-segment-routing'/>. 
+          The 32 bit SID MUST NOT be included. The format of SR-RRO subobject is reproduced with the SRv6I field as shown below:</t>          
+          <figure anchor="SR-RRO-Subobject-Format" title="SR-RRO Subobject Format">
+            <artwork>
+              <![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      Type     |     Length    |  ST   |     Flags     |F|S|C|M|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     SID (not included)                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//                     SRv6I (variable)                        //
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+           ]]>
+</artwork>
+          </figure>
+          <t>The description of all fields and flags is as per SR-ERO subobject.</t>
+          <t>Processing rules of SR-RRO subobject are identical to those of SR-ERO
+   subobject.</t>
+   <t>If a PCE detects that all subobjects of RRO are not identical, and if
+   it does not handle such RRO, it MUST send a PCErr message with Error-
+   Type = 10 ("Reception of an invalid object") and Error-Value = 10
+   ("Non-identical RRO subobjects").</t>
+        </section>
+        <!-- SR-RRO Subobject -->
+      </section>
+      <!-- RRO Object -->
+    </section>
+    <!-- Object Formats -->
+    <!--<section anchor="Backward-Compatibility"
+             title="Backward Compatibility">
+      <t>A PCEP speaker that does not support the SR PCEP
+      capability cannot recognize the SR-ERO or SR-RRO subobjects
+      with new (I) flag MUST send a PCEP error with Error-Type = 4
+      (Not supported object) and Error-Value = 2 (Not supported
+      object Type) as per [RFC5440].</t>
+    </section>-->
+    <!-- Backward Compatibility -->
+    <section anchor="Security-Considerations"
+             title="Security Considerations">
+      <t>The security considerations described in <xref target='RFC5440'/>, <xref target='RFC8231'/> and 
+      <xref target='RFC8281'/>, <xref target='I-D.ietf-pce-segment-routing'/>, are
+      applicable to this specification. No additional security
+      measure is required.</t>
+    </section>
+    <!-- Security Considerations -->
+    <section anchor="IANA-Considerations" title="IANA Considerations">
+      <t>This document requests IANA to include (I) bit in flags
+      registry for SR-ERO and SR-RRO sub-objects. Other changes are 
+      defined as:</t>
+      
+      <section anchor="PCEP-Objects" title="PCEP Objects">
+        <section anchor="ERROR-Objects"
+                 title="ERROR Objects">
+          <t>IANA is requested to allocate code-points in the PCEP-ERROR Object
+   Error Types and Values registry for the following new error-values:</t>
+          <figure >
+            <artwork>
+              <![CDATA[   
+   Error-Type   Meaning
+   ----------   -------
+   10           Reception of an invalid object
+                Error-value = TBD5 (Missing 
+                PCE-SRv6-CAPABILITY sub-TLV) 
+   19           Invalid Operation
+                Error-value = TBD4 (Attempted SRv6 when the 
+                capability was not advertised)
+                ]]>
+</artwork>
+          </figure>
+        </section>
+        <!-- ERROR Objects -->
+        <section anchor="TLV-Type-Indicators"
+                 title="TLV Type Indicators">
+                 <t>IANA is requested to make the assignment of the new code points for
+   the existing "PCEP TLV Type Indicators" registry as follows:</t>
+   <figure><artwork><![CDATA[   
+   Value     Meaning                     Reference
+   -----     -------                     ---------
+   TBD1      SRv6-PCE-CAPABILITY         This Document
+   ]]></artwork></figure>
+               </section>
+          <section anchor="New-Path-Setup-Type"
+                   title="New Path Setup Type">
+            <t>
+            <xref target='RFC8408'/> defines
+            the PATH-SETUP-TYPE TLV and requests that IANA creates
+            a registry to manage the value of the PATH-SETUP-TYPE
+            TLV's PST field. IANA is requested to allocate a new
+            code point in the PCEP PATH_SETUP_TYPE TLV PST field
+            registry, as follows:</t>
+            <figure >
+              <artwork>
+                <![CDATA[
+Value             Description                  Reference
+-----             -----------                  ---------
+TBD2              SRv6 (SRH) technique         This Document
+                                                                                     
+   ]]>
+</artwork>
+            </figure>
+          </section>
+          <!-- New Path Setup Type -->
+        </section>
+        <!-- TLV Type Indicators -->
+      </section> <!-- PCEP Objects -->
+      <section title="The NAI Type field">
+        <t>As per <xref target='I-D.ietf-pce-segment-routing'/>, a new subregistery for "PCEP
+   SR-ERO NAI Types" was created. IANA is requested to make the assignment of the new code points in the 
+   afore-mentioned registry as follows: </t>
+   <figure><artwork><![CDATA[   
+   Value     Description                 Reference
+   -----     -------                     ---------
+   TBD3      NAI is an SRv6 segment      This Document
+   ]]></artwork></figure>   
+
+
+          
+      </section>
+    </section>
+    <!-- IANA Considerations -->
+  </middle>
+  <back>
+    
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119"?>
+      <?rfc include="reference.RFC.5440"?>
+      <?rfc include="reference.RFC.5511"?>
+      <?rfc include="reference.RFC.8174"?>
+      <?rfc include="reference.RFC.8231"?>
+      <?rfc include="reference.RFC.8281"?>
+      <?rfc include="reference.RFC.8402"?>
+      <?rfc include="reference.RFC.8408"?>
+      <?rfc include="reference.I-D.ietf-pce-segment-routing"?>
+      </references>
+    <references title="Informative References">
+      <?rfc include="reference.RFC.4657"?>      
+      <?rfc include="reference.RFC.7855"?>      
+	  <?rfc include="reference.RFC.8051"?>	  
+    <?rfc include="reference.RFC.8354"?>   
+    <?rfc include="reference.I-D.ietf-6man-segment-routing-header"?>
+    
+    <?rfc include="reference.I-D.ietf-isis-segment-routing-extensions"?>
+      <?rfc include="reference.I-D.ietf-ospf-ospfv3-segment-routing-extensions"?>
+      <?rfc include="reference.I-D.ietf-spring-segment-routing-policy"?>
+      <?rfc include="reference.I-D.filsfils-spring-srv6-network-programming"?>
+      <?rfc include="reference.I-D.li-ospf-ospfv3-srv6-extensions"?>
+      <?rfc include="reference.I-D.bashandy-isis-srv6-extensions"?>
+      <?rfc include="reference.I-D.dawra-idr-bgpls-srv6-ext"?>
+
+      </references>
+      <section title="Contributor">
+      <t>The following persons contributed to this document:</t>
+     <figure><artwork>
+Huang Wumin
+Huawei Technologies
+Huawei Building, No. 156 Beiqing Rd.
+Beijing  100095
+China
+
+Email: huangwumin@huawei.com
+     </artwork></figure> 
+    </section>
+  </back>
+</rfc>
