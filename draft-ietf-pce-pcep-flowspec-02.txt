@@ -5,10 +5,10 @@
 Network Working Group                                      D. Dhody, Ed.
 Internet-Draft                                       Huawei Technologies
 Intended status: Standards Track                          A. Farrel, Ed.
-Expires: April 17, 2019                                 Juniper Networks
+Expires: April 18, 2019                                 Juniper Networks
                                                                    Z. Li
                                                      Huawei Technologies
-                                                        October 14, 2018
+                                                        October 15, 2018
 
 
                  PCEP Extension for Flow Specification
@@ -47,13 +47,13 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 17, 2019.
+   This Internet-Draft will expire on April 18, 2019.
 
 
 
 
 
-Dhody, et al.            Expires April 17, 2019                 [Page 1]
+Dhody, et al.            Expires April 18, 2019                 [Page 1]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -88,7 +88,7 @@ Table of Contents
    6.  Flow Filter TLV . . . . . . . . . . . . . . . . . . . . . . .  10
    7.  Flow Specification TLVs . . . . . . . . . . . . . . . . . . .  10
    8.  Detailed Procedures . . . . . . . . . . . . . . . . . . . . .  14
-     8.1.  Default Behavior and Backward Compatibility . . . . . . .  14
+     8.1.  Default Behavior and Backward Compatibility . . . . . . .  15
      8.2.  Composite Flow Specifications . . . . . . . . . . . . . .  15
      8.3.  Modifying Flow Specifications . . . . . . . . . . . . . .  15
      8.4.  Multiple Flow Specifications  . . . . . . . . . . . . . .  15
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Dhody, et al.            Expires April 17, 2019                 [Page 2]
+Dhody, et al.            Expires April 18, 2019                 [Page 2]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -165,7 +165,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                 [Page 3]
+Dhody, et al.            Expires April 18, 2019                 [Page 3]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -221,7 +221,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                 [Page 4]
+Dhody, et al.            Expires April 18, 2019                 [Page 4]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -277,7 +277,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                 [Page 5]
+Dhody, et al.            Expires April 18, 2019                 [Page 5]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -333,7 +333,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                 [Page 6]
+Dhody, et al.            Expires April 18, 2019                 [Page 6]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -389,7 +389,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                 [Page 7]
+Dhody, et al.            Expires April 18, 2019                 [Page 7]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -445,7 +445,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                 [Page 8]
+Dhody, et al.            Expires April 18, 2019                 [Page 8]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -489,22 +489,29 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
       Unassigned bits MUST be set to zero on transmission and ignored on
       receipt.
 
+   If the PCEP speaker receives a message with R bit set in FLOWSPEC
+   object and the Flow Specification identified with a FS-ID does not
+   exist, it MUST generate a PCErr with Error-type TBD8 (FlowSpec
+   Error), error-value 4 (Unknown FlowSpec).
+
+   If the PCEP speaker does not understand or support the AFI in the
+   FLOWSPEC message, the PCEP peer MUST respond with a PCErr message
+   with error-type TBD8 (FlowSpec Error), error-value 2 (Malformed
+   FlowSpec).
+
+
+
+Dhody, et al.            Expires April 18, 2019                 [Page 9]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    Flow Filter TLV (variable): One TLV MAY be included.
 
    The Flow Filter TLV is OPTIONAL when the R bit is set.  The TLV MUST
    be present when the R bit is clear.  If the TLV is missing when the R
    bit is clear, the PCEP peer MUST respond with a PCErr message with
    error-type TBD8 (FlowSpec Error), error-value 2 (Malformed FlowSpec).
-
-
-
-
-
-
-Dhody, et al.            Expires April 17, 2019                 [Page 9]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
 6.  Flow Filter TLV
 
@@ -540,6 +547,21 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    Type field is partitioned as shown in Figure 3.
 
 
+
+
+
+
+
+
+
+
+
+
+Dhody, et al.            Expires April 18, 2019                [Page 10]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    Range          |
    ---------------+---------------------------------------------------
    0              | Reserved - must not be allocated.
@@ -553,14 +575,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
                Figure 3: Flow Specification TLV Type Ranges
-
-
-
-
-Dhody, et al.            Expires April 17, 2019                [Page 10]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
    [RFC5575] created the registry "Flow Spec Component Types" and made
    allocations to it.  [I-D.ietf-idr-flow-spec-v6] requested for another
@@ -596,6 +610,14 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    are also associated with actions to indicate how traffic matching the
    Flow Specification should be treated.  In PCEP, however, the only
    action is to associate the traffic with a tunnel and to forward
+
+
+
+Dhody, et al.            Expires April 18, 2019                [Page 11]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    matching traffic on to that path, so no encoding of an action is
    needed.
 
@@ -610,14 +632,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    | *     | Destination IPv4 Prefix | [RFC5575]                   |
    +-------+-------------------------+-----------------------------+
    | *     | Destination IPv6 Prefix | [I-D.ietf-idr-flow-spec-v6] |
-
-
-
-Dhody, et al.            Expires April 17, 2019                [Page 11]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
    +-------+-------------------------+-----------------------------+
    | *     | Source IPv4 Prefix      | [RFC5575]                   |
    +-------+-------------------------+-----------------------------+
@@ -652,6 +666,14 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    +-------+-------------------------+-----------------------------+
    | *     | Source MAC              | [I-D.ietf-idr-flowspec-     |
    |       |                         | l2vpn]                      |
+
+
+
+Dhody, et al.            Expires April 18, 2019                [Page 12]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    +-------+-------------------------+-----------------------------+
    | *     | Destination MAC         | [I-D.ietf-idr-flowspec-     |
    |       |                         | l2vpn]                      |
@@ -666,14 +688,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    |       |                         | l2vpn]                      |
    +-------+-------------------------+-----------------------------+
    | *     | SNAP                    | [I-D.ietf-idr-flowspec-     |
-
-
-
-Dhody, et al.            Expires April 17, 2019                [Page 12]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
    |       |                         | l2vpn]                      |
    +-------+-------------------------+-----------------------------+
    | *     | VLAN ID                 | [I-D.ietf-idr-flowspec-     |
@@ -708,6 +722,14 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    All Flow Specification TLVs with Types in the range 1 to 255 have
    Values defined for use in BGP (for example, in [RFC5575],
    [I-D.ietf-idr-flow-spec-v6], and [I-D.ietf-idr-flowspec-l2vpn]) and
+
+
+
+Dhody, et al.            Expires April 18, 2019                [Page 13]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    are set using the BGP encoding, but without the type or length octets
    (the relevant information is in the Type and Length fields of the
    TLV).  The Value field is padded with trailing zeros to achieve
@@ -721,14 +743,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    information (for example, an IPv4 destination prefix) is associated
    with a specific VPN identified by the RD.  See Section 8.6 for
    further discussion of VPN identification.
-
-
-
-
-Dhody, et al.            Expires April 17, 2019                [Page 13]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
    Although it may be possible to describe a multicast Flow
    Specification from the combination of other Flow Specification TLVs
@@ -762,6 +776,16 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    This section outlines some specific detailed procedures for using the
    protocol extensions defined in this document.
 
+
+
+
+
+
+Dhody, et al.            Expires April 18, 2019                [Page 14]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
 8.1.  Default Behavior and Backward Compatibility
 
    The default behavior is that no Flow Specification is applied to a
@@ -774,17 +798,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
    [RFC5440] describes how receivers respond when they see unknown PCEP
    objects.
-
-
-
-
-
-
-
-Dhody, et al.            Expires April 17, 2019                [Page 14]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
 8.2.  Composite Flow Specifications
 
@@ -821,6 +834,14 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    acceptable.  PCEP would consider this as a single Flow Specification
    identified by a single FS-ID.
 
+
+
+
+Dhody, et al.            Expires April 18, 2019                [Page 15]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    In other scenarios the use of multiple Flow Specification TLVs would
    be confusing.  For example, if flows from A to B and from C to D are
    to be included then using two Source IPv4 Prefix TLVs and two
@@ -829,18 +850,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    its own PCEP Flow Spec Object with multiple objects present on a
    single PCEP message.  Use of separate objects also allows easier
    removal and modification of Flow Specifications.
-
-
-
-
-
-
-
-
-Dhody, et al.            Expires April 17, 2019                [Page 15]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
 8.5.  Adding and Removing Flow Specifications
 
@@ -880,23 +889,20 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
    TBD
 
+
+
+
+
+Dhody, et al.            Expires April 18, 2019                [Page 16]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    An implementation that receives a PCEP message carrying a Flow
    Specification that it cannot resolve against other Flow
    Specifications already installed MUST respond with a PCErr message
    with error-type TBD8 (FlowSpec Error), error-value 3 (Unresolvable
    conflict) and MUST NOT install the Flow Specification.
-
-
-
-
-
-
-
-
-Dhody, et al.            Expires April 17, 2019                [Page 16]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
 9.  PCEP Messages
 
@@ -943,13 +949,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-
-
-
-
-
-
-Dhody, et al.            Expires April 17, 2019                [Page 17]
+Dhody, et al.            Expires April 18, 2019                [Page 17]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1005,7 +1005,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 18]
+Dhody, et al.            Expires April 18, 2019                [Page 18]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1061,7 +1061,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 19]
+Dhody, et al.            Expires April 18, 2019                [Page 19]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1117,7 +1117,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 20]
+Dhody, et al.            Expires April 18, 2019                [Page 20]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1173,7 +1173,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 21]
+Dhody, et al.            Expires April 18, 2019                [Page 21]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1185,7 +1185,8 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
           |                    | 1: Unsupported FlowSpec    | [This.I-D]
           |                    | 2: Malformed FlowSpec      | [This.I-D]
           |                    | 3: Unresolvable conflict   | [This.I-D]
-          |                    | 4-255: Unassigned          | [This.I-D]
+          |                    | 4: Unknown FlowSpec        | [This.I-D]
+          |                    | 5-255: Unassigned          | [This.I-D]
 
 
 10.5.  PCE Capability Flag
@@ -1228,8 +1229,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-
-Dhody, et al.            Expires April 17, 2019                [Page 22]
+Dhody, et al.            Expires April 18, 2019                [Page 22]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1285,7 +1285,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 23]
+Dhody, et al.            Expires April 18, 2019                [Page 23]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1341,7 +1341,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 24]
+Dhody, et al.            Expires April 18, 2019                [Page 24]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1397,7 +1397,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 25]
+Dhody, et al.            Expires April 18, 2019                [Page 25]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1453,7 +1453,7 @@ Appendix A.  Contributors
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 26]
+Dhody, et al.            Expires April 18, 2019                [Page 26]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1509,4 +1509,4 @@ Authors' Addresses
 
 
 
-Dhody, et al.            Expires April 17, 2019                [Page 27]
+Dhody, et al.            Expires April 18, 2019                [Page 27]

@@ -377,6 +377,13 @@
  <t>Unassigned bits MUST be set to zero on transmission and ignored on receipt.</t>   
 </list></t>
 
+ <t>If the PCEP speaker receives a message with R bit set in FLOWSPEC object and the Flow Specification 
+   identified with a FS-ID does not exist, it MUST
+   generate a PCErr with Error-type TBD8 (FlowSpec Error), error-value 4 (Unknown FlowSpec). </t>
+  <t>If the PCEP speaker does not understand or support the AFI in the FLOWSPEC message, the PCEP peer
+    MUST respond with a PCErr message with error-type TBD8 (FlowSpec Error), error-value 2
+    (Malformed FlowSpec).</t> 
+
  <t>Flow Filter TLV (variable): One TLV MAY be included.</t>
 
  <t>The Flow Filter TLV is OPTIONAL when the R bit is set.  The TLV MUST be present
@@ -973,7 +980,8 @@ Range          | Assignment policy
        |                    | 1: Unsupported FlowSpec    | [This.I-D]
        |                    | 2: Malformed FlowSpec      | [This.I-D]
        |                    | 3: Unresolvable conflict   | [This.I-D]
-       |                    | 4-255: Unassigned          | [This.I-D]
+       |                    | 4: Unknown FlowSpec        | [This.I-D] 
+       |                    | 5-255: Unassigned          | [This.I-D]
        ]]>
      </artwork>
    </figure>
