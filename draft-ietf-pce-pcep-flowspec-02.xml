@@ -263,12 +263,12 @@
       </list></t>
 
    <t>To carry Flow Specifications in PCEP messages, this document defines a new PCEP object called the
-      PCEP Flow Spec Object.  The object is OPTIONAL in the messages described above and MAY appear more
+      PCEP FLOWSPEC Object.  The object is OPTIONAL in the messages described above and MAY appear more
       than once in each message.</t>
 
-   <t>The PCEP Flow Spec Object carries zero or one Flow Filter TLV which describes a traffic flow.</t>
+   <t>The PCEP FLOWSPEC Object carries zero or one Flow Filter TLV which describes a traffic flow.</t>
 
-   <t>The inclusion of multiple PCEP Flow Spec Objects allows multiple traffic flows to be placed on a single
+   <t>The inclusion of multiple PCEP FLOWSPEC Objects allows multiple traffic flows to be placed on a single
       path.</t>
 
    <t>Once a PCE and PCC have established that they can both support the use of Flow Specifications in PCEP
@@ -324,23 +324,23 @@
 
 </section>
 
-<section title="PCEP Flow Spec Object">
+<section title="PCEP FLOWSPEC Object">
 
- <t>The PCEP Flow Spec object defined in this document is compliant with the PCEP object format
+ <t>The PCEP FLOWSPEC object defined in this document is compliant with the PCEP object format
     defined in <xref target="RFC5440"/>.  It is OPTIONAL in the PCReq, PCRep, PCErr, PCInitiate,
     PCRpt, and PCUpd messages and MAY be present zero, one, or more times.  Each instance of the
     object specifies a traffic flow.</t>
 
- <t>The PCEP Flow Spec object carries a FlowSpec filter rule encoded in a TLV (as defined in
+ <t>The PCEP FLOWSPEC object carries a FlowSpec filter rule encoded in a TLV (as defined in
     <xref target="tlv" />.</t>
 
- <t>The FLOW SPEC Object-Class is TBD3 (to be assigned by IANA).</t>
+ <t>The FLOWSPEC Object-Class is TBD3 (to be assigned by IANA).</t>
 
- <t>The FLOW SPEC Object-Type is 1.</t>
+ <t>The FLOWSPEC Object-Type is 1.</t>
 
- <t>The format of the body of the PCEP Flow Spec object is shown in <xref target="FlowSpecFig" /></t>
+ <t>The format of the body of the PCEP FLOWSPEC object is shown in <xref target="FlowSpecFig" /></t>
 
- <figure title="PCEP Flow Spec Object Body Format" anchor="FlowSpecFig">
+ <figure title="PCEP FLOWSPEC Object Body Format" anchor="FlowSpecFig">
    <artwork>
      <![CDATA[
  0                   1                   2                   3
@@ -348,7 +348,7 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                            FS-ID                              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         AFI                   |        Flags                |R|
+|         AFI                   |  Reserved     |   Flags     |R|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 |                   Flow Filter TLV (variable)                  |
@@ -367,10 +367,10 @@
  <t>AFI (16-bits): Address Family Identifier as used in BGP <xref target="RFC4760"/> 
  (AFI=1 for IPv4 or VPNv4, AFI=2 for IPv6 and VPNv6 as per as per <xref target="I-D.ietf-idr-flow-spec-v6"/>).
 </t>   
-
- <t>Flags (16-bits): One flag is assigned - 
+ <t>Reserved (8-bits): MUST be set to zero on transmission and ignored on receipt.</t>
+ <t>Flags (8-bits): One flag is currently assigned - 
  <list>
- <t>R bit: The Remove bit is set when a PCEP Flow Spec Object is included in a PCEP
+ <t>R bit: The Remove bit is set when a PCEP FLOWSPEC Object is included in a PCEP
     message to indicate removal of the Flow Specification from the associated tunnel.
     If the bit is clear, the Flow Specification is being added or modified.</t>
 
@@ -413,8 +413,8 @@
     PCEP TLV registry.</t>
 
  <t>Type values are chosen so that there can be commonality with Flow Specifications defined for use
-    with BGP.  This is possible because the BGP Flow Spec encoding uses a single octet to encode the
-    type where PCEP uses two octets.  Thus the space of values for the Type field is partitioned as
+    with BGP <xref target="RFC5575"/>.  This is possible because the BGP Flow Spec encoding uses a single octet to encode the
+    type where as PCEP uses two octets.  Thus the space of values for the Type field is partitioned as
     shown in <xref target="fspectlvs" />.</t>
 
  <figure title="Flow Specification TLV Type Ranges" anchor="fspectlvs">
@@ -424,7 +424,8 @@ Range          |
 ---------------+---------------------------------------------------
 0              | Reserved - must not be allocated.
                |
-1 .. 255       | Per BGP registry defined by [RFC5575].
+1 .. 255       | Per BGP registry defined by [RFC5575] and
+               | [I-D.ietf-idr-flow-spec-v6].
                | Not to be allocated in this registry.
                |
 256 ..   65535 | New PCEP Flow Specifications allocated according
@@ -433,11 +434,19 @@ Range          |
    </artwork>
  </figure>
 
+ <t><xref target="RFC5575"/> created the registry "Flow Spec Component Types" and made allocations to it. 
+ <xref target="I-D.ietf-idr-flow-spec-v6"/> requested for another registry "Flow Spec IPv6 Component Types"
+ and requested initial allocations in it. If the AFI (in the FLOWSPEC object) is set to IPv4, the range 
+ 1..255 is as per "Flow Spec Component Types" <xref target="RFC5575"/>; if the AFI is set to IPv6, the range 
+ 1..255 is as per "Flow Spec IPv6 Component Types" <xref target="I-D.ietf-idr-flow-spec-v6"/>.
+ When future BGP specifications (such as <xref target="I-D.ietf-idr-flowspec-l2vpn"/>) make further allocations 
+ to the aforementioned registries, they are also inherited to be used in PCEP.</t>
+
  <t>The content of the Value field in each TLV is specific to the type/AFI and describes the parameters
     of the Flow Specification.  The definition of the format of many of these Value fields is inherited
     from BGP specifications as shown in <xref target="tlvFig" />.  Specifically, the inheritance is from
     <xref target="RFC5575"/> and <xref target="I-D.ietf-idr-flow-spec-v6"/>, but may also be inherited
-    from future BGP specifications.</t>
+    from future BGP specifications. This is a non-exhaustive list for illustration purpose.</t>
 
  <t>When multiple Flow Specification TLVs are present in a single Flow Filter TLV they are combined to
     produce a more detailed description of a flow.  For examples and rules about how this is achieved,
@@ -447,10 +456,10 @@ Range          |
     that it does not recognize or does not support MUST respond with a PCErr message with error-type TBD8
     (FlowSpec Error), error-value 1 (Unsupported FlowSpec) and MUST NOT install the Flow Specification.</t>
 
- <!--<t>When used in other protocols (such as BGP) these Flow Specifications are also associated with actions
+ <t>When used in other protocols (such as BGP) these Flow Specifications are also associated with actions
     to indicate how traffic matching the Flow Specification should be treated.  In PCEP, however, the only
     action is to associate the traffic with a tunnel and to forward matching traffic on to that path, so
-    no encoding of an action is needed.</t>-->
+    no encoding of an action is needed.</t>
 
  <t><xref target="priorities" /> describes how overlapping Flow Specifications are prioritized and
     handled.</t>
@@ -539,7 +548,7 @@ Range          |
 
   * Indicates that the TLV Type value comes from the value used
     in BGP.
-    This is a non-exhaustive list. 
+    This is a non-exhaustive list for illustration purpose. 
      ]]>
    </artwork>
  </figure>
@@ -587,65 +596,7 @@ Range          |
     set to zero and ignored on receipt.</t>
 
 </section>
-<section title="Flow Action TLV" anchor="action">
- <t>The Flow Filter TLV carries one or more Flow Action TLV.  The Flow Action TLV
-    follows the format of all PCEP TLVs as defined in <xref target="RFC5440" />. This is optional, the default action is to accept traffic that matches the rule and direct over the tunnel. To allow QoS related actions this TLV is included in the Flow Filter TLV.</t>
 
-  <figure title="Flow Action TLV Encoding">
-   <artwork>
-     <![CDATA[
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         Type=TBD9             |          Length               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                   BGP Extended Community Type                 |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//         BGP Extended Community Encoding (variable)          //
-+---------------------------------------------------------------+
-
-     ]]>
-   </artwork>
- </figure>	
- <t>The type of the TLV is TBD9 and it has a variable length. The Value field consists of - 
- 	<list>
- 		<t>BGP Extended Community Type: The extended community value as per <xref target="RFC5575"/> and other BGP specification.</t>
- 		<t>BGP Extended Community Encoding: The encoding is as per the BGP specification.</t>
- 	</list>
- </t>
- <figure title="Table of Extended Community Types">
-   <artwork>
-     <![CDATA[
-+-------+-------------------------+-----------------------------+
-| Type  | Description             | Encoding defined in         |
-|       |                         |                             |
-+-------+-------------------------+-----------------------------+
-| *     | traffic-rate            | [RFC5575]                   |     
-+-------+-------------------------+-----------------------------+
-| *     | traffic-action          | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | traffic-marking         | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+ 
-
-  * Indicates that the Type comes from the value used in BGP.
-    This is a non-exhaustive list. 
-     ]]>
-    </artwork>
- </figure>
- <t>An implementation that receives a PCEP message carrying a Flow Action TLV with an extended community type value
-    that it does not recognize or does not support MUST respond with a PCErr message with error-type TBD8
-    (FlowSpec Error), error-value 1 (Unsupported FlowSpec) and MUST NOT install the Flow Specification.</t>
-  <t>The content of the BGP Extended Community Encoding field is specific to the type
-   and describes the action of the Flow Specification.  The
-   definition of the format of many of these Value fields is inherited
-   from BGP specifications.  Specifically, the
-   inheritance is from <xref target="RFC5575"/> but
-   may also be inherited from future BGP specifications.</t>
-   <t>This TLV MAY appear more than once when multiple actions are needed. It MUST NOT appear more than once for the same 
-   type. If it appears more than once for the same type, only
-   the first occurrence is processed and any others MUST be ignored.</t>
-  
-</section>
 
 <section title="Detailed Procedures" anchor="detailed">
 
@@ -754,7 +705,7 @@ Range          |
 
  <t>The figures in this section use the notation defined in <xref target="RFC5511" />.</t>
 
- <t>The FLOW SPEC Object is OPTIONAL and MAY be carried in the PCEP messages.</t>
+ <t>The FLOWSPEC Object is OPTIONAL and MAY be carried in the PCEP messages.</t>
 
  <t>The PCInitiate message is defined in <xref target="RFC8281" /> and updated
     as below:</t>
@@ -916,11 +867,36 @@ Where:
        <![CDATA[
 Object-Class | Value Name  | Object-Type            |  Reference
 -------------+-------------+------------------------+----------------
-   TBD3      | FLOW SPEC   |  0: Reserved           |  [This.I-D]
+   TBD3      | FLOWSPEC    |  0: Reserved           |  [This.I-D]
              |             |  1: Flow Specification |  [This.I-D]
        ]]>
      </artwork>
    </figure>
+   <section title="PCEP FLOWSPEC Object Flag Field">
+   <t>
+    This document requests that a new sub-registry, named "FLOW SPEC Object
+   Flag Field", is created within the "Path Computation Element Protocol
+   (PCEP) Numbers" registry to manage the Flag field of the FLOWSPEC
+   object. New values are to be assigned by Standards Action <xref target="RFC8126"/>.
+   Each bit should be tracked with the following qualities:
+   <list style="symbols">
+    <t>Bit number (counting from bit 0 as the most significant bit)</t>
+    <t>Capability description</t>
+    <t>Defining RFC</t>
+   </list>
+    </t>
+    <t>The following values are defined in this document:</t>   	
+        <figure>
+          <artwork>
+<![CDATA[
+ Bit     Description           Reference
+
+  31     Remove (R-bit)        [This.I-D]
+         ]]>
+
+</artwork>
+        </figure>    
+   </section>
  </section>
 
  <section title="PCEP TLV Type Indicators">
@@ -935,7 +911,6 @@ Value   | Meaning                      | Reference
 --------+------------------------------+-------------
  TBD2   | PCE-FLOWSPEC-CAPABILITY TLV  | [This.I-D]
  TBD4   | FLOW FILTER TLV              | [This.I-D]
- TBD9   | FLOW ACTION TLV              | [This.I-D]
        ]]>
      </artwork>
    </figure>
@@ -955,9 +930,10 @@ Range          | Assignment policy
 0              | Reserved - must not be allocated.
                |
 1 .. 255       | Reserved - must not be allocated.
-               | Usage mirrors the BGP FlowSpec registry [RFC5575].
+               | Usage mirrors the BGP FlowSpec registry [RFC5575]
+               | & [I-D.ietf-idr-flow-spec-v6].
                |
-258 ..   64506 | Specification Required
+256 ..   64506 | Specification Required
                |
 64507 .. 65531 | First Come First Served
                |
@@ -967,7 +943,7 @@ Range          | Assignment policy
    </figure>
 
    <t>IANA is requested to pre-populate this registry with values defined in this
-      document as follows, taking the new values from the range 258 to 64506:</t>
+      document as follows, taking the new values from the range 256 to 64506:</t>
 
    <figure>
      <artwork>
@@ -981,7 +957,6 @@ Range          | Assignment policy
      </artwork>
    </figure>
  </section>
-
  <section title="PCEP Error Codes">
 
    <t>IANA maintains a subregistry called "PCEP-ERROR Object Error Types and Values".  Entries

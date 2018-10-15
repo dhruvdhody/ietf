@@ -5,10 +5,10 @@
 Network Working Group                                      D. Dhody, Ed.
 Internet-Draft                                       Huawei Technologies
 Intended status: Standards Track                          A. Farrel, Ed.
-Expires: April 15, 2019                                 Juniper Networks
+Expires: April 17, 2019                                 Juniper Networks
                                                                    Z. Li
                                                      Huawei Technologies
-                                                        October 12, 2018
+                                                        October 14, 2018
 
 
                  PCEP Extension for Flow Specification
@@ -47,13 +47,13 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 15, 2019.
+   This Internet-Draft will expire on April 17, 2019.
 
 
 
 
 
-Dhody, et al.            Expires April 15, 2019                 [Page 1]
+Dhody, et al.            Expires April 17, 2019                 [Page 1]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -84,41 +84,41 @@ Table of Contents
      3.2.  Dissemination Procedures  . . . . . . . . . . . . . . . .   6
      3.3.  Flow Specification Synchronization  . . . . . . . . . . .   7
    4.  PCE FlowSpec Capability TLV . . . . . . . . . . . . . . . . .   7
-   5.  PCEP Flow Spec Object . . . . . . . . . . . . . . . . . . . .   8
-   6.  Flow Filter TLV . . . . . . . . . . . . . . . . . . . . . . .   9
+   5.  PCEP FLOWSPEC Object  . . . . . . . . . . . . . . . . . . . .   8
+   6.  Flow Filter TLV . . . . . . . . . . . . . . . . . . . . . . .  10
    7.  Flow Specification TLVs . . . . . . . . . . . . . . . . . . .  10
-   8.  Flow Action TLV . . . . . . . . . . . . . . . . . . . . . . .  14
-   9.  Detailed Procedures . . . . . . . . . . . . . . . . . . . . .  15
-     9.1.  Default Behavior and Backward Compatibility . . . . . . .  15
-     9.2.  Composite Flow Specifications . . . . . . . . . . . . . .  16
-     9.3.  Modifying Flow Specifications . . . . . . . . . . . . . .  16
-     9.4.  Multiple Flow Specifications  . . . . . . . . . . . . . .  16
-     9.5.  Adding and Removing Flow Specifications . . . . . . . . .  17
-     9.6.  VPN Identifiers . . . . . . . . . . . . . . . . . . . . .  17
-     9.7.  Priorities and Overlapping Flow Specifications  . . . . .  17
-   10. PCEP Messages . . . . . . . . . . . . . . . . . . . . . . . .  18
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  21
-     11.1.  PCEP Objects . . . . . . . . . . . . . . . . . . . . . .  21
-     11.2.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  21
-     11.3.  Flow Specification TLV Type Indicators . . . . . . . . .  21
-     11.4.  PCEP Error Codes . . . . . . . . . . . . . . . . . . . .  22
-     11.5.  PCE Capability Flag  . . . . . . . . . . . . . . . . . .  23
-   12. Security Considerations . . . . . . . . . . . . . . . . . . .  23
-   13. Manageability Considerations  . . . . . . . . . . . . . . . .  24
-   14. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  24
+   8.  Detailed Procedures . . . . . . . . . . . . . . . . . . . . .  14
+     8.1.  Default Behavior and Backward Compatibility . . . . . . .  14
+     8.2.  Composite Flow Specifications . . . . . . . . . . . . . .  15
+     8.3.  Modifying Flow Specifications . . . . . . . . . . . . . .  15
+     8.4.  Multiple Flow Specifications  . . . . . . . . . . . . . .  15
+     8.5.  Adding and Removing Flow Specifications . . . . . . . . .  16
+     8.6.  VPN Identifiers . . . . . . . . . . . . . . . . . . . . .  16
+     8.7.  Priorities and Overlapping Flow Specifications  . . . . .  16
+   9.  PCEP Messages . . . . . . . . . . . . . . . . . . . . . . . .  17
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  20
+     10.1.  PCEP Objects . . . . . . . . . . . . . . . . . . . . . .  20
+       10.1.1.  PCEP FLOWSPEC Object Flag Field  . . . . . . . . . .  20
+     10.2.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  20
+     10.3.  Flow Specification TLV Type Indicators . . . . . . . . .  21
+     10.4.  PCEP Error Codes . . . . . . . . . . . . . . . . . . . .  21
+     10.5.  PCE Capability Flag  . . . . . . . . . . . . . . . . . .  22
+   11. Security Considerations . . . . . . . . . . . . . . . . . . .  22
+   12. Manageability Considerations  . . . . . . . . . . . . . . . .  23
+   13. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  23
 
 
 
-Dhody, et al.            Expires April 15, 2019                 [Page 2]
+Dhody, et al.            Expires April 17, 2019                 [Page 2]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
-   15. References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
-     15.1.  Normative References . . . . . . . . . . . . . . . . . .  24
-     15.2.  Informative References . . . . . . . . . . . . . . . . .  25
-   Appendix A.  Contributors . . . . . . . . . . . . . . . . . . . .  27
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
+   14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  23
+     14.1.  Normative References . . . . . . . . . . . . . . . . . .  23
+     14.2.  Informative References . . . . . . . . . . . . . . . . .  24
+   Appendix A.  Contributors . . . . . . . . . . . . . . . . . . . .  26
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
 
 1.  Introduction
 
@@ -165,7 +165,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                 [Page 3]
+Dhody, et al.            Expires April 17, 2019                 [Page 3]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -221,7 +221,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                 [Page 4]
+Dhody, et al.            Expires April 17, 2019                 [Page 4]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -277,7 +277,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                 [Page 5]
+Dhody, et al.            Expires April 17, 2019                 [Page 5]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -328,12 +328,12 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
       can be reported.
 
    To carry Flow Specifications in PCEP messages, this document defines
-   a new PCEP object called the PCEP Flow Spec Object.  The object is
+   a new PCEP object called the PCEP FLOWSPEC Object.  The object is
 
 
 
 
-Dhody, et al.            Expires April 15, 2019                 [Page 6]
+Dhody, et al.            Expires April 17, 2019                 [Page 6]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -341,10 +341,10 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    OPTIONAL in the messages described above and MAY appear more than
    once in each message.
 
-   The PCEP Flow Spec Object carries zero or one Flow Filter TLV which
+   The PCEP FLOWSPEC Object carries zero or one Flow Filter TLV which
    describes a traffic flow.
 
-   The inclusion of multiple PCEP Flow Spec Objects allows multiple
+   The inclusion of multiple PCEP FLOWSPEC Objects allows multiple
    traffic flows to be placed on a single path.
 
    Once a PCE and PCC have established that they can both support the
@@ -352,7 +352,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    exchanged at any time for new or existing paths.
 
    The application and prioritization of Flow Specifications is
-   described in Section 9.7.
+   described in Section 8.7.
 
 3.3.  Flow Specification Synchronization
 
@@ -389,7 +389,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                 [Page 7]
+Dhody, et al.            Expires April 17, 2019                 [Page 7]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -412,22 +412,22 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    The inclusion of this TLV in an OPEN object indicates that the sender
    can perform FlowSpec handling as defined in this document.
 
-5.  PCEP Flow Spec Object
+5.  PCEP FLOWSPEC Object
 
-   The PCEP Flow Spec object defined in this document is compliant with
+   The PCEP FLOWSPEC object defined in this document is compliant with
    the PCEP object format defined in [RFC5440].  It is OPTIONAL in the
    PCReq, PCRep, PCErr, PCInitiate, PCRpt, and PCUpd messages and MAY be
    present zero, one, or more times.  Each instance of the object
    specifies a traffic flow.
 
-   The PCEP Flow Spec object carries a FlowSpec filter rule encoded in a
+   The PCEP FLOWSPEC object carries a FlowSpec filter rule encoded in a
    TLV (as defined in Section 6.
 
-   The FLOW SPEC Object-Class is TBD3 (to be assigned by IANA).
+   The FLOWSPEC Object-Class is TBD3 (to be assigned by IANA).
 
-   The FLOW SPEC Object-Type is 1.
+   The FLOWSPEC Object-Type is 1.
 
-   The format of the body of the PCEP Flow Spec object is shown in
+   The format of the body of the PCEP FLOWSPEC object is shown in
    Figure 2
 
 
@@ -445,7 +445,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                 [Page 8]
+Dhody, et al.            Expires April 17, 2019                 [Page 8]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -455,7 +455,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                            FS-ID                              |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |         AFI                   |        Flags                |R|
+   |         AFI                   |  Reserved     |   Flags     |R|
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                                                               |
    |                   Flow Filter TLV (variable)                  |
@@ -463,7 +463,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-                Figure 2: PCEP Flow Spec Object Body Format
+                Figure 2: PCEP FLOWSPEC Object Body Format
 
    FS-ID (32-bits): A PCEP-specific identifier for the FlowSpec
    information.  A PCE or PCC creates an FS-ID for each FlowSpec that it
@@ -476,9 +476,12 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    (AFI=1 for IPv4 or VPNv4, AFI=2 for IPv6 and VPNv6 as per as per
    [I-D.ietf-idr-flow-spec-v6]).
 
-   Flags (16-bits): One flag is assigned -
+   Reserved (8-bits): MUST be set to zero on transmission and ignored on
+   receipt.
 
-      R bit: The Remove bit is set when a PCEP Flow Spec Object is
+   Flags (8-bits): One flag is currently assigned -
+
+      R bit: The Remove bit is set when a PCEP FLOWSPEC Object is
       included in a PCEP message to indicate removal of the Flow
       Specification from the associated tunnel.  If the bit is clear,
       the Flow Specification is being added or modified.
@@ -493,19 +496,21 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    bit is clear, the PCEP peer MUST respond with a PCErr message with
    error-type TBD8 (FlowSpec Error), error-value 2 (Malformed FlowSpec).
 
+
+
+
+
+
+Dhody, et al.            Expires April 17, 2019                 [Page 9]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
 6.  Flow Filter TLV
 
    A new PCEP TLV is defined to convey Flow Specification filtering
    rules that specify what traffic is carried on a path.  The TLV
    follows the format of all PCEP TLVs as defined in [RFC5440].  The
-
-
-
-Dhody, et al.            Expires April 15, 2019                 [Page 9]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
    Type field values come from the codepoint space for PCEP TLVs and has
    the value TBD4.
 
@@ -525,21 +530,22 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    The Flow Filter TLV carries one or more Flow Specification TLV.  The
    Flow Specification TLV follows the format of all PCEP TLVs as defined
    in [RFC5440], however, the Type values are selected from a separate
-   IANA registry (see Section 11) rather than from the common PCEP TLV
+   IANA registry (see Section 10) rather than from the common PCEP TLV
    registry.
 
    Type values are chosen so that there can be commonality with Flow
-   Specifications defined for use with BGP.  This is possible because
-   the BGP Flow Spec encoding uses a single octet to encode the type
-   where PCEP uses two octets.  Thus the space of values for the Type
-   field is partitioned as shown in Figure 3.
+   Specifications defined for use with BGP [RFC5575].  This is possible
+   because the BGP Flow Spec encoding uses a single octet to encode the
+   type where as PCEP uses two octets.  Thus the space of values for the
+   Type field is partitioned as shown in Figure 3.
 
 
    Range          |
    ---------------+---------------------------------------------------
    0              | Reserved - must not be allocated.
                   |
-   1 .. 255       | Per BGP registry defined by [RFC5575].
+   1 .. 255       | Per BGP registry defined by [RFC5575] and
+                  | [I-D.ietf-idr-flow-spec-v6].
                   | Not to be allocated in this registry.
                   |
    256 ..   65535 | New PCEP Flow Specifications allocated according
@@ -548,19 +554,32 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
                Figure 3: Flow Specification TLV Type Ranges
 
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 10]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
+   [RFC5575] created the registry "Flow Spec Component Types" and made
+   allocations to it.  [I-D.ietf-idr-flow-spec-v6] requested for another
+   registry "Flow Spec IPv6 Component Types" and requested initial
+   allocations in it.  If the AFI (in the FLOWSPEC object) is set to
+   IPv4, the range 1..255 is as per "Flow Spec Component Types"
+   [RFC5575]; if the AFI is set to IPv6, the range 1..255 is as per
+   "Flow Spec IPv6 Component Types" [I-D.ietf-idr-flow-spec-v6].  When
+   future BGP specifications (such as [I-D.ietf-idr-flowspec-l2vpn])
+   make further allocations to the aforementioned registries, they are
+   also inherited to be used in PCEP.
+
    The content of the Value field in each TLV is specific to the type/
    AFI and describes the parameters of the Flow Specification.  The
    definition of the format of many of these Value fields is inherited
    from BGP specifications as shown in Figure 4.  Specifically, the
    inheritance is from [RFC5575] and [I-D.ietf-idr-flow-spec-v6], but
-   may also be inherited from future BGP specifications.
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 10]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
+   may also be inherited from future BGP specifications.  This is a non-
+   exhaustive list for illustration purpose.
 
    When multiple Flow Specification TLVs are present in a single Flow
    Filter TLV they are combined to produce a more detailed description
@@ -573,7 +592,14 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    TBD8 (FlowSpec Error), error-value 1 (Unsupported FlowSpec) and MUST
    NOT install the Flow Specification.
 
-   Section 9.7 describes how overlapping Flow Specifications are
+   When used in other protocols (such as BGP) these Flow Specifications
+   are also associated with actions to indicate how traffic matching the
+   Flow Specification should be treated.  In PCEP, however, the only
+   action is to associate the traffic with a tunnel and to forward
+   matching traffic on to that path, so no encoding of an action is
+   needed.
+
+   Section 8.7 describes how overlapping Flow Specifications are
    prioritized and handled.
 
 
@@ -584,6 +610,14 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    | *     | Destination IPv4 Prefix | [RFC5575]                   |
    +-------+-------------------------+-----------------------------+
    | *     | Destination IPv6 Prefix | [I-D.ietf-idr-flow-spec-v6] |
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 11]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    +-------+-------------------------+-----------------------------+
    | *     | Source IPv4 Prefix      | [RFC5575]                   |
    +-------+-------------------------+-----------------------------+
@@ -610,14 +644,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    | *     | DSCP                    | [RFC5575]                   |
    +-------+-------------------------+-----------------------------+
    | *     | Fragment                | [RFC5575]                   |
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 11]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
    +-------+-------------------------+-----------------------------+
    | *     | Flow Label              | [I-D.ietf-idr-flow-spec-v6] |
    +-------+-------------------------+-----------------------------+
@@ -640,6 +666,14 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    |       |                         | l2vpn]                      |
    +-------+-------------------------+-----------------------------+
    | *     | SNAP                    | [I-D.ietf-idr-flowspec-     |
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 12]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    |       |                         | l2vpn]                      |
    +-------+-------------------------+-----------------------------+
    | *     | VLAN ID                 | [I-D.ietf-idr-flowspec-     |
@@ -666,15 +700,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
      * Indicates that the TLV Type value comes from the value used
        in BGP.
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 12]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
-       This is a non-exhaustive list.
+       This is a non-exhaustive list for illustration purpose.
 
 
               Figure 4: Table of Flow Specification TLV Types
@@ -693,8 +719,16 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    carries a Value field matching that present in the ROUTE-
    DISTINGUISHER TLV and is used to identify that other flow filter
    information (for example, an IPv4 destination prefix) is associated
-   with a specific VPN identified by the RD.  See Section 9.6 for
+   with a specific VPN identified by the RD.  See Section 8.6 for
    further discussion of VPN identification.
+
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 13]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
 
    Although it may be possible to describe a multicast Flow
    Specification from the combination of other Flow Specification TLVs
@@ -723,109 +757,12 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    IPv6 Multicast Flow.  Reserved fields (RSVD) MUST be set to zero and
    ignored on receipt.
 
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 13]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
-8.  Flow Action TLV
-
-   The Flow Filter TLV carries one or more Flow Action TLV.  The Flow
-   Action TLV follows the format of all PCEP TLVs as defined in
-   [RFC5440].  This is optional, the default action is to accept traffic
-   that matches the rule and direct over the tunnel.  To allow QoS
-   related actions this TLV is included in the Flow Filter TLV.
-
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |         Type=TBD9             |          Length               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                   BGP Extended Community Type                 |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   //         BGP Extended Community Encoding (variable)          //
-   +---------------------------------------------------------------+
-
-
-
-                         Flow Action TLV Encoding
-
-   The type of the TLV is TBD9 and it has a variable length.  The Value
-   field consists of -
-
-      BGP Extended Community Type: The extended community value as per
-      [RFC5575] and other BGP specification.
-
-      BGP Extended Community Encoding: The encoding is as per the BGP
-      specification.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 14]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
-   +-------+-------------------------+-----------------------------+
-   | Type  | Description             | Encoding defined in         |
-   |       |                         |                             |
-   +-------+-------------------------+-----------------------------+
-   | *     | traffic-rate            | [RFC5575]                   |
-   +-------+-------------------------+-----------------------------+
-   | *     | traffic-action          | [RFC5575]                   |
-   +-------+-------------------------+-----------------------------+
-   | *     | traffic-marking         | [RFC5575]                   |
-   +-------+-------------------------+-----------------------------+
-
-     * Indicates that the Type comes from the value used in BGP.
-       This is a non-exhaustive list.
-
-
-                     Table of Extended Community Types
-
-   An implementation that receives a PCEP message carrying a Flow Action
-   TLV with an extended community type value that it does not recognize
-   or does not support MUST respond with a PCErr message with error-type
-   TBD8 (FlowSpec Error), error-value 1 (Unsupported FlowSpec) and MUST
-   NOT install the Flow Specification.
-
-   The content of the BGP Extended Community Encoding field is specific
-   to the type and describes the action of the Flow Specification.  The
-   definition of the format of many of these Value fields is inherited
-   from BGP specifications.  Specifically, the inheritance is from
-   [RFC5575] but may also be inherited from future BGP specifications.
-
-   This TLV MAY appear more than once when multiple actions are needed.
-   It MUST NOT appear more than once for the same type.  If it appears
-   more than once for the same type, only the first occurrence is
-   processed and any others MUST be ignored.
-
-9.  Detailed Procedures
+8.  Detailed Procedures
 
    This section outlines some specific detailed procedures for using the
    protocol extensions defined in this document.
 
-9.1.  Default Behavior and Backward Compatibility
+8.1.  Default Behavior and Backward Compatibility
 
    The default behavior is that no Flow Specification is applied to a
    tunnel.  That is, the default is that the Flow Spec object is not
@@ -835,17 +772,21 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    In this case it is a local matter (such as through configuration) how
    tunnel head ends are instructed what traffic to place on a tunnel.
 
+   [RFC5440] describes how receivers respond when they see unknown PCEP
+   objects.
 
 
-Dhody, et al.            Expires April 15, 2019                [Page 15]
+
+
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 14]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
-   [RFC5440] describes how receivers respond when they see unknown PCEP
-   objects.
-
-9.2.  Composite Flow Specifications
+8.2.  Composite Flow Specifications
 
    Flow Specifications may be represented by a single Flow Specification
    TLV or may require a more complex description using multiple Flow
@@ -854,7 +795,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    combination of Destination IPv6 Prefix and Source IPv6 Prefix Flow
    Specification TLVs.
 
-9.3.  Modifying Flow Specifications
+8.3.  Modifying Flow Specifications
 
    A PCE may want to modify a Flow Specification associated with a
    tunnel, or a PCC may want to report a change to the Flow
@@ -862,7 +803,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
    It is important that the specific Flow Specification is identified so
    that it is clear that this is a modification of an existing flow and
-   not the addition of a new flow as described in Section 9.4.  The FS-
+   not the addition of a new flow as described in Section 8.4.  The FS-
    ID field of the PCEP Flow Spec Object is used to identify a specific
    Flow Specification.
 
@@ -871,7 +812,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    Flow Spec Object and the FS-ID MUST be retained from the previous
    description of the flow.
 
-9.4.  Multiple Flow Specifications
+8.4.  Multiple Flow Specifications
 
    It is possible that multiple flows will be place on a single tunnel.
    In some cases it is possible to to define these within a single PCEP
@@ -893,12 +834,15 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                [Page 16]
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 15]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
-9.5.  Adding and Removing Flow Specifications
+8.5.  Adding and Removing Flow Specifications
 
    The Remove bit in the the PCEP Flow Spec Object is left clear when a
    Flow Specification is being added or modified.
@@ -915,7 +859,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    Specification MUST still be removed and the implementation SHOULD
    record a local exception or log.
 
-9.6.  VPN Identifiers
+8.6.  VPN Identifiers
 
    VPN instances are identified in BGP using Route Distinguishers (RDs)
    [RFC4364].  These values are not normally considered to have any
@@ -932,7 +876,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    incoming port (for port-based VPNs) or may leverage knowledge of the
    VRF that is in use for the traffic.
 
-9.7.  Priorities and Overlapping Flow Specifications
+8.7.  Priorities and Overlapping Flow Specifications
 
    TBD
 
@@ -949,16 +893,16 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                [Page 17]
+Dhody, et al.            Expires April 17, 2019                [Page 16]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
-10.  PCEP Messages
+9.  PCEP Messages
 
    The figures in this section use the notation defined in [RFC5511].
 
-   The FLOW SPEC Object is OPTIONAL and MAY be carried in the PCEP
+   The FLOWSPEC Object is OPTIONAL and MAY be carried in the PCEP
    messages.
 
    The PCInitiate message is defined in [RFC8281] and updated as below:
@@ -1005,7 +949,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                [Page 18]
+Dhody, et al.            Expires April 17, 2019                [Page 17]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1061,7 +1005,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                [Page 19]
+Dhody, et al.            Expires April 17, 2019                [Page 18]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
@@ -1117,18 +1061,18 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
 
-Dhody, et al.            Expires April 15, 2019                [Page 20]
+Dhody, et al.            Expires April 17, 2019                [Page 19]
 
 Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
-11.  IANA Considerations
+10.  IANA Considerations
 
    IANA maintains the "Path Computation Element Protocol (PCEP) Numbers"
    registry.  This document requests IANA actions to allocate code
    points for the protocol elements defined in this document.
 
-11.1.  PCEP Objects
+10.1.  PCEP Objects
 
    Each PCEP object has an Object-Class and an Object-Type.  IANA
    maintains a subregistry called "PCEP Objects".  IANA is requested to
@@ -1137,24 +1081,54 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
    Object-Class | Value Name  | Object-Type            |  Reference
    -------------+-------------+------------------------+----------------
-      TBD3      | FLOW SPEC   |  0: Reserved           |  [This.I-D]
+      TBD3      | FLOWSPEC    |  0: Reserved           |  [This.I-D]
                 |             |  1: Flow Specification |  [This.I-D]
 
 
-11.2.  PCEP TLV Type Indicators
+10.1.1.  PCEP FLOWSPEC Object Flag Field
+
+   This document requests that a new sub-registry, named "FLOW SPEC
+   Object Flag Field", is created within the "Path Computation Element
+   Protocol (PCEP) Numbers" registry to manage the Flag field of the
+   FLOWSPEC object.  New values are to be assigned by Standards Action
+   [RFC8126].  Each bit should be tracked with the following qualities:
+
+   o  Bit number (counting from bit 0 as the most significant bit)
+
+   o  Capability description
+
+   o  Defining RFC
+
+   The following values are defined in this document:
+
+
+    Bit     Description           Reference
+
+     31     Remove (R-bit)        [This.I-D]
+
+
+
+10.2.  PCEP TLV Type Indicators
 
    IANA maintains a subregistry called "PCEP TLV Type Indicators".  IANA
    is requested to make an assignment from this subregistry as follows:
+
+
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 20]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
    Value   | Meaning                      | Reference
    --------+------------------------------+-------------
     TBD2   | PCE-FLOWSPEC-CAPABILITY TLV  | [This.I-D]
     TBD4   | FLOW FILTER TLV              | [This.I-D]
-    TBD9   | FLOW ACTION TLV              | [This.I-D]
 
 
-11.3.  Flow Specification TLV Type Indicators
+10.3.  Flow Specification TLV Type Indicators
 
    IANA is requested to create a new subregistry call the "PCEP Flow
    Specification TLV Type Indicators" registry.
@@ -1163,29 +1137,15 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    following assignment policies [RFC8126]:
 
 
-
-
-
-
-
-
-
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 21]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
    Range          | Assignment policy
    ---------------+---------------------------------------------------
    0              | Reserved - must not be allocated.
                   |
    1 .. 255       | Reserved - must not be allocated.
-                  | Usage mirrors the BGP FlowSpec registry [RFC5575].
+                  | Usage mirrors the BGP FlowSpec registry [RFC5575]
+                  | & [I-D.ietf-idr-flow-spec-v6].
                   |
-   258 ..   64506 | Specification Required
+   256 ..   64506 | Specification Required
                   |
    64507 .. 65531 | First Come First Served
                   |
@@ -1193,7 +1153,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
    IANA is requested to pre-populate this registry with values defined
-   in this document as follows, taking the new values from the range 258
+   in this document as follows, taking the new values from the range 256
    to 64506:
 
 
@@ -1204,12 +1164,18 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
     TBD7  | IPv6 Multicast
 
 
-11.4.  PCEP Error Codes
+10.4.  PCEP Error Codes
 
    IANA maintains a subregistry called "PCEP-ERROR Object Error Types
    and Values".  Entries in this subregistry are described by Error-Type
    and Error-value.  IANA is requested to make the following assignment
    from this subregistry:
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 21]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
 
 
     Error-| Meaning            | Error-value                | Reference
@@ -1222,19 +1188,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
           |                    | 4-255: Unassigned          | [This.I-D]
 
 
-
-
-
-
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 22]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
-11.5.  PCE Capability Flag
+10.5.  PCE Capability Flag
 
    IANA maintains a subregistry called "Open Shortest Path First v2
    (OSPFv2) Parameters" with a sub-registry called "Path Computation
@@ -1247,7 +1201,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
     TBD1  | FlowSpec                      | [This.I-D]
 
 
-12.  Security Considerations
+11.  Security Considerations
 
    We may assume that a system that utilizes a remote PCE is subject to
    a number of vulnerabilities that could allow spurious LSPs or SR
@@ -1271,6 +1225,15 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    implementations or deployments concerned to protect privacy MUST
    apply the mechanisms described in the documents referenced above.
 
+
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 22]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    Experience with Flow Specifications in BGP systems indicates that
    they can become complex and that the overlap of Flow Specifications
    installed in different orders can lead to unexpected results.
@@ -1278,29 +1241,19 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    and unexpected forwarding behavior may be engineered or exploited by
    an attacker.  Therefore, implementers and operators SHOULD pay
    careful attention to the Manageability Considerations described in
-   Section 13.
+   Section 12.
 
-
-
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 23]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
-
-13.  Manageability Considerations
+12.  Manageability Considerations
 
    TBD
 
-14.  Acknowledgements
+13.  Acknowledgements
 
    Thanks to Julian Lucek and Sudhir Cheruathur for useful discussions.
 
-15.  References
+14.  References
 
-15.1.  Normative References
+14.1.  Normative References
 
    [I-D.dhodylee-pce-pcep-ls]
               Dhody, D., Lee, Y., and D. Ceccarelli, "PCEP Extension for
@@ -1329,6 +1282,14 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
               DOI 10.17487/RFC4760, January 2007,
               <https://www.rfc-editor.org/info/rfc4760>.
 
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 23]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
               DOI 10.17487/RFC5440, March 2009,
@@ -1338,13 +1299,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
               Used to Form Encoding Rules in Various Routing Protocol
               Specifications", RFC 5511, DOI 10.17487/RFC5511, April
               2009, <https://www.rfc-editor.org/info/rfc5511>.
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 24]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
    [RFC5575]  Marques, P., Sheth, N., Raszuk, R., Greene, B., Mauch, J.,
               and D. McPherson, "Dissemination of Flow Specification
@@ -1361,7 +1315,7 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
               RFC 8253, DOI 10.17487/RFC8253, October 2017,
               <https://www.rfc-editor.org/info/rfc8253>.
 
-15.2.  Informative References
+14.2.  Informative References
 
    [I-D.ietf-idr-flowspec-mpls-match]
               Yong, L., Hares, S., liangqiandeng, l., and J. You, "BGP
@@ -1371,8 +1325,8 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
    [I-D.ietf-pce-segment-routing]
               Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,
               and J. Hardwick, "PCEP Extensions for Segment Routing",
-              draft-ietf-pce-segment-routing-12 (work in progress), June
-              2018.
+              draft-ietf-pce-segment-routing-14 (work in progress),
+              October 2018.
 
    [RFC4364]  Rosen, E. and Y. Rekhter, "BGP/MPLS IP Virtual Private
               Networks (VPNs)", RFC 4364, DOI 10.17487/RFC4364, February
@@ -1383,6 +1337,15 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
               DOI 10.17487/RFC4655, August 2006,
               <https://www.rfc-editor.org/info/rfc4655>.
 
+
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 24]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    [RFC5088]  Le Roux, JL., Ed., Vasseur, JP., Ed., Ikejiri, Y., and R.
               Zhang, "OSPF Protocol Extensions for Path Computation
               Element (PCE) Discovery", RFC 5088, DOI 10.17487/RFC5088,
@@ -1392,15 +1355,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
               Zhang, "IS-IS Protocol Extensions for Path Computation
               Element (PCE) Discovery", RFC 5089, DOI 10.17487/RFC5089,
               January 2008, <https://www.rfc-editor.org/info/rfc5089>.
-
-
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 25]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
    [RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of
               BGP, LDP, PCEP, and MSDP Issues According to the Keying
@@ -1436,6 +1390,18 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
               DOI 10.17487/RFC8232, September 2017,
               <https://www.rfc-editor.org/info/rfc8232>.
 
+
+
+
+
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 25]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
               Computation Element Communication Protocol (PCEP)
               Extensions for PCE-Initiated LSP Setup in a Stateful PCE
@@ -1447,16 +1413,6 @@ Internet-Draft                PCEP-FlowSpec                 October 2018
               Protocol (PCEP) in a Network with Central Control",
               RFC 8283, DOI 10.17487/RFC8283, December 2017,
               <https://www.rfc-editor.org/info/rfc8283>.
-
-
-
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 26]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
 Appendix A.  Contributors
 
@@ -1494,6 +1450,14 @@ Appendix A.  Contributors
    Juniper Networks
    200 Somerset Corporate Boulevard, Suite 4001
    Bridgewater, NJ
+
+
+
+Dhody, et al.            Expires April 17, 2019                [Page 26]
+
+Internet-Draft                PCEP-FlowSpec                 October 2018
+
+
    08807
    USA
 
@@ -1505,14 +1469,6 @@ Appendix A.  Contributors
    Beijing
    100095
    China
-
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 27]
-
-Internet-Draft                PCEP-FlowSpec                 October 2018
-
 
    Email: jescia.chenxia@huawei.com
 
@@ -1553,16 +1509,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Dhody, et al.            Expires April 15, 2019                [Page 28]
+Dhody, et al.            Expires April 17, 2019                [Page 27]
