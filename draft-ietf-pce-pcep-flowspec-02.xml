@@ -471,80 +471,21 @@ Range          |
  <t><xref target="priorities" /> describes how overlapping Flow Specifications are prioritized and
     handled.</t>
 
- <figure title="Table of Flow Specification TLV Types" anchor="tlvFig">
+ <t>All Flow Specification TLVs with Types in the range 1 to 255 have Values defined
+    for use in BGP (for example, in <xref target="RFC5575"/>, 
+    <xref target="I-D.ietf-idr-flow-spec-v6"/>, and <xref target="I-D.ietf-idr-flowspec-l2vpn"/>) and are set using the BGP encoding,
+    but without the type or length octets (the relevant information is in the
+    Type and Length fields of the TLV).  The Value field is padded with trailing
+    zeros to achieve 4-byte alignment.</t>
+
+    <t>This document defines following new types - 
+
+<figure title="Table of Flow Specification TLV Types defined in this document" anchor="tlvFigthis">
    <artwork>
      <![CDATA[
 +-------+-------------------------+-----------------------------+
 | Type  | Description             | Value defined in            |
 |       |                         |                             |
-+-------+-------------------------+-----------------------------+
-| *     | Destination IPv4 Prefix | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | Destination IPv6 Prefix | [I-D.ietf-idr-flow-spec-v6] |
-+-------+-------------------------+-----------------------------+
-| *     | Source IPv4 Prefix      | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | Source IPv6 Prefix      | [I-D.ietf-idr-flow-spec-v6] |
-+-------+-------------------------+-----------------------------+
-| *     | IP Protocol             | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | Next Header             | [I-D.ietf-idr-flow-spec-v6] |
-+-------+-------------------------+-----------------------------+
-| *     | Port                    | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | Destination port        | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | Source port             | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | ICMP type               | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | ICMP code               | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | TCP flags               | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | Packet length           | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | DSCP                    | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | Fragment                | [RFC5575]                   |
-+-------+-------------------------+-----------------------------+
-| *     | Flow Label              | [I-D.ietf-idr-flow-spec-v6] |
-+-------+-------------------------+-----------------------------+
-| *     | Ethernet Type           | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | Source MAC              | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | Destination MAC         | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | DSAP in LLC             | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | SSAP in LLC             | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | Control field in LLC    | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | SNAP                    | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | VLAN ID                 | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | VLAN COS                | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | Inner VLAN ID           | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | Inner VLAN COS          | [I-D.ietf-idr-flowspec-     |
-|       |                         | l2vpn]                      |
-+-------+-------------------------+-----------------------------+
-| *     | MPLS Label              | [I-D.ietf-idr-flowspec-mpls-|
-|       |                         | match]                      |  
 +-------+-------------------------+-----------------------------+
 | TBD5  | Route Distinguisher     | [I-D.dhodylee-pce-pcep-ls]  |
 +-------+-------------------------+-----------------------------+
@@ -553,19 +494,9 @@ Range          |
 | TBD7  | IPv6 Multicast Flow     | [This.I-D]                  |
 +-------+-------------------------+-----------------------------+
 
-  * Indicates that the TLV Type value comes from the value used
-    in BGP.
-    This is a non-exhaustive list for illustration purpose. 
      ]]>
    </artwork>
- </figure>
-
- <t>All Flow Specification TLVs with Types in the range 1 to 255 have Values defined
-    for use in BGP (for example, in <xref target="RFC5575"/>, 
-    <xref target="I-D.ietf-idr-flow-spec-v6"/>, and <xref target="I-D.ietf-idr-flowspec-l2vpn"/>) and are set using the BGP encoding,
-    but without the type or length octets (the relevant information is in the
-    Type and Length fields of the TLV).  The Value field is padded with trailing
-    zeros to achieve 4-byte alignment.</t>
+ </figure></t>
 
  <t><xref target="I-D.dhodylee-pce-pcep-ls"/> defines a way to convey identification
     of a VPN in PCEP via a Route Distinguisher (RD) <xref target="RFC4364"/>
@@ -1076,6 +1007,98 @@ Range          | Assignment policy
  <?rfc include='reference.I-D.ietf-pce-segment-routing'?>
  <?rfc include='reference.I-D.ietf-idr-flowspec-mpls-match'?>
 </references>
+<section title="Flow Specification TLV Types" toc="default">
+	<t>[Editor's Note: This section is added for illustration of various Types supported, some are inherited from BGP and others are defined in this document. 
+		This section might be removed at the time of final publication.]</t>
+<figure title="Table of Flow Specification TLV Types" anchor="tlvFig">
+   <artwork>
+     <![CDATA[
++-------+-------------------------+-----------------------------+
+| Type  | Description             | Value defined in            |
+|       |                         |                             |
++-------+-------------------------+-----------------------------+
+| *     | Destination IPv4 Prefix | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Destination IPv6 Prefix | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
+| *     | Source IPv4 Prefix      | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Source IPv6 Prefix      | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
+| *     | IP Protocol             | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Next Header             | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
+| *     | Port                    | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Destination port        | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Source port             | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | ICMP type               | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | ICMP code               | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | TCP flags               | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Packet length           | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | DSCP                    | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Fragment                | [RFC5575]                   |
++-------+-------------------------+-----------------------------+
+| *     | Flow Label              | [I-D.ietf-idr-flow-spec-v6] |
++-------+-------------------------+-----------------------------+
+| *     | Ethernet Type           | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | Source MAC              | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | Destination MAC         | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | DSAP in LLC             | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | SSAP in LLC             | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | Control field in LLC    | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | SNAP                    | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | VLAN ID                 | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | VLAN COS                | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | Inner VLAN ID           | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | Inner VLAN COS          | [I-D.ietf-idr-flowspec-     |
+|       |                         | l2vpn]                      |
++-------+-------------------------+-----------------------------+
+| *     | MPLS Label              | [I-D.ietf-idr-flowspec-mpls-|
+|       |                         | match]                      |  
++-------+-------------------------+-----------------------------+
+| TBD5  | Route Distinguisher     | [I-D.dhodylee-pce-pcep-ls]  |
++-------+-------------------------+-----------------------------+
+| TBD6  | IPv4 Multicast Flow     | [This.I-D]                  |
++-------+-------------------------+-----------------------------+
+| TBD7  | IPv6 Multicast Flow     | [This.I-D]                  |
++-------+-------------------------+-----------------------------+
+
+  * Indicates that the TLV Type value comes from the value used
+    in BGP.
+    This is a non-exhaustive list for illustration purpose. 
+     ]]>
+   </artwork>
+ </figure>
+</section>
 
 <section title="Contributors" toc="default">
   <figure title="" align="left" height="" width="" alt="" suppress-title="false">
