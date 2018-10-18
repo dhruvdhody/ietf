@@ -1,20 +1,26 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!ENTITY RFC2119 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC4206 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4206.xml">
+<!ENTITY RFC5150 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5150.xml">
+<!ENTITY RFC5151 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5151.xml">
 <!ENTITY RFC5440 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5440.xml">
-<!ENTITY RFC8283 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8283.xml">
 <!ENTITY RFC5441 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5441.xml">
 <!ENTITY RFC5541 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5541.xml">
 <!ENTITY RFC5376 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5376.xml">
-<!ENTITY RFC8402 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8402.xml">
+<!ENTITY RFC8174 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC8231 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8231.xml">
 <!ENTITY RFC8281 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8281.xml">
-<!ENTITY RFC8174 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
+<!ENTITY RFC8283 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8283.xml">
 <!ENTITY RFC8355 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8355.xml">
+<!ENTITY RFC8402 SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8402.xml">
+<!ENTITY I-D.ietf-pce-segment-routing SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-pce-segment-routing-14.xml">
+<!ENTITY I-D.ietf-pce-stateful-hpce SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-pce-stateful-hpce-05.xml">
+<!ENTITY I-D.li-pce-controlled-id-space SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-li-pce-controlled-id-space-00.xml">
+<!ENTITY I-D.dugeon-pce-stateful-interdomain SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-dugeon-pce-stateful-interdomain-01.xml">
 <!ENTITY I-D.zhao-pce-pcep-extension-for-pce-controller SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-zhao-pce-pcep-extension-for-pce-controller-08.xml">
 <!ENTITY I-D.zhao-pce-pcep-extension-pce-controller-sr SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-zhao-pce-pcep-extension-pce-controller-sr-03.xml">
-<!ENTITY I-D.ietf-pce-segment-routing SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-pce-segment-routing-14.xml">
-<!ENTITY I-D.li-pce-controlled-id-space SYSTEM "https://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-li-pce-controlled-id-space-00.xml">
+
 ]>
 <rfc submissionType="IETF" docName="draft-ietf-teas-pcecc-use-cases-02" category="info"><?rfc compact="yes"?>
 	<?rfc text-list-symbols="oo*+-"?>
@@ -436,7 +442,7 @@
 
    <t>The various mechanism are described in <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>.</t>     
   </section>
-	<section title="Use Cases of PCECC for SR Best Effort(BE) Path" anchor="section-4.1"><t>
+	<section title="Use Cases of PCECC for SR Best Effort (BE) Path" anchor="section-4.1"><t>
    In this mode of the solution, the PCECC just need to allocate the
    node segment ID and adjacency ID (without calculating the explicit
    path for the SR path).  The ingress of the forwarding path just need
@@ -583,20 +589,20 @@
                        +----------+
                 link3 *   |   *    * link4
                      *    |   *     *
-                    *link1|   *      *
-     192.0.2.4/32  *      |   *link2  *  192.0.2.5/32
+                    *link5|   *      *
+     192.0.2.4/32  *      |   *link6  *  192.0.2.5/32
         +-----------+     |   *     +-----------+
         | R4        |     |   *     | R5        |
         +-----------+     |   *     +-----------+
                    *      |   *      *       +
-                    *     |   *     *link1   +
+            link10  *     |   *     *link7   +
                      *    |   *    *         +
                      +-----------+   +-----------+
         192.0.2.3/32 | R3        |   |R6         |192.0.2.6/32
                      +-----------+   +-----------+
                       |         |
-                      |link1    |
-                      |         |link2
+                      |link8    |
+                      |         |link9
                      +-----------+
                      | R8        |  192.0.2.8/32
                      +-----------+
@@ -613,19 +619,17 @@ receives the PCECC request with constraints and optimization criteria. </t>
    (i.e.bandwidth).</t>
 
 <t>PCECC would provision each node along the path and assign incoming and outgoing labels from R1 to R8 with the
-   path: {R1, link1, 6001}, {R2, link3, 7002], {R4, link0,
-   9001}, {R3, link1, 3001}, {R8}.</t>
+   path: {R1, link1, 1001}, {1001, R2, link3, 2003], {2003, R4, link10, 4010}, {4010, R3, link8, 3008}, {3008, R8}.</t>
 
 <t>For the end to end protection, PCECC program each node along the
-   path from R1 to R8 with the secondary path: {R1, link2, 6002},
-   {R2, link4, 7001], {R5, link1, 9002}, {R3, link2, 3002}, {R8}.</t>
+   path from R1 to R8 with the secondary path: {R1, link2, 1002},
+   {1002, R2, link4, 2004], {2004, R5, link7, 5007}, {5007, R3, link9, 3009}, {3009, R8}.</t>
 
-<t>It is also possible to have a secondary backup path for the local
-   node protection setup by PCECC.  For example, the primary path is
-   still same as what we have setup so far, then to protect the node
-   R4 locally, PCECC can program the secondary path like this: {R1,
-   link1, 6001}, {R2, link1, 5001}, {R3, link1, 3001}, {R8}. By doing
-   this, the node R4 is locally protected.</t>
+<t>It is also possible to have a bypass path for the local
+   protection setup by the PCECC.  For example, the primary path as above, then to protect the node
+   R4 locally, PCECC can program the bypass path like this: 
+   {R2, link5, 2005], {2005, R3}. By doing
+   this, the node R4 is locally protected at R2.</t>
 </list></t>
 	<section title="PCECC Load Balancing (LB) Use Case" anchor="section-5.1">
   <t>
@@ -657,7 +661,7 @@ receives the PCECC request with constraints and optimization criteria. </t>
 	<t>
    This MBH architecture uses L2 access rings and subrings. L3 starts at
    aggregation. For the sake of simplicity here we have only one access
-   subring,access ring and aggregation ring (AGG1...AGGN), connected
+   subring, access ring and aggregation ring (AGG1...AGGN), connected
    by Nx10GE interfaces. Aggregation domain runs its own IGP. There are
    two Egress routers (AGG N-1,AGG N) that are connected to the Core
    domain via L2 interfaces. Core also have connections to service routers,
@@ -675,11 +679,10 @@ receives the PCECC request with constraints and optimization criteria. </t>
   <list style="symbols">
 
 	<t>Perform automatic  LB amongst TE tunnels according to current
-       traffic load</t>
+       traffic load.</t>
 	<t>TE bandwidth (BW) management: Provide guaranteed BW for specific
-       service: HSI,IPTV, etc., provide time-based BW reservation (BoD) </t>
-  <t>Simplify development of TE tunnels
-	(go away from  manual provisioning)</t>
+       service: HSI, IPTV, etc., provide time-based BW reservation (BoD) for other services.</t>
+  <t>Simplify development of TE tunnels by automation without any manual intervention.</t>
   
 	<t>Provide flexibility for Service Router placement (anywhere
        in the network by creation of  transport LSPs to them).</t>
@@ -688,55 +691,44 @@ receives the PCECC request with constraints and optimization criteria. </t>
 	hereafter we will focus only on load balancing (LB) task. LB task
    could be solved by means of PCECC in the following way:
 	<list style="symbols">
-    <t>After application or network service or operator will ask SDN
+    <t>After application or network service or operator can ask SDN
        controller (PCECC) for LSP based LB between AGG X and AGG N/AGG N-1
        (egress AGG routers which have connections to core) via North
-       Bound Interface (NBI such as REST API), PCECC SHOULD ask for
-       constrains for that particular calculation (i.e. LSP type: traditional
+       Bound Interface (NBI). Each of these would have associated 
+       constrains (i.e. LSP type: traditional
        CR-LSP or SR-TE LSP, bandwidth, inclusion or exclusion specific links
        or nodes, number of paths, shortest path or minimum cost tree, need
        for disjoint LSP paths etc.).</t>
 
-	<t>PCECC MUST calculate N P2P LSPs according to given constrains,
-       calculation is based on results of Objective Function (OF), that
-       includes same source and destination  routers IDs, same or different
+	<t>PCECC could calculate multiple (Say N) LSPs according to given constrains,
+       calculation is based on results of Objective Function (OF), constraints, endpoints, same or different
        bandwidth (BW) , different links (in case of disjoint paths) and other
-       constrains from Step 1.</t>
+       constrains.</t>
 
-	<t>Depending on given LSP type (CR-LSP or SR-TE), PCECC SHOULD create
-       different labels (aka different label spaces, it MAY also require
-       label space negotiation procedure between PCECC and PCCs <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>) for
-       calculated LSPs from egress nodes AGG N-1 and AGG N towards ingress
-       AGG X node.</t>
+	<t>Depending on given LSP Path setup type (PST), PCECC would use download 
+    instructions to the PCC. At this stage it is assumed the PCECC is aware 
+    of the label space it controls and in case of SR the SID allocation and 
+    distribution is already done.</t>
 
-	<t>PCECC SHOULD send PCInitiate PCEP message <xref target="RFC8281"/> towards ingress AGG X router(PCC) for each of N LSPs
+	<t>PCECC would send PCInitiate PCEP message <xref target="RFC8281"/> towards ingress AGG X router(PCC) for each of N LSPs
        and receives PCRpt PCEP message <xref target="RFC8231"/> back from
-       him.</t>
+       PCCs. If the PST is PCECC-SR, the PCECC would include the SID stack as per <xref target="I-D.ietf-pce-segment-routing"/>. 
+       If the PST is PCECC (basic), then the PCECC would assigns labels along the calculated path; and set up the
+   path by sending central controller instructions in PCEP message to each node along the path of the
+   LSP as per <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and then
+       send PCUpd message to the ingress AGG X router with
+       information about new LSP and AGG X(PCC) would respond with PCRpt
+       with LSP status.</t>
 
-       <t>If LSP type is CR-LSP, PCECC
-	MUST send PCLabelUpd
-	<xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> PCEP message  to
-       each node along the path with label information for each of N LSPs.
-       If LSP type is SR-TE, PCECC also MUST send  PCLabelUpd  PCEP message
-       to each node along the path with label information (Node-ID and
-       Adjacency-ID segment (label) list) specific to that node. Then PCECC
-       SHOULD send PCUpd PCEP message to the ingress AGG X router with
-       information about new LSP and AGG X(PCC) SHOULD send PCEP PCRpt back
-       with LSP status:Up.
-	</t>
-
-
-	<t>Now each router along the LSP has corresponding label forwarding
-       state for each of N LSPs.</t>
-
-	<t>AGG X as ingress router now have N LSPs towards AGG N and AGG N-1674
-       which are available for installing to router's RIB and LB of traffic
+		<t>AGG X as ingress router now have N LSPs towards AGG N and AGG N-1
+       which are available for installing to router's forwarding and LB of traffic
        between them. Traffic distribution between those LSPs depends on
        particular realization of hash-function on that router.</t>
 
-	<t>Since PCECC MUST know as LSDB as TEDB (TE state) he can manage and
+	<t>Since PCECC knows as LSDB as TEDB (TE state) he can manage and
        prevent possible oversubscriptions and limit number of available LB
-       states.</t>
+       states. Via PCECC mechanism the control can take quick actions into 
+       the network by directly provisioning the central control instructions.</t>
 
 	</list>
 	</t>
@@ -746,20 +738,20 @@ receives the PCECC request with constraints and optimization criteria. </t>
 
 	<section title="PCECC and Inter-AS TE" anchor="section-5.2">
     <t>
-   There are three signalling options for establishing Inter-AS TE LSP:
-   contiguous TE LSP [RFC5151], stitched inter-AS TE LSP [RFC5150],
-   nested TE LSP [RFC4206].</t>
+   There are various signaling options for establishing Inter-AS TE LSP:
+   contiguous TE LSP <xref target="RFC5151"/>, stitched TE LSP <xref target="RFC5150"/>,
+   nested TE LSP <xref target="RFC4206"/>.</t>
 
 	<t>
    Requirements for PCE-based Inter-AS setup <xref target="RFC5376"/> describe the approach
-   and PCEP fucntionality that are needed for establishing Inter-AS TE LSPs.</t>
+   and PCEP functionality that are needed for establishing Inter-AS TE LSPs.</t>
 
 	<t>
    <xref target="RFC5376"/> also gives Inter- and Intra-AS PCE Reference Model that is
    provided below in shorten form for the sake of simplicity.</t>
 
 	<figure><artwork><![CDATA[
-     Inter-AS       Inter-AS
+           Inter-AS       Inter-AS
      PCC <-->PCE1<--------->PCE2
       ::      ::             ::
       ::      ::             ::
@@ -770,21 +762,24 @@ receives the PCECC request with constraints and optimization criteria. </t>
       ::                     ::
       ::                     ::
    Intra-AS               Intra-AS
-      PCE                    PCE
+      PCE3                   PCE4
 
  Shorten form of Inter- and Intra-AS PCE Reference Model [RFC5376]
 ]]></artwork>
 	</figure>
+  <t>The PCECC belonging to different domain can co-operate to setup inter-AS TE LSP. 
+    The stateful H-PCE <xref target="I-D.ietf-pce-stateful-hpce"/> mechanism could be used to first establish a per-domain PCECC
+    LSP. These could be stitched together to form inter-AS TE LSP as described in <xref target="I-D.dugeon-pce-stateful-interdomain"/>.</t>
 	<t>
-   Hereatfter we will discuss a simplified Inter-AS case when both AS1 and
+   Hereatfter we will focus on a simplified Inter-AS case when both AS1 and
    AS2 belong to the same service provider administration. In that case Inter
    and Intra-AS PCEs could be combined in one single PCE if such combined PCE
    performance is enough for handling all Path Computation Requests. Even
    more in that particular case we potentially could use single PCE for both
-   ASes if his scalability and performance are enough, we just will need
-   interfaces (PCEP and BGP-LS) to both domains. SDN controller's redundancy
-   mechanisms are out of scope in our case. Thus routers in AS1 and AS2 (PCCs)
-   will send Path Computation Requests towards same PCE.</t>
+   ASes if the scalability and performance are enough, we require
+   interfaces (PCEP and BGP-LS) to both domains. PCECC redundancy
+   mechanisms are described in <xref target="RFC8283"/>. Thus routers in AS1 and AS2 (PCCs)
+   can send Path Computation messages towards same PCECC.</t>
 
 	<figure><artwork><![CDATA[
              +----BGP-LS------+ +------BGP-LS-----+
@@ -806,70 +801,68 @@ receives the PCECC request with constraints and optimization criteria. </t>
         MPLS Domain 1          Inter-AS         MPLS Domain 2
     <=======AS1=======>                    <========AS2=======>
 
-               Particular case of Inter-AS PCE Reference Model
+               Particular case of Inter-AS PCE
 ]]></artwork>
 	</figure>
 	<t>
-   In one particular case of PCECC Inter-AS TE scenario service provider
+   In a case of PCECC Inter-AS TE scenario where service provider
    controls both domains (AS1 and AS2), each of them have own IGP and MPLS
-   transport. The need is to setup Inter-AS LSPs for transporting different
-   services on top of them (Voice,L3 VPN etc.) Inter-AS links with different
+   transport. There is a need is to setup Inter-AS LSPs for transporting different
+   services on top of them (Voice, L3VPN etc.). Inter-AS links with different
    capacity exist in several regions. The task is not only to provision
-   those Inter-AS LSPs with given  constrains but also calculate the path
-   and pre-setup the backup Inter-AS LSPs that will be used if main LSP fails.</t>
+   those Inter-AS LSPs with given constrains but also calculate the path
+   and pre-setup the backup Inter-AS LSPs that will be used if primary LSP fails.</t>
 
 	<t>
-   For the figure above it would be that LSP1 from R1 to R3 SHOULD go via ASBR1
-   and ASBR3, and it is the main Inter-AS LSP. R1-R3 LSP2 that SHOULD go via
-   ASBR5 and ASBR6 is the backup one. Depending on Inter-AS TE type, backup LSP
-   could be used either by head-end R1 or ASBR1.</t>
+   For the figure above it would be that LSP1 from R1 to R3 may go via ASBR1
+   and ASBR3, and it is the primary Inter-AS LSP. R1-R3 LSP2 that go via
+   ASBR5 and ASBR6 is the backup one. In adition there could be bypass LSP
+   setup to protect against ASBR or inter-AS link failure.</t>
 
 	<t>
    After the addition of PCECC functionality to PCE (SDN controller), PCECC
-   based Inter-AS TE model SHOULD follow as PCECC usecase for TE LSP (case 6
-   above) as requirements of <xref target="RFC5376"/> with the following details:
+   based Inter-AS TE model SHOULD follow as PCECC usecase for TE LSP 
+   as requirements of <xref target="RFC5376"/> with the following details:
 
 	<list style="symbols">
-	<t>Since PCECC MUST know the topology of both domains AS1 and AS2, PCECC
-       MUST establish BGP-LS peering with routers (or RRs) in both domains</t>
+	<t>Since PCECC needs to know the topology of both domains AS1 and AS2, PCECC
+       could use BGP-LS peering with routers (or RRs) in both domains.</t>
 
-	<t>PCECC MUST have SBI (PCEP) connectivity towards all routers in both
-       domains (see also section 4 in <xref target="RFC5376"/>)</t>
+	<t>PCECC needs to PCEP connectivity towards all routers in both
+       domains (see also section 4 in <xref target="RFC5376"/>) in a similar manner as a SDN controller.</t>
 
-	<t>After operator's application or service orchetsrator will create request
-       for topology of specific service, PCECC SHOULD receive that request via NBI
+	<t>After operator's application or service orchestrator will create request
+       for tunnel creation of specific service, PCECC SHOULD receive that request via NBI
        (NBI type is implementation dependent, MAY be NETCONF/Yang, REST etc.). Then
-       PCECC SHOULD calculate Objective Function (OF) for optimal path with given
-       constrains (i.e. LSP type, bandwidth etc.), including those from <xref target="RFC5376"/>:
-       priority, AS sequence, preffered ASBR, disjoint paths, protection. On this
+       PCECC would calculate the optimal path based on Objective Function (OF) and given
+       constrains (i.e. path setup type, bandwidth etc.), including those from <xref target="RFC5376"/>:
+       priority, AS sequence, preferred ASBR, disjoint paths, protection. On this
        step we would have two paths: R1-ASBR1-ASBR3-R3, R1-ASBR5-ASBR6-R3</t>
 
-	<t>Depending on given LSP type (CR-LSP or SR-TE), PCECC SHOULD create
-       different labels (aka different label spaces, it MAY also require
-       label space negotiation procedure between PCECC and PCCs) for
-       calculated LSPs from egress node in one AS towards ingress in another AS.</t>
+	<t>Depending on given LSP PST (PCECC or PCECC-SR), PCECC would use download 
+    instructions to the PCC. At this stage it is assumed the PCECC is aware 
+    of the label space it controls and in case of SR the SID allocation and 
+    distribution is already done.</t>
 
-	<t>PCECC SHOULD send PCInitiate PCEP message <xref target="RFC8281"/> towards ingress router R1 (PCC) in AS1
-       and receive PCRpt PCEP message <xref target="RFC8231"/> back from
-       him.</t> 
+  <t>PCECC would send PCInitiate PCEP message <xref target="RFC8281"/> towards ingress router R1 (PCC) in AS1
+       and receives PCRpt PCEP message <xref target="RFC8231"/> back from
+       PCC. If the PST is PCECC-SR, the PCECC would include the SID stack as per <xref target="I-D.ietf-pce-segment-routing"/>.
+       It may also include binding SID based on AS boundary. The backup SID stack could also be installed at ingress but more importantly 
+       each node along the SR path could also do local protection just based on the top segement. 
+       If the PST is PCECC (basic), then the PCECC would assigns labels along the calculated paths (R1-ASBR1-ASBR3-R3, R1-ASBR5-ASBR6-R3); and set up the
+   path by sending central controller instructions in PCEP message to each node along the path of the
+   LSPs as per <xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> and then
+       send PCUpd message to the ingress R1 router with
+       information about new LSPs and R1 would respond with PCRpt
+       with LSP(s) status.</t>
 
-       <t>If LSP type is CR-LSP, PCECC">
-	MUST send PCLabelUpd
-	<xref target="I-D.zhao-pce-pcep-extension-for-pce-controller"/> PCEP message  to
-       each node along the path (ASBR1-ASBR3-R3, ASBR5-ASBR6-R3) in both ASes with
-       label information for that LSP.
-       If LSP type is SR-TE, PCECC also MUST send  PCLabelUpd  PCEP message
-       to each node along the path in aboth Ases with label information (Node-ID and
-       Adjacency-ID segment (label) list) specific to that node.
-	</t>
+    <t>AGG X as ingress router now have N LSPs towards AGG N and AGG N-1
+       which are available for installing to router's forwarding and LB of traffic
+       between them. Traffic distribution between those LSPs depends on
+       particular realization of hash-function on that router.</t>
 
-
-	<t>Then PCECC SHOULD send PCUpd PCEP message to the ingress router R1 in AS1
-       with information about new LSP and the R1 router SHOULD send PCEP PCRpt back
-       with LSP1 and LSP2 status:Up.</t>
-
-	<t>After that step R1 SHOULD have main and backup TEs (LSP1 and LSP2) towards
-       R3 up. It is up to implementation how to put this TEs to R1's RIB and how to
+	<t>After that step R1 now have primary and backup TEs (LSP1 and LSP2) towards
+       R3. It is up to router implementation how to 
        make switchover to backup LSP2 if LSP1 fails.</t>
 
   </list></t>
@@ -879,20 +872,23 @@ receives the PCECC request with constraints and optimization criteria. </t>
 
 	<section title="Use Cases of PCECC for Multicast LSPs" anchor="section-6"><t>
    The current multicast LSPs are setup either using the RSVP-TE P2MP or
-   mLDP protocols.  The setup of these LSPs not only need a lot of
-   manual configurations, but also it is also complex when the
+   mLDP protocols.  The setup of these LSPs may require 
+   manual configurations and complex signaling when the
    protection is considered.  By using the PCECC solution, the multicast
    LSP can be computed and setup through centralized controller which
    has the full picture of the topology and bandwidth usage for each
    link.  It not only reduces the complex configurations comparing the
-   distributed RSVP-TE P2MP or mLDP signal lings, but also it can
-   compute the disjoint primary path and secondary path efficiently.</t>
+   distributed RSVP-TE P2MP or mLDP signaling, but also it can
+   compute the disjoint primary path and secondary P2MP path efficiently.</t>
 
-	<section title="Using PCECC for P2MP/MP2MP LSPs' Setup" anchor="section-6.1"><t>
+	<section title="Using PCECC for P2MP/MP2MP LSPs' Setup" anchor="section-6.1">
+    <!--<t>
    With the capability of global label and local label existing at the
    same time in the PCECC network, PCECC will use compute, setup and
    maintain the P2MP and MP2MP lsp using the local label range for each
-   network nodes.</t>
+   network nodes.</t>-->
+   <t>It is assumed the PCECC is aware of the label space it controls for 
+    all nodes and make allocations accordingly.</t>
 
 	<figure><artwork><![CDATA[
                        +----------+
@@ -901,7 +897,7 @@ receives the PCECC request with constraints and optimization criteria. </t>
                            |6000
                        +----------+
         Transit Node   |    R2    |
-                       +----------+
+        branch         +----------+
                        *  |   *  *
                   9001*   |   *   *9002
                      *    |   *    *
@@ -912,35 +908,52 @@ receives the PCECC request with constraints and optimization criteria. </t>
                 9003*     |   *     *      +9004
                      *    |   *    *       +
                      +-----------+  +-----------+
-                     |    R3     |  |    R5     | Leaf Node
+                     |    R3     |  |    R6     | Leaf Node
                      +-----------+  +-----------+
                       9005|
                      +-----------+
                      |    R8     | Leaf Node
                      +-----------+
 
-The P2MP examples are explained here:
 ]]></artwork>
 	</figure>
+  <t>The P2MP examples are explained here, where R1 is root and R8 and R6 are the leaves.
+  <list style="symbols">
+<t>Based on the P2MP path computation request / delegation or PCE initiation, the PCECC
+receives the PCECC request with constraints and optimization criteria. </t>
+
+<t>PCECC would calculate the optimal P2MP path according to given constrains
+   (i.e.bandwidth).</t>
+
+<t>PCECC would provision each node along the path and assign incoming and outgoing labels from R1 to {R6, R8} with the
+   path: {R1, 6000}, {6000, R2, {9001,9002}}, {9001, R4, 9003}, {9002, R5, 9004} {9003, R3, 9005}, {9004, R6}, {9005, R8}. The main difference
+   is in the branch node instruction at R2 where two copies of packet are sent towards R4 and R5 with 9001 and 9002 labels respectively.</t>
+
+  </list></t>
+  <t>The packet forwarding involves - 
+  <list>
 	<t>
    Step1: R1 may send a packet P1 to R2 simply by pushing an label of
    6000 to the packet.</t>
 
 	<t>
    Step2: After R2 receives the packet with label 6000, it will
-   forwarding to R4 by pushing header of 9001 and R5 by pusing header of
-   9002.</t>
+   forwarding to R4 by swapping label to 9001 and by swapping label of
+   9002 towards R5.</t>
 
 	<t>
    Step3: After R4 receives the packet with label 9001, it will
-   forwarding to R3 by pushing header of 9003.  After R5 receives the
-   packet with label 9002, it will forwarding to R5 by pushing header of
+   forwarding to R3 by swapping to 9003.  After R5 receives the
+   packet with label 9002, it will forwarding to R6 by swapping to
    9004.</t>
 
 	<t>
-   Step3: After R3 receives the packet with label 9003, it will
-   forwarding to R8 by pushing header of 9005</t>
+   Step4: After R3 receives the packet with label 9003, it will
+   forwarding to R8 by swapping to 9005 and when R5 receives the 
+   packet with label 9004, it will swap to 9004 and send to R6.</t>
 
+   <t>Step5: Packet received at R8 and 9005 is popped; packet receives at R6 and 9004 is popped.</t>
+  </list></t>
 	</section>
 
 	<section title="Use Cases of PCECC for the Resiliency of P2MP/MP2MP LSPs" anchor="section-6.2"><section title="PCECC for the End-to-End Protection of the P2MP/MP2MP LSPs" anchor="section-6.2.1"><t>
@@ -1359,7 +1372,10 @@ Example: Using PCECC for L3VPN and PWE3
 	&RFC8283;
   </references>
 	<references title="Informative References">
-	&RFC5441;
+	&RFC4206;
+  &RFC5150;
+  &RFC5151;
+  &RFC5441;
 	&RFC5541;
 	&RFC5376;
   &RFC8231;
@@ -1367,9 +1383,11 @@ Example: Using PCECC for L3VPN and PWE3
   &RFC8355;
   &RFC8402;
   &I-D.ietf-pce-segment-routing;
+  &I-D.ietf-pce-stateful-hpce;
 	&I-D.zhao-pce-pcep-extension-for-pce-controller;
   &I-D.zhao-pce-pcep-extension-pce-controller-sr;
   &I-D.li-pce-controlled-id-space;
+  &I-D.dugeon-pce-stateful-interdomain;
 	
 	
 	</references>

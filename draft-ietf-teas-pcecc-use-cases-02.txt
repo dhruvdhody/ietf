@@ -114,7 +114,7 @@ Zhao, et al.             Expires April 20, 2019                 [Page 2]
 Internet-Draft                    PCECC                     October 2018
 
 
-       3.2.2.  Use Cases of PCECC for SR Best Effort(BE) Path  . . .   8
+       3.2.2.  Use Cases of PCECC for SR Best Effort (BE) Path . . .   8
        3.2.3.  Use Cases of PCECC for SR Traffic Engineering (TE)
                Path  . . . . . . . . . . . . . . . . . . . . . . . .   8
      3.3.  Use Cases of PCECC for TE LSP . . . . . . . . . . . . . .   9
@@ -125,7 +125,7 @@ Internet-Draft                    PCECC                     October 2018
        3.4.2.  Use Cases of PCECC for the Resiliency of P2MP/MP2MP
                LSPs  . . . . . . . . . . . . . . . . . . . . . . . .  17
        3.4.3.  Using reliable P2MP TE based multicast delivery for
-               distributed computations (MapReduce-Hadoop) . . . . .  20
+               distributed computations (MapReduce-Hadoop) . . . . .  19
      3.5.  Use Cases of PCECC for LSP in the Network Migration . . .  22
      3.6.  Use Cases of PCECC for L3VPN and PWE3 . . . . . . . . . .  23
      3.7.  Using PCECC for Traffic Classification Information  . . .  24
@@ -394,7 +394,7 @@ Zhao, et al.             Expires April 20, 2019                 [Page 7]
 Internet-Draft                    PCECC                     October 2018
 
 
-3.2.2.  Use Cases of PCECC for SR Best Effort(BE) Path
+3.2.2.  Use Cases of PCECC for SR Best Effort (BE) Path
 
    In this mode of the solution, the PCECC just need to allocate the
    node segment ID and adjacency ID (without calculating the explicit
@@ -518,20 +518,20 @@ Internet-Draft                    PCECC                     October 2018
                           +----------+
                    link3 *   |   *    * link4
                         *    |   *     *
-                       *link1|   *      *
-        192.0.2.4/32  *      |   *link2  *  192.0.2.5/32
+                       *link5|   *      *
+        192.0.2.4/32  *      |   *link6  *  192.0.2.5/32
            +-----------+     |   *     +-----------+
            | R4        |     |   *     | R5        |
            +-----------+     |   *     +-----------+
                       *      |   *      *       +
-                       *     |   *     *link1   +
+               link10  *     |   *     *link7   +
                         *    |   *    *         +
                         +-----------+   +-----------+
            192.0.2.3/32 | R3        |   |R6         |192.0.2.6/32
                         +-----------+   +-----------+
                          |         |
-                         |link1    |
-                         |         |link2
+                         |link8    |
+                         |         |link9
                         +-----------+
                         | R8        |  192.0.2.8/32
                         +-----------+
@@ -549,11 +549,11 @@ Internet-Draft                    PCECC                     October 2018
 
    o  PCECC would provision each node along the path and assign incoming
       and outgoing labels from R1 to R8 with the path: {R1, link1,
-      6001}, {R2, link3, 7002], {R4, link0, 9001}, {R3, link1, 3001},
-      {R8}.
+      1001}, {1001, R2, link3, 2003], {2003, R4, link10, 4010}, {4010,
+      R3, link8, 3008}, {3008, R8}.
 
-
-
+   o  For the end to end protection, PCECC program each node along the
+      path from R1 to R8 with the secondary path: {R1, link2, 1002},
 
 
 
@@ -562,16 +562,14 @@ Zhao, et al.             Expires April 20, 2019                [Page 10]
 Internet-Draft                    PCECC                     October 2018
 
 
-   o  For the end to end protection, PCECC program each node along the
-      path from R1 to R8 with the secondary path: {R1, link2, 6002},
-      {R2, link4, 7001], {R5, link1, 9002}, {R3, link2, 3002}, {R8}.
+      {1002, R2, link4, 2004], {2004, R5, link7, 5007}, {5007, R3,
+      link9, 3009}, {3009, R8}.
 
-   o  It is also possible to have a secondary backup path for the local
-      node protection setup by PCECC.  For example, the primary path is
-      still same as what we have setup so far, then to protect the node
-      R4 locally, PCECC can program the secondary path like this: {R1,
-      link1, 6001}, {R2, link1, 5001}, {R3, link1, 3001}, {R8}. By doing
-      this, the node R4 is locally protected.
+   o  It is also possible to have a bypass path for the local protection
+      setup by the PCECC.  For example, the primary path as above, then
+      to protect the node R4 locally, PCECC can program the bypass path
+      like this: {R2, link5, 2005], {2005, R3}. By doing this, the node
+      R4 is locally protected at R2.
 
 3.3.1.  PCECC Load Balancing (LB) Use Case
 
@@ -600,7 +598,7 @@ Internet-Draft                    PCECC                     October 2018
 
    This MBH architecture uses L2 access rings and subrings.  L3 starts
    at aggregation.  For the sake of simplicity here we have only one
-   access subring,access ring and aggregation ring (AGG1...AGGN),
+   access subring, access ring and aggregation ring (AGG1...AGGN),
    connected by Nx10GE interfaces.  Aggregation domain runs its own IGP.
    There are two Egress routers (AGG N-1,AGG N) that are connected to
    the Core domain via L2 interfaces.  Core also have connections to
@@ -609,6 +607,8 @@ Internet-Draft                    PCECC                     October 2018
    router to egress AGG routers.  There are also many L2 access rings
    connected to AGG routers.
 
+   Service deployment made by means of either L2VPNs (VPLS) or L3VPNs.
+   Those services use MPLS TE as transport towards egress AGG routers.
 
 
 
@@ -618,21 +618,20 @@ Zhao, et al.             Expires April 20, 2019                [Page 11]
 Internet-Draft                    PCECC                     October 2018
 
 
-   Service deployment made by means of either L2VPNs (VPLS) or L3VPNs.
-   Those services use MPLS TE as transport towards egress AGG routers.
    TE tunnels could be also used as transport towards service routers in
    case of seamless MPLS based architecture in the future.
 
    There is a need to solve the following tasks:
 
    o  Perform automatic LB amongst TE tunnels according to current
-      traffic load
+      traffic load.
 
    o  TE bandwidth (BW) management: Provide guaranteed BW for specific
-      service: HSI,IPTV, etc., provide time-based BW reservation (BoD)
+      service: HSI, IPTV, etc., provide time-based BW reservation (BoD)
+      for other services.
 
-   o  Simplify development of TE tunnels (go away from manual
-      provisioning)
+   o  Simplify development of TE tunnels by automation without any
+      manual intervention.
 
    o  Provide flexibility for Service Router placement (anywhere in the
       network by creation of transport LSPs to them).
@@ -641,31 +640,32 @@ Internet-Draft                    PCECC                     October 2018
    hereafter we will focus only on load balancing (LB) task.  LB task
    could be solved by means of PCECC in the following way:
 
-   o  After application or network service or operator will ask SDN
+   o  After application or network service or operator can ask SDN
       controller (PCECC) for LSP based LB between AGG X and AGG N/AGG
       N-1 (egress AGG routers which have connections to core) via North
-      Bound Interface (NBI such as REST API), PCECC SHOULD ask for
-      constrains for that particular calculation (i.e.  LSP type:
-      traditional CR-LSP or SR-TE LSP, bandwidth, inclusion or exclusion
-      specific links or nodes, number of paths, shortest path or minimum
-      cost tree, need for disjoint LSP paths etc.).
+      Bound Interface (NBI).  Each of these would have associated
+      constrains (i.e.  LSP type: traditional CR-LSP or SR-TE LSP,
+      bandwidth, inclusion or exclusion specific links or nodes, number
+      of paths, shortest path or minimum cost tree, need for disjoint
+      LSP paths etc.).
 
-   o  PCECC MUST calculate N P2P LSPs according to given constrains,
-      calculation is based on results of Objective Function (OF), that
-      includes same source and destination routers IDs, same or
-      different bandwidth (BW) , different links (in case of disjoint
-      paths) and other constrains from Step 1.
+   o  PCECC could calculate multiple (Say N) LSPs according to given
+      constrains, calculation is based on results of Objective Function
+      (OF), constraints, endpoints, same or different bandwidth (BW) ,
+      different links (in case of disjoint paths) and other constrains.
 
-   o  Depending on given LSP type (CR-LSP or SR-TE), PCECC SHOULD create
-      different labels (aka different label spaces, it MAY also require
-      label space negotiation procedure between PCECC and PCCs
-      [I-D.zhao-pce-pcep-extension-for-pce-controller]) for calculated
-      LSPs from egress nodes AGG N-1 and AGG N towards ingress AGG X
-      node.
+   o  Depending on given LSP Path setup type (PST), PCECC would use
+      download instructions to the PCC.  At this stage it is assumed the
+      PCECC is aware of the label space it controls and in case of SR
+      the SID allocation and distribution is already done.
 
-   o  PCECC SHOULD send PCInitiate PCEP message [RFC8281] towards
-      ingress AGG X router(PCC) for each of N LSPs and receives PCRpt
-      PCEP message [RFC8231] back from him.
+   o  PCECC would send PCInitiate PCEP message [RFC8281] towards ingress
+      AGG X router(PCC) for each of N LSPs and receives PCRpt PCEP
+      message [RFC8231] back from PCCs.  If the PST is PCECC-SR, the
+      PCECC would include the SID stack as per
+      [I-D.ietf-pce-segment-routing].  If the PST is PCECC (basic), then
+      the PCECC would assigns labels along the calculated path; and set
+      up the path by sending central controller instructions in PCEP
 
 
 
@@ -674,63 +674,36 @@ Zhao, et al.             Expires April 20, 2019                [Page 12]
 Internet-Draft                    PCECC                     October 2018
 
 
-   o  If LSP type is CR-LSP, PCECC MUST send PCLabelUpd
-      [I-D.zhao-pce-pcep-extension-for-pce-controller] PCEP message to
-      each node along the path with label information for each of N
-      LSPs.  If LSP type is SR-TE, PCECC also MUST send PCLabelUpd PCEP
-      message to each node along the path with label information (Node-
-      ID and Adjacency-ID segment (label) list) specific to that node.
-      Then PCECC SHOULD send PCUpd PCEP message to the ingress AGG X
-      router with information about new LSP and AGG X(PCC) SHOULD send
-      PCEP PCRpt back with LSP status:Up.
+      message to each node along the path of the LSP as per
+      [I-D.zhao-pce-pcep-extension-for-pce-controller] and then send
+      PCUpd message to the ingress AGG X router with information about
+      new LSP and AGG X(PCC) would respond with PCRpt with LSP status.
 
-   o  Now each router along the LSP has corresponding label forwarding
-      state for each of N LSPs.
-
-   o  AGG X as ingress router now have N LSPs towards AGG N and AGG
-      N-1674 which are available for installing to router's RIB and LB
+   o  AGG X as ingress router now have N LSPs towards AGG N and AGG N-1
+      which are available for installing to router's forwarding and LB
       of traffic between them.  Traffic distribution between those LSPs
       depends on particular realization of hash-function on that router.
 
-   o  Since PCECC MUST know as LSDB as TEDB (TE state) he can manage and
+   o  Since PCECC knows as LSDB as TEDB (TE state) he can manage and
       prevent possible oversubscriptions and limit number of available
-      LB states.
+      LB states.  Via PCECC mechanism the control can take quick actions
+      into the network by directly provisioning the central control
+      instructions.
 
 3.3.2.  PCECC and Inter-AS TE
 
-   There are three signalling options for establishing Inter-AS TE LSP:
-   contiguous TE LSP [RFC5151], stitched inter-AS TE LSP [RFC5150],
-   nested TE LSP [RFC4206].
+   There are various signaling options for establishing Inter-AS TE LSP:
+   contiguous TE LSP [RFC5151], stitched TE LSP [RFC5150], nested TE LSP
+   [RFC4206].
 
    Requirements for PCE-based Inter-AS setup [RFC5376] describe the
-   approach and PCEP fucntionality that are needed for establishing
+   approach and PCEP functionality that are needed for establishing
    Inter-AS TE LSPs.
 
    [RFC5376] also gives Inter- and Intra-AS PCE Reference Model that is
    provided below in shorten form for the sake of simplicity.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Zhao, et al.             Expires April 20, 2019                [Page 13]
-
-Internet-Draft                    PCECC                     October 2018
-
-
-        Inter-AS       Inter-AS
+              Inter-AS       Inter-AS
         PCC <-->PCE1<--------->PCE2
          ::      ::             ::
          ::      ::             ::
@@ -741,20 +714,35 @@ Internet-Draft                    PCECC                     October 2018
          ::                     ::
          ::                     ::
       Intra-AS               Intra-AS
-         PCE                    PCE
+         PCE3                   PCE4
 
     Shorten form of Inter- and Intra-AS PCE Reference Model [RFC5376]
 
-   Hereatfter we will discuss a simplified Inter-AS case when both AS1
+   The PCECC belonging to different domain can co-operate to setup
+   inter-AS TE LSP.  The stateful H-PCE [I-D.ietf-pce-stateful-hpce]
+   mechanism could be used to first establish a per-domain PCECC LSP.
+
+
+
+
+Zhao, et al.             Expires April 20, 2019                [Page 13]
+
+Internet-Draft                    PCECC                     October 2018
+
+
+   These could be stitched together to form inter-AS TE LSP as described
+   in [I-D.dugeon-pce-stateful-interdomain].
+
+   Hereatfter we will focus on a simplified Inter-AS case when both AS1
    and AS2 belong to the same service provider administration.  In that
    case Inter and Intra-AS PCEs could be combined in one single PCE if
    such combined PCE performance is enough for handling all Path
    Computation Requests.  Even more in that particular case we
-   potentially could use single PCE for both ASes if his scalability and
-   performance are enough, we just will need interfaces (PCEP and BGP-
-   LS) to both domains.  SDN controller's redundancy mechanisms are out
-   of scope in our case.  Thus routers in AS1 and AS2 (PCCs) will send
-   Path Computation Requests towards same PCE.
+   potentially could use single PCE for both ASes if the scalability and
+   performance are enough, we require interfaces (PCEP and BGP-LS) to
+   both domains.  PCECC redundancy mechanisms are described in
+   [RFC8283].  Thus routers in AS1 and AS2 (PCCs) can send Path
+   Computation messages towards same PCECC.
 
                 +----BGP-LS------+ +------BGP-LS-----+
                 |                | |                 |
@@ -775,9 +763,21 @@ Internet-Draft                    PCECC                     October 2018
            MPLS Domain 1          Inter-AS         MPLS Domain 2
        <=======AS1=======>                    <========AS2=======>
 
-                  Particular case of Inter-AS PCE Reference Model
+                  Particular case of Inter-AS PCE
 
+   In a case of PCECC Inter-AS TE scenario where service provider
+   controls both domains (AS1 and AS2), each of them have own IGP and
+   MPLS transport.  There is a need is to setup Inter-AS LSPs for
+   transporting different services on top of them (Voice, L3VPN etc.).
+   Inter-AS links with different capacity exist in several regions.  The
+   task is not only to provision those Inter-AS LSPs with given
+   constrains but also calculate the path and pre-setup the backup
+   Inter-AS LSPs that will be used if primary LSP fails.
 
+   For the figure above it would be that LSP1 from R1 to R3 may go via
+   ASBR1 and ASBR3, and it is the primary Inter-AS LSP.  R1-R3 LSP2 that
+   go via ASBR5 and ASBR6 is the backup one.  In adition there could be
+   bypass LSP setup to protect against ASBR or inter-AS link failure.
 
 
 
@@ -786,54 +786,54 @@ Zhao, et al.             Expires April 20, 2019                [Page 14]
 Internet-Draft                    PCECC                     October 2018
 
 
-   In one particular case of PCECC Inter-AS TE scenario service provider
-   controls both domains (AS1 and AS2), each of them have own IGP and
-   MPLS transport.  The need is to setup Inter-AS LSPs for transporting
-   different services on top of them (Voice,L3 VPN etc.)  Inter-AS links
-   with different capacity exist in several regions.  The task is not
-   only to provision those Inter-AS LSPs with given constrains but also
-   calculate the path and pre-setup the backup Inter-AS LSPs that will
-   be used if main LSP fails.
-
-   For the figure above it would be that LSP1 from R1 to R3 SHOULD go
-   via ASBR1 and ASBR3, and it is the main Inter-AS LSP.  R1-R3 LSP2
-   that SHOULD go via ASBR5 and ASBR6 is the backup one.  Depending on
-   Inter-AS TE type, backup LSP could be used either by head-end R1 or
-   ASBR1.
-
    After the addition of PCECC functionality to PCE (SDN controller),
    PCECC based Inter-AS TE model SHOULD follow as PCECC usecase for TE
-   LSP (case 6 above) as requirements of [RFC5376] with the following
-   details:
+   LSP as requirements of [RFC5376] with the following details:
 
-   o  Since PCECC MUST know the topology of both domains AS1 and AS2,
-      PCECC MUST establish BGP-LS peering with routers (or RRs) in both
-      domains
+   o  Since PCECC needs to know the topology of both domains AS1 and
+      AS2, PCECC could use BGP-LS peering with routers (or RRs) in both
+      domains.
 
-   o  PCECC MUST have SBI (PCEP) connectivity towards all routers in
-      both domains (see also section 4 in [RFC5376])
+   o  PCECC needs to PCEP connectivity towards all routers in both
+      domains (see also section 4 in [RFC5376]) in a similar manner as a
+      SDN controller.
 
-   o  After operator's application or service orchetsrator will create
-      request for topology of specific service, PCECC SHOULD receive
-      that request via NBI (NBI type is implementation dependent, MAY be
-      NETCONF/Yang, REST etc.).  Then PCECC SHOULD calculate Objective
-      Function (OF) for optimal path with given constrains (i.e.  LSP
-      type, bandwidth etc.), including those from [RFC5376]: priority,
-      AS sequence, preffered ASBR, disjoint paths, protection.  On this
-      step we would have two paths: R1-ASBR1-ASBR3-R3, R1-ASBR5-ASBR6-R3
+   o  After operator's application or service orchestrator will create
+      request for tunnel creation of specific service, PCECC SHOULD
+      receive that request via NBI (NBI type is implementation
+      dependent, MAY be NETCONF/Yang, REST etc.).  Then PCECC would
+      calculate the optimal path based on Objective Function (OF) and
+      given constrains (i.e. path setup type, bandwidth etc.), including
+      those from [RFC5376]: priority, AS sequence, preferred ASBR,
+      disjoint paths, protection.  On this step we would have two paths:
+      R1-ASBR1-ASBR3-R3, R1-ASBR5-ASBR6-R3
 
-   o  Depending on given LSP type (CR-LSP or SR-TE), PCECC SHOULD create
-      different labels (aka different label spaces, it MAY also require
-      label space negotiation procedure between PCECC and PCCs) for
-      calculated LSPs from egress node in one AS towards ingress in
-      another AS.
+   o  Depending on given LSP PST (PCECC or PCECC-SR), PCECC would use
+      download instructions to the PCC.  At this stage it is assumed the
+      PCECC is aware of the label space it controls and in case of SR
+      the SID allocation and distribution is already done.
 
-   o  PCECC SHOULD send PCInitiate PCEP message [RFC8281] towards
-      ingress router R1 (PCC) in AS1 and receive PCRpt PCEP message
-      [RFC8231] back from him.
+   o  PCECC would send PCInitiate PCEP message [RFC8281] towards ingress
+      router R1 (PCC) in AS1 and receives PCRpt PCEP message [RFC8231]
+      back from PCC.  If the PST is PCECC-SR, the PCECC would include
+      the SID stack as per [I-D.ietf-pce-segment-routing].  It may also
+      include binding SID based on AS boundary.  The backup SID stack
+      could also be installed at ingress but more importantly each node
+      along the SR path could also do local protection just based on the
+      top segement.  If the PST is PCECC (basic), then the PCECC would
+      assigns labels along the calculated paths (R1-ASBR1-ASBR3-R3,
+      R1-ASBR5-ASBR6-R3); and set up the path by sending central
+      controller instructions in PCEP message to each node along the
+      path of the LSPs as per
+      [I-D.zhao-pce-pcep-extension-for-pce-controller] and then send
+      PCUpd message to the ingress R1 router with information about new
+      LSPs and R1 would respond with PCRpt with LSP(s) status.
 
-   o  If LSP type is CR-LSP, PCECC"> MUST send PCLabelUpd
-      [I-D.zhao-pce-pcep-extension-for-pce-controller] PCEP message to
+   o  AGG X as ingress router now have N LSPs towards AGG N and AGG N-1
+      which are available for installing to router's forwarding and LB
+      of traffic between them.  Traffic distribution between those LSPs
+      depends on particular realization of hash-function on that router.
+
 
 
 
@@ -842,61 +842,26 @@ Zhao, et al.             Expires April 20, 2019                [Page 15]
 Internet-Draft                    PCECC                     October 2018
 
 
-      each node along the path (ASBR1-ASBR3-R3, ASBR5-ASBR6-R3) in both
-      ASes with label information for that LSP.  If LSP type is SR-TE,
-      PCECC also MUST send PCLabelUpd PCEP message to each node along
-      the path in aboth Ases with label information (Node-ID and
-      Adjacency-ID segment (label) list) specific to that node.
-
-   o  Then PCECC SHOULD send PCUpd PCEP message to the ingress router R1
-      in AS1 with information about new LSP and the R1 router SHOULD
-      send PCEP PCRpt back with LSP1 and LSP2 status:Up.
-
-   o  After that step R1 SHOULD have main and backup TEs (LSP1 and LSP2)
-      towards R3 up.  It is up to implementation how to put this TEs to
-      R1's RIB and how to make switchover to backup LSP2 if LSP1 fails.
+   o  After that step R1 now have primary and backup TEs (LSP1 and LSP2)
+      towards R3.  It is up to router implementation how to make
+      switchover to backup LSP2 if LSP1 fails.
 
 3.4.  Use Cases of PCECC for Multicast LSPs
 
    The current multicast LSPs are setup either using the RSVP-TE P2MP or
-   mLDP protocols.  The setup of these LSPs not only need a lot of
-   manual configurations, but also it is also complex when the
-   protection is considered.  By using the PCECC solution, the multicast
-   LSP can be computed and setup through centralized controller which
-   has the full picture of the topology and bandwidth usage for each
-   link.  It not only reduces the complex configurations comparing the
-   distributed RSVP-TE P2MP or mLDP signal lings, but also it can
-   compute the disjoint primary path and secondary path efficiently.
+   mLDP protocols.  The setup of these LSPs may require manual
+   configurations and complex signaling when the protection is
+   considered.  By using the PCECC solution, the multicast LSP can be
+   computed and setup through centralized controller which has the full
+   picture of the topology and bandwidth usage for each link.  It not
+   only reduces the complex configurations comparing the distributed
+   RSVP-TE P2MP or mLDP signaling, but also it can compute the disjoint
+   primary path and secondary P2MP path efficiently.
 
 3.4.1.  Using PCECC for P2MP/MP2MP LSPs' Setup
 
-   With the capability of global label and local label existing at the
-   same time in the PCECC network, PCECC will use compute, setup and
-   maintain the P2MP and MP2MP lsp using the local label range for each
-   network nodes.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Zhao, et al.             Expires April 20, 2019                [Page 16]
-
-Internet-Draft                    PCECC                     October 2018
-
+   It is assumed the PCECC is aware of the label space it controls for
+   all nodes and make allocations accordingly.
 
                           +----------+
                           |    R1    | Root node of the multicast LSP
@@ -904,7 +869,7 @@ Internet-Draft                    PCECC                     October 2018
                               |6000
                           +----------+
            Transit Node   |    R2    |
-                          +----------+
+           branch         +----------+
                           *  |   *  *
                      9001*   |   *   *9002
                         *    |   *    *
@@ -915,29 +880,58 @@ Internet-Draft                    PCECC                     October 2018
                    9003*     |   *     *      +9004
                         *    |   *    *       +
                         +-----------+  +-----------+
-                        |    R3     |  |    R5     | Leaf Node
+                        |    R3     |  |    R6     | Leaf Node
                         +-----------+  +-----------+
                          9005|
                         +-----------+
                         |    R8     | Leaf Node
                         +-----------+
 
-   The P2MP examples are explained here:
 
-   Step1: R1 may send a packet P1 to R2 simply by pushing an label of
-   6000 to the packet.
+   The P2MP examples are explained here, where R1 is root and R8 and R6
+   are the leaves.
 
-   Step2: After R2 receives the packet with label 6000, it will
-   forwarding to R4 by pushing header of 9001 and R5 by pusing header of
-   9002.
 
-   Step3: After R4 receives the packet with label 9001, it will
-   forwarding to R3 by pushing header of 9003.  After R5 receives the
-   packet with label 9002, it will forwarding to R5 by pushing header of
-   9004.
 
-   Step3: After R3 receives the packet with label 9003, it will
-   forwarding to R8 by pushing header of 9005
+Zhao, et al.             Expires April 20, 2019                [Page 16]
+
+Internet-Draft                    PCECC                     October 2018
+
+
+   o  Based on the P2MP path computation request / delegation or PCE
+      initiation, the PCECC receives the PCECC request with constraints
+      and optimization criteria.
+
+   o  PCECC would calculate the optimal P2MP path according to given
+      constrains (i.e.bandwidth).
+
+   o  PCECC would provision each node along the path and assign incoming
+      and outgoing labels from R1 to {R6, R8} with the path: {R1, 6000},
+      {6000, R2, {9001,9002}}, {9001, R4, 9003}, {9002, R5, 9004} {9003,
+      R3, 9005}, {9004, R6}, {9005, R8}. The main difference is in the
+      branch node instruction at R2 where two copies of packet are sent
+      towards R4 and R5 with 9001 and 9002 labels respectively.
+
+   The packet forwarding involves -
+
+      Step1: R1 may send a packet P1 to R2 simply by pushing an label of
+      6000 to the packet.
+
+      Step2: After R2 receives the packet with label 6000, it will
+      forwarding to R4 by swapping label to 9001 and by swapping label
+      of 9002 towards R5.
+
+      Step3: After R4 receives the packet with label 9001, it will
+      forwarding to R3 by swapping to 9003.  After R5 receives the
+      packet with label 9002, it will forwarding to R6 by swapping to
+      9004.
+
+      Step4: After R3 receives the packet with label 9003, it will
+      forwarding to R8 by swapping to 9005 and when R5 receives the
+      packet with label 9004, it will swap to 9004 and send to R6.
+
+      Step5: Packet received at R8 and 9005 is popped; packet receives
+      at R6 and 9004 is popped.
 
 3.4.2.  Use Cases of PCECC for the Resiliency of P2MP/MP2MP LSPs
 
@@ -945,6 +939,12 @@ Internet-Draft                    PCECC                     October 2018
 
    In this section we describe the end-end managed path protection
    service and the local protection with the operation management in the
+   PCECC network for the P2MP/MP2MP LSP, which includes both the RSVP-TE
+   P2MP based LSP and also the mLDP based LSP.
+
+   An end-to-end protection (for nodes and links) principle can be
+   applied for computing backup P2MP or MP2MP LSPs.  During computation
+   of the primarily multicast trees, PCECC server may also be taken into
 
 
 
@@ -954,12 +954,6 @@ Zhao, et al.             Expires April 20, 2019                [Page 17]
 Internet-Draft                    PCECC                     October 2018
 
 
-   PCECC network for the P2MP/MP2MP LSP, which includes both the RSVP-TE
-   P2MP based LSP and also the mLDP based LSP.
-
-   An end-to-end protection (for nodes and links) principle can be
-   applied for computing backup P2MP or MP2MP LSPs.  During computation
-   of the primarily multicast trees, PCECC server may also be taken into
    consideration to compute a secondary tree.  A PCE may compute the
    primary and backup P2MP or MP2Mp LSP together or sequentially.
 
@@ -1002,6 +996,12 @@ Internet-Draft                    PCECC                     October 2018
    While the PCECC sets up the primary multicast tree, it can also build
    the back LSP among PLR, the protected node, and MPs (the downstream
    nodes of the protected node).  In the cases where the amount of
+   downstream nodes are huge, this mechanism can avoid unnecessary
+   packet duplication on PLR, so that protect the network from traffic
+   congestion risk.
+
+
+
 
 
 
@@ -1009,10 +1009,6 @@ Zhao, et al.             Expires April 20, 2019                [Page 18]
 
 Internet-Draft                    PCECC                     October 2018
 
-
-   downstream nodes are huge, this mechanism can avoid unnecessary
-   packet duplication on PLR, so that protect the network from traffic
-   congestion risk.
 
                                +------------+
                                |     R1     | Root Node
@@ -1053,19 +1049,6 @@ Internet-Draft                    PCECC                     October 2018
    the path computation and forwarding path downloading can all be done
    without the complex signaling used in the P2MP RSVP-TE or mLDP.
 
-
-
-
-
-
-
-
-
-Zhao, et al.             Expires April 20, 2019                [Page 19]
-
-Internet-Draft                    PCECC                     October 2018
-
-
 3.4.3.  Using reliable P2MP TE based multicast delivery for distributed
         computations (MapReduce-Hadoop)
 
@@ -1075,6 +1058,14 @@ Internet-Draft                    PCECC                     October 2018
    Distributed File System (HDFS),where NameNode has the knowledge about
    resources of the cluster and where actual data (chunks) for
    particular task are located (which DataNode).  Each chunk of data
+
+
+
+Zhao, et al.             Expires April 20, 2019                [Page 19]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    (64MB or more) should have 3 saved copies in different DataNodes
    based on their proximity.
 
@@ -1114,14 +1105,6 @@ Internet-Draft                    PCECC                     October 2018
 
    P2MP TE tunnels looks much more suitable as potential solution for
    creation of multicast based communications between Master and Slave
-
-
-
-Zhao, et al.             Expires April 20, 2019                [Page 20]
-
-Internet-Draft                    PCECC                     October 2018
-
-
    nodes inside cluster.  Obviously these P2MP tunnels should be
    dynamically created and turned down (no manual intervention).  Here
    is there PCECC comes to play.  His main task is to create optimal
@@ -1131,6 +1114,14 @@ Internet-Draft                    PCECC                     October 2018
 
    This solution would require to use MPLS label based forwarding inside
    the cluster.  Usage of label based forwarding inside DC was proposed
+
+
+
+Zhao, et al.             Expires April 20, 2019                [Page 20]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    by Yandex [MPLS in DC...] Technically it is already possible because
    mpls on switches is already supported by some vendors, mpls aslo
    exists on Linux and OVS.
@@ -1170,14 +1161,6 @@ Internet-Draft                    PCECC                     October 2018
 
    Phase 1: Distributed cluster resources discovery During this phase
    Master Nodes SHOULD identify and find available Slave nodes according
-
-
-
-Zhao, et al.             Expires April 20, 2019                [Page 21]
-
-Internet-Draft                    PCECC                     October 2018
-
-
    to computing request from application (APP).  NameNode SHOULD query
    PCECC about available DataNodes, NameNode MAY provide additional
    constrains to PCECC such as topological proximity, redundancy level.
@@ -1187,6 +1170,13 @@ Internet-Draft                    PCECC                     October 2018
    suitable NameNodes.  PCECC SHOULD reply to NameNode the list of most
    suitable DataNodes and their resource capabilities.  Topology
    discovery mechanism for PCECC will be added later to that framework.
+
+
+
+Zhao, et al.             Expires April 20, 2019                [Page 21]
+
+Internet-Draft                    PCECC                     October 2018
+
 
    Phase 2: PCECC SHOULD create P2MP LSP from client towards those
    DataNodes by means of PCLabelUpd [I-D.zhao-pce-pcep-extension-for-
@@ -1219,6 +1209,16 @@ Internet-Draft                    PCECC                     October 2018
 
    Example described in this section is based on network configurations
    illustrated using the following figure:
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1387,12 +1387,12 @@ Internet-Draft                    PCECC                     October 2018
 
 7.2.  Informative References
 
-   [RFC5441]  Vasseur, JP., Ed., Zhang, R., Bitar, N., and JL. Le Roux,
-              "A Backward-Recursive PCE-Based Computation (BRPC)
-              Procedure to Compute Shortest Constrained Inter-Domain
-              Traffic Engineering Label Switched Paths", RFC 5441,
-              DOI 10.17487/RFC5441, April 2009,
-              <https://www.rfc-editor.org/info/rfc5441>.
+   [RFC4206]  Kompella, K. and Y. Rekhter, "Label Switched Paths (LSP)
+              Hierarchy with Generalized Multi-Protocol Label Switching
+              (GMPLS) Traffic Engineering (TE)", RFC 4206,
+              DOI 10.17487/RFC4206, October 2005,
+              <https://www.rfc-editor.org/info/rfc4206>.
+
 
 
 
@@ -1401,6 +1401,25 @@ Zhao, et al.             Expires April 20, 2019                [Page 25]
 
 Internet-Draft                    PCECC                     October 2018
 
+
+   [RFC5150]  Ayyangar, A., Kompella, K., Vasseur, JP., and A. Farrel,
+              "Label Switched Path Stitching with Generalized
+              Multiprotocol Label Switching Traffic Engineering (GMPLS
+              TE)", RFC 5150, DOI 10.17487/RFC5150, February 2008,
+              <https://www.rfc-editor.org/info/rfc5150>.
+
+   [RFC5151]  Farrel, A., Ed., Ayyangar, A., and JP. Vasseur, "Inter-
+              Domain MPLS and GMPLS Traffic Engineering -- Resource
+              Reservation Protocol-Traffic Engineering (RSVP-TE)
+              Extensions", RFC 5151, DOI 10.17487/RFC5151, February
+              2008, <https://www.rfc-editor.org/info/rfc5151>.
+
+   [RFC5441]  Vasseur, JP., Ed., Zhang, R., Bitar, N., and JL. Le Roux,
+              "A Backward-Recursive PCE-Based Computation (BRPC)
+              Procedure to Compute Shortest Constrained Inter-Domain
+              Traffic Engineering Label Switched Paths", RFC 5441,
+              DOI 10.17487/RFC5441, April 2009,
+              <https://www.rfc-editor.org/info/rfc5441>.
 
    [RFC5541]  Le Roux, JL., Vasseur, JP., and Y. Lee, "Encoding of
               Objective Functions in the Path Computation Element
@@ -1432,6 +1451,13 @@ Internet-Draft                    PCECC                     October 2018
               DOI 10.17487/RFC8355, March 2018,
               <https://www.rfc-editor.org/info/rfc8355>.
 
+
+
+Zhao, et al.             Expires April 20, 2019                [Page 26]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    [RFC8402]  Filsfils, C., Ed., Previdi, S., Ed., Ginsberg, L.,
               Decraene, B., Litkowski, S., and R. Shakir, "Segment
               Routing Architecture", RFC 8402, DOI 10.17487/RFC8402,
@@ -1443,20 +1469,18 @@ Internet-Draft                    PCECC                     October 2018
               draft-ietf-pce-segment-routing-14 (work in progress),
               October 2018.
 
+   [I-D.ietf-pce-stateful-hpce]
+              Dhody, D., Lee, Y., Ceccarelli, D., Shin, J., King, D.,
+              and O. Dios, "Hierarchical Stateful Path Computation
+              Element (PCE).", draft-ietf-pce-stateful-hpce-05 (work in
+              progress), June 2018.
+
    [I-D.zhao-pce-pcep-extension-for-pce-controller]
               Zhao, Q., Li, Z., Dhody, D., Karunanithi, S., Farrel, A.,
               and C. Zhou, "PCEP Procedures and Protocol Extensions for
               Using PCE as a Central Controller (PCECC) of LSPs", draft-
               zhao-pce-pcep-extension-for-pce-controller-08 (work in
               progress), June 2018.
-
-
-
-
-Zhao, et al.             Expires April 20, 2019                [Page 26]
-
-Internet-Draft                    PCECC                     October 2018
-
 
    [I-D.zhao-pce-pcep-extension-pce-controller-sr]
               Zhao, Q., Li, Z., Dhody, D., Karunanithi, S., Farrel, A.,
@@ -1470,7 +1494,25 @@ Internet-Draft                    PCECC                     October 2018
               Controlled ID Space", draft-li-pce-controlled-id-space-00
               (work in progress), June 2018.
 
+   [I-D.dugeon-pce-stateful-interdomain]
+              Dugeon, O., Meuric, J., Lee, Y., Dhody, D., and D.
+              Ceccarelli, "PCEP Extension for Stateful Inter-Domain
+              Tunnels", draft-dugeon-pce-stateful-interdomain-01 (work
+              in progress), July 2018.
+
 Authors' Addresses
+
+
+
+
+
+
+
+
+Zhao, et al.             Expires April 20, 2019                [Page 27]
+
+Internet-Draft                    PCECC                     October 2018
+
 
    Quintin Zhao
    Huawei Technologies
@@ -1508,18 +1550,24 @@ Authors' Addresses
    Email: dhruv.ietf@gmail.com
 
 
-
-Zhao, et al.             Expires April 20, 2019                [Page 27]
-
-Internet-Draft                    PCECC                     October 2018
-
-
    King Ke
    Tencent Holdings Ltd.
    Shenzhen
    China
 
    Email: kinghe@tencent.com
+
+
+
+
+
+
+
+
+
+Zhao, et al.             Expires April 20, 2019                [Page 28]
+
+Internet-Draft                    PCECC                     October 2018
 
 
    Luyuan Fang
@@ -1565,4 +1613,12 @@ Internet-Draft                    PCECC                     October 2018
 
 
 
-Zhao, et al.             Expires April 20, 2019                [Page 28]
+
+
+
+
+
+
+
+
+Zhao, et al.             Expires April 20, 2019                [Page 29]
