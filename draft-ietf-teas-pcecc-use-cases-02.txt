@@ -126,22 +126,26 @@ Internet-Draft                    PCECC                     October 2018
                LSPs  . . . . . . . . . . . . . . . . . . . . . . . .  17
      3.5.  Use Cases of PCECC for LSP in the Network Migration . . .  19
      3.6.  Use Cases of PCECC for L3VPN and PWE3 . . . . . . . . . .  21
-     3.7.  Using PCECC for Traffic Classification Information  . . .  21
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  22
-   6.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  22
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  22
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  22
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .  23
+     3.7.  Using PCECC for Traffic Classification Information  . . .  22
+     3.8.  Use Cases of PCECC for SRv6 . . . . . . . . . . . . . . .  22
+     3.9.  Use Cases of PCECC for SFC  . . . . . . . . . . . . . . .  23
+     3.10. Use Cases of PCECC for Native IP  . . . . . . . . . . . .  23
+     3.11. Use Cases of PCECC for Local Protection (RSVP-TE) . . . .  24
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  24
+   6.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  24
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  24
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .  25
    Appendix A.  Using reliable P2MP TE based multicast delivery for
-                distributed computations (MapReduce-Hadoop)  . . . .  25
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
+                distributed computations (MapReduce-Hadoop)  . . . .  29
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
 
 1.  Introduction
 
-   An Architecture for Use of PCE and PCEP in a Network with Central
-   Control [RFC8283] describes SDN architecture where the Path
-   Computation Element (PCE) determines paths for variety of diferent
+   An Architecture for Use of PCE and PCEP [RFC5440] in a Network with
+   Central Control [RFC8283] describes SDN architecture where the Path
+   Computation Element (PCE) determines paths for variety of different
    usecases, with PCEP as a general southbound communication protocol
    with all the nodes along the path..
 
@@ -159,16 +163,15 @@ Internet-Draft                    PCECC                     October 2018
       protocols, Open Shortest Path First (OSPF) or Intermediate System
       to Intermediate System (IS-IS).
 
-   PCC:  Path Computation Client: any client application requesting a
-      path computation to be performed by a Path Computation Element.
-
-
 
 
 Zhao, et al.             Expires April 21, 2019                 [Page 3]
 
 Internet-Draft                    PCECC                     October 2018
 
+
+   PCC:  Path Computation Client: any client application requesting a
+      path computation to be performed by a Path Computation Element.
 
    PCE:  Path Computation Element.  An entity (component, application,
       or network node) that is capable of computing a network path or
@@ -202,7 +205,7 @@ Internet-Draft                    PCECC                     October 2018
    along the path of the end-to-end LSP.  For this to work, the PCE-
    based controller will take responsibility for managing some part of
    the MPLS label space for each of the routers that it controls.  An
-   extention to PCEP could be done to allow a PCC to inform the PCE of
+   extension to PCEP could be done to allow a PCC to inform the PCE of
    such a label space to control.
 
    [I-D.ietf-pce-segment-routing] specifies extensions to PCEP that
@@ -216,15 +219,15 @@ Internet-Draft                    PCECC                     October 2018
    space to control is needed within PCEP.  The full SRGB/SRLB of a node
    could be learned via existing IGP or BGP-LS mechanism too.
 
-   [I-D.li-pce-controlled-id-space] defines a PCEP extention to support
-   advertisement of the MPLS label space to the PCE to control.
-
 
 
 Zhao, et al.             Expires April 21, 2019                 [Page 4]
 
 Internet-Draft                    PCECC                     October 2018
 
+
+   [I-D.li-pce-controlled-id-space] defines a PCEP extension to support
+   advertisement of the MPLS label space to the PCE to control.
 
    There have been various proposals for Global Labels, the PCECC
    architecture could be used as means to learn the label space of
@@ -274,9 +277,6 @@ Internet-Draft                    PCECC                     October 2018
 
 
 
-
-
-
 Zhao, et al.             Expires April 21, 2019                 [Page 5]
 
 Internet-Draft                    PCECC                     October 2018
@@ -314,8 +314,8 @@ Internet-Draft                    PCECC                     October 2018
    failure recovery (used for SR-TE).  Also protection can be performed
    by the node adjacent to the failed component, commonly referred to as
    local protection techniques or fast-reroute (FRR) techniques.  In
-   case of PCECC, the protection paths can be pre-computated and setup
-   by the PCE.
+   case of PCECC, the protection paths can be pre-computed and setup by
+   the PCE.
 
    The following example illustrate the use case where the node SID and
    adjacency SID are allocated by the PCECC.
@@ -651,8 +651,9 @@ Internet-Draft                    PCECC                     October 2018
 
    o  PCECC could calculate multiple (Say N) LSPs according to given
       constrains, calculation is based on results of Objective Function
-      (OF), constraints, endpoints, same or different bandwidth (BW) ,
-      different links (in case of disjoint paths) and other constrains.
+      (OF) [RFC5541], constraints, endpoints, same or different
+      bandwidth (BW) , different links (in case of disjoint paths) and
+      other constrains.
 
    o  Depending on given LSP Path setup type (PST), PCECC would use
       download instructions to the PCC.  At this stage it is assumed the
@@ -665,7 +666,6 @@ Internet-Draft                    PCECC                     October 2018
       PCECC would include the SID stack as per
       [I-D.ietf-pce-segment-routing].  If the PST is PCECC (basic), then
       the PCECC would assigns labels along the calculated path; and set
-      up the path by sending central controller instructions in PCEP
 
 
 
@@ -674,6 +674,7 @@ Zhao, et al.             Expires April 21, 2019                [Page 12]
 Internet-Draft                    PCECC                     October 2018
 
 
+      up the path by sending central controller instructions in PCEP
       message to each node along the path of the LSP as per
       [I-D.zhao-pce-pcep-extension-for-pce-controller] and then send
       PCUpd message to the ingress AGG X router with information about
@@ -721,7 +722,6 @@ Internet-Draft                    PCECC                     October 2018
    The PCECC belonging to different domain can co-operate to setup
    inter-AS TE LSP.  The stateful H-PCE [I-D.ietf-pce-stateful-hpce]
    mechanism could be used to first establish a per-domain PCECC LSP.
-
 
 
 
@@ -776,7 +776,7 @@ Internet-Draft                    PCECC                     October 2018
 
    For the figure above it would be that LSP1 from R1 to R3 may go via
    ASBR1 and ASBR3, and it is the primary Inter-AS LSP.  R1-R3 LSP2 that
-   go via ASBR5 and ASBR6 is the backup one.  In adition there could be
+   go via ASBR5 and ASBR6 is the backup one.  In addition there could be
    bypass LSP setup to protect against ASBR or inter-AS link failure.
 
 
@@ -1054,8 +1054,8 @@ Internet-Draft                    PCECC                     October 2018
 
    One of the main advantages for PCECC solution is that it has backward
    compatibility naturally since the PCE server itself can function as a
-   proxy node of MPLS network for all the new nodes which don't support
-   the existing MPLS signaling protocol anymore.
+   proxy node of MPLS network for all the new nodes which may no longer
+   support the signaling protocols.
 
 
 
@@ -1067,7 +1067,7 @@ Internet-Draft                    PCECC                     October 2018
 
 
    As it is illustrated in the following example, the current network
-   will migrate to a total PCECC controlled network gradually by
+   could migrate to a total PCECC controlled network gradually by
    replacing the legacy nodes.  During the migration, the legacy nodes
    still need to signal using the existing MPLS protocol such as LDP and
    RSVP-TE, and the new nodes setup their portion of the forwarding path
@@ -1108,11 +1108,11 @@ Internet-Draft                    PCECC                     October 2018
       (Node1, if1),(Node2, if2), (Node3, if3), (Node4, if4), Node5.
 
    o  Node1, Node2, Node3 will setup the LSP to Node5 using the local
-      labels as usual.
+      labels as usual.  Node 3 with help of PCECC could proxy the
+      signaling.
 
-   o  Then the PCECC will program the outsegment of Node3, the
-      insegment/ ousegment of Node4, and the insegment for Node5.
-
+   o  Then the PCECC will program the out-segment of Node3, the in-
+      segment/ out-segment of Node4, and the in-segment for Node5.
 
 
 
@@ -1124,12 +1124,18 @@ Internet-Draft                    PCECC                     October 2018
 
 3.6.  Use Cases of PCECC for L3VPN and PWE3
 
-   The existing services using MPLS LSP tunnels based on MPLS signalling
-   mechanism such L3VPN, PWE3 and IPv6 can be simplified by using the
-   PCECC to negoitate the label assignments for the L3VPN, PWE3 and
-   Ipv6.
+   As described in [RFC8283], various network services may be offered
+   over a network.  These include protection services (including Virtual
+   Private Network (VPN) services (such as Layer 3 VPNs [RFC4364] or
+   Ethernet VPNs [RFC7432]); or Pseudowires [RFC3985].  Delivering
+   services over a network in an optimal way requires coordination in
+   the way that network resources are allocated to support the services.
+   A PCE-based central controller can consider the whole network and all
+   components of a service at once when planning how to deliver the
+   service.  It can then use PCEP to manage the network resources and to
+   install the necessary associations between those resources.
 
-   In the case of L3VPN, VPN labels can be negotiated and distributed
+   In the case of L3VPN, VPN labels can be assigned and distributed
    through the PCECC PCEP among the PE router instead of using the BGP
    protocols.
 
@@ -1155,21 +1161,15 @@ Internet-Draft                    PCECC                     October 2018
 
    Example: Using PCECC for L3VPN and PWE3
 
-   In the cast PWE3, instead of using the LDP signalling protocols, the
-   lable and port pairs assigned to each pseudowire can be negotiated
-   through PCECC among the PE rotuers and the corresponding forwarding
+   In the case PWE3, instead of using the LDP signaling protocols, the
+   label and port pairs assigned to each pseudowire can be assigned
+   through PCECC among the PE routers and the corresponding forwarding
    entries will be distributed into each PE routers through the extended
-   PCEP protocols.
+   PCEP protocols and PCECC mechanism.
 
-3.7.  Using PCECC for Traffic Classification Information
 
-   When a TE-LSP is set up, the head end needs to know:
 
-   o  how to use it
 
-   o  What traffic to send on the LSP
-
-   o  Whether it is a virtual link
 
 
 
@@ -1178,18 +1178,141 @@ Zhao, et al.             Expires April 21, 2019                [Page 21]
 Internet-Draft                    PCECC                     October 2018
 
 
+3.7.  Using PCECC for Traffic Classification Information
+
+   As described in [RFC8283], traffic classification is an important
+   part of traffic engineering.  It is the process of looking at a
+   packet to determine how it should be treated as it is forwarded
+   through the network.  It applies in many scenarios including MPLS
+   traffic engineering (where it determines what traffic is forwarded
+   onto which LSPs); segment routing (where it is used to select which
+   set of forwarding instructions to add to a packet); and SFC (where it
+   indicates along which service function path a packet should be
+   forwarded).  In conjunction with traffic engineering, traffic
+   classification is an important enabler for load balancing.  Traffic
+   classification is closely linked to the computational elements of
+   planning for the network functions just listed because it determines
+   how traffic load is balanced and distributed through the network.
+   Therefore, selecting what traffic classification should be performed
+   by a router is an important part of the work done by a PCECC.
+
+   Instructions can be passed from the controller to the routers using
+   PCEP.  These instructions tell the routers how to map traffic to
+   paths or connections.  Refer [I-D.ietf-pce-pcep-flowspec].
+
+   Along with traffic classification, there are few more question -
+
+   o  how to use it
+
+   o  Whether it is a virtual link
+
    o  Whether to advertise it in the IGP
 
    o  What bits of this information to signal to the tail end
 
-   PCEP allows an Active PCE to set up or modify LSPs.  But we have no
-   way to tell the head end how to use the LSP.  This is because of
-   history.  It used to be the LER that made the request of the PCE, so
-   it knew why it wanted the LSP.
+3.8.  Use Cases of PCECC for SRv6
 
-   With the PCECC architecture by extending the PCEP protocols, it is
-   easy to carry this information such as how to use the LSP, how to
-   advertise the LSP and other extra signaling information.
+   As per [RFC8402], with Segment Routing (SR), a node steers a packet
+   through an ordered list of instructions, called segments.  Segment
+   Routing can be applied to the IPv6 architecture with the Segment
+   Routing Header (SRH) [I-D.ietf-6man-segment-routing-header].  A
+   segment is encoded as an IPv6 address.  An ordered list of segments
+   is encoded as an ordered list of IPv6 addresses in the routing
+   header.  The active segment is indicated by the Destination Address
+   of the packet.  Upon completion of a segment, a pointer in the new
+   routing header is incremented and indicates the next segment.
+
+   As per [I-D.ietf-6man-segment-routing-header], an SRv6 Segment is a
+   128-bit value.  "SRv6 SID" or simply "SID" are often used as a
+   shorter reference for "SRv6 Segment".  Further details are in An
+   illustration is provided in
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 22]
+
+Internet-Draft                    PCECC                     October 2018
+
+
+   [I-D.filsfils-spring-srv6-network-programming] where SRv6 SID is
+   represented as LOC:FUNCT.
+
+   [I-D.negi-pce-segment-routing-ipv6] extends
+   [I-D.ietf-pce-segment-routing] to support SR for IPv6 data plane.
+   Further a PCECC could be extended to support SRv6 SID allocation and
+   distribution.
+
+   [Editor's Note - more details to be added]
+
+3.9.  Use Cases of PCECC for SFC
+
+   Service Function Chaining (SFC) is described in [RFC7665].  It is the
+   process of directing traffic in a network such that it passes through
+   specific hardware devices or virtual machines (known as service
+   function nodes) that can perform particular desired functions on the
+   traffic.  The set of functions to be performed and the order in which
+   they are to be performed is known as a service function chain.  The
+   chain is enhanced with the locations at which the service functions
+   are to be performed to derive a Service Function Path (SFP).  Each
+   packet is marked as belonging to a specific SFP, and that marking
+   lets each successive service function node know which functions to
+   perform and to which service function node to send the packet next.
+   To operate an SFC network, the service function nodes must be
+   configured to understand the packet markings, and the edge nodes must
+   be told how to mark packets entering the network.  Additionally, it
+   may be necessary to establish tunnels between service function nodes
+   to carry the traffic.  Planning an SFC network requires load
+   balancing between service function nodes and traffic engineering
+   across the network that connects them.  As per [RFC8283], these are
+   operations that can be performed by a PCE-based controller, and that
+   controller can use PCEP to program the network and install the
+   service function chains and any required tunnels.
+
+   PCECC can play the role for setting the traffic classification rules
+   at the classifier as well as downloading the forwarding instructions
+   to the SFFs so that they could process the NSH and forward
+   accordingly.
+
+   [Editor's Note - more details to be added]
+
+3.10.  Use Cases of PCECC for Native IP
+
+   [I-D.ietf-teas-native-ip-scenarios] describes the scenarios, and
+   suggestions for the "Centrally Control Dynamic Routing (CCDR)"
+   architecture, which integrates the merit of traditional distributed
+   protocols (IGP/BGP), and the power of centrally control technologies
+   (PCE/SDN) to provide one feasible traffic engineering solution in
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 23]
+
+Internet-Draft                    PCECC                     October 2018
+
+
+   various complex scenarios for the service provider.
+   [I-D.ietf-teas-pce-native-ip] defines the framework for CCDR traffic
+   engineering within Native IP network, using Dual/Multi-BGP session
+   strategy and CCDR architecture.  PCEP protocol can be used to
+   transfer the key parameters between PCE and the underlying network
+   devices (PCC) using PCECC technique.  The central control
+   instructions from PCECC to identify which prefix should be advertised
+   on which BGP session.
+
+3.11.  Use Cases of PCECC for Local Protection (RSVP-TE)
+
+   [I-D.cbrt-pce-stateful-local-protection] describes the need for the
+   PCE to maintain and associate the local protection paths for the
+   RSVP-TE LSP.  Local protection requires the setup of a bypass at the
+   PLR.  This bypass can be PCC-initiated and delegated, or PCE-
+   initiated.  In either case, the PLR MUST maintain a PCEP session to
+   the PCE.  The Bypass LSPs need to mapped to the primary LSP.  This
+   could be done locally at the PLR based on a local policy but there is
+   a need for a PCE to do the mapping as well to exert greater control.
+
+   This mapping can be done via PCECC procedures where the PCE could
+   instruct the PLR to the mapping and identify the primary LSP for
+   which bypass should be used.
 
 4.  IANA Considerations
 
@@ -1215,6 +1338,14 @@ Internet-Draft                    PCECC                     October 2018
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 24]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
               DOI 10.17487/RFC5440, March 2009,
@@ -1224,16 +1355,6 @@ Internet-Draft                    PCECC                     October 2018
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-
-
-
-
-
-Zhao, et al.             Expires April 21, 2019                [Page 22]
-
-Internet-Draft                    PCECC                     October 2018
-
-
    [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
               Architecture for Use of PCE and the PCE Communication
               Protocol (PCEP) in a Network with Central Control",
@@ -1242,11 +1363,20 @@ Internet-Draft                    PCECC                     October 2018
 
 7.2.  Informative References
 
+   [RFC3985]  Bryant, S., Ed. and P. Pate, Ed., "Pseudo Wire Emulation
+              Edge-to-Edge (PWE3) Architecture", RFC 3985,
+              DOI 10.17487/RFC3985, March 2005,
+              <https://www.rfc-editor.org/info/rfc3985>.
+
    [RFC4206]  Kompella, K. and Y. Rekhter, "Label Switched Paths (LSP)
               Hierarchy with Generalized Multi-Protocol Label Switching
               (GMPLS) Traffic Engineering (TE)", RFC 4206,
               DOI 10.17487/RFC4206, October 2005,
               <https://www.rfc-editor.org/info/rfc4206>.
+
+   [RFC4364]  Rosen, E. and Y. Rekhter, "BGP/MPLS IP Virtual Private
+              Networks (VPNs)", RFC 4364, DOI 10.17487/RFC4364, February
+              2006, <https://www.rfc-editor.org/info/rfc4364>.
 
    [RFC5150]  Ayyangar, A., Kompella, K., Vasseur, JP., and A. Farrel,
               "Label Switched Path Stitching with Generalized
@@ -1260,12 +1390,17 @@ Internet-Draft                    PCECC                     October 2018
               Extensions", RFC 5151, DOI 10.17487/RFC5151, February
               2008, <https://www.rfc-editor.org/info/rfc5151>.
 
-   [RFC5441]  Vasseur, JP., Ed., Zhang, R., Bitar, N., and JL. Le Roux,
-              "A Backward-Recursive PCE-Based Computation (BRPC)
-              Procedure to Compute Shortest Constrained Inter-Domain
-              Traffic Engineering Label Switched Paths", RFC 5441,
-              DOI 10.17487/RFC5441, April 2009,
-              <https://www.rfc-editor.org/info/rfc5441>.
+
+
+
+
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 25]
+
+Internet-Draft                    PCECC                     October 2018
+
 
    [RFC5541]  Le Roux, JL., Vasseur, JP., and Y. Lee, "Encoding of
               Objective Functions in the Path Computation Element
@@ -1279,16 +1414,15 @@ Internet-Draft                    PCECC                     October 2018
               DOI 10.17487/RFC5376, November 2008,
               <https://www.rfc-editor.org/info/rfc5376>.
 
+   [RFC7432]  Sajassi, A., Ed., Aggarwal, R., Bitar, N., Isaac, A.,
+              Uttaro, J., Drake, J., and W. Henderickx, "BGP MPLS-Based
+              Ethernet VPN", RFC 7432, DOI 10.17487/RFC7432, February
+              2015, <https://www.rfc-editor.org/info/rfc7432>.
 
-
-
-
-
-
-Zhao, et al.             Expires April 21, 2019                [Page 23]
-
-Internet-Draft                    PCECC                     October 2018
-
+   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015,
+              <https://www.rfc-editor.org/info/rfc7665>.
 
    [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
               Computation Element Communication Protocol (PCEP)
@@ -1313,6 +1447,17 @@ Internet-Draft                    PCECC                     October 2018
               Routing Architecture", RFC 8402, DOI 10.17487/RFC8402,
               July 2018, <https://www.rfc-editor.org/info/rfc8402>.
 
+
+
+
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 26]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    [I-D.ietf-pce-segment-routing]
               Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,
               and J. Hardwick, "PCEP Extensions for Segment Routing",
@@ -1324,6 +1469,11 @@ Internet-Draft                    PCECC                     October 2018
               and O. Dios, "Hierarchical Stateful Path Computation
               Element (PCE).", draft-ietf-pce-stateful-hpce-05 (work in
               progress), June 2018.
+
+   [I-D.ietf-pce-pcep-flowspec]
+              Dhody, D., Farrel, A., and Z. Li, "PCEP Extension for Flow
+              Specification", draft-ietf-pce-pcep-flowspec-02 (work in
+              progress), October 2018.
 
    [I-D.zhao-pce-pcep-extension-for-pce-controller]
               Zhao, Q., Li, Z., Dhody, D., Karunanithi, S., Farrel, A.,
@@ -1339,13 +1489,6 @@ Internet-Draft                    PCECC                     October 2018
               draft-zhao-pce-pcep-extension-pce-controller-sr-03 (work
               in progress), June 2018.
 
-
-
-Zhao, et al.             Expires April 21, 2019                [Page 24]
-
-Internet-Draft                    PCECC                     October 2018
-
-
    [I-D.li-pce-controlled-id-space]
               Li, C., Chen, M., Dong, J., Li, Z., and D. Dhody, "PCE
               Controlled ID Space", draft-li-pce-controlled-id-space-00
@@ -1356,6 +1499,50 @@ Internet-Draft                    PCECC                     October 2018
               Ceccarelli, "PCEP Extension for Stateful Inter-Domain
               Tunnels", draft-dugeon-pce-stateful-interdomain-01 (work
               in progress), July 2018.
+
+   [I-D.cbrt-pce-stateful-local-protection]
+              Barth, C. and R. Torvi, "PCEP Extensions for RSVP-TE
+              Local-Protection with PCE-Stateful", draft-cbrt-pce-
+              stateful-local-protection-01 (work in progress), June
+              2018.
+
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 27]
+
+Internet-Draft                    PCECC                     October 2018
+
+
+   [I-D.filsfils-spring-srv6-network-programming]
+              Filsfils, C., Camarillo, P., Leddy, J.,
+              daniel.voyer@bell.ca, d., Matsushima, S., and Z. Li, "SRv6
+              Network Programming", draft-filsfils-spring-srv6-network-
+              programming-05 (work in progress), July 2018.
+
+   [I-D.negi-pce-segment-routing-ipv6]
+              Negi, M., Kaladharan, P., Dhody, D., and S. Sivabalan,
+              "PCEP Extensions for Segment Routing leveraging the IPv6
+              data plane", draft-negi-pce-segment-routing-ipv6-02 (work
+              in progress), June 2018.
+
+   [I-D.ietf-6man-segment-routing-header]
+              Filsfils, C., Previdi, S., Leddy, J., Matsushima, S., and
+              d. daniel.voyer@bell.ca, "IPv6 Segment Routing Header
+              (SRH)", draft-ietf-6man-segment-routing-header-14 (work in
+              progress), June 2018.
+
+   [I-D.ietf-teas-pce-native-ip]
+              Wang, A., Zhao, Q., Khasanov, B., Chen, H., Mi, P.,
+              Mallya, R., and S. Peng, "PCE in Native IP Network",
+              draft-ietf-teas-pce-native-ip-01 (work in progress), June
+              2018.
+
+   [I-D.ietf-teas-native-ip-scenarios]
+              Wang, A., Huang, X., Qou, C., Li, Z., Huang, L., and P.
+              Mi, "CCDR Scenario, Simulation and Suggestion", draft-
+              ietf-teas-native-ip-scenarios-01 (work in progress), June
+              2018.
 
    [MAP-REDUCE]
               Lee, K., Choi, T., Ganguly, A., Wolinsky, D., Boykin, P.,
@@ -1369,17 +1556,31 @@ Internet-Draft                    PCECC                     October 2018
               <https://www.slideshare.net/DmitryAfanasiev1/
               yandex-nag201320131031>.
 
+7.3.  URIs
+
+   [1] https://hadoop.apache.org/
+
+
+
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 28]
+
+Internet-Draft                    PCECC                     October 2018
+
+
 Appendix A.  Using reliable P2MP TE based multicast delivery for
              distributed computations (MapReduce-Hadoop)
 
    MapReduce model of distributed computations in computing clusters is
-   widely deployed.  In Hadoop 1.0 architecture MapReduce operations on
-   big data performs by means of Master-Slave architecture in the Hadoop
-   Distributed File System (HDFS),where NameNode has the knowledge about
-   resources of the cluster and where actual data (chunks) for
-   particular task are located (which DataNode).  Each chunk of data
-   (64MB or more) should have 3 saved copies in different DataNodes
-   based on their proximity.
+   widely deployed.  In Hadoop [1] 1.0 architecture MapReduce operations
+   on big data performs by means of Master-Slave architecture in the
+   Hadoop Distributed File System (HDFS), where NameNode has the
+   knowledge about resources of the cluster and where actual data
+   (chunks) for particular task are located (which DataNode).  Each
+   chunk of data (64MB or more) should have 3 saved copies in different
+   DataNodes based on their proximity.
 
    Proximity level currently has semi-manual allocation and based on
    Rack IDs (Assumption is that closer data are better because of access
@@ -1394,14 +1595,6 @@ Appendix A.  Using reliable P2MP TE based multicast delivery for
    It is clear that we should go beyond of one DC for Hadoop cluster
    creation and move towards distributed clusters.  In that case we need
    to handle performance and latency issues.  Latency depends on speed
-
-
-
-Zhao, et al.             Expires April 21, 2019                [Page 25]
-
-Internet-Draft                    PCECC                     October 2018
-
-
    of light in fiber links and also latency introduced by intermediate
    devices in between.  The last one is closely correlated with network
    device architecture and performance.  Current performance of NPU
@@ -1425,9 +1618,17 @@ Internet-Draft                    PCECC                     October 2018
 
    P2MP TE tunnels looks much more suitable as potential solution for
    creation of multicast based communications between Master and Slave
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 29]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    nodes inside cluster.  Obviously these P2MP tunnels should be
-   dynamically created and turned down (no manual intervention).  Here
-   is there PCECC comes to play.  His main task is to create optimal
+   dynamically created and turned down (no manual intervention).  Here,
+   the PCECC comes to play with main objective to create optimal
    topology of each particular request for MapReduce computation and
    also create P2MP tunnels with needed parameters such as bandwidth and
    delay.
@@ -1439,24 +1640,6 @@ Internet-Draft                    PCECC                     October 2018
    Linux and OVS.
 
    The following framework can make this task:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Zhao, et al.             Expires April 21, 2019                [Page 26]
-
-Internet-Draft                    PCECC                     October 2018
-
 
                       +--------+
                       |  APP   |
@@ -1491,37 +1674,36 @@ Internet-Draft                    PCECC                     October 2018
 
    Phase 1: Distributed cluster resources discovery During this phase
    Master Nodes SHOULD identify and find available Slave nodes according
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 30]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    to computing request from application (APP).  NameNode SHOULD query
    PCECC about available DataNodes, NameNode MAY provide additional
    constrains to PCECC such as topological proximity, redundancy level.
 
    PCECC SHOULD analyze the topology of distributed cluster and perform
-   constrain based path calculation [RFC7334] from client towards most
-   suitable NameNodes.  PCECC SHOULD reply to NameNode the list of most
-   suitable DataNodes and their resource capabilities.  Topology
-   discovery mechanism for PCECC will be added later to that framework.
+   constrain based path calculation from client towards most suitable
+   NameNodes.  PCECC SHOULD reply to NameNode the list of most suitable
+   DataNodes and their resource capabilities.  Topology discovery
+   mechanism for PCECC will be added later to that framework.
 
    Phase 2: PCECC SHOULD create P2MP LSP from client towards those
-   DataNodes by means of PCLabelUpd [I-D.zhao-pce-pcep-extension-for-
-   pce-controller] PCEP messages following previously calculated path.
-
-
-
-
-
-Zhao, et al.             Expires April 21, 2019                [Page 27]
-
-Internet-Draft                    PCECC                     October 2018
-
+   DataNodes by means of PCEP messages following previously calculated
+   path.
 
    Phase 3.  NameNode SHOULD send this information to client, PCECC
    informs client about optimal P2MP path towards DataNodes via PCEP
-   PCUpd message.
+   message.
 
    Phase 4.  Client sends data blocks to those DataNodes for writing via
    created P2MP tunnel.
 
-   When this task will be finished, P2MP tunnel MAY be turned down.
+   When this task will be finished, P2MP tunnel could be turned down.
 
 Authors' Addresses
 
@@ -1543,6 +1725,19 @@ Authors' Addresses
    Email: lizhenbin@huawei.com
 
 
+
+
+
+
+
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 31]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    Boris Khasanov
    Huawei Technologies
    Moskovskiy Prospekt 97A
@@ -1559,15 +1754,6 @@ Authors' Addresses
    India
 
    Email: dhruv.ietf@gmail.com
-
-
-
-
-
-
-Zhao, et al.             Expires April 21, 2019                [Page 28]
-
-Internet-Draft                    PCECC                     October 2018
 
 
    King Ke
@@ -1597,6 +1783,17 @@ Internet-Draft                    PCECC                     October 2018
    Email: Boris.zhang@telus.com
 
 
+
+
+
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 32]
+
+Internet-Draft                    PCECC                     October 2018
+
+
    Artem Rachitskiy
    Mobile TeleSystems JLLC
    Nezavisimosti ave., 95
@@ -1621,4 +1818,31 @@ Internet-Draft                    PCECC                     October 2018
 
 
 
-Zhao, et al.             Expires April 21, 2019                [Page 29]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Zhao, et al.             Expires April 21, 2019                [Page 33]
