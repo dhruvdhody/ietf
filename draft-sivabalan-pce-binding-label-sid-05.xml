@@ -30,19 +30,7 @@
       </address>
     </author>
 
-    <author fullname="Jeff Tantsura" initials="J." surname="Tantsura">
-          <organization>Nuage Networks</organization>
-          <address>
-            <postal>
-              <street>755 Ravendale Drive</street>
-              <city>Mountain View</city>
-              <region>CA</region>
-              <code>94043</code>
-              <country>USA</country>
-            </postal>
-            <email>jefftant.ietf@gmail.com</email>
-          </address>
-        </author>
+
 
 <author fullname="Clarence Filsfils" initials="C." surname="Filsfils">
       <organization>Cisco Systems, Inc.</organization>
@@ -58,19 +46,19 @@
       </address>
     </author>
 
-    <author fullname="Stefano Previdi" initials="S." surname="Previdi">
-      <organization>Cisco Systems, Inc.</organization>
-      <address>
-        <postal>
-          <street></street>
-          <city></city>
-          <region></region>
-          <code></code>
-          <country></country>
-        </postal>
-        <email>stefano@previdi.net</email>
-      </address>
-    </author>
+    <author fullname="Jeff Tantsura" initials="J." surname="Tantsura">
+          <organization>Apstra, Inc.</organization>
+          <address>
+            <postal>
+              <street></street>
+              <city></city>
+              <region></region>
+              <code></code>
+              <country></country>
+            </postal>
+            <email>jefftant.ietf@gmail.com</email>
+          </address>
+        </author>
 
     <author fullname="Jonathan Hardwick" initials="J."  surname="Hardwick">
    <organization>Metaswitch Networks</organization>
@@ -82,6 +70,20 @@
           <country>UK</country>
         </postal>
         <email>Jonathan.Hardwick@metaswitch.com</email>
+      </address>
+    </author>
+
+    <author fullname="Stefano Previdi" initials="S." surname="Previdi">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>stefano@previdi.net</email>
       </address>
     </author>
 
@@ -145,6 +147,12 @@
 and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. Note that if an SR-TE path is represented as a forwarding-adjacency (FA), then the corresponding adjacency SID can be used as the binding SID. In such case, the path is advertised using the routing protocols as described in <xref target="RFC4206"/>. The binding SID provides an alternate mechanism without additional overhead on routing protocols.</t>-->
 
 <t><xref target="RFC5440"/> describes the Path Computation Element Protocol (PCEP) for communication between a Path Computation Client (PCC) and a PCE or between a pair of PCEs. <xref target="RFC8231"/> specifies extension to PCEP that allows a PCC to delegate its LSPs to a stateful PCE. A stateful PCE can then update the state of LSPs delegated to it. <xref target="RFC8281"/> specifies a mechanism allowing a PCE to dynamically instantiate an LSP on a PCC by sending the path and characteristics. The PCEP extension to setup and maintain SR-TE paths is specified in <xref target="I-D.ietf-pce-segment-routing"/>.</t>
+
+<t><xref target="I-D.ietf-pce-segment-routing"/> provides a mechanism for a network controller
+   (acting as a PCE) to instantiate candidate paths for an SR Policy
+   onto a head-end node (acting as a PCC) using PCEP.  For more
+   information on the SR Policy Architecture, see
+   <xref target="I-D.ietf-spring-segment-routing-policy"/>.</t>
 
 <t>Binding label/SID has local significance to the ingress node of the corresponding TE path. When a stateful PCE is deployed for setting up TE paths, it may be desirable to report the binding label or SID to the stateful PCE for the purpose of enforcing end-to-end TE/SR policy. A sample Data Center (DC) use-case is illustrated in the following diagram. In the MPLS DC network, an SR LSP (without traffic engineering) is established using a prefix SID advertised by BGP (see <xref target="I-D.ietf-idr-bgp-prefix-sid"/>). In IP/MPLS WAN, an SR-TE LSP is setup using the PCE. The list of SIDs of the SR-TE LSP is {A, B, C, D}. The gateway node 1 (which is the PCC) allocates a binding SID X and reports it to the PCE. In order for the access node to steer the traffic over the SR-TE LSP, the PCE passes the SID stack {Y, X} where Y is the prefix SID of the gateway node-1 to the access node. In the absence of the binding SID X, the PCE should pass the SID stack {Y, A, B, C, D} to the access node. This example also illustrates the additional benefit of using the binding SID to reduce the number of SIDs imposed on the access nodes with a limited forwarding capacity.</t>
 
