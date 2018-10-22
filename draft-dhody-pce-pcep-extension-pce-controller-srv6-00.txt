@@ -5,7 +5,7 @@
 PCE Working Group                                               D. Dhody
 Internet-Draft                                                     Z. Li
 Intended status: Standards Track                     Huawei Technologies
-Expires: April 24, 2019                                 October 21, 2018
+Expires: April 25, 2019                                 October 22, 2018
 
 
    PCEP Procedures and Protocol Extensions for Using PCE as a Central
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Dhody & Li               Expires April 24, 2019                 [Page 1]
+Dhody & Li               Expires April 25, 2019                 [Page 1]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -61,7 +61,7 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 24, 2019.
+   This Internet-Draft will expire on April 25, 2019.
 
 Copyright Notice
 
@@ -91,7 +91,7 @@ Table of Contents
      5.2.  New Functions . . . . . . . . . . . . . . . . . . . . . .   6
      5.3.  PCECC Capability Advertisement  . . . . . . . . . . . . .   7
      5.4.  PCEP session IP address and TEDB Router ID  . . . . . . .   7
-     5.5.  LSP Operations  . . . . . . . . . . . . . . . . . . . . .   7
+     5.5.  SRv6 Path Operations  . . . . . . . . . . . . . . . . . .   7
        5.5.1.  PCECC Segment Routing in IPv6 (SRv6)  . . . . . . . .   7
          5.5.1.1.  PCECC SRv6 Node/Prefix SID allocation . . . . . .   7
          5.5.1.2.  PCECC SRv6 Adjacency SID allocation . . . . . . .   8
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Dhody & Li               Expires April 24, 2019                 [Page 2]
+Dhody & Li               Expires April 25, 2019                 [Page 2]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -165,7 +165,7 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                 [Page 3]
+Dhody & Li               Expires April 25, 2019                 [Page 3]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -188,10 +188,9 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    tunneling paradigms.  A source node can choose a path without relying
    on hop-by-hop signaling protocols such as LDP or RSVP-TE.  Each path
    is specified as a set of "segments" advertised by link-state routing
-   protocols (IS-IS or OSPF).  [I-D.ietf-spring-segment-routing]
-   provides an introduction to SR architecture.  The corresponding IS-IS
-   and OSPF extensions are specified in
-   [I-D.ietf-isis-segment-routing-extensions] and
+   protocols (IS-IS or OSPF).  [RFC8402] provides an introduction to SR
+   architecture.  The corresponding IS-IS and OSPF extensions are
+   specified in [I-D.ietf-isis-segment-routing-extensions] and
    [I-D.ietf-ospf-segment-routing-extensions] , respectively.  It relies
    on a series of forwarding instructions being placed in the header of
    a packet.  The list of segment forming the path is called the Segment
@@ -217,17 +216,15 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    routers (SR SID distribution in this case), in addition to computing
    the paths for packet flows in a segment routing network and telling
    the edge routers what instructions to attach to packets as they enter
+   the network.  This document extends this to include SRv6 SID
+   distribution as well.
 
 
 
-
-Dhody & Li               Expires April 24, 2019                 [Page 4]
+Dhody & Li               Expires April 25, 2019                 [Page 4]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
-
-   the network.  This document extends this to include SRv6 SID
-   distribution as well.
 
 1.1.  Requirements Language
 
@@ -277,7 +274,10 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                 [Page 5]
+
+
+
+Dhody & Li               Expires April 25, 2019                 [Page 5]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -333,7 +333,7 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                 [Page 6]
+Dhody & Li               Expires April 25, 2019                 [Page 6]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -363,21 +363,20 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    is important to link the session IP address with the Router ID in
    TEDB for successful PCECC operations.
 
-5.5.  LSP Operations
+5.5.  SRv6 Path Operations
 
    The PCEP messages pertaining to PCECC-SRv6 MUST include PATH-SETUP-
-   TYPE TLV [I-D.ietf-pce-lsp-setup-type] with PST=TBD in the SRP object
-   to clearly identify the PCECC-SRv6 LSP is intended.
+   TYPE TLV [RFC8408] with PST=TBD in the SRP object to clearly identify
+   the PCECC-SRv6 setup is intended.
 
 5.5.1.  PCECC Segment Routing in IPv6 (SRv6)
 
-   Segment Routing (SR) as described in
-   [I-D.ietf-spring-segment-routing] depends on "segments" that are
-   advertised by Interior Gateway Protocols (IGPs).  The SR-node
-   allocates and advertises the SID (node, adj etc) and flood via the
-   IGP.  This document proposes a new mechanism where PCE allocates the
-   SRv6 SID centrally and uses PCEP to advertise the SRv6 SID.  In some
-   deployments PCE (and PCEP) are better suited than IGP because of
+   Segment Routing (SR) as described in [RFC8402] depends on "segments"
+   that are advertised by Interior Gateway Protocols (IGPs).  The SR-
+   node allocates and advertises the SID (node, adj etc) and flood via
+   the IGP.  This document proposes a new mechanism where PCE allocates
+   the SRv6 SID centrally and uses PCEP to advertise the SRv6 SID.  In
+   some deployments PCE (and PCEP) are better suited than IGP because of
    centralized nature of PCE and direct TCP based PCEP session to the
    node.
 
@@ -385,17 +384,15 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
    Each node (PCC) is allocated a node SRv6 SID by the PCECC.  The PCECC
    sends PCInitiate message to update the SID table of each node.  The
+   TE router ID is determined from the TEDB or from "IPv4/IPv6 Router-
+   ID" Sub-TLV [I-D.dhodylee-pce-pcep-ls], in the OPEN Object.
 
 
 
-
-Dhody & Li               Expires April 24, 2019                 [Page 7]
+Dhody & Li               Expires April 25, 2019                 [Page 7]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
-
-   TE router ID is determined from the TEDB or from "IPv4/IPv6 Router-
-   ID" Sub-TLV [I-D.dhodylee-pce-pcep-ls], in the OPEN Object.
 
    On receiving the SRv6 node SID allocation, each node (PCC) uses the
    local routing information to determine the next-hop and download the
@@ -445,7 +442,10 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                 [Page 8]
+
+
+
+Dhody & Li               Expires April 25, 2019                 [Page 8]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -495,19 +495,19 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 7.2.  PATH-SETUP-TYPE TLV
 
-   The PATH-SETUP-TYPE TLV is defined in [I-D.ietf-pce-lsp-setup-type].
-   PST = TBD is used when Path is setup via PCECC SRv6 mode.
+   The PATH-SETUP-TYPE TLV is defined in [RFC8408].  PST = TBD is used
+   when Path is setup via PCECC SRv6 mode.
 
 
 
 
-Dhody & Li               Expires April 24, 2019                 [Page 9]
+Dhody & Li               Expires April 25, 2019                 [Page 9]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
 
    On a PCRpt/PCUpd/PCInitiate message, the PST=TBD indicates that this
-   LSP was setup via a PCECC-SRv6 based mechanism where either the SIDs
+   path was setup via a PCECC-SRv6 based mechanism where either the SIDs
    were allocated/instructed by PCE via PCECC mechanism.
 
 7.3.  CCI Object
@@ -557,7 +557,7 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                [Page 10]
+Dhody & Li               Expires April 25, 2019                [Page 10]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -613,7 +613,7 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                [Page 11]
+Dhody & Li               Expires April 25, 2019                [Page 11]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -669,7 +669,7 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                [Page 12]
+Dhody & Li               Expires April 25, 2019                [Page 12]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -725,7 +725,7 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                [Page 13]
+Dhody & Li               Expires April 25, 2019                [Page 13]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -781,10 +781,20 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                [Page 14]
+Dhody & Li               Expires April 25, 2019                [Page 14]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
+
+   [RFC8402]  Filsfils, C., Ed., Previdi, S., Ed., Ginsberg, L.,
+              Decraene, B., Litkowski, S., and R. Shakir, "Segment
+              Routing Architecture", RFC 8402, DOI 10.17487/RFC8402,
+              July 2018, <https://www.rfc-editor.org/info/rfc8402>.
+
+   [RFC8408]  Sivabalan, S., Tantsura, J., Minei, I., Varga, R., and J.
+              Hardwick, "Conveying Path Setup Type in PCE Communication
+              Protocol (PCEP) Messages", RFC 8408, DOI 10.17487/RFC8408,
+              July 2018, <https://www.rfc-editor.org/info/rfc8408>.
 
    [I-D.ietf-teas-pcecc-use-cases]
               Zhao, Q., Li, Z., Khasanov, B., Dhody, D., Ke, Z., Fang,
@@ -792,12 +802,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
               Gulida, "The Use Cases for Path Computation Element (PCE)
               as a Central Controller (PCECC).", draft-ietf-teas-pcecc-
               use-cases-02 (work in progress), October 2018.
-
-   [I-D.ietf-pce-lsp-setup-type]
-              Sivabalan, S., Tantsura, J., Minei, I., Varga, R., and J.
-              Hardwick, "Conveying path setup type in PCEP messages",
-              draft-ietf-pce-lsp-setup-type-10 (work in progress), May
-              2018.
 
    [I-D.ietf-pce-pcep-yang]
               Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
@@ -830,29 +834,18 @@ Internet-Draft                 PCECC-SRv6                   October 2018
               procedures", draft-litkowski-pce-state-sync-03 (work in
               progress), April 2018.
 
-   [I-D.dhodylee-pce-pcep-ls]
-              Dhody, D., Lee, Y., and D. Ceccarelli, "PCEP Extension for
-              Distribution of Link-State and TE Information.", draft-
-              dhodylee-pce-pcep-ls-11 (work in progress), June 2018.
 
 
 
-Dhody & Li               Expires April 24, 2019                [Page 15]
+Dhody & Li               Expires April 25, 2019                [Page 15]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
 
-   [I-D.ietf-spring-segment-routing]
-              Filsfils, C., Previdi, S., Ginsberg, L., Decraene, B.,
-              Litkowski, S., and R. Shakir, "Segment Routing
-              Architecture", draft-ietf-spring-segment-routing-15 (work
-              in progress), January 2018.
-
-   [I-D.ietf-spring-segment-routing-mpls]
-              Bashandy, A., Filsfils, C., Previdi, S., Decraene, B.,
-              Litkowski, S., and R. Shakir, "Segment Routing with MPLS
-              data plane", draft-ietf-spring-segment-routing-mpls-14
-              (work in progress), June 2018.
+   [I-D.dhodylee-pce-pcep-ls]
+              Dhody, D., Lee, Y., and D. Ceccarelli, "PCEP Extension for
+              Distribution of Link-State and TE Information.", draft-
+              dhodylee-pce-pcep-ls-11 (work in progress), June 2018.
 
    [I-D.filsfils-spring-srv6-network-programming]
               Filsfils, C., Camarillo, P., Leddy, J.,
@@ -893,7 +886,14 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
 
 
-Dhody & Li               Expires April 24, 2019                [Page 16]
+
+
+
+
+
+
+
+Dhody & Li               Expires April 25, 2019                [Page 16]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
@@ -949,4 +949,4 @@ Authors' Addresses
 
 
 
-Dhody & Li               Expires April 24, 2019                [Page 17]
+Dhody & Li               Expires April 25, 2019                [Page 17]
