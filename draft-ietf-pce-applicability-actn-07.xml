@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902" category="info" docName="draft-ietf-pce-applicability-actn-07" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+  <front>
+    <title abbrev="PCE-ACTN">Applicability of Path Computation Element (PCE) for Abstraction and Control of TE Networks (ACTN)</title>
+    <author initials="D" surname="Dhody" fullname="Dhruv Dhody">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+    <author fullname="Young Lee" initials="Y" surname="Lee">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>5340 Legacy Drive, Building 3</street>
+          <city>Plano</city>
+          <region>TX</region>
+          <code>75023</code>
+          <country>USA</country>
+        </postal>
+        <email>leeyoung@huawei.com</email>
+      </address>
+    </author>
+    <author initials="D" fullname="Daniele Ceccarelli" surname="Ceccarelli">
+      <organization>Ericsson</organization>
+      <address>
+        <postal>
+          <street>Torshamnsgatan,48</street>
+          <city>Stockholm</city>
+          <region></region>
+          <code></code>
+          <country>Sweden</country>
+        </postal>
+        <email>daniele.ceccarelli@ericsson.com</email>
+      </address>
+    </author>
+    <date year="2018" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+   <t> 
+      Abstraction and Control of TE Networks (ACTN) refers to the set of virtual network (VN) operations needed to
+   orchestrate, control and manage large-scale multi-domain TE networks
+   so as to facilitate network programmability, automation, efficient
+   resource sharing, and end-to-end virtual service aware connectivity
+   and network function virtualization services.</t> 
+   <t>The Path Computation Element Communication Protocol (PCEP) provides
+   mechanisms for Path Computation Elements (PCEs) to perform path
+   computations in response to Path Computation Clients (PCCs) requests.</t>
+   <t>This document examines the applicability of PCE to the ACTN framework. </t>    
+   </abstract>
+  </front>
+  <middle>
+    <section title="Introduction" toc="default">
+    <section title="Path Computation Element (PCE)" toc="default">
+   <t>The Path Computation Element Communication Protocol (PCEP) <xref target="RFC5440"/> provides
+   mechanisms for Path Computation Elements (PCEs) <xref target="RFC4655"/> to perform path
+   computations in response to Path Computation Clients (PCCs) requests.</t>
+   
+   <t>The ability to compute shortest constrained TE LSPs in Multiprotocol
+   Label Switching (MPLS) and Generalized MPLS (GMPLS) networks across
+   multiple domains has been identified as a key motivation for PCE
+   development.</t>
+   
+   <t>A stateful PCE <xref target="RFC8231"/> is capable of considering, for the purposes of
+   path computation, not only the network state in terms of links and
+   nodes (referred to as the Traffic Engineering Database or TED) but
+   also the status of active services (previously computed paths,
+   and currently reserved resources, stored in the Label Switched
+   Paths Database (LSP-DB).</t>
+
+
+   <t><xref target="RFC8051"/> describes general considerations for
+   a stateful PCE deployment and examines its applicability and
+   benefits, as well as its challenges and limitations through a number
+   of use cases.</t>
+
+   <t><xref target="RFC8231"/> describes a set of extensions to PCEP to
+   provide stateful control.  A stateful PCE has access to not only the
+   information carried by the network's Interior Gateway Protocol (IGP),
+   but also the set of active paths and their reserved resources for its
+   computations.  The additional state allows the PCE to compute
+   constrained paths while considering individual LSPs and their
+   interactions.  <xref target="RFC8281"/> describes the setup,
+   maintenance and teardown of PCE-initiated LSPs under the stateful PCE
+   model.</t>
+
+   <t><xref target="RFC8231"/> also describes the active stateful PCE.
+   The active PCE functionality allows a PCE to reroute an existing
+   LSP or make changes to the attributes of an existing LSP, or a PCC to delegate
+   control of specific LSPs to a new PCE.</t>
+
+   
+   <section title="Role of PCE in SDN" toc="default">
+   <t>Software-Defined Networking (SDN) <xref target="RFC7149"/> refers to a separation between the control elements
+   and the forwarding components so that software running in a
+   centralized system called a controller, can act to program the
+   devices in the network to behave in specific ways. A required 
+   element in an SDN architecture is a component that plans
+   how the network resources will be used and how the devices will be
+   programmed.  It is possible to view this component as performing
+   specific computations to place flows within the network given
+   knowledge of the availability of network resources, how other
+   forwarding devices are programmed, and the way that other flows are
+   routed.  It is concluded in <xref target="RFC7399"/>, that this is the same function that a PCE
+   might offer in a network operated using a dynamic control plane.
+   This is the function and purpose of a PCE, and the way that
+   a PCE integrates into a wider network control system including SDN is
+   presented in Application-Based Network Operation (ABNO) <xref target="RFC7491"/>.
+   </t>
+    
+   
+   </section>
+   <section title="PCE in multi-domain and multi-layer deployments" toc="default">
+   <t>Computing paths across large multi-domain environments
+   require special computational components and cooperation between
+   entities in different domains capable of complex path computation.
+   The PCE provides an architecture and a set of functional components 
+   to address this problem space. A PCE may be used to compute 
+   end-to-end paths across multi-domain
+   environments using a per-domain path computation technique <xref target="RFC5152"/>.
+   The Backward recursive PCE based path computation (BRPC) mechanism
+   <xref target="RFC5441"/> defines a PCE-based path computation procedure to compute
+   inter-domain constrained  MPLS and
+   GMPLS TE networks. However,
+   both per-domain and BRPC techniques assume that the sequence of
+   domains to be crossed from source to destination is known, either
+   fixed by the network operator or obtained by other means.</t>
+   <t><xref target="RFC6805"/> describes a Hierarchical PCE (H-PCE)
+   architecture which can be used for computing end-to-end paths for
+   inter-domain MPLS Traffic Engineering (TE) and GMPLS Label Switched
+   Paths (LSPs) when the domain sequence is not known.  
+   Within the Hierarchical PCE (H-PCE) architecture, 
+   the Parent PCE (P-PCE) is used to compute a multi-domain
+   path based on the domain connectivity information.  A Child PCE
+   (C-PCE) may be responsible for a single domain or multiple domains,
+   it is used to compute the intra-domain path based on its domain
+   topology information.</t>
+   
+   <t><xref target="I-D.ietf-pce-stateful-hpce"/> state the considerations for stateful PCE(s) in
+   hierarchical PCE architecture.  In particular, the behavior changes
+   and additions to the existing stateful PCE mechanisms (including PCE-
+   initiated LSP setup and active PCE usage) in the context of networks
+   using the H-PCE architecture.</t> 
+   
+   <t><xref target="RFC5623"/> describes a framework for applying the PCE-based
+   architecture to inter-layer to (G)MPLS TE. It provides
+   suggestions for the deployment of PCE in support of multi-layer
+   networks.  It also describes the
+   relationship between PCE and a functional component in charge of the
+   control and management of the Virtual Network Topology (VNT) <xref target="RFC5212"/>, called the VNT Manager (VNTM).</t>
+   
+   </section>
+   <section title="Relationship to PCE based central control" toc="default">
+       <t><xref target="RFC8283"/> introduces the architecture for PCE as a central
+   controller (PCECC), it further examines the motivations and applicability for PCEP as a
+   southbound interface, and introduces the implications for the
+   protocol. The section 2.1.3 of <xref target="RFC8283"/>
+   describe an hierarchy of PCE-based controller as per the Hierarchy of PCE
+   framework defined in <xref target="RFC6805"/>. </t>
+    </section>
+   </section>
+   <section title="Abstraction and Control of TE Networks (ACTN)" toc="default">
+   <t><xref target="I-D.ietf-teas-actn-requirements"/> describes the high-level 
+   ACTN requirements. <xref target="RFC8453"/> 
+   describes the architecture
+   model for ACTN including the entities (Customer Network
+   Controller(CNC), Multi-domain Service Coordinator(MDSC), and Provisioning Network Controller (PNC) and their interfaces.</t>
+   <t>The ACTN reference architecture identified a three-tier control
+   hierarchy as depicted in <xref target="fig_actn"/>:</t>
+                <figure title="ACTN Hierarchy"
+             suppress-title="false" align="center" alt="" width="" height="" anchor="fig_actn">
+            <artwork><![CDATA[
+
+
+           +---------+           +---------+           +---------+
+           |   CNC   |           |   CNC   |           |   CNC   |
+           +---------+           +---------+           +---------+
+                     \                |                /
+                      \               |               /
+Boundary  =============\==============|==============/============
+Between                 \             |             /
+Customer &               -------      | CMI  -------
+Network Operator                \     |     /
+                              +---------------+
+                              |     MDSC      |
+                              +---------------+
+                                /     |     \
+                    ------------      | MPI  -------------
+                   /                  |                   \
+              +-------+          +-------+             +-------+
+              |  PNC  |          |  PNC  |             |  PNC  |
+              +-------+          +-------+             +-------+
+                  | SBI            /   |                /   \
+                  |               /    | SBI           /     \
+              ---------        -----   |              /       \
+             (         )      (     )  |             /         \
+             - Control -     ( Phys. ) |            /        -----
+            (  Plane    )     ( Net )  |           /        (     )
+           (  Physical   )     -----   |          /        ( Phys. )
+            (  Network  )            -----      -----       ( Net )
+             -         -            (     )    (     )       -----
+             (         )           ( Phys. )  ( Phys. )
+              ---------             ( Net )    ( Net )
+                                     -----      -----
+
+CMI - (CNC-MDSC Interface)
+MPI - (MDSC-PNC Interface)
+
+]]></artwork>
+          </figure>
+
+   <t>The two interfaces with respect to the MDSC, one north of the MDSC
+   (CMI CNC-MDSC Interface) and one south (MPI MDSC-PNC Interface). A hierarchy of MDSC is 
+   possible with a recursive MPI interface.  </t>
+   <t><xref target="RFC8454"/> provides an information model
+   for ACTN interfaces.</t>
+   </section>
+   <section title="PCE and ACTN" toc="default">
+   <t></t>
+   <t>This document examines the PCE and ACTN architecture and describes how the PCE architecture
+   is applicable to ACTN. It also lists the PCEP extensions that are needed to use PCEP as an ACTN interface. 
+   This document also identifies any gaps in PCEP, that exist at the time of publication of this document.</t>
+   <t>Further, ACTN, Stateful H-PCE, and PCECC are based on the same basic hierarchy     
+   framework and thus compatible with each other.</t>
+   
+   </section>
+   
+          
+    </section>
+<section title="Architectural Considerations" toc="default">
+    <t>ACTN <xref target="RFC8453"/> architecture
+    is based on hierarchy and recursiveness of controllers. It defines 
+    three types of controllers (depending on the functionalities they implement).
+    The main functionalities are - 
+    <list style="symbols">
+    <t>Multi domain coordination</t>
+    <t>Abstraction</t>
+    <t>Customer mapping/translation</t>
+    <t>Virtual service coordination</t>
+    </list>
+    </t>
+    <t>Section 3 of <xref target="RFC8453"/> describes these functions.</t>
+   
+    <t>It should be noted that, this document lists all possible ways in which PCEP could be used
+    for each of the above functions, but all functions are not required to be implemented via PCEP. Operator 
+   may choose to use the PCEP for multi domain coordination via stateful H-PCE
+   but use RESTCONF <xref target="RFC8040"/> or BGP-LS <xref target="RFC7752"/> to get the topology and support abstraction function.</t>
+   
+    <section title="Multi domain coordination via Hierarchy" toc="default" anchor="sec_hpce">
+    <t>
+    With the definition of domain being "everything that is under the control of the single logical
+        controller", as per <xref target="RFC8453"/>, 
+        it is needed to have a control entity that oversees
+        the specific aspects of the different domains and to build a
+        single abstracted end-to-end network topology in order to
+        coordinate end-to-end path computation and path/service
+        provisioning.
+    
+	</t>
+	<t>The MDSC in ACTN framework realizes this function by coordinating 
+	the per-domain PNCs in a hierarchy of controllers. It also needs to detach 
+	from the underlying network technology and express customer concerns by
+	business needs.</t>
+	<t><xref target="RFC6805"/> and <xref target="I-D.ietf-pce-stateful-hpce"/> 
+	describes a hierarchy of PCE with Parent PCE coordinating multi-domain path 
+	computation function between Child PCE(s). It is easy to see how these 
+	principles align, and thus how stateful H-PCE architecture can be used to realize ACTN.</t>
+	<t>The Per domain stitched LSP in the Hierarchical stateful PCE architecture, 
+	described in Section 3.3.1 of <xref target="I-D.ietf-pce-stateful-hpce"/> 
+	is well suited for multi-domain coordination function. This includes domain sequence
+	selection; E2E path computation; Controller (PCE) initiated path setup and reporting. 
+	This is also applicable to multi-layer coordination in case of IP+optical networks.
+	</t>
+	<t><xref target="I-D.litkowski-pce-state-sync"/>" describes the procedures to allow a
+   stateful communication between PCEs for various use-cases. The
+   procedures and extensions are also applicable to Child and
+   Parent PCE communication and thus useful for ACTN as well.</t>
+    </section>
+    <section title="Abstraction" toc="default" anchor="sec_topo">
+    <t>To realize ACTN, an
+        abstracted view of the underlying network resources needs to be built. 
+        This includes global network-wide abstracted topology based
+        on the underlying network resources of each domain. This also 
+        include abstract topology created as per the customer service
+        connectivity requests and represented as a network slice allocated
+        to each customer. </t>
+    
+    <t>In order to compute and provide optimal paths, PCEs 
+    require an accurate and timely Traffic Engineering
+   Database (TED).  Traditionally this TED has been obtained from a link
+   state (LS) routing protocol supporting traffic engineering
+   extensions. PCE may construct its TED by participating in the
+   IGP (<xref target="RFC3630"/>  and <xref target="RFC5305"/>  for MPLS-TE; <xref target="RFC4203"/>  and <xref target="RFC5307"/>
+   for GMPLS). An alternative is offered by BGP-LS <xref target="RFC7752"/>.</t>
+   <t>In case of H-PCE <xref target="RFC6805"/>, the parent PCE needs to 
+   build the domain topology map of the child domains and
+   their interconnectivity. <xref target="RFC6805"/> and <xref target="I-D.ietf-pce-inter-area-as-applicability"/>
+   suggest that BGP-LS could be used as a "northbound" TE advertisement from 
+   the child PCE to the parent PCE.</t>
+   <t><xref target="I-D.dhodylee-pce-pcep-ls"/> proposes another approaches for learning and maintaining
+   the Link-State and TE information as an alternative to IGPs and BGP flooding, using PCEP itself. 
+   The child PCE can use this mechanism to transport Link-State and
+   TE information from child PCE to a Parent PCE using PCEP.
+
+   </t>
+   <t>In ACTN, there is a need to control the level of abstraction based on 
+   the deployment scenario and business relationship between the controllers. 
+   The mechanism used to disseminate information from PNC (child PCE) to 
+   MDSC (parent PCE) should support abstraction. 
+   <xref target="RFC8453"/> describes a few
+   alternative approaches of abstraction. The resulting abstracted topology
+   can be encoded using the PCEP-LS mechanisms <xref target="I-D.dhodylee-pce-pcep-ls"/>
+   and its optical network extension <xref target="I-D.lee-pce-pcep-ls-optical"/>. 
+   PCEP-LS is an attractive option when the operator 
+   would wish to have a single control plane protocol (PCEP) to 
+   achieve ACTN functions. </t>
+   
+   <t><xref target="RFC8453"/> discusses two ways to build abstract topology from an MDSC standpoint
+   with interaction with PNCs. The primary method is called automatic generation of abstract topology by configuration. With this 
+   method, automatic generation is based on the abstraction/summarization of
+   the whole domain by the PNC and its advertisement on the MPI. The secondary method is called 
+   on-demand generation of supplementary topology via Path Compute
+   Request/Reply. This method may be needed to obtain further complementary information such as 
+   potential connectivity from child PCEs in order to facilitate an end-to-end path provisioning.
+   PCEP is well suited to support both methods.</t>
+    </section>
+	<section title="Customer mapping" toc="default">
+    <t>In ACTN, there is a need to map customer virtual network (VN) requirements into 
+    network provisioning request to the PNC. That is, the
+        customer requests/commands are mapped into network provisioning requests
+        that can be sent to the PNC. Specifically, it provides mapping and
+        translation of a customer's service request into a set of
+        parameters that are specific to a network type and technology
+        such that network configuration process is made possible.</t>
+
+    <t><xref target="RFC8281"/> describes the setup, maintenance and
+   teardown of PCE-initiated LSPs under the stateful PCE model, without
+   the need for local configuration on the PCC, thus allowing for a
+   dynamic network that is centrally controlled and deployed.  To
+   instantiate or delete an LSP, the PCE sends the Path Computation LSP
+   Initiate Request (PCInitiate) message to the PCC.  As described in 
+   <xref target="I-D.ietf-pce-stateful-hpce"/>, for inter-domain LSP in 
+   Hierarchical PCE architecture, the initiation
+   operations can be carried out at the parent PCE. In which case after
+   parent PCE finishes the E2E path computation, it can send the
+   PCInitiate message to the child PCE, the child PCE
+   further propagates the initiate request to the LSR. The customer request
+   is received by the MDSC (parent PCE) and based on the business logic, 
+   global abstracted topology, network conditions and local policy, the 
+   MDSC (parent PCE) translates this into per domain LSP initiation request that a 
+   PNC (child PCE) can understand and act on. This can be done via the PCInitiate message.</t>
+   <t>PCEP extensions for associating opaque policy between PCEP peer <xref target="I-D.ietf-pce-association-policy"/>
+   can be used.</t> 
+   
+  
+    </section>
+	<section title="Virtual Service Coordination" toc="default" anchor="sec_vno">
+    <t>Virtual service coordination
+        function in ACTN incorporates customer service-related
+        information into the virtual network service operations in order to
+        seamlessly operate virtual networks while meeting customer's
+        service requirements. </t>
+
+	<t><xref target="I-D.leedhody-pce-vn-association"/> describes the 
+	need for associating a set of LSPs with a VN "construct" to
+   facilitate VN operations in PCE architecture. This association
+   allows the PCEs to identify which LSPs belong to a certain VN. </t>
+
+   <t>This association based on VN is useful for various optimizations
+   at the VN level which can be applied to all the LSPs that
+   are part of the VN slice. During path computation, the impact of a path for an LSP
+   is compared against the paths of other LSPs in the VN. This is to make sure 
+   that the overall optimization and SLA of the VN rather than of a single LSP. 
+   Similarly, during re-optimization, advanced path computation algorithm 
+   and optimization
+      technique can be considered for all the LSPs belonging to a VN/customer
+      and optimize them all together. 
+</t>
+    </section>
+</section>
+<section title="Interface Considerations" toc="default">
+<t>As per <xref target="RFC8453"/>, 
+to allow virtualization and multi domain coordination, the network
+   has to provide open, programmable interfaces, in which customer
+   applications can create, replace and modify virtual network
+   resources and services in an interactive, flexible and dynamic
+   fashion while having no impact on other customers. The two ACTN 
+   interfaces are - 
+   <list style="symbols">
+   <t>The CNC-MDSC Interface (CMI) is an interface
+        between a Customer Network Controller and a Multi Domain
+        Service Coordinator. It requests the creation of the network
+        resources, topology or services for the applications. The
+        MDSC may also report potential network
+        topology availability if queried for current capability from
+        the Customer Network Controller.</t>
+   <t>The MDSC-PNC Interface (MPI) is an interface
+        between a Multi Domain Service Coordinator and a Provisioning
+        Network Controller. It communicates the creation request, if
+        required, of new connectivity of bandwidth changes in the
+        physical network, via the PNC. In multi-domain environments,
+        the MDSC needs to establish multiple MPIs, one for each PNC, as
+        there are multiple PNCs responsible for its domain control.</t>    
+    <t>In case of hierarchy of MDSC, the MPI is applied recursively. 
+   From an abstraction point of view, the top level MDSC which
+   interfaces the CNC operates on a higher level of abstraction (i.e.,
+   less granular level) than the lower level MSDCs.</t>     
+   </list></t>
+   <t>PCEP is especially suitable on the MPI as it meets the requirement
+   and the functions as set out in the ACTN framework 
+   <xref target="RFC8453"/>. Its recursive nature is well suited 
+   via the multi-level hierarchy of PCE. PCEP can also be applied to the CMI as the 
+   CNC can be a path computation client while the MDSC can be a path 
+   computation server. The <xref target="sec_real"/> describe how PCE and PCEP could help 
+   realize ACTN on the MPI.</t>
+   
+</section>
+<section title="Realizing ACTN with PCE (and PCEP)" toc="default" anchor="sec_real">
+<t>As per the example in the <xref target="F1"/>, there are 4 domains, 
+each with its own PNC and a MDSC at top. The PNC and MDSC need PCE as 
+a important function. The PNC (or child PCE) already uses PCEP to communicate to
+the network device. It can utilize the PCEP as the MPI to communicate
+between controllers too.</t>
+             <figure title="ACTN with PCE"
+             suppress-title="false" align="center" alt="" width="" height="" anchor="F1">
+            <artwork><![CDATA[
+                          ******  
+                ..........*MDSC*.............................. 
+             .            ****** ..                   MPI    .
+          .                .        .                        .
+       .                   .          .                      .
+     .                    .             .                    .
+    .                    .                .                  .
+   .                    .                  .                 .
+  .                    .                    .                .
+  v                    v                    v                .
+******               ******               ******             .    
+*PNC1*               *PNC2*               *PNC4*             .
+******               ******               ******             .
++---------------+    +---------------+    +---------------+  .
+|A              |----|               |----|              C|  .
+|               |    |               |    |               |  .
+|DOMAIN 1       |----|DOMAIN 2       |----|DOMAIN 4       |  .
++------------B13+    +---------------+    +B43------------+  .
+                \                         /                  .
+                 \   ******              /                   .
+                  \  *PNC3*<............/.....................
+                   \ ******            /
+                    \+---------------+/
+                     B31           B34
+                     |               |
+                     |DOMAIN 3      B|
+                     +---------------+
+
+
+MDSC -> Parent PCE
+PNC  -> Child  PCE
+MPI  -> PCEP            
+            ]]></artwork>
+          </figure>
+    <t><list style="symbols">      
+    <t>Building Domain Topology at MDSC: PNC (or child PCE) needs to have the TED to compute path in its domain. 
+    As described in <xref target="sec_topo"/>, it can learn the topology 
+    via IGP or BGP-LS. PCEP-LS is also a proposed mechanism to carry link state and 
+    traffic engineering information within PCEP. A mechanism to carry abstracted
+    topology while hiding technology specific information between PNC and MDSC is
+    described in <xref target="I-D.dhodylee-pce-pcep-ls"/>. At the end of this 
+    step the MDSC (or parent PCE) has the abstracted topology from each of its PNC 
+    (or child PCE). This could be as simple as a domain topology map as described 
+    in <xref target="RFC6805"/> or it can have full topology information of all
+    domains. The latter is not scalable and thus an abstracted topology of each domain
+    interconnected by inter-domain links is the most common case.
+    <list style="symbols">      
+        <t>Topology Change: When the PNC learns of any topology change, the PNC needs 
+        to decide if the change needs to be notified to the MDSC. This is dependent on 
+        the level of abstraction between the MDSC and the PNC.</t>
+        </list>
+    </t>
+    <t>VN Instantiate: MDSC is requested to instantiate a VN, the minimal information 
+    that is required would be a VN identifier and a set of end points. Various path 
+    computation, setup constraints and objective functions may also be provided.
+    In PCE terms, a VN Instantiate can be considered as a set of paths belonging to the same VN. 
+    As described in <xref target="sec_vno"/> and <xref target="I-D.leedhody-pce-vn-association"/>
+    the VN association can help in identifying the set of paths that belong to a VN. 
+    The rest of the information like the endpoints, constraints and objective function (OF) is 
+    already defined in PCEP in terms of a single path.
+        <list style="symbols">      
+        <t>Path Computation: As per the example in the <xref target="F1"/>, 
+        the VN instantiate requires two end to end paths between (A in Domain 1 to B in Domain 3) 
+        and (A in Domain 1 to C in Domain 4). The MDSC (or parent PCE) triggers the 
+        end to end path computation for these two paths. MDSC can do path computation based on the abstracted domain topology that 
+        it already has or it may use the H-PCE procedures (<xref target="sec_hpce"/>) using the PCReq and PCRep messages to get the 
+        end to end path with the help of the child PCEs (PNC).   
+        Either way, the resulted E2E paths may be broken into per-domain paths.</t>
+        <t>A-B: (A-B13,B13-B31,B31-B) </t>
+        <t>A-C: (A-B13,B13-B31,B34-B43,B43-C)</t>
+        <t>Per Domain Path Instantiation: Based on the above path computation, MDSC
+        can issue the path instantiation request to each PNC via PCInitiate message (see <xref target="I-D.ietf-pce-stateful-hpce"/>
+        and <xref target="I-D.leedhody-pce-vn-association"/>). 
+        A suitable
+        stitching mechanism would be used to stitch these per domain LSPs. 
+        One such mechanism is described in <xref target="I-D.lee-pce-lsp-stitching-hpce"/>, where 
+        PCEP is extended to support stitching in stateful H-PCE context.
+        </t>
+        <t>Per Domain Path Report: Each PNC should report the status of 
+        the per-domain LSP to the MDSC via PCRpt message, as per the Hierarchy of stateful 
+        PCE (<xref target="I-D.ietf-pce-stateful-hpce"/>). The status
+        of the end to end LSP (A-B and A-C) is made up when all the per domain 
+        LSP are reported up by the PNCs.</t>
+        <t>Delegation: It is suggested that the per domain LSPs are delegated to
+        respective PNC, so that they can control the path and attributes based
+        on each domain network conditions.</t>
+        <t>State Synchronization: The state needs to be synchronized between the parent PCE
+        	and child PCE. The mechanism described in <xref target="I-D.litkowski-pce-state-sync"/> 
+        	can be used.</t>
+        </list></t>
+   <t>VN Modify: MDSC is requested to modify a VN, for example the bandwidth for
+   VN is increased. This may trigger path computation at MDSC as described in the 
+   previous step and can trigger an update to existing per-intra-domain path (via PCUpd message)
+   or creation (or deletion) of a per-domain path (via PCInitiate message). As described in <xref target="I-D.ietf-pce-stateful-hpce"/>, this should be done
+   in make-before-break fashion.</t>   
+   <t>VN Delete: MDSC is requested to delete a VN, in this case, based on the E2E paths and 
+   the resulting per-domain paths need to be removed (via PCInitiate message).</t>
+   <t>VN Update (based on network changes): Any change in the per-domain LSP
+   are reported to the MDSC (via PCRpt message) as per <xref target="I-D.ietf-pce-stateful-hpce"/>. 
+   This may result in changes in the E2E path or VN status. This may also trigger a re-optimization
+   leading to a new per-domain path, update to existing path, or deletion of the path.</t>
+   <t>VN Protection: The VN protection/restoration requirements, need to applied to each E2E path
+   as well as each per domain path. The MDSC needs to play a crucial role in coordinating the 
+   right protection/restoration policy across each PNC. The existing protection/restoration mechanism
+   of PCEP can be applied on each path.   </t>
+   <t>In case PNC generates an abstract topology to the MDSC, the PCInitiate/PCUpd messages from the 
+   MDSC to a PNC will contain a path with abstract nodes and links. PNC would need to take that as an 
+   input for path computation to get a path with physical nodes and links. Similarly PNC would convert 
+   the path received from the device (with physical nodes and links) into abstract path (based on the
+   abstract topology generated before with abstract nodes and links) and reported to the MDSC.</t>
+   </list></t>
+</section>
+
+
+    <section title="IANA Considerations" toc="default" anchor="sec_iana">
+    <t>This is an informational document and thus does not have any 
+    IANA allocations to be made.</t>    
+    </section>  
+    
+    
+    
+    
+    <section title="Security Considerations" toc="default">
+    <t> The ACTN framework described in <xref target="RFC8453"/> defines key components
+   and interfaces for managed traffic engineered networks. It also list various security considerations 
+   such as 
+   request and control of resources, confidentially of the information,
+   and availability of function which should be taken into consideration. </t>
+   <t>When PCEP is used on the MPI, this interface needs to be secured, use of <xref target="RFC8253"/> is 
+   RECOMENDED. Each PCEP extension listed in this document, presents its individual security considerations, which continue to apply.</t>
+    </section>
+      
+    
+    
+    <section title="Acknowledgments" toc="default">
+      <t>The authors would like to thank Jonathan Hardwick for the inspiration behind this document. 
+      Further thanks to Avantika for her comments with suggested text. </t>
+    </section>
+        
+  </middle>
+  <back>
+    <references title="Normative References">
+    <?rfc include="reference.RFC.5440.xml" ?>
+    <?rfc include="reference.RFC.6805.xml" ?>
+    <?rfc include="reference.RFC.8453.xml" ?>
+    </references>
+    <references title="Informative References">
+    <?rfc include="reference.RFC.3630.xml" ?>
+    <?rfc include="reference.RFC.4203.xml" ?>
+	<?rfc include="reference.RFC.4655.xml" ?>
+	<?rfc include="reference.RFC.5152.xml" ?>
+  <?rfc include="reference.RFC.5212.xml" ?>
+	<?rfc include="reference.RFC.5305.xml" ?>
+	<?rfc include="reference.RFC.5307.xml" ?>
+	<?rfc include="reference.RFC.5441.xml" ?>
+	<?rfc include="reference.RFC.5623.xml" ?>
+	<?rfc include="reference.RFC.7149.xml" ?>
+	<?rfc include="reference.RFC.7399.xml" ?>
+	<?rfc include="reference.RFC.7491.xml" ?>
+	<?rfc include="reference.RFC.7752.xml" ?>
+  <?rfc include="reference.RFC.8040.xml"?>
+	<?rfc include="reference.RFC.8051.xml"?>
+	<?rfc include="reference.RFC.8231.xml"?>
+  <?rfc include="reference.RFC.8253.xml"?>
+	<?rfc include="reference.RFC.8281.xml"?>
+  <?rfc include="reference.RFC.8283.xml"?>
+  <?rfc include="reference.RFC.8454.xml"?>
+	<?rfc include="reference.I-D.ietf-pce-stateful-hpce"?>
+	
+     <?rfc include="reference.I-D.ietf-teas-actn-requirements"?>
+	 
+     
+     <?rfc include="reference.I-D.ietf-pce-inter-area-as-applicability"?>
+     <?rfc include="reference.I-D.dhodylee-pce-pcep-ls"?>
+	 <?rfc include="reference.I-D.lee-pce-pcep-ls-optical"?>
+	 
+     <?rfc include="reference.I-D.leedhody-pce-vn-association"?>
+     <?rfc include="reference.I-D.litkowski-pce-state-sync"?>
+     <?rfc include="reference.I-D.ietf-pce-association-policy"?>
+     
+     
+     <?rfc include="reference.I-D.lee-pce-lsp-stitching-hpce"?>
+     
+
+    </references>
+    
+  </back>
+</rfc>
