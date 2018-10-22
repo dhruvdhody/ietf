@@ -349,6 +349,18 @@ The SR is applied to IPV6 forwarding
          routing information to determine the next-hop and download the 
          forwarding instructions accordingly.  The PCInitiate message in this
          case MUST have FEC object.</t>
+
+
+         <t>On receiving the SRv6 node SID allocation:<list>
+
+  <t>For the local SID, node (PCC) needs to update SID with associated 
+  function (END function in this case) in "My Local SID Table" (<xref target="I-D.filsfils-spring-srv6-network-programming"/>).</t>
+  
+  <t>For the non-local SID, node (PCC) uses the local routing information
+  to determine the next-hop and download the forwarding instructions accordingly.  </t></list></t>
+  
+  <t>The PCInitiate message in this
+  case MUST have FEC object.</t>         
         
 
         <t>The forwarding behavior and the end result is similar to IGP based
@@ -544,7 +556,7 @@ The SR is applied to IPV6 forwarding
       functions associated with SRv6 SIDs.</t>
       <t>SRv6 Identifier: 128 bit IPv6 addresses representing SRv6
       segment.</t>
-      
+      <t>[Editor's Note - It might be useful to seperate the LOC:FUNC part in the SRv6 SID]</t>
      </section>   
     <section title="FEC Object"
              toc="default"
@@ -601,7 +613,7 @@ The SR is applied to IPV6 forwarding
       <section title="Impact On Network Operations"
                toc="default">
         <t>PCEP implementation SHOULD allow a limit to be placed on the rate
-   of PCLabelUpd messages sent by PCE and processed by PCC.
+   of PCInitiate/PCUpd messages (as per <xref target="RFC8231"/>) sent by PCE and processed by PCC.
    It SHOULD also allow sending a notification when a rate threshold is
    reached.</t>
       </section>

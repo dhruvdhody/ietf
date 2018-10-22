@@ -95,14 +95,14 @@ Table of Contents
        5.5.1.  PCECC Segment Routing in IPv6 (SRv6)  . . . . . . . .   7
          5.5.1.1.  PCECC SRv6 Node/Prefix SID allocation . . . . . .   7
          5.5.1.2.  PCECC SRv6 Adjacency SID allocation . . . . . . .   8
-         5.5.1.3.  Redundant PCEs  . . . . . . . . . . . . . . . . .   8
+         5.5.1.3.  Redundant PCEs  . . . . . . . . . . . . . . . . .   9
          5.5.1.4.  Re Delegation and Cleanup . . . . . . . . . . . .   9
          5.5.1.5.  Synchronization of SRv6 SID Allocations . . . . .   9
    6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .   9
    7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .   9
      7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .   9
        7.1.1.  PCECC Capability sub-TLV  . . . . . . . . . . . . . .   9
-     7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .   9
+     7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  10
      7.3.  CCI Object  . . . . . . . . . . . . . . . . . . . . . . .  10
      7.4.  FEC Object  . . . . . . . . . . . . . . . . . . . . . . .  11
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
@@ -118,7 +118,7 @@ Internet-Draft                 PCECC-SRv6                   October 2018
      9.1.  Control of Function and Policy  . . . . . . . . . . . . .  11
      9.2.  Information and Data Models . . . . . . . . . . . . . . .  11
      9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  11
-     9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  11
+     9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  12
      9.5.  Requirements On Other Protocols . . . . . . . . . . . . .  12
      9.6.  Impact On Network Operations  . . . . . . . . . . . . . .  12
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
@@ -399,6 +399,18 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    forwarding instructions accordingly.  The PCInitiate message in this
    case MUST have FEC object.
 
+   On receiving the SRv6 node SID allocation:
+
+      For the local SID, node (PCC) needs to update SID with associated
+      function (END function in this case) in "My Local SID Table"
+      ([I-D.filsfils-spring-srv6-network-programming]).
+
+      For the non-local SID, node (PCC) uses the local routing
+      information to determine the next-hop and download the forwarding
+      instructions accordingly.
+
+   The PCInitiate message in this case MUST have FEC object.
+
    The forwarding behavior and the end result is similar to IGP based
    "Node-SID" in SRv6.  Thus, from anywhere in the domain, it enforces
    the ECMP-aware shortest-path forwarding of the packet towards the
@@ -431,6 +443,13 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    PCE relies on the Adj label cleanup using the same PCInitiate
    message.
 
+
+
+Dhody & Li               Expires April 25, 2019                 [Page 8]
+
+Internet-Draft                 PCECC-SRv6                   October 2018
+
+
 5.5.1.3.  Redundant PCEs
 
    [I-D.litkowski-pce-state-sync] describes synchronization mechanism
@@ -439,16 +458,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    Note that the SRv6 SIDs are independent to the PCECC-SRv6 paths, and
    remains intact till any topology change.  The redundant PCEs MUST
    have a common view of all SRv6 SIDs allocated in the domain.
-
-
-
-
-
-
-Dhody & Li               Expires April 25, 2019                 [Page 8]
-
-Internet-Draft                 PCECC-SRv6                   October 2018
-
 
 5.5.1.4.  Re Delegation and Cleanup
 
@@ -489,6 +498,14 @@ Internet-Draft                 PCECC-SRv6                   October 2018
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
+
+
+
+Dhody & Li               Expires April 25, 2019                 [Page 9]
+
+Internet-Draft                 PCECC-SRv6                   October 2018
+
+
    I (PCECC-SRv6-CAPABILITY - 1 bit): If set to 1 by a PCEP speaker, it
    indicates that the PCEP speaker is capable for PCECC-SRv6 capability
    and PCE would allocate node and Adj SRv6 SID on this session.
@@ -497,14 +514,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 
    The PATH-SETUP-TYPE TLV is defined in [RFC8408].  PST = TBD is used
    when Path is setup via PCECC SRv6 mode.
-
-
-
-
-Dhody & Li               Expires April 25, 2019                 [Page 9]
-
-Internet-Draft                 PCECC-SRv6                   October 2018
-
 
    On a PCRpt/PCUpd/PCInitiate message, the PST=TBD indicates that this
    path was setup via a PCECC-SRv6 based mechanism where either the SIDs
@@ -545,15 +554,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    Algorithm, Flags are defined in
    [I-D.zhao-pce-pcep-extension-pce-controller-sr].
 
-   Reserved: MUST be set to 0 while sending and ignored on receipt.
-
-   SRv6 Endpoint Function: 16 bit field representing supported functions
-   associated with SRv6 SIDs.
-
-   SRv6 Identifier: 128 bit IPv6 addresses representing SRv6 segment.
-
-
-
 
 
 
@@ -561,6 +561,16 @@ Dhody & Li               Expires April 25, 2019                [Page 10]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
+
+   Reserved: MUST be set to 0 while sending and ignored on receipt.
+
+   SRv6 Endpoint Function: 16 bit field representing supported functions
+   associated with SRv6 SIDs.
+
+   SRv6 Identifier: 128 bit IPv6 addresses representing SRv6 segment.
+
+   [Editor's Note - It might be useful to seperate the LOC:FUNC part in
+   the SRv6 SID]
 
 7.4.  FEC Object
 
@@ -600,16 +610,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    detection and monitoring requirements in addition to those already
    listed in [RFC5440].
 
-9.4.  Verify Correct Operations
-
-   Mechanisms defined in this document do not imply any new operation
-   verification requirements in addition to those already listed in
-   [RFC5440] and [RFC8231].
-
-
-
-
-
 
 
 
@@ -617,6 +617,12 @@ Dhody & Li               Expires April 25, 2019                [Page 11]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
+
+9.4.  Verify Correct Operations
+
+   Mechanisms defined in this document do not imply any new operation
+   verification requirements in addition to those already listed in
+   [RFC5440] and [RFC8231].
 
 9.5.  Requirements On Other Protocols
 
@@ -626,8 +632,9 @@ Internet-Draft                 PCECC-SRv6                   October 2018
 9.6.  Impact On Network Operations
 
    PCEP implementation SHOULD allow a limit to be placed on the rate of
-   PCLabelUpd messages sent by PCE and processed by PCC.  It SHOULD also
-   allow sending a notification when a rate threshold is reached.
+   PCInitiate/PCUpd messages (as per [RFC8231]) sent by PCE and
+   processed by PCC.  It SHOULD also allow sending a notification when a
+   rate threshold is reached.
 
 10.  IANA Considerations
 
@@ -659,13 +666,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
    PCEP Numbers registry for the following errors:
 
 
-   Error-Type   Meaning
-   ----------   -------
-   19           Invalid operation.
-
-                 Error-value = TBD :                 SRv6 capability was
-                                                     not advertised
-
 
 
 
@@ -673,6 +673,13 @@ Dhody & Li               Expires April 25, 2019                [Page 12]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
+
+   Error-Type   Meaning
+   ----------   -------
+   19           Invalid operation.
+
+                 Error-value = TBD :                 SRv6 capability was
+                                                     not advertised
 
 11.  Acknowledgments
 
@@ -712,13 +719,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
               Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
               <https://www.rfc-editor.org/info/rfc8281>.
 
-   [I-D.negi-pce-segment-routing-ipv6]
-              Negi, M., Dhody, D., Sivabalan, S., and P. Kaladharan,
-              "PCEP Extensions for Segment Routing leveraging the IPv6
-              data plane", draft-negi-pce-segment-routing-ipv6-03 (work
-              in progress), October 2018.
-
-
 
 
 
@@ -729,6 +729,12 @@ Dhody & Li               Expires April 25, 2019                [Page 13]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
+
+   [I-D.negi-pce-segment-routing-ipv6]
+              Negi, M., Dhody, D., Sivabalan, S., and P. Kaladharan,
+              "PCEP Extensions for Segment Routing leveraging the IPv6
+              data plane", draft-negi-pce-segment-routing-ipv6-03 (work
+              in progress), October 2018.
 
    [I-D.zhao-pce-pcep-extension-for-pce-controller]
               Zhao, Q., Li, Z., Dhody, D., Karunanithi, S., Farrel, A.,
@@ -772,12 +778,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
               DOI 10.17487/RFC8232, September 2017,
               <https://www.rfc-editor.org/info/rfc8232>.
 
-   [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
-              Architecture for Use of PCE and the PCE Communication
-              Protocol (PCEP) in a Network with Central Control",
-              RFC 8283, DOI 10.17487/RFC8283, December 2017,
-              <https://www.rfc-editor.org/info/rfc8283>.
-
 
 
 
@@ -785,6 +785,12 @@ Dhody & Li               Expires April 25, 2019                [Page 14]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
+
+   [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
+              Architecture for Use of PCE and the PCE Communication
+              Protocol (PCEP) in a Network with Central Control",
+              RFC 8283, DOI 10.17487/RFC8283, December 2017,
+              <https://www.rfc-editor.org/info/rfc8283>.
 
    [RFC8402]  Filsfils, C., Ed., Previdi, S., Ed., Ginsberg, L.,
               Decraene, B., Litkowski, S., and R. Shakir, "Segment
@@ -828,12 +834,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
               Extensions for Segment Routing", draft-ietf-ospf-segment-
               routing-extensions-25 (work in progress), April 2018.
 
-   [I-D.litkowski-pce-state-sync]
-              Litkowski, S., Sivabalan, S., and D. Dhody, "Inter
-              Stateful Path Computation Element communication
-              procedures", draft-litkowski-pce-state-sync-03 (work in
-              progress), April 2018.
-
 
 
 
@@ -841,6 +841,12 @@ Dhody & Li               Expires April 25, 2019                [Page 15]
 
 Internet-Draft                 PCECC-SRv6                   October 2018
 
+
+   [I-D.litkowski-pce-state-sync]
+              Litkowski, S., Sivabalan, S., and D. Dhody, "Inter
+              Stateful Path Computation Element communication
+              procedures", draft-litkowski-pce-state-sync-03 (work in
+              progress), April 2018.
 
    [I-D.dhodylee-pce-pcep-ls]
               Dhody, D., Lee, Y., and D. Ceccarelli, "PCEP Extension for
@@ -858,12 +864,6 @@ Internet-Draft                 PCECC-SRv6                   October 2018
               d. daniel.voyer@bell.ca, "IPv6 Segment Routing Header
               (SRH)", draft-ietf-6man-segment-routing-header-14 (work in
               progress), June 2018.
-
-
-
-
-
-
 
 
 
