@@ -786,7 +786,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
     | Error-Type | Meaning                                 |
     +------------+-----------------------------------------+
     | TBD8       | H-PCE error                             |
-    |            | Error-value=1: parent PCE capability    |
+    |            | Error-value=1: H-PCE capability         |
     |            | was not advertised                      |
     |            | Error-value=2: parent PCE capability    |
     |            | cannot be provided                      |
@@ -852,16 +852,14 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    parental activity and H-PCE capability flags TLV was not included in the
    session establishment procedure as described above, the peer PCE
    should send a PCErr message to the child PCE and specify the error-
-   type=TBD8 (H-PCE error) and error-value=1 (parent PCE capability was
+   type=TBD8 (H-PCE error) and error-value=1 (H-PCE capability was
    not advertised) in the PCEP-ERROR object.
 
    When a specific child PCE sends a PCReq to a peer PCE that requires
    parental activity and the peer PCE does not want to act as the parent
    for it, the peer PCE should send a PCErr message to the child PCE and
-   specify the error-type=TBD8 (H-PCE error) and error-value=2 (parent
+   specify the error-type=TBD8 (H-PCE error) and error-value=2 (Parent
    PCE capability cannot be provided) in the PCEP-ERROR object.
-
-[Dhruv]: I think we should remove this, we do not have this case now with only one bit.    
 
 
 
@@ -1191,7 +1189,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
        ------------------------------------------------------
        TBD8     H-PCE Error                    This I.D.
 
-                Error-value=1 Parent PCE
+                Error-value=1 H-PCE
                 Capability not advertised
 
 
@@ -1202,7 +1200,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
 
                 Error-value=2 Parent PCE
-                Capability not supported
+                Capability cannot be provided
         10      Reception of an invalid object [RFC5440] 
         
                 Error-value=TBD15: Incompatible  This I.D. 
