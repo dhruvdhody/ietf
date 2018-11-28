@@ -207,11 +207,12 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
    The following functions are out of scope of this document.
 
-   o  Determination of Destination Domain (section 4.5 of [RFC6805])
+   o  Determination of Destination Domain (section 4.5 of [RFC6805]). 
+      This could be done
 
       *  via a collection of reachability information from child domain;
 
-      *  via requests to the child PCEs to discover if they contain the
+      *  via a requests to the child PCEs to discover if they contain the
          destination node;
 
 
@@ -224,9 +225,22 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
       *  or any other methods.
 
    o  Parent Traffic Engineering Database (TED) methods (section 4.4 of
-      [RFC6805])
+      [RFC6805]). This could be done via 
 
-   o  Learning of Domain connectivity and boundary nodes (BN) addresses.
+      *  Yang based management interfaces
+
+      *  BGP-LS [RFC7752]
+
+      *  Future extension to PCEP (such as PCEP-LS)
+
+   o  Learning of Domain connectivity and boundary nodes (BN) addresses. 
+   This could be done via 
+
+      *  Yang based management interfaces
+
+      *  BGP-LS [RFC7752]
+
+      *  Future extension to PCEP (such as PCEP-LS)
 
    o  Stateful PCE Operations.  (Refer [I-D.ietf-pce-stateful-hpce])
    
@@ -264,7 +278,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    the full functionality of the H-PCE procedures, the PCReq message
    needs to include:
 
-   o  Qualification of PCE Requests;
+   o  Qualification of PCE Requests (Section 4.8.1. of [RFC6805]);
 
    o  Multi-domain Objective Functions (OF);
 
@@ -294,6 +308,10 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
    o  It MAY be possible to indicate that the inter domain path computed
       by parent PCE should disallow domain re-entry.
+
+[Dhruv]: It is not clear why MUST, SHOULD and MAY usage for the 3 
+requirements. It is also interesting to note that we dont use this in
+other sections. I think we should reword them and avoid those terms. 
 
 2.1.2.  Multi-domain Objective Functions
 
@@ -377,7 +395,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    In case when full domain diversity could not be achieved, it is
    helpful to minimize the common shared domains.  Also it is
    interesting to note that other scope of diversity (node, link, SRLG
-   etc) can still be applied inside the common shared domains.
+   etc.) can still be applied inside the common shared domains.
 
 
 3.  PCEP Extensions
@@ -427,10 +445,11 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    on receipt.   
 
    The inclusion of this TLV in an OPEN object indicates that the H-PCE
-   extensions are supported by the PCEP speaker.  The PCC MAY include
-   this TLV to indicate that it understands the H-PCE extensions.  The
+   extensions are supported by the PCEP speaker.  The
    child PCE MUST include this TLV and set the P flag.  The parent PCE
-   MUST include this TLV and unset the P flag. 
+   MUST include this TLV and unset the P flag. The PCC MUST include
+   this TLV to indicate that it understands the H-PCE extensions with 
+   P flag unset.
 
 [Dhruv]: Updated; It is the child that sets the P flag!    
    
@@ -463,7 +482,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
 3.1.2.  Domain-ID TLV
 
-   The Domain-ID TLV when used in OPEN object identify the domains
+   The Domain-ID TLV when used in OPEN object, identify the domains
    served by the PCE.  The child PCE uses this mechanism to inform the
    domain information to the parent PCE.
 
@@ -509,13 +528,14 @@ Zhang, et al.           Expires May, 2019                      [Page 9]
 Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
 
-      Domain ID (variable): Indicates an IGP Area ID or AS number.  It
+      Domain ID (variable): Indicates an IGP Area ID or AS number as 
+      per the Domain Type field.  It
       can be 2 bytes, 4 bytes or variable length depending on the domain
       identifier used.  It is padded with trailing zeros to a 4-byte
       boundary. In case of IS-IS it includes the Area-Len as well. 
 
-   In case a PCE serves more than one domain, multiple Domain-ID TLV is
-   included for each domain it serves.
+   In case a PCE serves more than one domain, multiple Domain-ID TLVs 
+   are included for each domain it serves.  
 
 3.2.  RP Object
 
@@ -549,7 +569,10 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
       computed path does not enter a domain more than once.
 
    Unassigned bits MUST be set to 0 on transmission and MUST be ignored 
-   on receipt.       
+   on receipt. 
+
+   The presence of the TLV indicates that the H-PCE based path computation
+   is requested as per this document.       
 
 3.2.2.  Domain-ID TLV
 
@@ -639,7 +662,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
    o  Name: Minimize the number of Common Transit Domains 
 
-   o  Objective Function Code - TBD12 (to be assigned by IANA)
+   o  Objective Function Code - TBD13 (to be assigned by IANA)
 
    o  Description: Find a set of paths such that it passes through the
       least number of common transit domains.
@@ -686,7 +709,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    OF List TLV MUST NOT include an H-PCE Objective Function. If this 
    condition is not met, the PCEP speaker MUST respond with PCErr 
    message with Error-Type=10 (Reception of an invalid object) and 
-   Error-Value=TBD (Incompatible OF codes in H-PCE).   
+   Error-Value=TBD15 (Incompatible OF codes in H-PCE).   
 
    If the Objective Functions defined in this document are unknown or
    unsupported by a PCE, then the procedure as defined in [RFC5541] 
@@ -739,7 +762,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
    The following new bit is added to the Flags field:
 
-   o  O (Domain diverse) bit - TBD12 : when set, this indicates that the
+   o  O (Domain diverse) bit - TBD14 : when set, this indicates that the
       computed paths corresponding to the requests specified by the
       following RP objects MUST NOT have any transit domains in
       common.
@@ -749,7 +772,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    diverse domain sequences.
 
    When domain diverse O bit is set, it is applied to the transit
-   domains.  The other bit in SVEC object (N, L, S etc) MAY be set and
+   domains.  The other bit in SVEC object (N, L, S etc.) MAY be set and
    MUST still be applied in the ingress and egress shared domain.
 
 3.6.  PCEP-ERROR object
@@ -799,10 +822,12 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    o  Bit number TBD11: When set, the parent PCE indicates no available
       resource available in one or more domains.
 
-   o  Bit number TBD: When set, the parent PCE indicates that 
+   o  Bit number TBD12: When set, the parent PCE indicates that 
       destination is not found in the indicated domain.
 
 4.  H-PCE Procedures
+
+  The H-PCE path computation procedure is described in [RFC6805]. 
 
 4.1.  OPEN Procedure between Child PCE and Parent PCE
 
@@ -827,16 +852,16 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    parental activity and H-PCE capability flags TLV was not included in the
    session establishment procedure as described above, the peer PCE
    should send a PCErr message to the child PCE and specify the error-
-   type=TBD (H-PCE error) and error-value=1 (parent PCE capability was
+   type=TBD8 (H-PCE error) and error-value=1 (parent PCE capability was
    not advertised) in the PCEP-ERROR object.
 
    When a specific child PCE sends a PCReq to a peer PCE that requires
    parental activity and the peer PCE does not want to act as the parent
    for it, the peer PCE should send a PCErr message to the child PCE and
-   specify the error-type=TBD (H-PCE error) and error-value=2 (parent
+   specify the error-type=TBD8 (H-PCE error) and error-value=2 (parent
    PCE capability cannot be provided) in the PCEP-ERROR object.
 
-[Dhruv]: I think we should remove this!    
+[Dhruv]: I think we should remove this, we do not have this case now with only one bit.    
 
 
 
@@ -1048,7 +1073,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
 7.2.  H-PCE-CAPABILITY TLV Flags
 
-   This document requests that a new sub-registry, named " H-PCE-
+   This document requests that a new sub-registry, named "H-PCE-
    CAPABILITY TLV Flag Field", is created within the "Path Computation
    Element Protocol (PCEP) Numbers" registry to manage the Flag field in
    the H-PCE-CAPABILITY TLV of the PCEP OPEN object.
@@ -1073,14 +1098,14 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
          Bit     Description                      Reference
          --------------------------------------------------
-         31      P (Parent PCE bit)               This I.D.
+         31      P (Parent PCE Request bit)       This I.D.
 
 7.3.  Domain-ID TLV Domain type
 
    This document requests that a new sub-registry, named "Domain-ID TLV
    Domain type", is created within the "Path Computation Element
    Protocol (PCEP) Numbers" registry to manage the Domain-Type field of
-   the Domain-ID TLV. The allocation policy for this new registry is 
+   the Domain-ID TLV. The allocation policy for this new sub-registry is 
    IETF Review [RFC8126].
 
 
@@ -1097,7 +1122,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
    TLV Flag Field", is created within the "Path Computation Element
    Protocol (PCEP) Numbers" registry to manage the Flag field in the H-
    PCE-FLAGS TLV of the PCEP RP object.  New values are to be assigned
-   by Standards Action [RFC5226].  Each bit should be tracked with the
+   by Standards Action [RFC8126].  Each bit should be tracked with the
    following qualities:
 
    o  Bit number (counting from bit 0 as the most significant bit)
@@ -1124,7 +1149,7 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 7.5.  OF Codes
 
    IANA maintains registry of Objective Function (described in
-   [RFC5541]) at the sub-registry "Objective Function".  Two new
+   [RFC5541]) at the sub-registry "Objective Function".  Three new
    Objective Functions have been defined in this document.
 
    IANA is requested to make the following allocations:
@@ -1136,8 +1161,8 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
                 Domains (MTD)
        TBD5     Minimize number of Border      This I.D.
                 Nodes (MBN)
-       TBD12    Minimize the number of         This I.D.
-                Common Transit Domains.
+       TBD13    Minimize the number of         This I.D.
+                Common Transit Domains
                 (MCTD)
 
 7.6.  METRIC Types
@@ -1180,14 +1205,15 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
                 Capability not supported
         10      Reception of an invalid object [RFC5440] 
         
-                Error-value=TBD: Incompatible  This I.D. 
+                Error-value=TBD15: Incompatible  This I.D. 
                 OF codes in H-PCE        
 
 7.8.  New NO-PATH-VECTOR TLV Bit Flag
 
-   IANA maintains a registry of bit flags carried in the PCEP NO-PATH-
-   VECTOR TLV in the PCEP NO-PATH object as defined in [RFC5440].  IANA
-   Is requested to assign three new bit flag as follows:
+   IANA maintains a sub-registry "NO-PATH-VECTOR TLV Flag Field" of
+   bit flags carried in the PCEP NO-PATH-VECTOR TLV in the PCEP NO-PATH 
+   object as defined in [RFC5440]. IANA is requested to assign three 
+   new bit flag as follows:
 
       Bit Number      Name Flag                   Reference
       ------------------------------------------------------
@@ -1195,28 +1221,20 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
       TBD10           Unresponsive child PCE(s)   This I.D.
       TBD11           No available resource in    This I.D.
                       one or more domain
+      TBD12           Destination is not found    This I.D.
+                      in the indicated domain.                
 
 7.9.  SVEC Flag
 
-   IANA maintains a registry of bit flags carried in the PCEP SVEC
-   object as defined in [RFC5440].  IANA Is requested to assign one new
-   bit flag as follows:
+   IANA maintains a sub-registry "SVEC Object Flag Field" of bit flags 
+   carried in the PCEP SVEC object as defined in [RFC5440].  IANA is 
+   requested to assign one new bit flag as follows:
 
       Bit Number      Name Flag                   Reference
       ------------------------------------------------------
-      TBD12           Domain Diverse              This I.D.
+      TBD14           Domain Diverse              This I.D.
       
-7.10.  NO-PATH VECTOR TLV Bit Flag
-
-   IANA maintains a registry of bit flags carried in the PCEP NO-PATH-
-   VECTOR TLV in the PCEP NO-PATH object as defined in [RFC5440].  IANA
-   assigned a new bit flag as follows:
-
-      Bit Number      Name Flag                    Reference
-      ------------------------------------------------------
-      TBD             Destination not found        This I.D.
-                      in the indicated domain
-
+[Dhruv]: removed "7.10.  NO-PATH VECTOR TLV Bit Flag" and added in 7.8 instead.
 
 8.  Security Considerations
 
@@ -1249,6 +1267,9 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
 
    o  an external mechanism (such as [RFC7752]), which will need to be
       authorized and secured.
+
+[Dhruv]: Since building of parent PCE TED is out of scope, not sure if 
+we should include this paragraph, or maybe reword it.         
 
    Any multi-domain operation necessarily involves the exchange of
    information across domain boundaries.  This is bound to represent a
@@ -1299,6 +1320,8 @@ Internet-Draft          PCEP Extensions for H-PCE         November 2018
               Domain Traffic Engineering (TE) Label Switched Paths
               (LSPs)", RFC 5152, DOI 10.17487/RFC5152, February 2008,
               <https://www.rfc-editor.org/info/rfc5152>.
+
+[Dhruv]: Move to informative              
 
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
@@ -1488,7 +1511,7 @@ A1. Implementation Status
    were implemented and tested for a variety of optical research
    applications.
    
-   The Appendix shold be removed before publication. 
+   Note to RFC-Editor: The Appendix should be removed before publication. 
 
 A1.1.  Inter-layer traffic engineering with H-PCE
 
