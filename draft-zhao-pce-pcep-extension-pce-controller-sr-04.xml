@@ -113,7 +113,7 @@
         <email>choa.zhou@cisco.com</email>
       </address>
     </author>
-    <date  year="2018" />
+    <date  year="2019" />
     <area>Routing</area>
     <workgroup>PCE Working Group</workgroup>
     <abstract>
@@ -149,7 +149,7 @@
    </abstract>
   </front>
   <middle>
-    <section title="Introduction"
+<section title="Introduction"
              toc="default">
 <t>The Path Computation Element (PCE) <xref target='RFC4655'/> was developed to offload
    path computation function from routers in an MPLS traffic-engineered
@@ -268,7 +268,7 @@
    of this document, it is assumed that label range to be used by a PCE
    is set on both PCEP peers. Further, a global label range is assumed to be 
    set on all PCEP peers in the SR domain. This document also allow a case where the label space is maintained by PCC itself, and the labels are  
-     allocated by the PCC, in this case then the PCE should request the allocation from  
+     allocated by the PCC, in this case, the PCE should request the allocation from  
      PCC as described in <xref target="PCC"/>.</t>
    </section>
    
@@ -473,7 +473,7 @@
 
         <t>The above example <xref target="SEC_FIG1"/> depict FEC and PCEP speakers that uses IPv4 address. Similarly IPv6 address (such as 2001:DB8::1) can be used during PCEP session establishment as well in FEC object as described in this specification.</t>
 
-        <t>In case where the label allocation are made by the PCC itself, the PCE could still request an allocation to be made by the PCC, and where the PCC would send a PCRpt with the allocated 
+        <t>In case where the label allocation are made by the PCC itself (see <xref target="PCC"/>), the PCE could still request an allocation to be made by the PCC, and where the PCC would send a PCRpt with the allocated 
           label encoded in the CC-ID object as shown below - </t>
  <figure align="left"
                 alt=""
@@ -589,7 +589,7 @@
                 <t>The above example <xref target="SEC_FIG2"/> depict FEC and PCEP speakers that uses IPv4 address. Similarly IPv6 address (such as 2001:DB8::1, 2001:DB8::2) can be used during PCEP session establishment as well in FEC object as described in this specification.</t>
 
 
-          <t>In case where the label allocation are made by the PCC itself, the PCE could still request an allocation to be made by the PCC, and where the PCC would send a PCRpt with the allocated 
+          <t>In case where the label allocation are made by the PCC itself (see <xref target="PCC"/>), the PCE could still request an allocation to be made by the PCC, and where the PCC would send a PCRpt with the allocated 
           label encoded in the CC-ID object as shown below - </t>                
         <figure align="left"
                 alt=""
@@ -665,7 +665,7 @@
         <!--<t>See <xref target="I-D.palle-pce-controller-labeldb-sync"/> for the optimizations for LABEL-DB synchronization procedure.</t>          -->
        </section>       
 
-       <section title="PCC based allocations"
+       <section title="PCC Based Allocations"
              toc="default"
              anchor="PCC">
              <t>
@@ -683,17 +683,50 @@
      If  
      the allocation is successful, the PCC should report  
      via PCRpt message with the CCI object.  Else, it MUST send a PCErr message with Error-Type = 
-     TBD ("PCECC failure") and Error Value = TBD ("Invalid SID").  If  
+     TBD ("PCECC failure") and Error Value = TBD ("Invalid CCI").  If  
      the value of the the SID/Label/Index in the CCI object is valid, but the PCC is unable to  
      allocate it, it MUST send a PCErr message with Error-Type = 
      TBD ("PCECC failure") and Error Value = TBD ("Unable to 
-     allocate the specified label/SID").
+     allocate the specified CCI").
    </t>
-   <t>If the PCC wishes to withdrawn or modify the previously assigned label/SID, it MUST send a PCRpt message without any SID/Label/Index
+  <t>If the PCC wishes to withdrawn or modify the previously assigned label/SID, it MUST send a PCRpt message without any SID/Label/Index
      or with the SID/Label/Index containing the new value respectively in 
      the CCI object.  The PCE would further trigger the removal of the  
      central controller instruction as per this document.</t>
+   
            </section>
+       <section title="Binding SID"
+             toc="default"
+             anchor="BSID">
+             
+   <t>A PCE as a central controller can allocate and
+   provision the node/prefix/adjacency label (SID) via PCEP. One such SID is binding SID as described in <xref target="I-D.sivabalan-pce-binding-label-sid"/> , the PCECC mechanism can also be used to allocate the binding SID as described in this section.</t> 
+
+   <!--<t>The PCECC Capability as per
+   <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> should also be
+   advertised on the PCEP session, along with the SR sub-TLVs before using this procedure.</t>-->
+
+   <t>A P flag in LSP object is introduced in <xref target="I-D.li-pce-sr-path-segment"/> to indicate the allocation needs to be made by the PCE. The same flag is also set for the binding SID allocation request. A PCC would set this bit to 1 to request for
+      allocation of the binding label/SID by the PCE in the PCReq or PCRpt
+      message.  A PCE would also set this bit to 1 to indicate that the
+      binding label/SID is allocated by PCE and encoded in the PCRep,
+      PCUpd or PCInitiate message (the TE-PATH-BINDING TLV <xref target="I-D.sivabalan-pce-binding-label-sid"/> is present in
+      LSP object).  Further, a PCE would set this bit to 0 to indicate
+      that the allocation is done by the PCC instead.</t>
+
+   <t>The ingress PCC could request the binding label/SID to be allocated by the PCE
+   via PCRpt message as per <xref target="RFC8231"/>.  The delegate flag (D-flag) MUST
+   also be set for this LSP.  The TE-PATH-BINDING TLV MAY be included with no Binding
+   Value. The PCECC would allocated the binding label/SID and further respond to
+   Ingress PCC with PCUpd message as per <xref target="RFC8231"/> and MUST include the
+   TE-PATH-BINDING TLV in a LSP object.  The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>
+
+   <t>The PCE could allocate the binding label/SID on its own accord for a PCE-
+   Initiated (or delegated LSP).  The allocated binding label/SID needs to be
+   informed to the PCC.  The PCE would use the
+   PCInitiate message <xref target="RFC8281"/> or PCUpd message <xref target="RFC8231"/> towards the
+   PCC and MUST include the TE-PATH-BINDING TLV in the LSP object. The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>  
+ </section>
        
        </section>
     </section>
@@ -1251,6 +1284,8 @@
     <?rfc include="reference.I-D.dhodylee-pce-pcep-ls"?>
     <?rfc include="reference.I-D.ietf-spring-segment-routing"?>
     <?rfc include="reference.I-D.ietf-spring-segment-routing-mpls"?>
+    <?rfc include="reference.I-D.sivabalan-pce-binding-label-sid"?>
+    <?rfc include="reference.I-D.li-pce-sr-path-segment"?>
     <!--<?rfc include="reference.I-D.palle-pce-controller-labeldb-sync"?>-->
 
       </references>
