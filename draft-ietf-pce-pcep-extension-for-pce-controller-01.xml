@@ -356,7 +356,7 @@
    <t>During PCEP Initialization Phase, PCEP Speakers (PCE or PCC)
    advertise their support of PCECC extensions.</t>
 
-   <t>This document defines a new Path Setup Type (PST) <xref target='I-D.ietf-pce-lsp-setup-type'/> for PCECC, as follows:<list style="symbols">
+   <t>This document defines a new Path Setup Type (PST) <xref target='RFC8408'/> for PCECC, as follows:<list style="symbols">
 
    <t>PST = TBD: Path is setup via PCECC mode.</t></list></t>
 
@@ -394,7 +394,7 @@
     <section title="LSP Operations"
              toc="default">
     <t> The PCEP messages pertaining to PCECC MUST include PATH-SETUP-TYPE
-   TLV <xref target='I-D.ietf-pce-lsp-setup-type'/> in the SRP object
+   TLV <xref target='RFC8408'/> in the SRP object
    to clearly identify the PCECC LSP is intended.</t>
     <section title="Basic PCECC LSP Setup"
              toc="default"
@@ -407,6 +407,7 @@
    path; and set up the path by sending PCInitiate message to each node
    along the path of the LSP. The PCC generates a Path Computation State Report
    (PCRpt) and include the central controller's instruction (CCI) and the identified LSP. The CC-ID is uniquely identify the central controller's instruction within PCEP. The PCC further responds with the PCRpt messages including the CCI and LSP objects.</t>
+   <t>The Ingress node would receive one CCI object with O bit (out-label) set. The transit node(s) would receive two CCI object with the in-label CCI without O bit set and the out-label CCI with O bit set. The egress node would receive one CCI object without O bit set. A node can determine its role based on the setting of the O bit in the CCI object(s).</t>
     <t>Once the central controller's instructions (label operations) are completed, the PCE SHOULD send the PCUpd message to the
     Ingress PCC. The PCUpd message is as per <xref target='RFC8231'/> SHOULD include the path information as calculated by the PCE.</t>
     <t>Note that the PCECC LSPs MUST be delegated to a PCE at all times.
@@ -443,15 +444,16 @@
  +--------+  |     |                                     |
      |       |     |                                     |
      |<------ PCInitiate,CC-ID=X,PLSP-ID=1  ------------ | Label
-     |       |     |                                     | download
+     |       |     |     L1,O=0                          | download
      |------- PCRpt,CC-ID=X,PLSP-ID=1  ----------------->|
      |       |     |                                     |
-     |       |<----- PCInitiate,CC-ID=Y1,Y2,PLSP-ID=1  - | Label
-     |       |     |                                     | download
+     |       |<----- PCInitiate,PLSP-ID=1, ------------- | Labels
+     |       |     |            CC-ID=Y1,O=0,L2          | download
+     |       |     |            CC-ID=Y2,O=1,L1          | 
      |       |-----  PCRpt,CC-ID=Y1,Y2,PLSP-ID=1  ------>|
      |       |     |                                     |
      |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=1  - | Label
-     |       |     |                                     | download
+     |       |     |                L2,O=1               | download
      |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=1  ------>| 
      |       |     |                                     |
      |       |     |<-- PCUpd,PLSP-ID=1,PST=TBD, D=1-----| PCECC LSP
@@ -499,19 +501,21 @@
      |       |     |     C=1                             | download
      |------- PCRpt,CC-ID=X,PLSP-ID=1  ----------------->|
      |       |     |     Label=L1                        |
-     |       |<----- PCInitiate,PLSP-ID=1, ------------- | Label
-     |       |     |            CC-ID=Y1,C=1             |
-     |       |     |            CC-ID=Y2,C=0,L1          | download
+     |       |<----- PCInitiate,PLSP-ID=1, ------------- | Labels
+     |       |     |            CC-ID=Y1,C=1             | download
+     |       |     |            CC-ID=Y2,C=0,L1          | 
      |       |-----  PCRpt,PLSP-ID=1  ------------------>|
      |       |     |       CC-ID=Y1, Label=L2            |
      |       |     |       CC-ID=Y2                      |
      |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=1  - | Label
-     |       |     |                C=0                  | download
+     |       |     |                C=0,L2               | download
      |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=1  ------>| 
      |       |     |                                     |
      |       |     |<-- PCUpd,PLSP-ID=1,PST=TBD, D=1-----| PCECC LSP
      |       |     |                                     | Update
      |       |     |                                     |
+
+ - The O bit is set as before (and thus not included)    
 ]]>
         </artwork>
         </figure> 
@@ -593,9 +597,9 @@ SHOULD be included in LSP object.</t>
      |       |     |                   R=1                | cleanup
      |------- PCRpt,CC-ID=X,PLSP-ID=1  ------------------>|
      |       |     |                                      |
-     |       |<----- PCInitiate,CC-ID=Y,PLSP-ID=1  ------ | Label
+     |       |<----- PCInitiate,CC-ID=Y1,Y2,PLSP-ID=1  -- | Label
      |       |     |                          R=1         | cleanup
-     |       |-----  PCRpt,CC-ID=Y,PLSP-ID=1  ----------->|
+     |       |-----  PCRpt,CC-ID=Y1,Y2,PLSP-ID=1  ------->|
      |       |     |                                      |
      |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=1  -- | Label
      |       |     |                              R=1     | cleanup
@@ -832,6 +836,40 @@ SHOULD be included in LSP object.</t>
      the CCI object.  The PCE would further trigger the removal of the  
      central controller instruction as per this document.</t>
            </section>
+<section title="Binding Label"
+             toc="default"
+             anchor="BSID">
+             
+   <t>As per <xref target="I-D.sivabalan-pce-binding-label-sid"/>, when a stateful PCE is deployed for setting up TE paths, it may be desirable to report the binding label to the stateful PCE for the purpose of enforcing end-to-end TE. In case of PCECC, the binding label may be allocated by the PCE itself as described in this section. This procedure is 
+   thus applicable for all path setup types including PCECC.</t> 
+   
+   <!--<t>The PCECC Capability as per
+   <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> should also be
+   advertised on the PCEP session, along with the SR sub-TLVs before using this procedure.</t>-->
+
+   <t>A P flag in LSP object is introduced in <xref target="I-D.li-pce-sr-path-segment"/> to indicate the allocation needs to be made by the PCE. The same flag can also be used to indicate that the allocation needs to be made by the PCE. A PCC would set this bit to 1 (and carry the TE-PATH-BINDING TLV <xref target="I-D.sivabalan-pce-binding-label-sid"/> in LSP object) to request for
+      allocation of the binding label by the PCE in the PCReq or PCRpt
+      message.  A PCE would also set this bit to 1 to indicate that the
+      binding label is allocated by PCE and encoded in the PCRep,
+      PCUpd or PCInitiate message (the TE-PATH-BINDING TLV is present in
+      LSP object).  Further, a PCE would set this bit to 0 to indicate
+      that the allocation is done by the PCC instead.</t>
+
+   <t>The ingress PCC could request the binding label to be allocated by the PCE
+   via PCRpt message as per <xref target="RFC8231"/>.  The delegate flag (D-flag) MUST
+   also be set for this LSP.  The TE-PATH-BINDING TLV MUST be included with no Binding
+   Value. The PCECC would allocated the binding label and further respond to
+   Ingress PCC with PCUpd message as per <xref target="RFC8231"/> and MUST include the
+   TE-PATH-BINDING TLV in a LSP object.  The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>
+
+   <t>The PCE could allocate the binding label on its own accord for a PCE-
+   Initiated (or delegated LSP).  The allocated binding label needs to be
+   informed to the PCC.  The PCE would use the
+   PCInitiate message <xref target="RFC8281"/> or PCUpd message <xref target="RFC8231"/> towards the
+   PCC and MUST include the TE-PATH-BINDING TLV in the LSP object. The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>  
+
+   <t>The PCECC capability MUST be exchanged on the PCEP session, before PCE could allocate binding label. Note that the CCI object is not used for binding allocation; this is done to maintain consistency with the rest of the binding label/SID procedures as per <xref target="I-D.sivabalan-pce-binding-label-sid"/>.</t>
+ </section>           
 
 
     </section>
@@ -1153,7 +1191,7 @@ SHOULD be included in LSP object.</t>
     <section title="PATH-SETUP-TYPE TLV"
              toc="default"
              anchor="SEC_PATH">
-      <t>The PATH-SETUP-TYPE TLV is defined in <xref target='I-D.ietf-pce-lsp-setup-type'/>;
+      <t>The PATH-SETUP-TYPE TLV is defined in <xref target='RFC8408'/>;
       this document defines a new PST value:
       <list style="symbols">
       <t>PST = TBD: Path is setup via PCECC mode.</t>
@@ -1559,6 +1597,7 @@ and extended in <xref target="RFC8281"/>.
       <?rfc include="reference.RFC.8231.xml"?>
       <?rfc include="reference.RFC.8233.xml"?>
       <?rfc include="reference.RFC.8281.xml"?>
+      <?rfc include="reference.RFC.8408.xml"?>
       </references>
 
     <references title="Informative References">
@@ -1569,10 +1608,13 @@ and extended in <xref target="RFC8281"/>.
       <?rfc include="reference.RFC.8253.xml"?>
     <?rfc include="reference.RFC.8283.xml"?>
     <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>
-    <?rfc include="reference.I-D.ietf-pce-lsp-setup-type"?>
+    
     <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
     <?rfc include="reference.I-D.zhao-pce-pcep-extension-pce-controller-sr"?>
     <?rfc include="reference.I-D.li-pce-controlled-id-space"?>
+    <?rfc include="reference.I-D.sivabalan-pce-binding-label-sid"?>
+    <?rfc include="reference.I-D.li-pce-sr-path-segment"?>
+
     <!--<?rfc include="reference.I-D.palle-pce-controller-labeldb-sync"?>-->
 
 
@@ -1611,6 +1653,12 @@ Toronto
 Canada
 
 EMail: boris.zhang@telus.com
+
+Alex Tokar
+Cisco Systems
+Slovak Republic
+
+EMail: atokar@cisco.com
       
         ]]></artwork>
         </figure>

@@ -188,7 +188,7 @@
    protocol.  <xref target='I-D.ietf-teas-pcecc-use-cases'/> describes the use cases for
    the PCECC architecture.</t>
    
-   <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> specify the procedures and PCEP protocol extensions for
+   <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> specify the procedures and PCEP protocol extensions for
    using the PCE as the central controller for static LSPs, where 
    LSPs can be provisioned as explicit label instructions at each
    hop on the end-to-end path.</t>
@@ -197,7 +197,7 @@
    A source node can choose a path without relying on hop-by-hop
    signaling protocols such as LDP or RSVP-TE.  Each path is specified
    as a set of "segments" advertised by link-state routing protocols
-   (IS-IS or OSPF).  <xref target='I-D.ietf-spring-segment-routing'/> provides an
+   (IS-IS or OSPF).  <xref target='RFC8402'/> provides an
    introduction to SR architecture. The corresponding IS-IS and OSPF extensions are
    specified in <xref target='I-D.ietf-isis-segment-routing-extensions'/> and
    <xref target='I-D.ietf-ospf-segment-routing-extensions'/> , respectively.
@@ -219,7 +219,7 @@
    what instructions to attach to packets as they enter the network.
    </t>
 
-      <!--<t>[Important Note - Note that this document achieves by extending the new PCEP message defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. 
+      <!--<t>[Important Note - Note that this document achieves by extending the new PCEP message defined in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>. 
     The authors and WG also debated on the use of existing PCEP messages. 
     <xref target="Procedures"/> defines the first approach where as <xref target="appendix"/>  
     defines the latter. The authors are open to either of the approach and
@@ -253,7 +253,7 @@
    node/adjacency label (SID).</t>         
    
    <t>The notion of segment and SID is defined in
-   <xref target='I-D.ietf-spring-segment-routing'/>, which fits the MPLS architecture
+   <xref target='RFC8402'/>, which fits the MPLS architecture
    <xref target='RFC3031'/> as the label which
    is managed by a local allocation process of LSR (similarly to
    other MPLS signaling protocols) <xref target='I-D.ietf-spring-segment-routing-mpls'/>. 
@@ -311,17 +311,17 @@
     <section title="New LSP Functions"
              toc="default">
    <t>This document uses the same PCEP messages and its extensions which
-   are described in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> for
+   are described in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> for
    PCECC-SR as well.</t>
    
    <t>PCEP messages PCRpt, PCInitiate, PCUpd are also used to send
    LSP Reports, LSP setup and LSP update respectively. The extended PCInitiate message described in
-   <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> is used to download
+   <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> is used to download
    or cleanup central controller's instructions (CCIs) (SR SID in scope of this document). The extended PCRpt message described in
-   <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> is also used to report
+   <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> is also used to report
    the CCIs (SR SIDs) from PCC to PCE.</t>
 
-    <!--<t>[Editor's Note: <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
+    <!--<t>[Editor's Note: <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
       PCLabelRpt. The authors and WG also debated on the use of existing PCEP messages. Further 
       the document also includes an appendix 
       on how the existing messages can be extended 
@@ -329,7 +329,7 @@
       are needed or existing PCEP messages can be extended. See See <xref target="appendix"/> 
       to see the extension of existing message for PCECC-SR functionality.]</t>-->
         
-        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> specify an object called CCI for the encoding of central controller's instructions. This document extends the CCI by defining a new object-type for segment routing. The PCEP messages are extended in this document to handle the PCECC operations for SR.</t>
+        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> specify an object called CCI for the encoding of central controller's instructions. This document extends the CCI by defining a new object-type for segment routing. The PCEP messages are extended in this document to handle the PCECC operations for SR.</t>
     </section>
     
     <section title="PCECC Capability Advertisement"
@@ -337,7 +337,7 @@
    <t>During PCEP Initialization Phase, PCEP Speakers (PCE or PCC)
    advertise their support of PCECC extensions.  A PCEP Speaker includes
    the "PCECC Capability" sub-TLV, described in 
-   <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>.</t>
+   <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>.</t>
 
    <t>A new S-bit is added in PCECC-CAPABILITY sub-TLV to indicate support for 
    PCECC-SR.  A PCC MUST set S-bit in PCECC-CAPABILITY sub-TLV and include 
@@ -378,14 +378,14 @@
     <section title="LSP Operations"
              toc="default">
     <t> The PCEP messages pertaining to PCECC-SR MUST include PATH-SETUP-TYPE
-   TLV <xref target='I-D.ietf-pce-lsp-setup-type'/> with PST=TBD in the SRP object
+   TLV <xref target='RFC8408'/> with PST=TBD in the SRP object
    to clearly identify the PCECC-SR LSP is intended.</t>
    
     <section title="PCECC Segment Routing (SR)"
              toc="default"
              anchor="SEC_SR_SETUP">
    <t>Segment Routing (SR) as described in
-   <xref target='I-D.ietf-spring-segment-routing'/> depends on "segments" that are
+   <xref target='RFC8402'/> depends on "segments" that are
    advertised by Interior Gateway Protocols (IGPs).  The SR-node
    allocates and advertises the SID (node, adj etc) and flood via the
    IGP.  This document proposes a new mechanism where PCE allocates the
@@ -650,7 +650,7 @@
        <section title="Re Delegation and Cleanup"
              toc="default"
              anchor="SEC_SES_TERMIN">
-        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> describes the action
+        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> describes the action
         needed for CCIs for the Basic PCECC LSP on this terminated
         session. Similarly actions should be applied for the SR SID as well.</t>
        </section>
@@ -658,7 +658,7 @@
        <section title="Synchronization of Label Allocations"
              toc="default"
              anchor="SEC_DB_SYNC">
-        <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> describes the synchronization of Central Controller's Instructions (CCI) via LSP state synchronization 
+        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> describes the synchronization of Central Controller's Instructions (CCI) via LSP state synchronization 
    as described in <xref target='RFC8231'/> and 
    <xref target='RFC8232'/>.  
         Same procedures should be applied for SR SIDs as well.</t>    
@@ -700,23 +700,25 @@
              anchor="BSID">
              
    <t>A PCE as a central controller can allocate and
-   provision the node/prefix/adjacency label (SID) via PCEP. One such SID is binding SID as described in <xref target="I-D.sivabalan-pce-binding-label-sid"/> , the PCECC mechanism can also be used to allocate the binding SID as described in this section.</t> 
+   provision the node/prefix/adjacency label (SID) via PCEP. One such SID is binding SID as described in <xref target="I-D.sivabalan-pce-binding-label-sid"/>, the PCECC mechanism can also be used to allocate the binding SID as described in this section.</t> 
 
-   <!--<t>The PCECC Capability as per
+   <t>A procedure for binding label/SID allocation is described in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> and is applicable for all path setup types (including SR paths).</t>
+
+   <!--Moved to I-D.ietf-pce-pcep-extension-for-pce-controller<t>The PCECC Capability as per
    <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> should also be
    advertised on the PCEP session, along with the SR sub-TLVs before using this procedure.</t>-->
 
-   <t>A P flag in LSP object is introduced in <xref target="I-D.li-pce-sr-path-segment"/> to indicate the allocation needs to be made by the PCE. The same flag is also set for the binding SID allocation request. A PCC would set this bit to 1 to request for
+   <!--<t>A P flag in LSP object is introduced in <xref target="I-D.li-pce-sr-path-segment"/> to indicate the allocation needs to be made by the PCE. The same flag can also be used to indicate that the allocation needs to be made by the PCE. A PCC would set this bit to 1 (and carry the TE-PATH-BINDING TLV <xref target="I-D.sivabalan-pce-binding-label-sid"/> in LSP object) to request for
       allocation of the binding label/SID by the PCE in the PCReq or PCRpt
       message.  A PCE would also set this bit to 1 to indicate that the
       binding label/SID is allocated by PCE and encoded in the PCRep,
-      PCUpd or PCInitiate message (the TE-PATH-BINDING TLV <xref target="I-D.sivabalan-pce-binding-label-sid"/> is present in
+      PCUpd or PCInitiate message (the TE-PATH-BINDING TLV is present in
       LSP object).  Further, a PCE would set this bit to 0 to indicate
       that the allocation is done by the PCC instead.</t>
 
    <t>The ingress PCC could request the binding label/SID to be allocated by the PCE
    via PCRpt message as per <xref target="RFC8231"/>.  The delegate flag (D-flag) MUST
-   also be set for this LSP.  The TE-PATH-BINDING TLV MAY be included with no Binding
+   also be set for this LSP.  The TE-PATH-BINDING TLV MUST be included with no Binding
    Value. The PCECC would allocated the binding label/SID and further respond to
    Ingress PCC with PCUpd message as per <xref target="RFC8231"/> and MUST include the
    TE-PATH-BINDING TLV in a LSP object.  The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>
@@ -726,6 +728,8 @@
    informed to the PCC.  The PCE would use the
    PCInitiate message <xref target="RFC8281"/> or PCUpd message <xref target="RFC8231"/> towards the
    PCC and MUST include the TE-PATH-BINDING TLV in the LSP object. The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>  
+
+   <t>The PCECC capability MUST be exchanged on the PCEP session, before PCE could allocate binding label/SID. Note that the CCI object is not used for binding allocation; this is done to maintain consistency with the rest of the binding label/SID procedures as per <xref target="I-D.sivabalan-pce-binding-label-sid"/>.</t>-->
  </section>
        
        </section>
@@ -747,7 +751,7 @@
     <section title="Central Control Instructions"
              toc="default"
              anchor="SEC_LabelOp"> 
-    <!--<t>[Editor's Note: <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
+    <!--<t>[Editor's Note: <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
       PCLabelRpt. The authors and WG also debated on the use of existing PCEP messages.  Further 
       the document also includes an appendix 
       on how the existing messages can be extended 
@@ -757,7 +761,7 @@
     <section title="The PCInitiate message"
              toc="default"
              anchor="SEC_PCInitiate">
-        <t>The PCInitiate Message defined in <xref target="RFC8281"/> and extended in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>
+        <t>The PCInitiate Message defined in <xref target="RFC8281"/> and extended in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>
         is further extended to support SR based central control instructions. </t>
         <t>The format of the extended PCInitiate message is as follows:
     <figure title="" suppress-title="false" align="left" alt="" width="" height="">
@@ -795,7 +799,7 @@
         </figure>
       </t>
  
-    <t>When PCInitiate message is used to distribute SR SIDs, the SRP, FEC and CCI objects MUST be present. The error handling for missing SRP or CCI object is as per <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. If the FEC object is
+    <t>When PCInitiate message is used to distribute SR SIDs, the SRP, FEC and CCI objects MUST be present. The error handling for missing SRP or CCI object is as per <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>. If the FEC object is
     missing, the receiving PCC MUST send a PCErr message with Error-type=6
     (Mandatory Object missing) and Error-value=TBD (FEC object missing).</t>
     <t>To cleanup the SRP object must set the R (remove) bit.</t>
@@ -838,7 +842,7 @@
 ]]></artwork>
         </figure></t>        
         <t>When PCRpt message is used to report the label map allocations, the FEC and CCI objects MUST be present. 
-          The error handling for CCI object is as per <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. If the FEC object is
+          The error handling for CCI object is as per <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>. If the FEC object is
     missing, the receiving PCC MUST send a PCErr message with Error-type=6
     (Mandatory Object missing) and Error-value=TBD (FEC object missing).</t>
         
@@ -856,7 +860,7 @@
     <section title="PCECC Capability sub-TLV"
              toc="default"
              anchor="SEC_PCECC_CAP_TLV">
-    <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defined
+    <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> defined
     the PCECC-CAPABILITY TLV.</t>
     <t>A new S-bit is defined in PCECC-CAPABILITY sub-TLV for PCECC-SR:</t>
 <figure align="left"
@@ -896,7 +900,7 @@
              toc="default"
              anchor="SEC_PATH">
              
-    <t>The PATH-SETUP-TYPE TLV is defined in <xref target='I-D.ietf-pce-lsp-setup-type'/>.
+    <t>The PATH-SETUP-TYPE TLV is defined in <xref target='RFC8408'/>.
    PST = TBD is used
    when Path is setup via PCECC SR mode.</t>
 
@@ -909,7 +913,7 @@
     <section title="CCI Object"
              toc="default"
              anchor="SEC_CCI">
-    <t>The Central Control Instructions (CCI) Object is used by the PCE to specify the forwarding instructions is defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. 
+    <t>The Central Control Instructions (CCI) Object is used by the PCE to specify the forwarding instructions is defined in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>. 
     This document defines another object-type for SR purpose. </t>
     <t>CCI Object-Type is TBD for SR as below - 
       <figure align="left"
@@ -944,12 +948,12 @@
         </artwork>
         </figure>
        </t>                 
-       <t>The field CC-ID is as described in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. Following new fields are defined for CCI Object-Type TBD - 
+       <t>The field CC-ID is as described in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>. Following new fields are defined for CCI Object-Type TBD - 
        <list style="hanging">
         <t hangText="MT-ID:"> Multi-Topology ID (as defined in <xref target='RFC4915'/>).</t>
         <t hangText="Algorithm:"> Single octet identifying the algorithm the SID is associated with. See <xref target='I-D.ietf-ospf-segment-routing-extensions'/>.</t>
         <t hangText="Flags:"> is used to carry any additional information
-    pertaining to the CCI. The O bit was defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>, this document further defines following bits- 
+    pertaining to the CCI. The O bit was defined in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>, this document further defines following bits- 
     <list style="symbols">
     <t>L-Bit (Local/Global): If set, then the value/index
          carried by the CCI object has local significance.  If not set,
@@ -1096,7 +1100,7 @@
     <section title="Security Considerations"
              toc="default">
     <t>The security considerations described in 
-     <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> apply to the
+     <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> apply to the
      extensions described in this document.</t>
     </section>
     
@@ -1146,7 +1150,7 @@
              toc="default">
 
       <section title="PCECC-CAPABILITY TLV" toc="default">
-      <t><xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines the
+      <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> defines the
       PCECC-CAPABILITY TLV and requests that IANA creates a registry to
       manage the value of the PCECC-CAPABILITY TLV's Flag field.  IANA
       is requested to allocate a new bit in the PCECC-CAPABILITY TLV Flag
@@ -1262,7 +1266,7 @@
       <?rfc include="reference.RFC.8174.xml"?>
       <?rfc include="reference.RFC.8231.xml"?>
       <?rfc include="reference.RFC.8281.xml"?>
-
+      <?rfc include="reference.RFC.8408.xml"?>
       </references>
 
     <references title="Informative References">
@@ -1273,19 +1277,20 @@
       <?rfc include="reference.RFC.7491.xml"?>
     <?rfc include="reference.RFC.8232.xml"?>
     <?rfc include="reference.RFC.8283.xml"?>
+    <?rfc include="reference.RFC.8402.xml"?>
+
     <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>
-    <?rfc include="reference.I-D.ietf-pce-lsp-setup-type"?>
+    
     <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
-    <?rfc include="reference.I-D.zhao-pce-pcep-extension-for-pce-controller"?>
+    <?rfc include="reference.I-D.ietf-pce-pcep-extension-for-pce-controller"?>
     <?rfc include="reference.I-D.ietf-pce-segment-routing"?>
     <?rfc include="reference.I-D.ietf-isis-segment-routing-extensions"?>
     <?rfc include="reference.I-D.ietf-ospf-segment-routing-extensions"?>
     <?rfc include="reference.I-D.litkowski-pce-state-sync"?>
     <?rfc include="reference.I-D.dhodylee-pce-pcep-ls"?>
-    <?rfc include="reference.I-D.ietf-spring-segment-routing"?>
     <?rfc include="reference.I-D.ietf-spring-segment-routing-mpls"?>
     <?rfc include="reference.I-D.sivabalan-pce-binding-label-sid"?>
-    <?rfc include="reference.I-D.li-pce-sr-path-segment"?>
+    
     <!--<?rfc include="reference.I-D.palle-pce-controller-labeldb-sync"?>-->
 
       </references>
@@ -1411,6 +1416,13 @@ Toronto
 Canada
 
 EMail: boris.zhang@telus.com
+
+Alex Tokar
+Cisco Systems
+Slovak Republic
+
+EMail: atokar@cisco.com
+
       
         ]]></artwork>
         </figure>

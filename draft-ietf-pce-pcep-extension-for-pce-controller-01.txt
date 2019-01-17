@@ -5,13 +5,13 @@
 PCE Working Group                                                Q. Zhao
 Internet-Draft                                                     Z. Li
 Intended status: Standards Track                                D. Dhody
-Expires: July 20, 2019                                    S. Karunanithi
+Expires: July 21, 2019                                    S. Karunanithi
                                                      Huawei Technologies
                                                                A. Farrel
                                                    Juniper Networks, Inc
                                                                  C. Zhou
                                                            Cisco Systems
-                                                        January 16, 2019
+                                                        January 17, 2019
 
 
    PCEP Procedures and Protocol Extensions for Using PCE as a Central
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Zhao, et al.              Expires July 20, 2019                 [Page 1]
+Zhao, et al.              Expires July 21, 2019                 [Page 1]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -68,7 +68,7 @@ Internet-Draft                    PCECC                     January 2019
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 20, 2019.
+   This Internet-Draft will expire on July 21, 2019.
 
 Copyright Notice
 
@@ -99,7 +99,7 @@ Table of Contents
      5.3.  PCECC Capability Advertisement  . . . . . . . . . . . . .   7
      5.4.  LSP Operations  . . . . . . . . . . . . . . . . . . . . .   8
        5.4.1.  Basic PCECC LSP Setup . . . . . . . . . . . . . . . .   8
-       5.4.2.  Central Control Instructions  . . . . . . . . . . . .  11
+       5.4.2.  Central Control Instructions  . . . . . . . . . . . .  12
          5.4.2.1.  Label Download  . . . . . . . . . . . . . . . . .  12
          5.4.2.2.  Label Cleanup . . . . . . . . . . . . . . . . . .  12
        5.4.3.  PCE Initiated PCECC LSP . . . . . . . . . . . . . . .  13
@@ -109,43 +109,44 @@ Table of Contents
 
 
 
-Zhao, et al.              Expires July 20, 2019                 [Page 2]
+Zhao, et al.              Expires July 21, 2019                 [Page 2]
 
 Internet-Draft                    PCECC                     January 2019
 
 
        5.4.7.  PCECC LSP State Report  . . . . . . . . . . . . . . .  17
        5.4.8.  PCC Based Allocations . . . . . . . . . . . . . . . .  18
-   6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .  18
-     6.1.  The PCInitiate message  . . . . . . . . . . . . . . . . .  18
-     6.2.  The PCRpt message . . . . . . . . . . . . . . . . . . . .  20
-   7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  20
-     7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .  21
-       7.1.1.  PCECC Capability sub-TLV  . . . . . . . . . . . . . .  21
-     7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  21
-     7.3.  CCI Object  . . . . . . . . . . . . . . . . . . . . . . .  22
-       7.3.1.  Address TLVs  . . . . . . . . . . . . . . . . . . . .  23
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  25
-     8.1.  Malicious PCE . . . . . . . . . . . . . . . . . . . . . .  25
-   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  25
-     9.1.  Control of Function and Policy  . . . . . . . . . . . . .  25
-     9.2.  Information and Data Models . . . . . . . . . . . . . . .  25
-     9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  25
-     9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  25
-     9.5.  Requirements On Other Protocols . . . . . . . . . . . . .  25
-     9.6.  Impact On Network Operations  . . . . . . . . . . . . . .  26
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  26
-     10.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  26
-     10.2.  New Path Setup Type Registry . . . . . . . . . . . . . .  26
-     10.3.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  26
-     10.4.  CCI Object Flag Field  . . . . . . . . . . . . . . . . .  26
-     10.5.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  27
-   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  27
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  27
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .  27
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  28
-   Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  31
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
+       5.4.9.  Binding Label . . . . . . . . . . . . . . . . . . . .  18
+   6.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .  19
+     6.1.  The PCInitiate message  . . . . . . . . . . . . . . . . .  19
+     6.2.  The PCRpt message . . . . . . . . . . . . . . . . . . . .  21
+   7.  PCEP Objects  . . . . . . . . . . . . . . . . . . . . . . . .  21
+     7.1.  OPEN Object . . . . . . . . . . . . . . . . . . . . . . .  22
+       7.1.1.  PCECC Capability sub-TLV  . . . . . . . . . . . . . .  22
+     7.2.  PATH-SETUP-TYPE TLV . . . . . . . . . . . . . . . . . . .  22
+     7.3.  CCI Object  . . . . . . . . . . . . . . . . . . . . . . .  23
+       7.3.1.  Address TLVs  . . . . . . . . . . . . . . . . . . . .  24
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  26
+     8.1.  Malicious PCE . . . . . . . . . . . . . . . . . . . . . .  26
+   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  26
+     9.1.  Control of Function and Policy  . . . . . . . . . . . . .  26
+     9.2.  Information and Data Models . . . . . . . . . . . . . . .  26
+     9.3.  Liveness Detection and Monitoring . . . . . . . . . . . .  26
+     9.4.  Verify Correct Operations . . . . . . . . . . . . . . . .  26
+     9.5.  Requirements On Other Protocols . . . . . . . . . . . . .  26
+     9.6.  Impact On Network Operations  . . . . . . . . . . . . . .  27
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  27
+     10.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  27
+     10.2.  New Path Setup Type Registry . . . . . . . . . . . . . .  27
+     10.3.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  27
+     10.4.  CCI Object Flag Field  . . . . . . . . . . . . . . . . .  27
+     10.5.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  28
+   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  28
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  28
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  28
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  30
+   Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  32
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  32
 
 1.  Introduction
 
@@ -161,15 +162,15 @@ Internet-Draft                    PCECC                     January 2019
    so that software running in a centralized system, called a
    controller, can act to program the devices in the network to behave
    in specific ways.  A required element in an SDN architecture is a
-   component that plans how the network resources will be used and how
 
 
 
-Zhao, et al.              Expires July 20, 2019                 [Page 3]
+Zhao, et al.              Expires July 21, 2019                 [Page 3]
 
 Internet-Draft                    PCECC                     January 2019
 
 
+   component that plans how the network resources will be used and how
    the devices will be programmed.  It is possible to view this
    component as performing specific computations to place traffic flows
    within the network given knowledge of the availability of network
@@ -220,8 +221,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-
-Zhao, et al.              Expires July 20, 2019                 [Page 4]
+Zhao, et al.              Expires July 21, 2019                 [Page 4]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -277,7 +277,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                 [Page 5]
+Zhao, et al.              Expires July 21, 2019                 [Page 5]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -333,7 +333,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                 [Page 6]
+Zhao, et al.              Expires July 21, 2019                 [Page 6]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -364,8 +364,8 @@ Internet-Draft                    PCECC                     January 2019
    During PCEP Initialization Phase, PCEP Speakers (PCE or PCC)
    advertise their support of PCECC extensions.
 
-   This document defines a new Path Setup Type (PST)
-   [I-D.ietf-pce-lsp-setup-type] for PCECC, as follows:
+   This document defines a new Path Setup Type (PST) [RFC8408] for
+   PCECC, as follows:
 
    o  PST = TBD: Path is setup via PCECC mode.
 
@@ -389,7 +389,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                 [Page 7]
+Zhao, et al.              Expires July 21, 2019                 [Page 7]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -418,8 +418,8 @@ Internet-Draft                    PCECC                     January 2019
 5.4.  LSP Operations
 
    The PCEP messages pertaining to PCECC MUST include PATH-SETUP-TYPE
-   TLV [I-D.ietf-pce-lsp-setup-type] in the SRP object to clearly
-   identify the PCECC LSP is intended.
+   TLV [RFC8408] in the SRP object to clearly identify the PCECC LSP is
+   intended.
 
 5.4.1.  Basic PCECC LSP Setup
 
@@ -445,7 +445,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                 [Page 8]
+Zhao, et al.              Expires July 21, 2019                 [Page 8]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -456,6 +456,13 @@ Internet-Draft                    PCECC                     January 2019
    LSP.  The CC-ID is uniquely identify the central controller's
    instruction within PCEP.  The PCC further responds with the PCRpt
    messages including the CCI and LSP objects.
+
+   The Ingress node would receive one CCI object with O bit (out-label)
+   set.  The transit node(s) would receive two CCI object with the in-
+   label CCI without O bit set and the out-label CCI with O bit set.
+   The egress node would receive one CCI object without O bit set.  A
+   node can determine its role based on the setting of the O bit in the
+   CCI object(s).
 
    Once the central controller's instructions (label operations) are
    completed, the PCE SHOULD send the PCUpd message to the Ingress PCC.
@@ -494,14 +501,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-
-
-
-
-
-
-
-Zhao, et al.              Expires July 20, 2019                 [Page 9]
+Zhao, et al.              Expires July 21, 2019                 [Page 9]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -518,15 +518,16 @@ Internet-Draft                    PCECC                     January 2019
     +--------+  |     |                                     |
         |       |     |                                     |
         |<------ PCInitiate,CC-ID=X,PLSP-ID=1  ------------ | Label
-        |       |     |                                     | download
+        |       |     |     L1,O=0                          | download
         |------- PCRpt,CC-ID=X,PLSP-ID=1  ----------------->|
         |       |     |                                     |
-        |       |<----- PCInitiate,CC-ID=Y1,Y2,PLSP-ID=1  - | Label
-        |       |     |                                     | download
+        |       |<----- PCInitiate,PLSP-ID=1, ------------- | Labels
+        |       |     |            CC-ID=Y1,O=0,L2          | download
+        |       |     |            CC-ID=Y2,O=1,L1          |
         |       |-----  PCRpt,CC-ID=Y1,Y2,PLSP-ID=1  ------>|
         |       |     |                                     |
         |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=1  - | Label
-        |       |     |                                     | download
+        |       |     |                L2,O=1               | download
         |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=1  ------>|
         |       |     |                                     |
         |       |     |<-- PCUpd,PLSP-ID=1,PST=TBD, D=1-----| PCECC LSP
@@ -556,8 +557,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-
-Zhao, et al.              Expires July 20, 2019                [Page 10]
+Zhao, et al.              Expires July 21, 2019                [Page 10]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -577,19 +577,21 @@ Internet-Draft                    PCECC                     January 2019
         |       |     |     C=1                             | download
         |------- PCRpt,CC-ID=X,PLSP-ID=1  ----------------->|
         |       |     |     Label=L1                        |
-        |       |<----- PCInitiate,PLSP-ID=1, ------------- | Label
-        |       |     |            CC-ID=Y1,C=1             |
-        |       |     |            CC-ID=Y2,C=0,L1          | download
+        |       |<----- PCInitiate,PLSP-ID=1, ------------- | Labels
+        |       |     |            CC-ID=Y1,C=1             | download
+        |       |     |            CC-ID=Y2,C=0,L1          |
         |       |-----  PCRpt,PLSP-ID=1  ------------------>|
         |       |     |       CC-ID=Y1, Label=L2            |
         |       |     |       CC-ID=Y2                      |
         |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=1  - | Label
-        |       |     |                C=0                  | download
+        |       |     |                C=0,L2               | download
         |       |     |---- PCRpt,CC-ID=Z,PLSP-ID=1  ------>|
         |       |     |                                     |
         |       |     |<-- PCUpd,PLSP-ID=1,PST=TBD, D=1-----| PCECC LSP
         |       |     |                                     | Update
         |       |     |                                     |
+
+    - The O bit is set as before (and thus not included)
 
 
              Figure 3: Basic PCECC LSP setup (PCC allocation)
@@ -604,19 +606,24 @@ Internet-Draft                    PCECC                     January 2019
    C bit is unset towards the ingress to complete all the label
    allocation for the PCECC LSP.
 
+
+
+
+
+
+
+
+Zhao, et al.              Expires July 21, 2019                [Page 11]
+
+Internet-Draft                    PCECC                     January 2019
+
+
 5.4.2.  Central Control Instructions
 
    The new central controller's instructions (CCI) for the label
    operations in PCEP is done via the PCInitiate message, by defining a
    new PCEP Objects for CCI operations.  Local label range of each PCC
    is assumed to be known at both the PCC and the PCE.
-
-
-
-Zhao, et al.              Expires July 20, 2019                [Page 11]
-
-Internet-Draft                    PCECC                     January 2019
-
 
 5.4.2.1.  Label Download
 
@@ -662,14 +669,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-
-
-
-
-
-
-
-Zhao, et al.              Expires July 20, 2019                [Page 12]
+Zhao, et al.              Expires July 21, 2019                [Page 12]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -689,9 +689,9 @@ Internet-Draft                    PCECC                     January 2019
         |       |     |                   R=1                | cleanup
         |------- PCRpt,CC-ID=X,PLSP-ID=1  ------------------>|
         |       |     |                                      |
-        |       |<----- PCInitiate,CC-ID=Y,PLSP-ID=1  ------ | Label
+        |       |<----- PCInitiate,CC-ID=Y1,Y2,PLSP-ID=1  -- | Label
         |       |     |                          R=1         | cleanup
-        |       |-----  PCRpt,CC-ID=Y,PLSP-ID=1  ----------->|
+        |       |-----  PCRpt,CC-ID=Y1,Y2,PLSP-ID=1  ------->|
         |       |     |                                      |
         |       |     |<--- PCInitiate,CC-ID=Z,PLSP-ID=1  -- | Label
         |       |     |                              R=1     | cleanup
@@ -725,7 +725,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 13]
+Zhao, et al.              Expires July 21, 2019                [Page 13]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -781,7 +781,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 14]
+Zhao, et al.              Expires July 21, 2019                [Page 14]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -837,7 +837,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 15]
+Zhao, et al.              Expires July 21, 2019                [Page 15]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -893,7 +893,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 16]
+Zhao, et al.              Expires July 21, 2019                [Page 16]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -949,7 +949,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 17]
+Zhao, et al.              Expires July 21, 2019                [Page 17]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -980,6 +980,59 @@ Internet-Draft                    PCECC                     January 2019
    PCE would further trigger the removal of the central controller
    instruction as per this document.
 
+5.4.9.  Binding Label
+
+   As per [I-D.sivabalan-pce-binding-label-sid], when a stateful PCE is
+   deployed for setting up TE paths, it may be desirable to report the
+   binding label to the stateful PCE for the purpose of enforcing end-
+   to-end TE.  In case of PCECC, the binding label may be allocated by
+   the PCE itself as described in this section.  This procedure is thus
+   applicable for all path setup types including PCECC.
+
+   A P flag in LSP object is introduced in [I-D.li-pce-sr-path-segment]
+   to indicate the allocation needs to be made by the PCE.  The same
+   flag can also be used to indicate that the allocation needs to be
+   made by the PCE.  A PCC would set this bit to 1 (and carry the TE-
+   PATH-BINDING TLV [I-D.sivabalan-pce-binding-label-sid] in LSP object)
+   to request for allocation of the binding label by the PCE in the
+   PCReq or PCRpt message.  A PCE would also set this bit to 1 to
+   indicate that the binding label is allocated by PCE and encoded in
+   the PCRep, PCUpd or PCInitiate message (the TE-PATH-BINDING TLV is
+   present in LSP object).  Further, a PCE would set this bit to 0 to
+   indicate that the allocation is done by the PCC instead.
+
+
+
+
+
+Zhao, et al.              Expires July 21, 2019                [Page 18]
+
+Internet-Draft                    PCECC                     January 2019
+
+
+   The ingress PCC could request the binding label to be allocated by
+   the PCE via PCRpt message as per [RFC8231].  The delegate flag
+   (D-flag) MUST also be set for this LSP.  The TE-PATH-BINDING TLV MUST
+   be included with no Binding Value.  The PCECC would allocated the
+   binding label and further respond to Ingress PCC with PCUpd message
+   as per [RFC8231] and MUST include the TE-PATH-BINDING TLV in a LSP
+   object.  The P flag in the LSP object would be set to 1 to indicate
+   that the allocation is made by the PCE.
+
+   The PCE could allocate the binding label on its own accord for a PCE-
+   Initiated (or delegated LSP).  The allocated binding label needs to
+   be informed to the PCC.  The PCE would use the PCInitiate message
+   [RFC8281] or PCUpd message [RFC8231] towards the PCC and MUST include
+   the TE-PATH-BINDING TLV in the LSP object.  The P flag in the LSP
+   object would be set to 1 to indicate that the allocation is made by
+   the PCE.
+
+   The PCECC capability MUST be exchanged on the PCEP session, before
+   PCE could allocate binding label.  Note that the CCI object is not
+   used for binding allocation; this is done to maintain consistency
+   with the rest of the binding label/SID procedures as per
+   [I-D.sivabalan-pce-binding-label-sid].
+
 6.  PCEP messages
 
    As defined in [RFC5440], a PCEP message consists of a common header
@@ -1005,7 +1058,10 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 18]
+
+
+
+Zhao, et al.              Expires July 21, 2019                [Page 19]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1061,7 +1117,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 19]
+Zhao, et al.              Expires July 21, 2019                [Page 20]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1117,7 +1173,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 20]
+Zhao, et al.              Expires July 21, 2019                [Page 21]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1157,8 +1213,8 @@ Internet-Draft                    PCECC                     January 2019
 
 7.2.  PATH-SETUP-TYPE TLV
 
-   The PATH-SETUP-TYPE TLV is defined in [I-D.ietf-pce-lsp-setup-type];
-   this document defines a new PST value:
+   The PATH-SETUP-TYPE TLV is defined in [RFC8408]; this document
+   defines a new PST value:
 
    o  PST = TBD: Path is setup via PCECC mode.
 
@@ -1173,7 +1229,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 21]
+Zhao, et al.              Expires July 21, 2019                [Page 22]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1229,7 +1285,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 22]
+Zhao, et al.              Expires July 21, 2019                [Page 23]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1285,7 +1341,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 23]
+Zhao, et al.              Expires July 21, 2019                [Page 24]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1341,7 +1397,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 24]
+Zhao, et al.              Expires July 21, 2019                [Page 25]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1397,7 +1453,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 25]
+Zhao, et al.              Expires July 21, 2019                [Page 26]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1453,7 +1509,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 26]
+Zhao, et al.              Expires July 21, 2019                [Page 27]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1509,7 +1565,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-Zhao, et al.              Expires July 20, 2019                [Page 27]
+Zhao, et al.              Expires July 21, 2019                [Page 28]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1553,22 +1609,29 @@ Internet-Draft                    PCECC                     January 2019
               Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
               <https://www.rfc-editor.org/info/rfc8281>.
 
+   [RFC8408]  Sivabalan, S., Tantsura, J., Minei, I., Varga, R., and J.
+              Hardwick, "Conveying Path Setup Type in PCE Communication
+              Protocol (PCEP) Messages", RFC 8408, DOI 10.17487/RFC8408,
+              July 2018, <https://www.rfc-editor.org/info/rfc8408>.
+
+
+
+
+
+
+
+
+Zhao, et al.              Expires July 21, 2019                [Page 29]
+
+Internet-Draft                    PCECC                     January 2019
+
+
 12.2.  Informative References
 
    [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
               Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
               <https://www.rfc-editor.org/info/rfc4655>.
-
-
-
-
-
-
-Zhao, et al.              Expires July 20, 2019                [Page 28]
-
-Internet-Draft                    PCECC                     January 2019
-
 
    [RFC7025]  Otani, T., Ogaki, K., Caviglia, D., Zhang, F., and C.
               Margaria, "Requirements for GMPLS Applications of PCE",
@@ -1604,12 +1667,6 @@ Internet-Draft                    PCECC                     January 2019
               as a Central Controller (PCECC).", draft-ietf-teas-pcecc-
               use-cases-02 (work in progress), October 2018.
 
-   [I-D.ietf-pce-lsp-setup-type]
-              Sivabalan, S., Tantsura, J., Minei, I., Varga, R., and J.
-              Hardwick, "Conveying path setup type in PCEP messages",
-              draft-ietf-pce-lsp-setup-type-10 (work in progress), May
-              2018.
-
    [I-D.ietf-pce-pcep-yang]
               Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
               YANG Data Model for Path Computation Element
@@ -1620,8 +1677,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-
-Zhao, et al.              Expires July 20, 2019                [Page 29]
+Zhao, et al.              Expires July 21, 2019                [Page 30]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1638,6 +1694,18 @@ Internet-Draft                    PCECC                     January 2019
               Controlled ID Space", draft-li-pce-controlled-id-space-01
               (work in progress), December 2018.
 
+   [I-D.sivabalan-pce-binding-label-sid]
+              Sivabalan, S., Filsfils, C., Tantsura, J., Hardwick, J.,
+              Previdi, S., and D. Dhody, "Carrying Binding Label/
+              Segment-ID in PCE-based Networks.", draft-sivabalan-pce-
+              binding-label-sid-05 (work in progress), October 2018.
+
+   [I-D.li-pce-sr-path-segment]
+              Li, C., Chen, M., Dhody, D., Cheng, W., Dong, J., Li, Z.,
+              and R. Gandhi, "Path Computation Element Communication
+              Protocol (PCEP) Extension for Path Segment in Segment
+              Routing (SR)", draft-li-pce-sr-path-segment-03 (work in
+              progress), October 2018.
 
 
 
@@ -1665,19 +1733,7 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Zhao, et al.              Expires July 20, 2019                [Page 30]
+Zhao, et al.              Expires July 21, 2019                [Page 31]
 
 Internet-Draft                    PCECC                     January 2019
 
@@ -1715,8 +1771,28 @@ Appendix A.  Contributor Addresses
 
    EMail: boris.zhang@telus.com
 
+   Alex Tokar
+   Cisco Systems
+   Slovak Republic
+
+   EMail: atokar@cisco.com
+
 
 Authors' Addresses
+
+
+
+
+
+
+
+
+
+
+Zhao, et al.              Expires July 21, 2019                [Page 32]
+
+Internet-Draft                    PCECC                     January 2019
+
 
    Quintin Zhao
    Huawei Technologies
@@ -1725,17 +1801,6 @@ Authors' Addresses
    USA
 
    EMail: quintin.zhao@huawei.com
-
-
-
-
-
-
-
-
-Zhao, et al.              Expires July 20, 2019                [Page 31]
-
-Internet-Draft                    PCECC                     January 2019
 
 
    Zhenbin Li
@@ -1780,13 +1845,4 @@ Internet-Draft                    PCECC                     January 2019
 
 
 
-
-
-
-
-
-
-
-
-
-Zhao, et al.              Expires July 20, 2019                [Page 32]
+Zhao, et al.              Expires July 21, 2019                [Page 33]
