@@ -146,7 +146,7 @@
   As such, any upstream node can use binding labels to steer the packets that it originates to appropriate TE LSPs to enforce TE/SR policy. Similarly, a binding SID, see <xref target="I-D.ietf-isis-segment-routing-extensions"/>, <xref target="I-D.ietf-idr-segment-routing-te-policy"/>
 and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. Note that if an SR-TE path is represented as a forwarding-adjacency (FA), then the corresponding adjacency SID can be used as the binding SID. In such case, the path is advertised using the routing protocols as described in <xref target="RFC4206"/>. The binding SID provides an alternate mechanism without additional overhead on routing protocols.</t>-->
 
-<t><xref target="RFC5440"/> describes the Path Computation Element Protocol (PCEP) for communication between a Path Computation Client (PCC) and a PCE or between a pair of PCEs. <xref target="RFC8231"/> specifies extension to PCEP that allows a PCC to delegate its LSPs to a stateful PCE. A stateful PCE can then update the state of LSPs delegated to it. <xref target="RFC8281"/> specifies a mechanism allowing a PCE to dynamically instantiate an LSP on a PCC by sending the path and characteristics. The PCEP extension to setup and maintain SR-TE paths is specified in <xref target="I-D.ietf-pce-segment-routing"/>.</t>
+<t><xref target="RFC5440"/> describes the Path Computation Element Protocol (PCEP) for communication between a Path Computation Client (PCC) and a PCE or between a pair of PCEs as per <xref target="RFC4655"/>. <xref target="RFC8231"/> specifies extension to PCEP that allows a PCC to delegate its LSPs to a stateful PCE. A stateful PCE can then update the state of LSPs delegated to it. <xref target="RFC8281"/> specifies a mechanism allowing a PCE to dynamically instantiate an LSP on a PCC by sending the path and characteristics. The PCEP extension to setup and maintain SR-TE paths is specified in <xref target="I-D.ietf-pce-segment-routing"/>.</t>
 
 <t><xref target="I-D.ietf-pce-segment-routing"/> provides a mechanism for a network controller
    (acting as a PCE) to instantiate candidate paths for an SR Policy
@@ -188,7 +188,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
   <t>Additionally, to support the PCE based central controller <xref target="RFC8283"/> operation where the PCE would take responsibility for
    managing some part of the MPLS label space for each of the routers that it controls, the PCE could directly make the binding label/SID allocation and inform the PCC. 
-   See <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> for details. </t>
+   See <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> for details. </t>
 
 
 </section> <!-- Introduction -->
@@ -244,7 +244,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       </list>
  </t>
  <t>Reserved: MUST be set to 0 while sending and ignored on receipt.</t>
- <t>Binding Value: A variable length field, padded with trailing zeros to a 4-byte boundary. For the BT as 0, the 20 bits represents the MPLS label. For the BT as 1, the 32-bits represents the label stack entry as per <xref target="RFC5462"/>.</t>
+ <t>Binding Value: A variable length field, padded with trailing zeros to a 4-byte boundary. For the BT as 0, the 20 bits represents the MPLS label. For the BT as 1, the 32-bits represents the label stack entry as per <xref target="RFC5462"/>. For the BT as 2, the 128-bits represent the SRv6 SID.</t>
 
 </section> <!-- Path-setup-type-tlv -->
 
@@ -373,8 +373,7 @@ are applicable to this specification. No additional security measure is required
   <!--<?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-idr-segment-routing-te-policy"?>-->
   <!--<?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-isis-segment-routing-extensions"?>-->
   <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-idr-bgp-prefix-sid"?>
-  <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.li-pce-sr-path-segment"?>
-  <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.zhao-pce-pcep-extension-pce-controller-sr"?>
+  <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-extension-for-pce-controller"?>
   </references>
 
 <!--<section anchor="sec_pcecc" title="PCE based Central Controller">

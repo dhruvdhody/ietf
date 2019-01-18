@@ -5,14 +5,14 @@
 PCE Working Group                                           S. Sivabalan
 Internet-Draft                                               C. Filsfils
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: July 20, 2019                                       J. Tantsura
+Expires: July 21, 2019                                       J. Tantsura
                                                             Apstra, Inc.
                                                              J. Hardwick
                                                      Metaswitch Networks
                                                               S. Previdi
                                                                 D. Dhody
                                                      Huawei Technologies
-                                                        January 16, 2019
+                                                        January 17, 2019
 
 
         Carrying Binding Label/Segment-ID in PCE-based Networks.
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                 [Page 1]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 1]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -61,7 +61,7 @@ Internet-Draft              Binding Label/SID               January 2019
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 20, 2019.
+   This Internet-Draft will expire on July 21, 2019.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                 [Page 2]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 2]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -131,13 +131,13 @@ Internet-Draft              Binding Label/SID               January 2019
 
    [RFC5440] describes the Path Computation Element Protocol (PCEP) for
    communication between a Path Computation Client (PCC) and a PCE or
-   between a pair of PCEs.  [RFC8231] specifies extension to PCEP that
-   allows a PCC to delegate its LSPs to a stateful PCE.  A stateful PCE
-   can then update the state of LSPs delegated to it.  [RFC8281]
-   specifies a mechanism allowing a PCE to dynamically instantiate an
-   LSP on a PCC by sending the path and characteristics.  The PCEP
-   extension to setup and maintain SR-TE paths is specified in
-   [I-D.ietf-pce-segment-routing].
+   between a pair of PCEs as per [RFC4655].  [RFC8231] specifies
+   extension to PCEP that allows a PCC to delegate its LSPs to a
+   stateful PCE.  A stateful PCE can then update the state of LSPs
+   delegated to it.  [RFC8281] specifies a mechanism allowing a PCE to
+   dynamically instantiate an LSP on a PCC by sending the path and
+   characteristics.  The PCEP extension to setup and maintain SR-TE
+   paths is specified in [I-D.ietf-pce-segment-routing].
 
    [I-D.ietf-pce-segment-routing] provides a mechanism for a network
    controller (acting as a PCE) to instantiate candidate paths for an SR
@@ -165,7 +165,7 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                 [Page 3]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 3]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -221,7 +221,7 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                 [Page 4]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 4]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -231,7 +231,7 @@ Internet-Draft              Binding Label/SID               January 2019
    part of the MPLS label space for each of the routers that it
    controls, the PCE could directly make the binding label/SID
    allocation and inform the PCC.  See
-   [I-D.zhao-pce-pcep-extension-pce-controller-sr] for details.
+   [I-D.ietf-pce-pcep-extension-for-pce-controller] for details.
 
 2.  Terminology
 
@@ -277,7 +277,7 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                 [Page 5]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 5]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -322,7 +322,8 @@ Internet-Draft              Binding Label/SID               January 2019
    Binding Value: A variable length field, padded with trailing zeros to
    a 4-byte boundary.  For the BT as 0, the 20 bits represents the MPLS
    label.  For the BT as 1, the 32-bits represents the label stack entry
-   as per [RFC5462].
+   as per [RFC5462].  For the BT as 2, the 128-bits represent the SRv6
+   SID.
 
 4.  Operation
 
@@ -332,8 +333,7 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-
-Sivabalan, et al.         Expires July 20, 2019                 [Page 6]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 6]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -389,7 +389,7 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                 [Page 7]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 7]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -445,7 +445,7 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                 [Page 8]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 8]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -501,7 +501,7 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                 [Page 9]
+Sivabalan, et al.         Expires July 21, 2019                 [Page 9]
 
 Internet-Draft              Binding Label/SID               January 2019
 
@@ -557,24 +557,17 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                [Page 10]
+Sivabalan, et al.         Expires July 21, 2019                [Page 10]
 
 Internet-Draft              Binding Label/SID               January 2019
 
 
-   [I-D.li-pce-sr-path-segment]
-              Li, C., Chen, M., Dhody, D., Cheng, W., Dong, J., Li, Z.,
-              and R. Gandhi, "Path Computation Element Communication
-              Protocol (PCEP) Extension for Path Segment in Segment
-              Routing (SR)", draft-li-pce-sr-path-segment-03 (work in
-              progress), October 2018.
-
-   [I-D.zhao-pce-pcep-extension-pce-controller-sr]
+   [I-D.ietf-pce-pcep-extension-for-pce-controller]
               Zhao, Q., Li, Z., Dhody, D., Karunanithi, S., Farrel, A.,
               and C. Zhou, "PCEP Procedures and Protocol Extensions for
-              Using PCE as a Central Controller (PCECC) of SR-LSPs",
-              draft-zhao-pce-pcep-extension-pce-controller-sr-03 (work
-              in progress), June 2018.
+              Using PCE as a Central Controller (PCECC) of LSPs", draft-
+              ietf-pce-pcep-extension-for-pce-controller-00 (work in
+              progress), November 2018.
 
 Authors' Addresses
 
@@ -611,17 +604,18 @@ Authors' Addresses
    EMail: Jonathan.Hardwick@metaswitch.com
 
 
-
-
-Sivabalan, et al.         Expires July 20, 2019                [Page 11]
-
-Internet-Draft              Binding Label/SID               January 2019
-
-
    Stefano Previdi
    Huawei Technologies
 
    EMail: stefano@previdi.net
+
+
+
+
+
+Sivabalan, et al.         Expires July 21, 2019                [Page 11]
+
+Internet-Draft              Binding Label/SID               January 2019
 
 
    Dhruv Dhody
@@ -669,4 +663,10 @@ Internet-Draft              Binding Label/SID               January 2019
 
 
 
-Sivabalan, et al.         Expires July 20, 2019                [Page 12]
+
+
+
+
+
+
+Sivabalan, et al.         Expires July 21, 2019                [Page 12]
