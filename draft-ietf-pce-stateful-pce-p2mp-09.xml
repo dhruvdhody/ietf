@@ -628,6 +628,9 @@ objects defined in [RFC5440].
         in <xref target='RFC5440'></xref>.</t>
 
         <t>The S2LS object could be used in conjunction with the intended-path (ERO) as well as the actual-path (RRO); for the same leaf, the state encoded in the S2LS object associated with the actual-path MUST be used over the intended-path.</t>
+
+        <t>If the E-bit (ERO-Compress bit) was set to 1 in the report, then the
+   path will be formed by an ERO followed by a list of SEROs or RRO followed by a list of SRROs.</t>
       </section>
       <section title="The PCUpd Message"
                toc="default"
@@ -1081,8 +1084,11 @@ by PCEP extensions.
           <list style="hanging">
             <t hangText="N (P2MP flag - 1 bit):">If the N flag is set to 1, it indicates that the
         message is for a P2MP TE LSP. </t>
-            <t hangText="F (Fragmentation flag - 1 bit):">If the F flag is set
-            to 1, it indicates the message is fragmented. See <xref target="frag"/> for details.</t>
+            <t hangText="F (Fragmentation flag - 1 bit):">If the F flag is unset (0), it indicates that the LSP is not fragmented or it is the last
+         piece of the fragmented LSP. If the F flag is set to 1, it indicates that the LSP is fragmented and this is not the
+         last piece of the fragmented LSP.  The receiver needs to wait
+         for additional fragments until it receives an LSP with the same
+         PLSP-ID and with the F-bit set to 0. See <xref target="frag"/> for further details.</t>
             <t hangText="E (ERO-compression flag - 1 bit):">If the E flag is set
             to 1, it indicates the route is in compressed format (that is, Secondary Explicit Route Object (SERO) and Secondary Record Route Object (SRRO) objects <xref target='RFC8306'></xref> are in use).</t>
           </list>
@@ -1342,7 +1348,7 @@ by PCEP extensions.
    report any error associated with the fragmentation of a P2MP PCEP
    message.  A new error-value 2 (early allocated by IANA) indicates
    "Fragmented report failure" and is used if a PCE does not receive the
-   any part of the fragmented message.</t>
+   last part of the fragmented message.</t>
 
         </section>
         <section title="Update Fragmentation Procedure"
@@ -1368,7 +1374,7 @@ by PCEP extensions.
    report any error associated with the fragmentation of a P2MP PCEP
    message.  A new error-value 3 (early allocated by IANA) indicates
    "Fragmented update failure" and is used if a PCC does not receive the
-   any part of the fragmented message.</t>          
+   last part of the fragmented message.</t>          
         </section>
         <section title="PCIntiate Fragmentation Procedure"
                toc="default">
@@ -1392,7 +1398,7 @@ by PCEP extensions.
    report any error associated with the fragmentation of a P2MP PCEP
    message.  A new error-value 4 (early allocated by IANA) indicates
    "Fragmented instantiation failure" and is used if a PCC does not receive the
-   any part of the fragmented message.</t>          
+   last part of the fragmented message.</t>          
       </section>
       </section>
     <section title="Non-Support of P2MP TE LSPs for Stateful PCE"
@@ -1655,7 +1661,7 @@ Bit      Meaning               Reference
 
 </artwork>
         </figure>
-        <t>Additionally, IANA is requested to allocate an additional code-point in this registry.</t>
+        <t>Additionally, IANA is requested to allocate additional code-points in this registry.</t>
 
         <figure title=""
                 suppress-title="true"

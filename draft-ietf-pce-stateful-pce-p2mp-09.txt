@@ -91,8 +91,8 @@ Table of Contents
          5.6.3.4.  P2MP TE LSPs Delegation and Cleanup . . . . . . .  10
    6.  PCEP Message Extensions . . . . . . . . . . . . . . . . . . .  10
      6.1.  The PCRpt Message . . . . . . . . . . . . . . . . . . . .  10
-     6.2.  The PCUpd Message . . . . . . . . . . . . . . . . . . . .  12
-     6.3.  The PCReq Message . . . . . . . . . . . . . . . . . . . .  13
+     6.2.  The PCUpd Message . . . . . . . . . . . . . . . . . . . .  13
+     6.3.  The PCReq Message . . . . . . . . . . . . . . . . . . . .  14
      6.4.  The PCRep Message . . . . . . . . . . . . . . . . . . . .  14
      6.5.  The PCInitiate message  . . . . . . . . . . . . . . . . .  15
      6.6.  Example . . . . . . . . . . . . . . . . . . . . . . . . .  16
@@ -105,7 +105,7 @@ Table of Contents
      7.3.  S2LS Object . . . . . . . . . . . . . . . . . . . . . . .  22
    8.  Message Fragmentation . . . . . . . . . . . . . . . . . . . .  23
      8.1.  Report Fragmentation Procedure  . . . . . . . . . . . . .  23
-     8.2.  Update Fragmentation Procedure  . . . . . . . . . . . . .  23
+     8.2.  Update Fragmentation Procedure  . . . . . . . . . . . . .  24
 
 
 
@@ -119,15 +119,15 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    10. Manageability Considerations  . . . . . . . . . . . . . . . .  25
      10.1.  Control of Function and Policy . . . . . . . . . . . . .  25
      10.2.  Information and Data Models  . . . . . . . . . . . . . .  25
-     10.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  25
+     10.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  26
      10.4.  Verify Correct Operations  . . . . . . . . . . . . . . .  26
      10.5.  Requirements On Other Protocols  . . . . . . . . . . . .  26
      10.6.  Impact On Network Operations . . . . . . . . . . . . . .  26
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  26
      11.1.  PCE Capabilities in IGP Advertisements . . . . . . . . .  26
-     11.2.  STATEFUL-PCE-CAPABILITY TLV  . . . . . . . . . . . . . .  26
+     11.2.  STATEFUL-PCE-CAPABILITY TLV  . . . . . . . . . . . . . .  27
      11.3.  LSP Object . . . . . . . . . . . . . . . . . . . . . . .  27
-     11.4.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  27
+     11.4.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  28
      11.5.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  29
      11.6.  PCEP object  . . . . . . . . . . . . . . . . . . . . . .  29
      11.7.  S2LS object  . . . . . . . . . . . . . . . . . . . . . .  29
@@ -136,8 +136,8 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
      14.1.  Normative References . . . . . . . . . . . . . . . . . .  30
      14.2.  Informative References . . . . . . . . . . . . . . . . .  32
-   Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  33
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  33
+   Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  34
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  34
 
 1.  Introduction
 
@@ -661,11 +661,11 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    encoded in the S2LS object associated with the actual-path MUST be
    used over the intended-path.
 
-6.2.  The PCUpd Message
+   If the E-bit (ERO-Compress bit) was set to 1 in the report, then the
+   path will be formed by an ERO followed by a list of SEROs or RRO
+   followed by a list of SRROs.
 
-   As per Section 6.2 of [RFC8231], PCUpd message is used to update P2P
-   TE LSP attributes.  This document extends the PCUpd message in
-   updating the attributes of a P2MP TE LSP.
+
 
 
 
@@ -673,6 +673,12 @@ Palle, et al.            Expires August 10, 2019               [Page 12]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
 
+
+6.2.  The PCUpd Message
+
+   As per Section 6.2 of [RFC8231], PCUpd message is used to update P2P
+   TE LSP attributes.  This document extends the PCUpd message in
+   updating the attributes of a P2MP TE LSP.
 
    The format of a PCUpd message is as follows:
 
@@ -716,12 +722,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    type=6 ("Mandatory Object missing") and Error-value=3 ("END-POINTS
    object missing") (defined in [RFC5440].
 
-6.3.  The PCReq Message
-
-   As per Section 3.4 of [RFC8306], PCReq message is used for a P2MP
-   Path Computation Request.  This document extends the PCReq message
-   such that a PCC MAY include the LSP object in the PCReq message if
-
 
 
 
@@ -730,6 +730,11 @@ Palle, et al.            Expires August 10, 2019               [Page 13]
 Internet-Draft                STATEFUL-P2MP                February 2019
 
 
+6.3.  The PCReq Message
+
+   As per Section 3.4 of [RFC8306], PCReq message is used for a P2MP
+   Path Computation Request.  This document extends the PCReq message
+   such that a PCC MAY include the LSP object in the PCReq message if
    the stateful PCE P2MP capability has been negotiated on a PCEP
    session between the PCC and a PCE.
 
@@ -773,17 +778,18 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    As per Section 3.5 of [RFC8306], PCRep message is used for a P2MP
    Path Computation Reply.  This document extends the PCRep message such
    that a PCE MAY include the LSP object in the PCRep message if the
-   stateful PCE P2MP capability has been negotiated on a PCEP session
-   between the PCC and a PCE.
-
-   The format of PCRep message is as follows:
-
 
 
 
 Palle, et al.            Expires August 10, 2019               [Page 14]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
+
+
+   stateful PCE P2MP capability has been negotiated on a PCEP session
+   between the PCC and a PCE.
+
+   The format of PCRep message is as follows:
 
 
    <PCRep Message>::= <Common Header>
@@ -822,12 +828,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    are same to the P2P TE LSPs.
 
    The format of PCInitiate message is as follows:
-
-
-
-
-
-
 
 
 
@@ -1026,8 +1026,13 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    N (P2MP flag - 1 bit):  If the N flag is set to 1, it indicates that
       the message is for a P2MP TE LSP.
 
-   F (Fragmentation flag - 1 bit):  If the F flag is set to 1, it
-      indicates the message is fragmented.  See Section 8 for details.
+   F (Fragmentation flag - 1 bit):  If the F flag is unset (0), it
+      indicates that the LSP is not fragmented or it is the last piece
+      of the fragmented LSP.  If the F flag is set to 1, it indicates
+      that the LSP is fragmented and this is not the last piece of the
+      fragmented LSP.  The receiver needs to wait for additional
+      fragments until it receives an LSP with the same PLSP-ID and with
+      the F-bit set to 0.  See Section 8 for further details.
 
    E (ERO-compression flag - 1 bit):  If the E flag is set to 1, it
       indicates the route is in compressed format (that is, Secondary
@@ -1053,11 +1058,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
 
    The P2MP-LSP-IDENTIFIERS TLV MAY be included in the LSP object in the
    PCUpd message for P2MP TE LSPs.  The special value of all zeros for
-   this TLV is used to refer to all paths pertaining to a particular
-   PLSP-ID.
-
-   There are two P2MP-LSP-IDENTIFIERS TLVs, one for IPv4 and one for
-   IPv6.
 
 
 
@@ -1065,6 +1065,12 @@ Palle, et al.            Expires August 10, 2019               [Page 19]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
 
+
+   this TLV is used to refer to all paths pertaining to a particular
+   PLSP-ID.
+
+   There are two P2MP-LSP-IDENTIFIERS TLVs, one for IPv4 and one for
+   IPv6.
 
    The format of the IPV4-P2MP-LSP-IDENTIFIERS TLV is shown in the
    Figure 6:
@@ -1106,12 +1112,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
       identifier defined in [RFC3209], Section 4.6.1.1 for the
       LSP_TUNNEL_IPv4 Session Object.
 
-   P2MP ID:  contains the 32-bits 'P2MP ID' identifier defined in
-      Section 19.1.1 of [RFC4875] for the P2MP LSP Tunnel IPv4 SESSION
-      Object.
-
-   The format of the IPV6-P2MP-LSP-IDENTIFIERS TLV is shown in the
-   Figure 7:
 
 
 
@@ -1120,6 +1120,14 @@ Internet-Draft                STATEFUL-P2MP                February 2019
 Palle, et al.            Expires August 10, 2019               [Page 20]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
+
+
+   P2MP ID:  contains the 32-bits 'P2MP ID' identifier defined in
+      Section 19.1.1 of [RFC4875] for the P2MP LSP Tunnel IPv4 SESSION
+      Object.
+
+   The format of the IPV6-P2MP-LSP-IDENTIFIERS TLV is shown in the
+   Figure 7:
 
 
     0                   1                   2                   3
@@ -1163,20 +1171,19 @@ Internet-Draft                STATEFUL-P2MP                February 2019
       [RFC3209], Section 4.6.2.2 for the LSP_TUNNEL_IPv6 Sender Template
       Object.
 
-   Tunnel ID:  contains the 16-bits 'Tunnel ID' identifier defined in
-      [RFC3209], Section 4.6.1.2 for the LSP_TUNNEL_IPv6 Session Object.
-
-   Extended Tunnel ID:  contains the 128-bits 'Extended Tunnel ID'
-      identifier defined in [RFC3209], Section 4.6.1.2 for the
-      LSP_TUNNEL_IPv6 Session Object.
-
-
 
 
 Palle, et al.            Expires August 10, 2019               [Page 21]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
 
+
+   Tunnel ID:  contains the 16-bits 'Tunnel ID' identifier defined in
+      [RFC3209], Section 4.6.1.2 for the LSP_TUNNEL_IPv6 Session Object.
+
+   Extended Tunnel ID:  contains the 128-bits 'Extended Tunnel ID'
+      identifier defined in [RFC3209], Section 4.6.1.2 for the
+      LSP_TUNNEL_IPv6 Session Object.
 
    P2MP ID:  As defined above in IPV4-P2MP-LSP-IDENTIFIERS TLV.
 
@@ -1219,13 +1226,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    Unassigned bits are reserved for future uses.  They MUST be set to 0
    on transmission and MUST be ignored on receipt.
 
-   When N flag is set in LSP object then the O field in LSP object
-   represents the operational status of the full P2MP TE LSP and the O
-   field in S2LS object represents the operational status of a group of
-   destinations encoded within the END-POINTS object.  If there is a
-   conflict between the O field in the LSP and the S2LS object (for
-   example, O field in LSP corresponds to down whereas the O field in
-   S2LS is up), the PCEP speaker MUST generate an error with error-type
 
 
 
@@ -1234,6 +1234,13 @@ Palle, et al.            Expires August 10, 2019               [Page 22]
 Internet-Draft                STATEFUL-P2MP                February 2019
 
 
+   When N flag is set in LSP object then the O field in LSP object
+   represents the operational status of the full P2MP TE LSP and the O
+   field in S2LS object represents the operational status of a group of
+   destinations encoded within the END-POINTS object.  If there is a
+   conflict between the O field in the LSP and the S2LS object (for
+   example, O field in LSP corresponds to down whereas the O field in
+   S2LS is up), the PCEP speaker MUST generate an error with error-type
    10 ("Reception of an invalid object") and error-value TBD2 (to be
    allocated by IANA) ("Mis-match of O field in S2LS and LSP object").
 
@@ -1271,7 +1278,17 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    report any error associated with the fragmentation of a P2MP PCEP
    message.  A new error-value 2 (early allocated by IANA) indicates
    "Fragmented report failure" and is used if a PCE does not receive the
-   any part of the fragmented message.
+   last part of the fragmented message.
+
+
+
+
+
+
+Palle, et al.            Expires August 10, 2019               [Page 23]
+
+Internet-Draft                STATEFUL-P2MP                February 2019
+
 
 8.2.  Update Fragmentation Procedure
 
@@ -1282,14 +1299,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    except the last one, will have the F flag set in the LSP object to
    signify that the update has been fragmented into multiple messages.
    In order to identify that a series of update messages represents a
-
-
-
-Palle, et al.            Expires August 10, 2019               [Page 23]
-
-Internet-Draft                STATEFUL-P2MP                February 2019
-
-
    single update, each message will use the same PLSP-ID and SRP-ID-
    number.
 
@@ -1297,7 +1306,7 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    report any error associated with the fragmentation of a P2MP PCEP
    message.  A new error-value 3 (early allocated by IANA) indicates
    "Fragmented update failure" and is used if a PCC does not receive the
-   any part of the fragmented message.
+   last part of the fragmented message.
 
 8.3.  PCIntiate Fragmentation Procedure
 
@@ -1315,7 +1324,7 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    report any error associated with the fragmentation of a P2MP PCEP
    message.  A new error-value 4 (early allocated by IANA) indicates
    "Fragmented instantiation failure" and is used if a PCC does not
-   receive the any part of the fragmented message.
+   receive the last part of the fragmented message.
 
 9.  Non-Support of P2MP TE LSPs for Stateful PCE
 
@@ -1329,15 +1338,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    error-value 12 (early allocated by IANA) ("Attempted LSP Update
    Request for P2MP if active stateful PCE capability for P2MP was not
    advertised") and terminate the PCEP session.  If the PCEP Speaker on
-   the PCE supports the extensions of this draft (understands the P2MP
-   flag in the LSP object) but did not advertise this capability, then
-   upon receipt of a PCRpt message from the PCC, it SHOULD generate a
-   PCErr with error-type 19 ("Invalid Operation"), error-value 11 (early
-   allocated by IANA) ("Attempted LSP State Report for P2MP if stateful
-   PCE capability for P2MP was not advertised") and it SHOULD terminate
-   the PCEP session.
-
-
 
 
 
@@ -1345,6 +1345,14 @@ Palle, et al.            Expires August 10, 2019               [Page 24]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
 
+
+   the PCE supports the extensions of this draft (understands the P2MP
+   flag in the LSP object) but did not advertise this capability, then
+   upon receipt of a PCRpt message from the PCC, it SHOULD generate a
+   PCErr with error-type 19 ("Invalid Operation"), error-value 11 (early
+   allocated by IANA) ("Attempted LSP State Report for P2MP if stateful
+   PCE capability for P2MP was not advertised") and it SHOULD terminate
+   the PCEP session.
 
    If a Stateful PCE receives a P2MP TE LSP report message and the PCE
    does not understand the P2MP flag in the LSP object, and therefore
@@ -1384,14 +1392,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    status, and delegation status of P2MP LSP etc.  The statistics module
    should also count P2MP LSP related data.
 
-10.3.  Liveness Detection and Monitoring
-
-   Mechanisms defined in this document do not imply any new liveness
-   detection and monitoring requirements in addition to those already
-   listed in [RFC5440].
-
-
-
 
 
 
@@ -1401,6 +1401,12 @@ Palle, et al.            Expires August 10, 2019               [Page 25]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
 
+
+10.3.  Liveness Detection and Monitoring
+
+   Mechanisms defined in this document do not imply any new liveness
+   detection and monitoring requirements in addition to those already
+   listed in [RFC5440].
 
 10.4.  Verify Correct Operations
 
@@ -1442,12 +1448,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
                           Initiation with P2MP
 
 
-11.2.  STATEFUL-PCE-CAPABILITY TLV
-
-   The STATEFUL-PCE-CAPABILITY TLV is defined in [RFC8231] and a
-   registry was created to manage the flags in the TLV.  IANA is
-   requested to confirm the early allocation of the following code-
-   points in the aforementioned registry.
 
 
 
@@ -1456,6 +1456,14 @@ Internet-Draft                STATEFUL-P2MP                February 2019
 Palle, et al.            Expires August 10, 2019               [Page 26]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
+
+
+11.2.  STATEFUL-PCE-CAPABILITY TLV
+
+   The STATEFUL-PCE-CAPABILITY TLV is defined in [RFC8231] and a
+   registry was created to manage the flags in the TLV.  IANA is
+   requested to confirm the early allocation of the following code-
+   points in the aforementioned registry.
 
 
        Bit    Description           Reference
@@ -1495,14 +1503,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
 
 
 
-11.4.  PCEP-Error Object
-
-   IANA is requested to confirm the early allocation of the new error
-   values within the "PCEP-ERROR Object Error Types and Values" sub-
-   registry of the PCEP Numbers registry, as follows:
-
-
-
 
 
 
@@ -1512,6 +1512,13 @@ Internet-Draft                STATEFUL-P2MP                February 2019
 Palle, et al.            Expires August 10, 2019               [Page 27]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
+
+
+11.4.  PCEP-Error Object
+
+   IANA is requested to confirm the early allocation of the new error
+   values within the "PCEP-ERROR Object Error Types and Values" sub-
+   registry of the PCEP Numbers registry, as follows:
 
 
        Error-Type  Meaning
@@ -1542,18 +1549,11 @@ Internet-Draft                STATEFUL-P2MP                February 2019
 
 
 
-   Additionally, IANA is requested to allocate an additional code-point
-   in this registry.
+   Additionally, IANA is requested to allocate additional code-points in
+   this registry.
 
 
-       Error-Type  Meaning
-          10       Reception of an invalid object [RFC5440]
-                     Error-value=TBD1: Mis-match of N flag in RP and
-                         LSP object
-                     Error-value=TBD2: Mis-match of O field in S2LS
-                         and  LSP object
 
-       Reference for all new Error-Value above is [This I-D].
 
 
 
@@ -1568,6 +1568,18 @@ Internet-Draft                STATEFUL-P2MP                February 2019
 Palle, et al.            Expires August 10, 2019               [Page 28]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
+
+
+       Error-Type  Meaning
+          10       Reception of an invalid object [RFC5440]
+                     Error-value=TBD1: Mis-match of N flag in RP and
+                         LSP object
+                     Error-value=TBD2: Mis-match of O field in S2LS
+                         and  LSP object
+
+       Reference for all new Error-Value above is [This I-D].
+
+
 
 
 11.5.  PCEP TLV Type Indicators
@@ -1607,6 +1619,13 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    object.  New values are to be assigned by Standards Action [RFC8126].
    Each bit should be tracked with the following qualities:
 
+
+
+Palle, et al.            Expires August 10, 2019               [Page 29]
+
+Internet-Draft                STATEFUL-P2MP                February 2019
+
+
    o  Bit number (counting from bit 0 as the most significant bit)
 
    o  Capability description
@@ -1614,16 +1633,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
    o  Defining RFC
 
    The following values are defined in this document:
-
-
-
-
-
-
-
-Palle, et al.            Expires August 10, 2019               [Page 29]
-
-Internet-Draft                STATEFUL-P2MP                February 2019
 
 
                     Bit     Description           Reference
@@ -1663,15 +1672,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC3209]  Awduche, D., Berger, L., Gan, D., Li, T., Srinivasan, V.,
-              and G. Swallow, "RSVP-TE: Extensions to RSVP for LSP
-              Tunnels", RFC 3209, DOI 10.17487/RFC3209, December 2001,
-              <https://www.rfc-editor.org/info/rfc3209>.
-
-   [RFC5088]  Le Roux, JL., Ed., Vasseur, JP., Ed., Ikejiri, Y., and R.
-              Zhang, "OSPF Protocol Extensions for Path Computation
-              Element (PCE) Discovery", RFC 5088, DOI 10.17487/RFC5088,
-              January 2008, <https://www.rfc-editor.org/info/rfc5088>.
 
 
 
@@ -1681,6 +1681,16 @@ Palle, et al.            Expires August 10, 2019               [Page 30]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
 
+
+   [RFC3209]  Awduche, D., Berger, L., Gan, D., Li, T., Srinivasan, V.,
+              and G. Swallow, "RSVP-TE: Extensions to RSVP for LSP
+              Tunnels", RFC 3209, DOI 10.17487/RFC3209, December 2001,
+              <https://www.rfc-editor.org/info/rfc3209>.
+
+   [RFC5088]  Le Roux, JL., Ed., Vasseur, JP., Ed., Ikejiri, Y., and R.
+              Zhang, "OSPF Protocol Extensions for Path Computation
+              Element (PCE) Discovery", RFC 5088, DOI 10.17487/RFC5088,
+              January 2008, <https://www.rfc-editor.org/info/rfc5088>.
 
    [RFC5089]  Le Roux, JL., Ed., Vasseur, JP., Ed., Ikejiri, Y., and R.
               Zhang, "IS-IS Protocol Extensions for Path Computation
@@ -1719,16 +1729,6 @@ Internet-Draft                STATEFUL-P2MP                February 2019
               Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
               <https://www.rfc-editor.org/info/rfc8281>.
 
-   [RFC8306]  Zhao, Q., Dhody, D., Ed., Palleti, R., and D. King,
-              "Extensions to the Path Computation Element Communication
-              Protocol (PCEP) for Point-to-Multipoint Traffic
-              Engineering Label Switched Paths", RFC 8306,
-              DOI 10.17487/RFC8306, November 2017,
-              <https://www.rfc-editor.org/info/rfc8306>.
-
-
-
-
 
 
 
@@ -1737,6 +1737,13 @@ Palle, et al.            Expires August 10, 2019               [Page 31]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
 
+
+   [RFC8306]  Zhao, Q., Dhody, D., Ed., Palleti, R., and D. King,
+              "Extensions to the Path Computation Element Communication
+              Protocol (PCEP) for Point-to-Multipoint Traffic
+              Engineering Label Switched Paths", RFC 8306,
+              DOI 10.17487/RFC8306, November 2017,
+              <https://www.rfc-editor.org/info/rfc8306>.
 
 14.2.  Informative References
 
@@ -1780,6 +1787,13 @@ Internet-Draft                STATEFUL-P2MP                February 2019
               RFC 8253, DOI 10.17487/RFC8253, October 2017,
               <https://www.rfc-editor.org/info/rfc8253>.
 
+
+
+Palle, et al.            Expires August 10, 2019               [Page 32]
+
+Internet-Draft                STATEFUL-P2MP                February 2019
+
+
    [I-D.ietf-pce-pcep-yang]
               Dhody, D., Hardwick, J., Beeram, V., and J. Tantsura, "A
               YANG Data Model for Path Computation Element
@@ -1789,7 +1803,49 @@ Internet-Draft                STATEFUL-P2MP                February 2019
 
 
 
-Palle, et al.            Expires August 10, 2019               [Page 32]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Palle, et al.            Expires August 10, 2019               [Page 33]
 
 Internet-Draft                STATEFUL-P2MP                February 2019
 
@@ -1845,4 +1901,4 @@ Authors' Addresses
 
 
 
-Palle, et al.            Expires August 10, 2019               [Page 33]
+Palle, et al.            Expires August 10, 2019               [Page 34]
