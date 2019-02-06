@@ -86,7 +86,7 @@
     </author>
 
     <date
-          year="2018" />
+          year="2019" />
     <area>Routing</area>
     <workgroup>PCE Working Group</workgroup>
     <abstract>
@@ -554,7 +554,7 @@ Where:
                     &lt;end-point-intended-path-pair-list&gt;
                     [&lt;actual-attribute-list&gt;
                     &lt;end-point-actual-path-pair-list&gt;]
-                    &lt;intended-attribute-list&gt;
+                    [&lt;intended-attribute-list&gt;]
 
 Where:
 
@@ -613,17 +613,21 @@ objects defined in [RFC5440].
         of &lt;state-report&gt; is preserved. At least one instance of
         &lt;END-POINTS&gt; MUST be present in this message for P2MP LSP.</t>
 
-        <t>During state synchronization, the PCRpt message reports the status of all P2MP TE LSPs.</t>
+        <t>Note that the ordering of &lt;end-point-intended-path-pair-list&gt;, &lt;actual-attribute-list&gt;, &lt;end-point-actual-path-pair-list&gt;, and &lt;intended-attribute-list&gt; is done to retain compatibility with state reports for the P2P LSPs as per <xref target='RFC8231'></xref>.</t>
+
+        <t>During state synchronization, the PCRpt message reports the status of the full P2MP tree.</t>
 
         <t>The S2LS object MUST be carried in PCRpt
         message along with END-POINTS object when N (P2MP) flag is set in
         LSP object for P2MP TE LSPs. If the S2LS object is missing, the receiving
-        PCE MUST send a PCErr message with Error-type=6 (Mandatory Object
-        missing) and Error-value=13 (early allocated by IANA) (S2LS object missing). If the
+        PCE MUST send a PCErr message with Error-type=6 ("Mandatory Object
+        missing") and Error-value=13 (early allocated by IANA) ("S2LS object missing"). If the
         END-POINTS object is missing, the receiving
-        PCE MUST send a PCErr message with Error-type=6 (Mandatory Object
-        missing) and Error-value=3 (END-POINTS object missing) (defined
+        PCE MUST send a PCErr message with Error-type=6 ("Mandatory Object
+        missing") and Error-value=3 ("END-POINTS object missing") (defined
         in <xref target='RFC5440'></xref>.</t>
+
+        <t>The S2LS object could be used in conjunction with the intended-path (ERO) as well as the actual-path (RRO); for the same leaf, the state encoded in the S2LS object associated with the actual-path MUST be used over the intended-path.</t>
       </section>
       <section title="The PCUpd Message"
                toc="default"
@@ -687,8 +691,8 @@ objects defined in [RFC5440].
         message when N flag is set in
         LSP object for a P2MP TE LSP. If the
         END-POINTS object is missing, the receiving
-        PCC MUST send a PCErr message with Error-type=6 (Mandatory Object
-        missing) and Error-value=3 (END-POINTS object missing) (defined
+        PCC MUST send a PCErr message with Error-type=6 ("Mandatory Object
+        missing") and Error-value=3 ("END-POINTS object missing") (defined
         in <xref target='RFC5440'></xref>.</t>
       </section>
       <section title="The PCReq Message"
@@ -877,8 +881,8 @@ by PCEP extensions.
         message when N flag is set in
         LSP object for a P2MP TE LSP. If the
         END-POINTS object is missing, the receiving
-        PCC MUST send a PCErr message with Error-type=6 (Mandatory Object
-        missing) and Error-value=3 (END-POINTS object missing) (defined
+        PCC MUST send a PCErr message with Error-type=6 ("Mandatory Object
+        missing") and Error-value=3 ("END-POINTS object missing") (defined
         in <xref target='RFC5440'></xref>.</t>
       </section>
       <section title="Example"
@@ -986,6 +990,7 @@ by PCEP extensions.
          xml:space="preserve">
 
            Common Header
+           SRP
            LSP with P2MP flag set
            END-POINTS for leaf type 3
              S2LS (O=UP)
@@ -995,6 +1000,7 @@ by PCEP extensions.
              ERO list (empty)
 </artwork>
           </figure>
+          <t>In this example, the PCRpt message is in response to a PCUpd message (with corresponding SRP) object indicating some leaves that are up (with the actual path) and some are down.</t>
           <t>An example of a PCRpt message for a non-delegated P2MP TE LSP is
           described below to report status of leaves:</t>
           <figure align="left"
@@ -1074,32 +1080,39 @@ by PCEP extensions.
         <t>
           <list style="hanging">
             <t hangText="N (P2MP flag - 1 bit):">If the N flag is set to 1, it indicates that the
-        message is for a P2MP TE LSP.  It can be used on a PCRpt, PCUpd,
-       or PCInitiate message to indicate a P2MP TE LSP. </t>
+        message is for a P2MP TE LSP. </t>
             <t hangText="F (Fragmentation flag - 1 bit):">If the F flag is set
             to 1, it indicates the message is fragmented. See <xref target="frag"/> for details.</t>
+            <t hangText="E (ERO-compression flag - 1 bit):">If the E flag is set
+            to 1, it indicates the route is in compressed format (that is, Secondary Explicit Route Object (SERO) and Secondary Record Route Object (SRRO) objects <xref target='RFC8306'></xref> are in use).</t>
           </list>
         </t>
-        <t>In case of PCReq and PCRep, the N flag in the RP (Request Parameters) object (<xref target='RFC8231'></xref>) is used to indicate P2MP path computation. The N flag in the LSP object MUST also set to 1 if the N flag in the RP object is set. If there is mis-match between the N flag in the RP and the LSP object in PCReq or PCRep message, the PCEP speaker MUST generate an error with error-type 10 (Reception of an invalid object) and error-value TBD1 (to be allocated by IANA) (Mis-match of N flag in RP and LSP object).</t>
-        <t>If the N bit is set, the P2MP-LSP-IDENTIFIER TLV defined in <xref target="P2MP-LSP-IDENTIFIERS-TLV"/> MUST be present in the LSP object.</t>
+        <t>The N flag is used in a PCRpt, PCUpd,
+       or PCInitiate message to indicate a P2MP TE LSP. In case of PCReq and PCRep, the N flag in the RP (Request Parameters) object (<xref target='RFC8231'></xref>) is used to indicate P2MP path computation. The N flag in the LSP object MUST also be set if the N flag in the RP object is set. If there is mis-match between the N flag in the RP and the LSP object in PCReq or PCRep message, the PCEP speaker MUST generate an error with error-type 10 ("Reception of an invalid object") and error-value TBD1 (to be allocated by IANA) ("Mis-match of N flag in RP and LSP object").</t>
+        <!--<t>If the N bit is set, the P2MP-LSP-IDENTIFIER TLV defined in <xref target="P2MP-LSP-IDENTIFIERS-TLV"/> MUST be present in the LSP object.</t>-->
       </section>
       <section title="P2MP-LSP-IDENTIFIERS TLV"
                toc="default"
                anchor="P2MP-LSP-IDENTIFIERS-TLV">
-        <t>The P2MP-LSP-IDENTIFIERS TLV MUST be included in the LSP
+        <t>If the N bit is set on a PCRpt but the P2MP-LSP-IDENTIFIER TLV is
+   absent, the PCE MUST respond with a PCErr message carrying 
+   error-type 6 ("mandatory object missing") and error-value 14 (early
+   allocated by IANA) ("P2MP-LSP-IDENTIFIER TLV missing") and close the
+   PCEP session.</t>
+        <!--<t>The P2MP-LSP-IDENTIFIERS TLV MUST be included in the LSP
         object in PCRpt message for RSVP-TE signaled P2MP TE LSPs. If
         the TLV is missing, the PCE will generate an error with
         error-type 6 (mandatory object missing) and error-value 14 (early allocated by IANA)
         (P2MP-LSP-IDENTIFIERS TLV missing) and close the PCEP
-        session.</t>
+        session.</t>-->
         <t>The P2MP-LSP-IDENTIFIERS TLV MAY be included in the LSP
-        object in PCUpd message for RSVP-TE signaled P2MP TE LSPs. The
+        object in the PCUpd message for P2MP TE LSPs. The
         special value of all zeros for this TLV is used to refer to
         all paths pertaining to a particular PLSP-ID.</t>
         <t>There are two P2MP-LSP-IDENTIFIERS TLVs, one for IPv4 and
         one for IPv6.</t>
         <t>The format of the IPV4-P2MP-LSP-IDENTIFIERS TLV is shown
-        in the following figure:</t>
+        in the <xref target="SEC_FIG1"/>:</t>
         <figure align="left"
                 alt=""
                 height=""
@@ -1158,7 +1171,7 @@ by PCEP extensions.
           </list>
         </t>
         <t>The format of the IPV6-P2MP-LSP-IDENTIFIERS TLV is shown
-        in the following figure:</t>
+        in the <xref target="SEC_FIG2"/>:</t>
         <figure align="left"
                 alt=""
                 height=""
@@ -1268,20 +1281,22 @@ by PCEP extensions.
         </figure>
  <t>
           <list style="hanging">
-            <t hangText="Flags(32-bits):"></t>
-            <t hangText="O(Operational - 3 bits)">the O Field
+            <t hangText="Flags(32-bits):"> the following flags are currently defined - </t>
+            <t hangText="O(Operational - 3 bits)"> the O Field
             represents the operational status of the group of
             destinations. The values are as per Operational field in LSP object defined in Section 7.3 of
         <xref target='RFC8231'></xref>.</t>
           </list>
         </t>
+        <t>Unassigned bits are reserved for future uses.  They MUST be set to 0
+   on transmission and MUST be ignored on receipt.</t>
         <t>When N flag is set in LSP object then the O field in LSP
         object represents the operational status of the full P2MP TE LSP and
         the O field in S2LS object represents the operational status
         of a group of destinations encoded within the END-POINTS
-        object.</t>
+        object. If there is a conflict between the O field in the LSP and the S2LS object (for example, O field in LSP corresponds to down whereas the O field in S2LS is up), the PCEP speaker MUST generate an error with error-type 10 ("Reception of an invalid object") and error-value TBD2 (to be allocated by IANA) ("Mis-match of O field in S2LS and LSP object").</t>
 
-    <t>Future documents MAY define optional TLVs that MAY be included
+    <t>Future documents might define optional TLVs that could be included
     in the S2LS Object.</t>
       </section>
     </section>
@@ -1315,12 +1330,20 @@ by PCEP extensions.
           multiple messages. In order to identify that a series of
           report messages represents a single report, each message
           will use the same PLSP-ID.</t>
-          <t>To indicate P2MP message fragmentation errors associated
+
+          <!--<t>To indicate P2MP message fragmentation errors associated
           with a P2MP Report, a Error-Type (18) for "P2MP Fragmentation Error" and a new
           error-value 2 (early allocated by IANA) is used if a PCE has not received the last
           piece of the fragmented message, it should send an error
           message to the PCC to signal that it has received an
-          incomplete message (i.e., "Fragmented Report failure").</t>
+          incomplete message (i.e., "Fragmented Report failure").</t>-->
+
+          <t>The Error-Type value 18 ("P2MP Fragmentation Error") is used to 
+   report any error associated with the fragmentation of a P2MP PCEP
+   message.  A new error-value 2 (early allocated by IANA) indicates
+   "Fragmented report failure" and is used if a PCE does not receive the
+   any part of the fragmented message.</t>
+
         </section>
         <section title="Update Fragmentation Procedure"
                  toc="default">
@@ -1335,12 +1358,17 @@ by PCEP extensions.
           series of update messages represents a single update,
           each message will use the same PLSP-ID and
           SRP-ID-number.</t>
-          <t>To indicate P2MP message fragmentation errors associated
+          <!--<t>To indicate P2MP message fragmentation errors associated
           with a P2MP Update request, a Error-Type (18) for "P2MP Fragmentation Error" and a new
           error-value 3 (early allocated by IANA) is used if a PCC has not received the last
           piece of the fragmented message, it should send an error
           message to the PCE to signal that it has received an
-          incomplete message (i.e., "Fragmented Update failure").</t>
+          incomplete message (i.e., "Fragmented Update failure").</t>-->
+          <t>The Error-Type value 18 ("P2MP Fragmentation Error") is used to 
+   report any error associated with the fragmentation of a P2MP PCEP
+   message.  A new error-value 3 (early allocated by IANA) indicates
+   "Fragmented update failure" and is used if a PCC does not receive the
+   any part of the fragmented message.</t>          
         </section>
         <section title="PCIntiate Fragmentation Procedure"
                toc="default">
@@ -1354,17 +1382,22 @@ by PCEP extensions.
         In order to identify that a series of PCInitiate messages
         represents a single Initiate, each message will use the
         same PLSP-ID (in this case 0) and SRP-ID-number.</t>
-        <t>To indicate P2MP message fragmentation errors associated
+        <!--<t>To indicate P2MP message fragmentation errors associated
           with a P2MP PCInitiate, a Error-Type (18) for "P2MP Fragmentation Error" and a new
           error-value 4 (early allocated by IANA) is used if a PCC has not received the last
           piece of the fragmented message, it should send an error
           message to the PCE to signal that it has received an
-          incomplete message (i.e., "Fragmented Instantiation failure").</t>
+          incomplete message (i.e., "Fragmented Instantiation failure").</t>-->
+          <t>The Error-Type value 18 ("P2MP Fragmentation Error") is used to 
+   report any error associated with the fragmentation of a P2MP PCEP
+   message.  A new error-value 4 (early allocated by IANA) indicates
+   "Fragmented instantiation failure" and is used if a PCC does not receive the
+   any part of the fragmented message.</t>          
       </section>
       </section>
     <section title="Non-Support of P2MP TE LSPs for Stateful PCE"
              toc="default">
-      <t>The PCEP protocol extensions described in this document
+      <t>The PCEP extensions described in this document
       for stateful PCEs with P2MP capability MUST NOT be used if
       PCE has not advertised its stateful capability with P2MP as
       per
@@ -1373,15 +1406,16 @@ by PCEP extensions.
       draft (understands the P2MP flag in the LSP object) but did not
       advertise this capability, then upon receipt
       of PCUpd message from the PCE, it SHOULD generate a PCErr with
-      error-type 19 (Invalid Operation), error-value 12 (early allocated by IANA) (Attempted
+      error-type 19 ("Invalid Operation"), error-value 12 (early allocated by IANA) ("Attempted
       LSP Update Request for P2MP if active stateful PCE capability
-      for P2MP was not advertised).  If the PCEP Speaker on the PCE
+      for P2MP was not advertised") and 
+   terminate the PCEP session.  If the PCEP Speaker on the PCE
       supports the extensions of this draft (understands the P2MP
       flag in the LSP object) but did not advertise this
       capability, then upon receipt of a PCRpt message from the PCC, it
-      SHOULD generate a PCErr with error-type 19 (Invalid Operation),
-      error-value 11 (early allocated by IANA) (Attempted LSP State Report for P2MP if stateful PCE
-   capability for P2MP was not advertised) and it will
+      SHOULD generate a PCErr with error-type 19 ("Invalid Operation"),
+      error-value 11 (early allocated by IANA) ("Attempted LSP State Report for P2MP if stateful PCE
+   capability for P2MP was not advertised") and it SHOULD
    terminate the PCEP session.</t>
 
       <t>If a Stateful PCE receives a P2MP TE LSP report message
@@ -1400,9 +1434,10 @@ by PCEP extensions.
       draft (understands the P (P2MP-LSP-INSTANTIATION-CAPABILITY) flag) but did not
       advertise this capability, then upon receipt
       of PCInitiate message from the PCE, it SHOULD generate a PCErr with
-      error-type 19 (Invalid Operation), error-value 13 (early allocated by IANA) (Attempted
+      error-type 19 ("Invalid Operation"), error-value 13 (early allocated by IANA) ("Attempted
       LSP Instantiation Request for P2MP if stateful PCE instantiation capability
-      for P2MP was not advertised).</t>
+      for P2MP was not advertised") and 
+   terminate the PCEP session..</t>
 
     </section>
 <section title="Manageability Considerations"
@@ -1411,7 +1446,7 @@ by PCEP extensions.
       <xref target="RFC5440"/>, <xref target="RFC8306"/>,
    <xref target='RFC8231'></xref>, and
    <xref target='RFC8281'></xref>
-   apply to PCEP protocol extensions defined in this document.  In
+   apply to PCEP extensions defined in this document.  In
    addition, requirements and considerations listed in this section
    apply.</t>
       <section title="Control of Function and Policy"
@@ -1423,7 +1458,7 @@ by PCEP extensions.
       <section title="Information and Data Models"
                toc="default">
         <t>The PCEP YANG module <xref target='I-D.ietf-pce-pcep-yang'></xref>
-   SHOULD be extended to include advertised P2MP stateful capabilities,
+   could be extended to include advertised P2MP stateful capabilities,
    P2MP synchronization status, and delegation status of P2MP LSP etc. The
    statistics module should also count P2MP LSP related data.</t>
       </section>
@@ -1544,11 +1579,33 @@ Bit      Meaning               Reference
 
     3       P2MP                 [This I-D]
     2       Fragmentation        [This I-D]
-
     ]]>
 
 </artwork>
         </figure>
+          <t>Additionally, IANA is requested to allocate an additional code-point in this registry.</t>
+        <figure title=""
+                suppress-title="true"
+                align="left"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="left"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+    Bit    Description           Reference
+
+    TBD    ERO-compression       [This I-D]
+    ]]>
+
+</artwork>
+        </figure>
+
       </section>
       <section title="PCEP-Error Object"
                toc="default">
@@ -1573,9 +1630,6 @@ Bit      Meaning               Reference
        6        Mandatory Object missing [RFC5440]
                   Error-value=13: S2LS object missing
                   Error-value=14: P2MP-LSP-IDENTIFIERS TLV missing
-       10       Reception of an invalid object [RFC5440]
-                  Error-value=TBD1: Mis-match of N flag in RP and 
-                      LSP object              
        18       P2MP Fragmentation Error [RFC8306]
                   Error-value= 2. Fragmented Report
                       failure
@@ -1601,6 +1655,35 @@ Bit      Meaning               Reference
 
 </artwork>
         </figure>
+        <t>Additionally, IANA is requested to allocate an additional code-point in this registry.</t>
+
+        <figure title=""
+                suppress-title="true"
+                align="left"
+                alt=""
+                width=""
+                height="">
+          <artwork xml:space="preserve"
+         name=""
+         type=""
+         align="left"
+         alt=""
+         width=""
+         height="">
+<![CDATA[
+    Error-Type  Meaning
+       10       Reception of an invalid object [RFC5440]
+                  Error-value=TBD1: Mis-match of N flag in RP and 
+                      LSP object              
+                  Error-value=TBD2: Mis-match of O field in S2LS 
+                      and  LSP object              
+
+    Reference for all new Error-Value above is [This I-D].
+
+    ]]>
+
+</artwork>
+        </figure>        
       </section>
       <section title="PCEP TLV Type Indicators"
                toc="default">
@@ -1664,8 +1747,8 @@ Bit      Meaning               Reference
                <t>
                 This document requests that a new sub-registry, named "S2LS Object
    Flag Field", is created within the "Path Computation Element Protocol
-   (PCEP) Numbers" registry to manage the Flag field of the S2LS
-   object.New values are to be assigned by Standards Action <xref target="RFC8126"/>.
+   (PCEP) Numbers" registry to manage the 32-bits Flag field of the S2LS
+   object. New values are to be assigned by Standards Action <xref target="RFC8126"/>.
    Each bit should be tracked with the following qualities:
    <list style="symbols">
     <t>Bit number (counting from bit 0 as the most significant bit)</t>
@@ -1691,6 +1774,7 @@ Bit      Meaning               Reference
                  Bit     Description           Reference
 
                 29-31    Operational (3-bits)  [This.I-D]
+                 0-28    Unassigned
          ]]>
 
 </artwork>
@@ -1701,26 +1785,31 @@ Bit      Meaning               Reference
     <section title="Security Considerations"
              toc="default">
     <t>The stateful operations on P2MP TE LSPs are more
-   CPU-intensive and also utilize more bandwidth on wire. In the event of
-   an unauthorized stateful P2MP operations, or a denial of service
-   attack, the subsequent PCEP operations may be disruptive
-   to the network.  Consequently, it is important that implementations
+   CPU-intensive and also utilize more bandwidth on wire (in comparison to P2P TE LSPs). 
+   If a rogue PCC were able to request unauthorized stateful PCE
+   operations then it may be able to mount a DoS attack against
+   a PCE, which would disrupt the network and deny service to
+   other PCCs. Consequently, it is important that implementations
    conform to the relevant security requirements of
    <xref target="RFC5440"/>, <xref target="RFC8306"/> and
    <xref target='RFC8231'></xref>, and
-   <xref target='RFC8281'></xref>.
+   <xref target='RFC8281'></xref>. 
+   Securing the PCEP session using
+   Transport Layer Security (TLS) <xref target="RFC8253"/>, as per the recommendations
+   and best current practices in <xref target="RFC7525"/>, is RECOMMENDED.
    </t>
-           <t> As stated in <xref target="RFC6952"/>, PCEP implementations SHOULD support the
+           <!--<t> As stated in <xref target="RFC6952"/>, PCEP implementations SHOULD support the
    TCP-AO <xref target="RFC5925"/> and not use TCP MD5 because of TCP MD5's known
    vulnerabilities and weakness. PCEP also support Transport Layer Security (TLS)
       <xref target="RFC8253"/> as per the recommendations and best current practices
-      in <xref target="RFC7525"/>.</t>
+      in <xref target="RFC7525"/>.</t>-->
     </section>
 
 
     <section title="Acknowledgments"
              toc="default">
-      <t>Thanks to Quintin Zhao, Avantika and Venugopal Reddy for his comments.</t>
+      <t>Thanks to Quintin Zhao, Avantika and Venugopal Reddy for the review comments.</t>
+      <t>Thanks to Adrian Farrel (and Jonathan Hardwick) for the review as document shepherds.</t>
     </section>
   </middle>
   <back>
@@ -1746,8 +1835,8 @@ Bit      Meaning               Reference
 
       <?rfc include="reference.RFC.5671.xml" ?>
 
-      <?rfc include="reference.RFC.5925.xml" ?>
-      <?rfc include="reference.RFC.6952.xml" ?>
+      <!--<?rfc include="reference.RFC.5925.xml" ?>-->
+      <!--<?rfc include="reference.RFC.6952.xml" ?>-->
       <?rfc include="reference.RFC.7525.xml" ?>
 
       <?rfc include="reference.RFC.8051.xml" ?>
