@@ -349,7 +349,7 @@
               <t>Reserved: 2 octet, this field MUST be set to 0 on transmission, and ignored on receipt.</t>
               <t>Flags: 2 octet, one bit is currently assigned in this document.
               <list>
-                <t>L bit: A PCC sets this bit to 1 to indicate that it does not impose any limit on SL.</t>
+                <t>L bit: A PCC sets this bit to 1 to indicate that it does not impose any limit on MSD (irrespective of the MSD-Type).</t>
                 <t>Unassigned bits MUST be set to 0 and ignored on receipt.</t>
               </list></t> 
               <t>A pair of (MSD-Type,MSD-Value): Where MSD-Type (1 octet) is as per the IGP MSD Type registry created by <xref target='RFC8491'/> and populated with SRv6 MSD types as per <xref target='I-D.bashandy-isis-srv6-extensions'/>; MSD-Value (1 octet) is as per <xref target='RFC8491'/>.</t> 
@@ -404,7 +404,8 @@
    the SRv6 MSD-Type, MSD-Value fields that it can impose on a
    packet.  If a PCE receives an SRv6-PCE-CAPABILITY sub-TLV with the L
    flag and SRv6 MSD-Type, MSD-Value fields both set to zero then it is considered as an error and 
-   the PCE MUST respond with a PCErr message (Error-Type=1 "PCEP session establishment failure" and Error-Value=1 "reception of an invalid Open message or a non Open message.").</t>
+   the PCE MUST respond with a PCErr message (Error-Type=1 "PCEP session establishment failure" and Error-Value=1 "reception of an invalid Open message or a non Open message."). 
+   In case the MSD-Type in SRv6-PCE-CAPABILITY sub-TLV received by the PCE does not correspond to one of the SRv6 MSD types, the PCE MUST respond with a PCErr message (Error-Type=1 "PCEP session establishment failure" and Error-Value=1 "reception of an invalid Open message or a non Open message.").</t>
 
    <t>Note that the MSD-Type, MSD-Value exchanged via the SRv6-PCE-CAPABILITY sub-TLV
    indicates the SRv6 SID imposition limit for the PCC node.  However,

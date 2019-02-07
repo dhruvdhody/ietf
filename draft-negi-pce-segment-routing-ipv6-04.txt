@@ -5,11 +5,11 @@
 PCE Working Group                                                M. Negi
 Internet-Draft                                                     C. Li
 Intended status: Standards Track                     Huawei Technologies
-Expires: August 9, 2019                                     S. Sivabalan
+Expires: August 10, 2019                                    S. Sivabalan
                                                            Cisco Systems
                                                            P. Kaladharan
                                                              RtBrick Inc
-                                                        February 5, 2018
+                                                        February 6, 2018
 
 
    PCEP Extensions for Segment Routing leveraging the IPv6 data plane
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Negi, et al.             Expires August 9, 2019                 [Page 1]
+Negi, et al.             Expires August 10, 2019                [Page 1]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -66,7 +66,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 9, 2019.
+   This Internet-Draft will expire on August 10, 2019.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Negi, et al.             Expires August 9, 2019                 [Page 2]
+Negi, et al.             Expires August 10, 2019                [Page 2]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -165,7 +165,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                 [Page 3]
+Negi, et al.             Expires August 10, 2019                [Page 3]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -221,7 +221,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                 [Page 4]
+Negi, et al.             Expires August 10, 2019                [Page 4]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -277,7 +277,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                 [Page 5]
+Negi, et al.             Expires August 10, 2019                [Page 5]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -333,7 +333,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                 [Page 6]
+Negi, et al.             Expires August 10, 2019                [Page 6]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -382,14 +382,14 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
       Flags: 2 octet, one bit is currently assigned in this document.
 
          L bit: A PCC sets this bit to 1 to indicate that it does not
-         impose any limit on SL.
+         impose any limit on MSD (irrespective of the MSD-Type).
 
          Unassigned bits MUST be set to 0 and ignored on receipt.
 
 
 
 
-Negi, et al.             Expires August 9, 2019                 [Page 7]
+Negi, et al.             Expires August 10, 2019                [Page 7]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -437,19 +437,22 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
    then it is considered as an error and the PCE MUST respond with a
    PCErr message (Error-Type=1 "PCEP session establishment failure" and
    Error-Value=1 "reception of an invalid Open message or a non Open
-   message.").
+   message.").  In case the MSD-Type in SRv6-PCE-CAPABILITY sub-TLV
+   received by the PCE does not correspond to one of the SRv6 MSD types,
+   the PCE MUST respond with a PCErr message (Error-Type=1 "PCEP session
+   establishment failure" and Error-Value=1 "reception of an invalid
+   Open message or a non Open message.").
 
-   Note that the MSD-Type, MSD-Value exchanged via the SRv6-PCE-
-   CAPABILITY sub-TLV indicates the SRv6 SID imposition limit for the
-   PCC node.  However, if a PCE learns these via different means, e.g
 
 
-
-Negi, et al.             Expires August 9, 2019                 [Page 8]
+Negi, et al.             Expires August 10, 2019                [Page 8]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
+   Note that the MSD-Type, MSD-Value exchanged via the SRv6-PCE-
+   CAPABILITY sub-TLV indicates the SRv6 SID imposition limit for the
+   PCC node.  However, if a PCE learns these via different means, e.g
    routing protocols, as specified in:
    [I-D.li-ospf-ospfv3-srv6-extensions];
    [I-D.bashandy-isis-srv6-extensions]; [I-D.dawra-idr-bgpls-srv6-ext],
@@ -498,10 +501,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-
-
-
-Negi, et al.             Expires August 9, 2019                 [Page 9]
+Negi, et al.             Expires August 10, 2019                [Page 9]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -557,7 +557,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 10]
+Negi, et al.             Expires August 10, 2019               [Page 10]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -613,7 +613,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 11]
+Negi, et al.             Expires August 10, 2019               [Page 11]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -669,7 +669,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 12]
+Negi, et al.             Expires August 10, 2019               [Page 12]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -725,7 +725,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 13]
+Negi, et al.             Expires August 10, 2019               [Page 13]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -781,7 +781,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 14]
+Negi, et al.             Expires August 10, 2019               [Page 14]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -837,7 +837,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 15]
+Negi, et al.             Expires August 10, 2019               [Page 15]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -893,7 +893,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 16]
+Negi, et al.             Expires August 10, 2019               [Page 16]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -918,8 +918,8 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
    [I-D.ietf-6man-segment-routing-header]
               Filsfils, C., Previdi, S., Leddy, J., Matsushima, S., and
               d. daniel.voyer@bell.ca, "IPv6 Segment Routing Header
-              (SRH)", draft-ietf-6man-segment-routing-header-15 (work in
-              progress), October 2018.
+              (SRH)", draft-ietf-6man-segment-routing-header-16 (work in
+              progress), February 2019.
 
    [I-D.ietf-isis-segment-routing-extensions]
               Previdi, S., Ginsberg, L., Filsfils, C., Bashandy, A.,
@@ -949,7 +949,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 17]
+Negi, et al.             Expires August 10, 2019               [Page 17]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -1005,7 +1005,7 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 18]
+Negi, et al.             Expires August 10, 2019               [Page 18]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -1061,7 +1061,7 @@ Authors' Addresses
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 19]
+Negi, et al.             Expires August 10, 2019               [Page 19]
 
 Internet-Draft          PCEP Extensions for SRv6           February 2018
 
@@ -1117,4 +1117,4 @@ Internet-Draft          PCEP Extensions for SRv6           February 2018
 
 
 
-Negi, et al.             Expires August 9, 2019                [Page 20]
+Negi, et al.             Expires August 10, 2019               [Page 20]
