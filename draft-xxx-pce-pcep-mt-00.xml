@@ -72,71 +72,81 @@
    network to be viewed as multiple topologies <xref target='RFC4915'></xref> <xref target='RFC5120'></xref>.
    Deploying multi-topology (MT) routing allows different paths through
    the network to be selected to support different traffic or to offer
-   protection paths in the event of failures. </t>
+   protection paths in the event of failures. A 16-bit Multi-Topology identifier (MT-ID) is used to identify the topology.</t>
 
-          
+   <t>This document extends PCEP to allow MT-ID to be encoded in the PCEP messages.</t>
+
+   <section title="Applicability to Enhanced VPN (VPN+)" toc="default">
+   <t>The framework for an enhanced virtual private network (VPN+) is
+   described in <xref target='I-D.ietf-teas-enhanced-vpn'/>. Driven 
+   largely by needs arising from the 5G mobile network design,
+   the concept of network slicing has gained traction.  There is a need
+   to create a VPN service with enhanced isolation and performance
+   characteristics.  Specifically, there is a need for a transport
+   network to support a set of virtual networks, each of which provides
+   the client with some dedicated (private) network resources drawn from
+   a shared pool.  The tenant of such a virtual network can require a
+   degree of isolation and performance that previously could only be
+   satisfied by dedicated networks.  Additionally the tenant may ask for
+   some level of control of their virtual networks e.g. to customize the
+   service paths in their network slices.</t>
+
+   <t>These properties cannot be met with pure overlay networks, as they
+   require tighter coordination and integration between the underlay and
+   the overlay network.  <xref target='I-D.ietf-teas-enhanced-vpn'/> provides the
+   framework of enhanced VPN and describes the candidate component
+   technologies.  <xref target='I-D.dong-spring-sr-for-enhanced-vpn'/> describes how
+   segment routing (SR) <xref target='RFC8402'/> is used to
+   construct the required virtual networks with the network resources
+   allocated for enhanced VPN services.</t>
+
+   <t>The Multi-Topology (MT) extension to PCEP as 
+   described in this document can also be used for he construction of 
+   virtual networks for enhanced VPN services, together with the segment
+   routing.</t>
+   </section>
     </section>
 <section title="PCEP Extension" toc="default" anchor="SEC_EXT">
-  <section title="Extensions to METRIC Object" toc="default" >
-  <t>The METRIC object is defined in Section 7.8 of <xref target="RFC5440"/>, comprising
-   metric-value and metric-type (T field), and a flags field, comprising
-   a number of bit flags (B bit and C bit).  This document defines a
-   new type for the METRIC object for Path MTU.</t>  
-   <t>
-   <list style="symbols">
-   <t>T = TBD: Path MTU.</t>
-      <t>A network comprises of a set of N links {Li, (i=1...N)}.</t>
-      <t>A path P of a LSP is a list of K links {Lpi,(i=1...K)}.</t>
-      <t>A Link MTU of link L is denoted M(L).</t>
-      <t>A Path MTU metric for the path P = Min {M(Lpi), (i=1...K)}.</t>
-    </list>
-  </t>
-  <t>The Path MTU metric type of the
-   METRIC object in PCEP represents the minimum of the Link MTU of
-   all links along the path.</t>
+  <section title="MT Object" toc="default" >
+  <t>A new MT object is defined to indicate the MT-ID. The MT object MAY be carried within PCReq to indicate that the path computation needs to be carried on the topology identified by the MT-ID. The MT object MAY be carried with PCRep in case of failure to indicate the path computation was not successful on the topology identified by the MT-ID.</t> 
 
-   <t>When PCE computes the path, it can also find the Path MTU (based on the above criteria) and include this 
-      information in the METRIC object with the above metric type in the PCEP message when replying to the PCC.
-      In a Path Computation Reply (PCRep) message, the PCE MAY insert the METRIC object with an
-   Explicit Route Object (ERO) so as to provide the METRIC (path MTU) for the computed path.  The PCE
-   MAY also insert the METRIC object with a NO-PATH object to indicate
-   that the metric constraint could not be satisfied.</t>
+   <t>MT Object-Class is TBD1.</t>
 
-   <t>Further, a PCC MAY use the Path MTU metric in a Path Computation Request
-   (PCReq) message to request a path meeting the MTU
-   requirement of the path.  In this case, the B bit MUST be set to suggest a bound
-   (a maximum) for the Path MTU metric that must not be exceeded for
-   the PCC to consider the computed path as acceptable.  The Path MTU
-   metric must be less than or equal to the value specified in the
-   metric-value field.</t>
-   <t>A PCC can also use this metric to ask PCE to optimize the path MTU
-   during path computation.  In this case, the B bit MUST be cleared.</t>
+   <t>MT Object-Type is 1.</t>
 
-   <t>The error handling and processing of the METRIC object is as specified in <xref target="RFC5440"/>.</t>
+   <t>The format of the MT object body is as follows:</t>
+        <figure align="left"
+                alt=""
+                height=""
+                suppress-title="false"
+                title="MT Object Body Format"
+                width=""
+                anchor="SEC_FIG1">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |          Reserved             |        MT-ID                  |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                                                               |  
+      //                      Optional TLV(s)                        //
+      |                                                               |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</artwork>
+        </figure>
+        <t>Reserved (16 bits):  This field MUST be set to zero on transmission
+      and MUST be ignored on receipt.</t>
+      <t>MT-ID (16-bits): This field corresponds to the 16-bit Multi-Topology ID. The value 0 represents the default MT topology.</t>
+      <t>No TLVs are currently defined for the MT object.</t>
     
-  </section>
-  <section title="Stateful PCE and PCE Initiated LSPs" toc="default" >
-    <t><xref target="RFC8231"/> specifies a set of extensions to PCEP to enable stateful
-   control of MPLS-TE and GMPLS LSPs via PCEP and the maintaining of
-   these LSPs at the stateful PCE.  It further distinguishes between an
-   active and a passive stateful PCE.  A passive stateful PCE uses LSP
-   state information learned from PCCs to optimize path computations but
-   does not actively update LSP state.  In contrast, an active stateful
-   PCE utilizes the LSP delegation mechanism to update LSP parameters in
-   those PCCs that delegated control over their LSPs to the PCE.
-   <xref target="RFC8281"/> describes the setup, maintenance, and teardown of
-   PCE-initiated LSPs under the stateful PCE model.  The document
-   defines the PCInitiate message that is used by a PCE to request a PCC
-   to set up a new LSP.</t>
-
-   <t>The new metric type defined in this document
-   can also be used with the stateful PCE extensions.  The format of
-   PCEP messages described in <xref target="RFC8231"/> and <xref target="RFC8281"/> uses
-   &lt;intended-attribute-list&gt; and &lt;attribute-list&gt;, respectively, (where
-   the &lt;intended-attribute-list&gt; is the attribute-list defined in
-   Section 6.5 of <xref target="RFC5440"/>.</t>
-
-   <t>A PCE MAY include the path MTU metric in PCInitiate or PCUpd message to inform the PCC of the path MTU calculated for the path. A PCC MAY include the path MTU metric as a bound constraint or to indicate optimization criteria (similar to PCReq).</t>
+   <t>The new MT object defined in this document
+   can also be used with the stateful PCE extensions. A PCC MAY include the MT object in PCRpt to indicate this to the PCE. </t>
 
   </section> 
   <section title="Segment Routing" toc="default" >
