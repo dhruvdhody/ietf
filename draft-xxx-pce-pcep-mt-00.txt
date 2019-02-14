@@ -1,0 +1,560 @@
+
+
+
+
+PCE Working Group                                                   x. y
+Internet-Draft                                       Huawei Technologies
+Intended status: Standards Track                       February 14, 2019
+Expires: August 18, 2019
+
+
+    Support for Multi-Topology (MT) in the Path Computation Element
+                     Communication Protocol (PCEP).
+                        draft-xxx-pce-pcep-mt-00
+
+Abstract
+
+   The Path Computation Element (PCE) provides path computation
+   functions in support of traffic engineering in Multiprotocol Label
+   Switching (MPLS) and Generalized MPLS (GMPLS) networks.
+
+   Multi-Topology (MT) routing is supported in IP networks with the use
+   of MT-aware IGPs.  This document specify the extension to PCE
+   communication protocol (PCEP) to carry MT information in the PCEP
+   messages.
+
+Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on August 18, 2019.
+
+
+
+
+
+
+y                        Expires August 18, 2019                [Page 1]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+Copyright Notice
+
+   Copyright (c) 2019 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+     1.1.  Applicability to Enhanced VPN (VPN+)  . . . . . . . . . .   3
+   2.  PCEP Extension  . . . . . . . . . . . . . . . . . . . . . . .   4
+     2.1.  MT Object . . . . . . . . . . . . . . . . . . . . . . . .   4
+     2.2.  PCEP Message  . . . . . . . . . . . . . . . . . . . . . .   5
+       2.2.1.  PCReq Message . . . . . . . . . . . . . . . . . . . .   5
+       2.2.2.  PCRep message . . . . . . . . . . . . . . . . . . . .   5
+       2.2.3.  PCRpt Message . . . . . . . . . . . . . . . . . . . .   6
+       2.2.4.  PCUpd Message . . . . . . . . . . . . . . . . . . . .   7
+       2.2.5.  PCInitiate message  . . . . . . . . . . . . . . . . .   7
+   3.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+     4.1.  New Object  . . . . . . . . . . . . . . . . . . . . . . .   8
+   5.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   8
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  10
+
+1.  Introduction
+
+   [RFC5440] describes the Path Computation Element (PCE) Communication
+   Protocol (PCEP).  PCEP enables the communication between a Path
+   Computation Client (PCC) and a PCE, or between PCE and PCE, for the
+   purpose of computation of Multiprotocol Label Switching (MPLS) as
+   well as Generalzied MPLS (GMPLS) Traffic Engineering Label Switched
+   Path (TE LSP) characteristics.
+
+   [RFC8231] specifies a set of extensions to PCEP to enable stateful
+   control of TE LSPs within and across PCEP sessions in compliance with
+   [RFC4657].  It includes mechanisms to effect LSP State
+
+
+
+y                        Expires August 18, 2019                [Page 2]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+   Synchronization between PCCs and PCEs, delegation of control over
+   LSPs to PCEs, and PCE control of timing and sequence of path
+   computations within and across PCEP sessions.  The model of operation
+   where LSPs are initiated from the PCE is described in [RFC8281].
+
+   Some protocols, such as OSPF and IS-IS, allow a single network to be
+   viewed as multiple topologies [RFC4915] [RFC5120].  Deploying multi-
+   topology (MT) routing allows different paths through the network to
+   be selected to support different traffic or to offer protection paths
+   in the event of failures.  A 16-bit Multi-Topology identifier (MT-ID)
+   is used to identify the topology.
+
+   This document extends PCEP to allow MT-ID to be encoded in the PCEP
+   messages.
+
+1.1.  Applicability to Enhanced VPN (VPN+)
+
+   The framework for an enhanced virtual private network (VPN+) is
+   described in [I-D.ietf-teas-enhanced-vpn].  Driven largely by needs
+   arising from the 5G mobile network design, the concept of network
+   slicing has gained traction.  There is a need to create a VPN service
+   with enhanced isolation and performance characteristics.
+   Specifically, there is a need for a transport network to support a
+   set of virtual networks, each of which provides the client with some
+   dedicated (private) network resources drawn from a shared pool.  The
+   tenant of such a virtual network can require a degree of isolation
+   and performance that previously could only be satisfied by dedicated
+   networks.  Additionally the tenant may ask for some level of control
+   of their virtual networks e.g. to customize the service paths in
+   their network slices.
+
+   These properties cannot be met with pure overlay networks, as they
+   require tighter coordination and integration between the underlay and
+   the overlay network.  [I-D.ietf-teas-enhanced-vpn] provides the
+   framework of enhanced VPN and describes the candidate component
+   technologies.  [I-D.dong-spring-sr-for-enhanced-vpn] describes how
+   segment routing (SR) [RFC8402] is used to construct the required
+   virtual networks with the network resources allocated for enhanced
+   VPN services.
+
+   The Multi-Topology (MT) extension to PCEP as described in this
+   document can also be used for he construction of virtual networks for
+   enhanced VPN services, together with the segment routing.
+
+
+
+
+
+
+
+
+y                        Expires August 18, 2019                [Page 3]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+2.  PCEP Extension
+
+2.1.  MT Object
+
+   A new MT object is defined to indicate the MT-ID.  The MT object MAY
+   be carried within PCReq to indicate that the path computation needs
+   to be carried on the topology identified by the MT-ID.  The MT object
+   MAY be carried with PCRep in case of failure to indicate the path
+   computation was not successful on the topology identified by the MT-
+   ID.
+
+   MT Object-Class is TBD1.
+
+   MT Object-Type is 1.
+
+   The format of the MT object body is as follows:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |          Reserved             |        MT-ID                  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   //                      Optional TLV(s)                        //
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                      Figure 1: MT Object Body Format
+
+   Reserved (16 bits): This field MUST be set to zero on transmission
+   and MUST be ignored on receipt.
+
+   MT-ID (16-bits): This field corresponds to the 16-bit Multi-Topology
+   ID.  The value 0 represents the default MT topology.
+
+   No TLVs are currently defined for the MT object.
+
+   The new MT object defined in this document can also be used with the
+   stateful PCE extensions.  A PCC MAY include the MT object in PCRpt to
+   indicate the topology on which the path for the LSP needs to be
+   calculated.  The PCE MAY include the MT object in PCUpd and
+   PCInitiate message to indicate the topology on which the path was
+   computed.
+
+
+
+
+
+
+
+
+y                        Expires August 18, 2019                [Page 4]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+2.2.  PCEP Message
+
+   Message formats in this document are expressed using Routing Backus-
+   Naur Form (RBNF) as used in [RFC5440] and defined in [RFC5511].
+
+2.2.1.  PCReq Message
+
+   The format of the PCReq message (with [RFC5541] and [RFC8231] as a
+   base) is updated as follows:
+
+      <PCReq Message> ::= <Common Header>
+                           [<svec-list>]
+                           <request-list>
+      where:
+           <svec-list> ::= <SVEC>
+                           [<OF>]
+                           [<metric-list>]
+                           [<svec-list>]
+
+           <request-list> ::= <request> [<request-list>]
+
+           <request> ::= <RP>
+                         <END-POINTS>
+                         [<LSP>]
+                         [<LSPA>]
+                         [<BANDWIDTH>]
+                         [<metric-list>]
+                         [<OF>]
+                         [<RRO>[<BANDWIDTH>]]
+                         [<IRO>]
+                         [<LOAD-BALANCING>]
+                         [<MT>]
+
+
+2.2.2.  PCRep message
+
+   The format of the PCRep message (with [RFC5541] and [RFC8231] as a
+   base) is updated as follows:
+
+
+
+
+
+
+
+
+
+
+
+
+
+y                        Expires August 18, 2019                [Page 5]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+      <PCRep Message> ::= <Common Header>
+                          [<svec-list>]
+                          <response-list>
+
+      where:
+
+            <svec-list> ::= <SVEC>
+                            [<OF>]
+                            [<metric-list>]
+                            [<svec-list>]
+
+           <response-list> ::= <response> [<response-list>]
+
+           <response> ::= <RP>
+                          [<LSP>]
+                          [<NO-PATH>]
+                          [<attribute-list>]
+                          [<path-list>]
+
+           <path-list> ::= <path> [<path-list>]
+
+           <path> ::= <ERO>
+                      <attribute-list>
+
+      and where:
+
+           <attribute-list> ::= [<OF>]
+                                [<LSPA>]
+                                [<BANDWIDTH>]
+                                [<metric-list>]
+                                [<IRO>]
+                                [<MT>]
+
+
+2.2.3.  PCRpt Message
+
+   A Path Computation LSP State Report message (also referred to as
+   PCRpt message) is a PCEP message sent by a PCC to a PCE to report the
+   current state or delegate control of an LSP.
+
+   The format of the PCRpt message is described in [RFC8231] which uses
+   the <attribute-list> as defined in [RFC5440] and extended by PCEP
+   extensions.
+
+   The PCRpt message can use the updated <attribute-list> (as extended
+   in Section 2.2.2) for the purpose of including the MT object.
+
+
+
+
+
+y                        Expires August 18, 2019                [Page 6]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+2.2.4.  PCUpd Message
+
+   A Path Computation LSP Update Request message (also referred to as
+   PCUpd message) is a PCEP message sent by a PCC to a PCE to update
+   attributes of an LSP.
+
+   The format of the PCUpd message is described in [RFC8231] which uses
+   the <attribute-list> as defined in [RFC5440] and extended by PCEP
+   extensions.
+
+   The PCUpd message can use the updated <attribute-list> (as extended
+   in Section 2.2.2) for the purpose of including the MT object.
+
+2.2.5.  PCInitiate message
+
+   An LSP Initiate Request (PCInitiate) message is a PCEP message sent
+   by a PCE to a PCC to trigger LSP instantiation or deletion.
+
+   The format of the PCInitiate message is described in [RFC8231] which
+   uses the <attribute-list> as defined in [RFC5440] and extended by
+   PCEP extensions.
+
+   The PCInitiate message can use the updated <attribute-list> (as
+   extended in Section 2.2.2) for the purpose of including the MT
+   object.
+
+3.  Security Considerations
+
+   This document defines a new MT object that do not add any new
+   security concerns beyond those discussed in [RFC5440] in itself.
+   Some deployments may find the MT information to be extra sensitive
+   and could be used to influence path computation and setup with
+   adverse effect.  Additionally, snooping of PCEP messages with such
+   data or using PCEP messages for network reconnaissance may give an
+   attacker sensitive information about the operations of the network.
+   Thus, such deployment should employ suitable PCEP security mechanisms
+   like TCP Authentication Option (TCP-AO) [RFC5925] or Transport Layer
+   Security (TLS) [RFC8253].  The procedure based on TLS is considered a
+   security enhancement and thus is much better suited for the sensitive
+   information.
+
+4.  IANA Considerations
+
+   This document makes following requests to IANA for action.
+
+
+
+
+
+
+
+y                        Expires August 18, 2019                [Page 7]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+4.1.  New Object
+
+   IANA maintains the "Path Computation Element Protocol (PCEP) Numbers"
+   registry.  Within this registry, IANA maintains a subregistry for
+   "PCEP Objects".  IANA is requested to make the following allocation:
+
+   Object-Class Value  Name                  Reference
+   ------------------  ----------------      -------------
+           TBD1        MT                    This document
+                       Object-Type
+                       0: Reserved
+                       1: MT
+
+5.  Acknowledgments
+
+6.  References
+
+6.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC4915]  Psenak, P., Mirtorabi, S., Roy, A., Nguyen, L., and P.
+              Pillay-Esnault, "Multi-Topology (MT) Routing in OSPF",
+              RFC 4915, DOI 10.17487/RFC4915, June 2007,
+              <https://www.rfc-editor.org/info/rfc4915>.
+
+   [RFC5120]  Przygienda, T., Shen, N., and N. Sheth, "M-ISIS: Multi
+              Topology (MT) Routing in Intermediate System to
+              Intermediate Systems (IS-ISs)", RFC 5120,
+              DOI 10.17487/RFC5120, February 2008,
+              <https://www.rfc-editor.org/info/rfc5120>.
+
+   [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
+              Element (PCE) Communication Protocol (PCEP)", RFC 5440,
+              DOI 10.17487/RFC5440, March 2009,
+              <https://www.rfc-editor.org/info/rfc5440>.
+
+   [RFC5511]  Farrel, A., "Routing Backus-Naur Form (RBNF): A Syntax
+              Used to Form Encoding Rules in Various Routing Protocol
+              Specifications", RFC 5511, DOI 10.17487/RFC5511, April
+              2009, <https://www.rfc-editor.org/info/rfc5511>.
+
+
+
+
+
+
+
+y                        Expires August 18, 2019                [Page 8]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+   [RFC5541]  Le Roux, JL., Vasseur, JP., and Y. Lee, "Encoding of
+              Objective Functions in the Path Computation Element
+              Communication Protocol (PCEP)", RFC 5541,
+              DOI 10.17487/RFC5541, June 2009,
+              <https://www.rfc-editor.org/info/rfc5541>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC8231]  Crabbe, E., Minei, I., Medved, J., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for Stateful PCE", RFC 8231,
+              DOI 10.17487/RFC8231, September 2017,
+              <https://www.rfc-editor.org/info/rfc8231>.
+
+   [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
+              Computation Element Communication Protocol (PCEP)
+              Extensions for PCE-Initiated LSP Setup in a Stateful PCE
+              Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
+              <https://www.rfc-editor.org/info/rfc8281>.
+
+6.2.  Informative References
+
+   [RFC4657]  Ash, J., Ed. and J. Le Roux, Ed., "Path Computation
+              Element (PCE) Communication Protocol Generic
+              Requirements", RFC 4657, DOI 10.17487/RFC4657, September
+              2006, <https://www.rfc-editor.org/info/rfc4657>.
+
+   [RFC5925]  Touch, J., Mankin, A., and R. Bonica, "The TCP
+              Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
+              June 2010, <https://www.rfc-editor.org/info/rfc5925>.
+
+   [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
+              "PCEPS: Usage of TLS to Provide a Secure Transport for the
+              Path Computation Element Communication Protocol (PCEP)",
+              RFC 8253, DOI 10.17487/RFC8253, October 2017,
+              <https://www.rfc-editor.org/info/rfc8253>.
+
+   [RFC8402]  Filsfils, C., Ed., Previdi, S., Ed., Ginsberg, L.,
+              Decraene, B., Litkowski, S., and R. Shakir, "Segment
+              Routing Architecture", RFC 8402, DOI 10.17487/RFC8402,
+              July 2018, <https://www.rfc-editor.org/info/rfc8402>.
+
+
+
+
+
+
+
+
+y                        Expires August 18, 2019                [Page 9]
+
+Internet-Draft                   PCEP-MT                   February 2019
+
+
+   [I-D.ietf-teas-enhanced-vpn]
+              Dong, J., Bryant, S., Li, Z., Miyasaka, T., and Y. Lee, "A
+              Framework for Enhanced Virtual Private Networks (VPN+)
+              Service", draft-ietf-teas-enhanced-vpn-00 (work in
+              progress), January 2019.
+
+   [I-D.dong-spring-sr-for-enhanced-vpn]
+              Dong, J., Bryant, S., Li, Z., and T. Miyasaka, "Segment
+              Routing for Enhanced VPN Service", draft-dong-spring-sr-
+              for-enhanced-vpn-02 (work in progress), October 2018.
+
+Author's Address
+
+   x y
+   Huawei Technologies
+   Huawei Campus, No. 156 Beiqing Rd.
+   Beijing  100095
+   China
+
+   Email: xy@huawei.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+y                        Expires August 18, 2019               [Page 10]

@@ -129,15 +129,15 @@
          type=""
          width=""
          xml:space="preserve">
-       0                   1                   2                   3
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |          Reserved             |        MT-ID                  |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |                                                               |  
-      //                      Optional TLV(s)                        //
-      |                                                               |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Reserved             |        MT-ID                  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |  
+//                      Optional TLV(s)                        //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </artwork>
         </figure>
         <t>Reserved (16 bits):  This field MUST be set to zero on transmission
@@ -146,31 +146,131 @@
       <t>No TLVs are currently defined for the MT object.</t>
     
    <t>The new MT object defined in this document
-   can also be used with the stateful PCE extensions. A PCC MAY include the MT object in PCRpt to indicate this to the PCE. </t>
+   can also be used with the stateful PCE extensions. A PCC MAY include the MT object in PCRpt to indicate the topology on which the path for the LSP needs to be calculated. The PCE MAY include the MT object in PCUpd and PCInitiate message to indicate the topology on which the path was computed.</t>
 
   </section> 
-  <section title="Segment Routing" toc="default" >
-    <t>A Segment Routed path (SR path) can be derived from an IGP Shortest
-   Path Tree (SPT).  Segment Routed Traffic Engineering paths (SR-TE
-   paths) may not follow IGP SPT.  Such paths may be chosen by a
-   suitable network planning tool and provisioned on the source node of
-   the SR-TE path.</t>
+  <section title="PCEP Message" toc="default" >
+    <t>Message formats in this document are expressed using Routing Backus-
+   Naur Form (RBNF) as used in <xref target="RFC5440"/> and defined in <xref target="RFC5511"/>.</t>
+   <section title="PCReq Message" toc="default" >
+    <t>The format of the PCReq message (with <xref target="RFC5541"/> and <xref target="RFC8231"/> as a
+   base) is updated as follows:</t>
+<figure align="left" alt="" height="" suppress-title="false" title=""
+                width="">
+          <artwork align="left" alt="" height="" name="" type="" width=""
+                   xml:space="preserve">
+   &lt;PCReq Message&gt; ::= &lt;Common Header&gt;
+                        [&lt;svec-list&gt;]
+                        &lt;request-list&gt;
+   where:
+        &lt;svec-list&gt; ::= &lt;SVEC&gt;
+                        [&lt;OF&gt;]
+                        [&lt;metric-list&gt;]
+                        [&lt;svec-list&gt;]
 
-   <t>It is possible to use a PCE for computing one or more SR-TE
-   paths taking into account various constraints and objective
-   functions.  Once a path is chosen, the PCE can inform
-   an SR-TE path on a PCC using PCEP extensions specified in 
-   <xref target="I-D.ietf-pce-segment-routing"/>. Further, <xref target="I-D.negi-pce-segment-routing-ipv6"/> adds the
-   support for IPv6 data plane in SR.</t>
+        &lt;request-list&gt; ::= &lt;request&gt; [&lt;request-list&gt;]
 
-   <t>The new metric type for path MTU is applicable for the SR-TE path and require no additional extensions. For SR paths with path setup type (PST) <xref target="I-D.ietf-pce-lsp-setup-type"/> for SR or SRv6, this metric SHOULD be included in the PCEP messages from the PCE by default, unless overridden by local policy.</t> 
-  </section>    
+        &lt;request&gt; ::= &lt;RP&gt;
+                      &lt;END-POINTS&gt;
+                      [&lt;LSP&gt;]
+                      [&lt;LSPA&gt;]
+                      [&lt;BANDWIDTH&gt;]
+                      [&lt;metric-list&gt;]
+                      [&lt;OF&gt;]
+                      [&lt;RRO&gt;[&lt;BANDWIDTH&gt;]]
+                      [&lt;IRO&gt;]
+                      [&lt;LOAD-BALANCING&gt;]
+                      [&lt;MT&gt;]
+
+    </artwork>
+        </figure>   
+   </section>
+   <section title="PCRep message" toc="default" anchor="SEC_REP">
+        <t>The format of the PCRep message (with <xref
+        target="RFC5541"></xref> and <xref target="RFC8231"></xref> as a base) is updated as follows:</t>
+
+        <figure align="left" alt="" height="" suppress-title="false" title=""
+                width="">
+          <artwork align="left" alt="" height="" name="" type="" width=""
+                   xml:space="preserve">
+   &lt;PCRep Message&gt; ::= &lt;Common Header&gt;
+                       [&lt;svec-list&gt;]
+                       &lt;response-list&gt;
+
+   where:
+
+         &lt;svec-list&gt; ::= &lt;SVEC&gt;
+                         [&lt;OF&gt;]
+                         [&lt;metric-list&gt;]
+                         [&lt;svec-list&gt;]
+
+        &lt;response-list&gt; ::= &lt;response&gt; [&lt;response-list&gt;]
+
+        &lt;response&gt; ::= &lt;RP&gt;
+                       [&lt;LSP&gt;]
+                       [&lt;NO-PATH&gt;]
+                       [&lt;attribute-list&gt;]
+                       [&lt;path-list&gt;]
+
+        &lt;path-list&gt; ::= &lt;path&gt; [&lt;path-list&gt;]
+
+        &lt;path&gt; ::= &lt;ERO&gt;
+                   &lt;attribute-list&gt;
+
+   and where:
+
+        &lt;attribute-list&gt; ::= [&lt;OF&gt;]
+                             [&lt;LSPA&gt;]
+                             [&lt;BANDWIDTH&gt;]
+                             [&lt;metric-list&gt;]
+                             [&lt;IRO&gt;]
+                             [&lt;MT&gt;]
+
+    </artwork>
+        </figure>
+        </section>
+              <section title="PCRpt Message" toc="default" anchor="sec_rpt">
+   <t>A Path Computation LSP State
+   Report message (also referred to as PCRpt message) is a PCEP message
+   sent by a PCC to a PCE to report the current state or delegate control
+   of an LSP.</t>
+   
+   <t>The format of the PCRpt message is described in <xref target="RFC8231"></xref> which uses 
+   the &lt;attribute-list&gt; as defined in <xref target="RFC5440"/> and 
+   extended by PCEP extensions.</t>
+   
+   <t>The PCRpt message can use the updated &lt;attribute-list&gt; (as extended in <xref target="SEC_REP"/>) for the purpose of including the MT object.</t>
+   </section>
+              <section title="PCUpd Message" toc="default" anchor="sec_upd">
+   <t>A Path Computation LSP Update
+   Request message (also referred to as PCUpd message) is a PCEP message
+   sent by a PCC to a PCE to update
+   attributes of an LSP.</t>
+      
+   <t>The format of the PCUpd message is described in <xref target="RFC8231"></xref> which uses 
+   the &lt;attribute-list&gt; as defined in <xref target="RFC5440"/> and 
+   extended by PCEP extensions.</t>
+   
+   <t>The PCUpd message can use the updated &lt;attribute-list&gt; (as extended in <xref target="SEC_REP"/>) for the purpose of including the MT object.</t>
+   </section>
+              <section title="PCInitiate message" toc="default" anchor="sec_int">
+   <t>An LSP Initiate Request (PCInitiate) message is a PCEP message sent
+   by a PCE to a PCC to trigger LSP instantiation or deletion.</t>
+   
+   <t>The format of the PCInitiate message is described in <xref target="RFC8231"></xref> which uses 
+   the &lt;attribute-list&gt; as defined in <xref target="RFC5440"/> and 
+   extended by PCEP extensions.</t>
+   
+   <t>The PCInitiate message can use the updated &lt;attribute-list&gt; (as extended in <xref target="SEC_REP"/>) for the purpose of including the MT object.</t>
+   </section>
+
+  </section>
  </section>
       
     <section title="Security Considerations" toc="default">
-    <t>   This document defines a new METRIC type that do not add any new security concerns beyond those
+    <t>This document defines a new MT object that do not add any new security concerns beyond those
    discussed in <xref target="RFC5440"/> in itself.  Some deployments may
-   find the path MTU information to be
+   find the MT information to be
    extra sensitive and could be used to influence path computation and
    setup with adverse effect.  Additionally, snooping of PCEP messages
    with such data or using PCEP messages for network reconnaissance may
@@ -184,15 +284,18 @@
       
     <section title="IANA Considerations" toc="default">
     <t>This document makes following requests to IANA for action.</t>
-    <section title="METRIC Types" toc="default">
+    <section title="New Object" toc="default">
       <t>IANA maintains the "Path Computation Element Protocol (PCEP) Numbers"
    registry.  Within this
-   registry, IANA maintains a subregistry for "METRIC Object T Field".
+   registry, IANA maintains a subregistry for "PCEP Objects".
    IANA is requested to make the following allocation:</t>
    <figure><artwork>
-Value                  Description                  Reference
----------------------- ---------------------------- --------------
-TBD                    Path MTU.                    This document    
+Object-Class Value  Name                  Reference
+------------------  ----------------      -------------
+        TBD1        MT                    This document
+                    Object-Type
+                    0: Reserved
+                    1: MT  
    </artwork></figure>
 
     </section>
@@ -205,7 +308,11 @@ TBD                    Path MTU.                    This document
   <back>
     <references title="Normative References">
       <?rfc include="reference.RFC.2119"?>
+      <?rfc include="reference.RFC.4915"?>
+      <?rfc include="reference.RFC.5120"?>
       <?rfc include="reference.RFC.5440"?>
+      <?rfc include="reference.RFC.5511"?>
+      <?rfc include="reference.RFC.5541"?>
       
       <?rfc include="reference.RFC.8174"?>
       <?rfc include="reference.RFC.8231"?>
@@ -213,18 +320,16 @@ TBD                    Path MTU.                    This document
 
       </references>
     <references title="Informative References">
-      <?rfc include="reference.RFC.3209"?>
+      
       <?rfc include="reference.RFC.4657"?>   
       <?rfc include="reference.RFC.5925"?>    
            
       
     <?rfc include="reference.RFC.8253"?>
-      <?rfc include="reference.I-D.ietf-pce-segment-routing"?>
-      <?rfc include="reference.I-D.ietf-spring-segment-routing"?>
-      <?rfc include="reference.I-D.ietf-pce-lsp-setup-type"?>
-      
-         
-      <?rfc include="reference.I-D.negi-pce-segment-routing-ipv6"?>
+    <?rfc include="reference.RFC.8402"?>
+    <?rfc include="reference.I-D.ietf-teas-enhanced-vpn"?>
+    <?rfc include="reference.I-D.dong-spring-sr-for-enhanced-vpn"?>
+    
 
       </references>
     
