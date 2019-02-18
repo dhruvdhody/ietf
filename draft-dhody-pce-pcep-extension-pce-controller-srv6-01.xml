@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"
+[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc ipr="trust200902"
+     category="std"
+     docName="draft-dhody-pce-pcep-extension-pce-controller-srv6-01"
+     obsoletes=""
+     updates=""
+     submissionType="IETF"
+     xml:lang="en">
+  <front>
+    <title abbrev="PCECC-SRv6">PCEP Procedures and Protocol Extensions for
+    Using PCE as a Central Controller (PCECC) for SRv6</title>
+
+
+<author initials="M" surname="Negi" fullname="Mahendra Singh Negi">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>mahendrasingh@huawei.com</email>
+      </address>
+    </author>
+
+
+    <author initials="Z"
+            surname="Li"
+            fullname="Zhenbin Li">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Huawei Bld., No.156 Beiqing Rd.</street>
+          <city>Beijing  </city>
+          <region></region>
+          <code>100095</code>
+          <country>China</country>
+        </postal>
+        <email>lizhenbin@huawei.com</email>
+      </address>
+    </author>
+    <author initials="X"
+            surname="Geng"
+            fullname="Xuesong Geng">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country>China</country>
+        </postal>
+        <email>gengxuesong@huawei.com</email>
+      </address>
+    </author>
+    <date  year="2019" />
+    <area>Routing</area>
+    <workgroup>PCE Working Group</workgroup>
+    <abstract>
+   <t>The Path Computation Element (PCE) is a core component of Software-
+   Defined Networking (SDN) systems.  It can compute optimal paths for
+   traffic across a network and can also update the paths to reflect
+   changes in the network or traffic demands.</t>
+
+   <t>PCE was developed to derive paths for MPLS Label Switched Paths
+   (LSPs), which are supplied to the head end of the LSP using the Path
+   Computation Element Communication Protocol (PCEP).  But SDN has a
+   broader applicability than signaled (G)MPLS traffic-engineered (TE)
+   networks, and the PCE may be used to determine paths in a range of
+   use cases.  PCEP has been proposed as a control protocol for use in
+   these environments to allow the PCE to be fully enabled as a central
+   controller.</t>
+
+   <t>A PCE-based central controller (PCECC) can simplify the processing of
+   a distributed control plane by blending it with elements of SDN and
+   without necessarily completely replacing it. This document specifies the procedures and PCEP protocol extensions
+   when a PCE-based controller is also responsible for configuring the
+   forwarding actions on the routers for Segment Routing in IPv6 (SRv6), in addition to computing the SRv6 paths
+   for packet flows and telling the edge
+   routers what instructions to attach to packets as they enter the
+   network.   </t>
+
+   </abstract>
+  </front>
+  <middle>
+    <section title="Introduction"
+             toc="default">
+<t>The Path Computation Element (PCE) <xref target='RFC4655'/> was developed to offload
+   path computation function from routers in an MPLS traffic-engineered
+   network.  Since then, the role and function of the PCE has grown to
+   cover a number of other uses (such as GMPLS <xref target='RFC7025'/>) and to allow
+   delegated control <xref target='RFC8231'/> and PCE-initiated use of network
+   resources <xref target='RFC8281'/>.</t>
+
+   <t>According to <xref target='RFC7399'/>, Software-Defined Networking (SDN) refers to a
+   separation between the control elements and the forwarding components
+   so that software running in a centralized system, called a
+   controller, can act to program the devices in the network to behave
+   in specific ways.  A required element in an SDN architecture is a
+   component that plans how the network resources will be used and how
+   the devices will be programmed.  It is possible to view this
+   component as performing specific computations to place traffic flows
+   within the network given knowledge of the availability of network
+   resources, how other forwarding devices are programmed, and the way
+   that other flows are routed.  This is the function and purpose of a
+   PCE, and the way that a PCE integrates into a wider network control
+   system (including an SDN system) is presented in <xref target='RFC7491'/>.</t>
+
+   <t>In early PCE implementations, where the PCE was used to derive paths
+   for MPLS Label Switched Paths (LSPs), paths were requested by network
+   elements (known as Path Computation Clients (PCCs)), and the results
+   of the path computations were supplied to network elements using the
+   Path Computation Element Communication Protocol (PCEP) <xref target='RFC5440'/>.
+   This protocol was later extended to allow a PCE to send unsolicited
+   requests to the network for LSP establishment <xref target='RFC8281'/>.</t>
+
+   <t><xref target='RFC8283'/> introduces the architecture for PCE as a central
+   controller as an extension of the architecture described in <xref target='RFC4655'/>
+   and assumes the continued use of PCEP as the protocol used between
+   PCE and PCC. <xref target='RFC8283'/>  further examines the motivations and applicability
+   for PCEP as a Southbound Interface (SBI), and introduces the implications for the
+   protocol.  <xref target='I-D.ietf-teas-pcecc-use-cases'/> describes the use cases for
+   the PCECC architecture.</t>
+   
+   <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> specify the procedures and PCEP protocol extensions for
+   using the PCE as the central controller for static LSPs, where 
+   LSPs can be provisioned as explicit label instructions at each
+   hop on the end-to-end path.</t>
+
+   <t>Segment Routing (SR) technology leverages the source routing and tunneling paradigms.
+   A source node can choose a path without relying on hop-by-hop
+   signaling protocols such as LDP or RSVP-TE.  Each path is specified
+   as a set of "segments" advertised by link-state routing protocols
+   (IS-IS or OSPF).  <xref target='RFC8402'/> provides an
+   introduction to SR architecture. The corresponding IS-IS and OSPF extensions are
+   specified in <xref target='I-D.ietf-isis-segment-routing-extensions'/> and
+   <xref target='I-D.ietf-ospf-segment-routing-extensions'/> , respectively.
+   It relies on a series of
+   forwarding instructions being placed in the header of a packet. 
+   The list of segment forming the path is called the
+   Segment List and is encoded in the packet header.  Segment Routing
+   can be applied to the IPv6 architecture with the Segment Routing
+   Header (SRH) [I-D.ietf-6man-segment-routing-header].  A segment is
+   encoded as an IPv6 address.  An ordered list of segments is encoded
+   as an ordered list of IPv6 addresses in the routing header.  The
+   active segment is indicated by the Destination Address of the packet.
+   Upon completion of a segment, a pointer in the new routing header is
+   incremented and indicates the next segment.
+   The segment routing architecture supports operations that can be used
+   to steer packet flows in a network, thus providing a form of traffic
+   engineering. <xref target='I-D.ietf-pce-segment-routing'/> and <xref target='I-D.negi-pce-segment-routing-ipv6'/> specify the SR specific PCEP
+   extensions. 
+ </t>
+
+
+   <t>PCECC may further use PCEP protocol for SR SID (Segment Identifier) distribution on the SR nodes
+    with some benefits. <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> specifies the procedures and PCEP protocol extensions when 
+   a PCE-based controller is also responsible for configuring
+   the forwarding actions on the routers (SR SID distribution in this case), in addition to computing
+   the paths for packet flows in a segment routing network and telling the edge routers
+   what instructions to attach to packets as they enter the network. This document extends this to include SRv6 SID distribution as well.
+   </t>
+
+      <!--<t>[Important Note - Note that this document achieves by extending the new PCEP message defined in <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/>. 
+    The authors and WG also debated on the use of existing PCEP messages. 
+    <xref target="Procedures"/> defines the first approach where as <xref target="appendix"/>  
+    defines the latter. The authors are open to either of the approach and
+    will follow the direction of the WG.]</t>-->
+
+      <section title="Requirements Language"
+               toc="default">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.</t>
+      </section>
+    </section>
+    
+    <section title="Terminology"
+             toc="default">
+      <t>Terminologies used in this document is same as described in the draft 
+       <xref target="RFC8283"/> and <xref target='I-D.ietf-teas-pcecc-use-cases'/>.</t>      
+    </section>
+    
+    <section title="PCECC SRv6"
+             toc="default"
+             anchor="SEC_M">
+
+    <t><xref target='I-D.ietf-pce-segment-routing'/> specifies extensions to 
+    PCEP that allow a stateful PCE to
+   compute, update or initiate SR-TE paths for MPLS dataplane. An ingress node of an SR-TE path appends
+   all outgoing packets with a list of MPLS labels (SIDs). This is encoded in
+   SR-ERO subobject, capable of carrying a label (SID) as well as the identity of the
+   node/adjacency label (SID). <xref target='I-D.negi-pce-segment-routing-ipv6'/> extends the procedure
+   to include support for SRv6 paths.</t>         
+   
+   <t>As per <xref target='I-D.ietf-6man-segment-routing-header'/>, an SRv6 Segment is a
+   128-bit value.  "SRv6 SID" or simply "SID" are often used as a
+   shorter reference for "SRv6 Segment".  Further details are in an
+   illustration provided in
+   <xref target='I-D.filsfils-spring-srv6-network-programming'/>.
+The SR is applied to IPV6 forwarding
+   plane using SRH.  A SR path can be derived from an IGP Shortest Path
+   Tree (SPT), but SR-TE paths may not follow IGP SPT.  Such paths may
+   be chosen by a suitable network planning tool, or a PCE and
+   provisioned on the ingress node. <xref target='I-D.negi-pce-segment-routing-ipv6'/> extended 
+   SR-ERO subobject capable of carrying an SRv6 SID as well as the identity
+   of the node/adjacency represented by the SID.</t>
+
+   <t>As per <xref target='RFC8283'/>, 
+   PCE as a central controller can allocate and provision the node/prefix/adjacency label (SID) via PCEP. 
+  As per <xref target='I-D.ietf-teas-pcecc-use-cases'/> this is also applicable to SRv6 SIDs.</t> 
+   <t>Rest of the
+   processing is similar to existing stateful PCE with SRv6 mechanism.</t>
+
+   </section>
+   
+    <section title="PCEP Requirements"
+             toc="default"
+             anchor="SEC_R">
+   <t>Following key requirements for PCECC-SRv6 should be considered when`
+   designing the PCECC based solution:</t>
+      <t>
+        <list style="symbols">
+   <t>PCEP speaker supporting this draft MUST have the capability to
+       advertise its PCECC-SRv6 capability to its peers.</t>
+
+
+   <t>PCEP speaker not supporting this draft MUST be able to reject
+       PCECC-SRv6 related message with a reason code that indicates no
+       support for it.</t>
+
+   <t>PCEP procedures MUST provide a means to update (or cleanup) the SRv6 SID to the PCC.</t>
+
+   <t>PCEP procedures SHOULD provide a means to synchronize the SRv6 SID allocations between
+       PCE to PCC in the PCEP messages.</t>
+
+        </list>
+      </t>
+    </section>
+    
+    
+    <section title="Procedures for Using the PCE as the Central Controller (PCECC) in SRv6"
+             toc="default" anchor="Procedures">
+             
+    <section title="Stateful PCE Model"
+             toc="default">
+    <t>Active stateful PCE is described in <xref target='RFC8231'/>. PCE
+    as a central controller (PCECC) reuses existing Active stateful PCE
+    mechanism as much as possible to control the LSP.</t>
+    </section>
+    
+    <section title="New Functions"
+             toc="default">
+   <t>This document uses the same PCEP messages and its extensions which
+   are described in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> and <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> for
+   PCECC-SRv6 as well.</t>
+   
+   <t>PCEP messages PCRpt, PCInitiate, PCUpd are also used to send
+   LSP Reports, LSP setup and LSP update respectively. The extended PCInitiate message described in
+   <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> is used to download
+   or cleanup central controller's instructions (CCIs) (SRv6 SID in scope of this document). The extended PCRpt message described in
+   <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> is also used to report
+   the CCIs (SRv6 SIDs) from PCC to PCE.</t>
+
+    <!--<t>[Editor's Note: <xref target='I-D.zhao-pce-pcep-extension-for-pce-controller'/> defines new messages PCLabelUpd and 
+      PCLabelRpt. The authors and WG also debated on the use of existing PCEP messages. Further 
+      the document also includes an appendix 
+      on how the existing messages can be extended 
+      to add this functionality. WG needs to decide the final direction i.e. new specific messages 
+      are needed or existing PCEP messages can be extended. See See <xref target="appendix"/> 
+      to see the extension of existing message for PCECC-SR functionality.]</t>-->
+        
+        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> specify an object called CCI for the encoding of central controller's instructions. <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> extends the CCI by defining a object-type for segment routing. This document further extends the CCI by defining another object-type for SRv6.
+      </t>
+    </section>
+    
+    <section title="PCECC Capability Advertisement"
+             toc="default">
+   <t>During PCEP Initialization Phase, PCEP Speakers (PCE or PCC)
+   advertise their support of PCECC extensions.  A PCEP Speaker includes
+   the "PCECC Capability" sub-TLV, described in 
+   <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>.</t>
+
+   <t>A S-bit is added in PCECC-CAPABILITY sub-TLV to indicate support for 
+   PCECC-SR in <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>. This document adds another I-bit to indicate support for SR in IPv6. A PCC MUST set I-bit in PCECC-CAPABILITY sub-TLV and include 
+   SRv6-PCE-CAPABILITY sub-TLV (<xref target='I-D.negi-pce-segment-routing-ipv6'/>) in OPEN Object 
+   (inside the the PATH-SETUP-TYPE-CAPABILITY TLV)
+   to support the PCECC SRv6 extensions defined in this document.  If
+   I-bit is set in PCECC-CAPABILITY sub-TLV and SRv6-PCE-CAPABILITY sub-TLV is not
+   advertised in OPEN Object, PCE SHOULD send a PCErr message with
+   Error-Type=19 (Invalid Operation) and Error-value=TBD(SRv6 capability
+   was not advertised) and terminate the session.</t>
+   </section>
+   
+   <section title="PCEP session IP address and TEDB Router ID"
+             toc="default" anchor="SEC_SESSION">
+   <t>As described in <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>, it is important to link the session IP address with the
+   Router ID in TEDB for successful PCECC operations.</t>
+   </section>
+
+   
+    <section title="SRv6 Path Operations"
+             toc="default">
+    <t> The PCEP messages pertaining to PCECC-SRv6 MUST include PATH-SETUP-TYPE
+   TLV <xref target='RFC8408'/> with PST=TBD in the SRP object
+   to clearly identify the PCECC-SRv6 setup is intended.</t>
+   
+    <section title="PCECC Segment Routing in IPv6 (SRv6)"
+             toc="default"
+             anchor="SEC_SR_SETUP">
+   <t>Segment Routing (SR) as described in
+   <xref target='RFC8402'/> depends on "segments" that are
+   advertised by Interior Gateway Protocols (IGPs).  The SR-node
+   allocates and advertises the SID (node, adj etc) and flood via the
+   IGP.  This document proposes a new mechanism where PCE allocates the
+   SRv6 SID centrally and uses PCEP to advertise the SRv6 SID.  In some
+   deployments PCE (and PCEP) are better suited than IGP because of
+   centralized nature of PCE and direct TCP based PCEP session to the
+   node.</t>
+   
+       <section title="PCECC SRv6 Node/Prefix SID allocation"
+             toc="default"
+             anchor="SEC_NODE_ALLOC">
+        <t>Each node (PCC) is allocated a node SRv6 SID by the PCECC.  The
+         PCECC sends PCInitiate message to update the SID table of each node.  
+         The TE router ID is determined from the
+         TEDB or from "IPv4/IPv6 Router-ID" Sub-TLV
+         <xref target='I-D.dhodylee-pce-pcep-ls'/>, in the OPEN Object.</t>
+
+         <!--<t>Note: See <xref target="appendix"/> for how
+   we could use PCInitiate message instead.]</t>-->
+
+        <!--<t>It is RECOMMENDED that PCEP session with PCECC SR capability to use a
+         different session IP address during TCP session establishment than
+         the node Router ID in TEDB, to make sure that the PCEP session does
+         not get impacted by the SR Node/Prefix Label maps (<xref target="SEC_SESSION"/>).</t>-->
+
+         <!--<t>If a node (PCC) receives a PCInitiate message with a CCI encoding a SID, out
+      of the range set aside for the SRGB, it MUST send a PCErr message with Error-type=TBD
+   (PCECC failure) and Error-value=TBD (SID out of range) and MUST include the
+   SRP object to specify the error is for the corresponding label update via PCInitiate message.</t>-->
+
+        <t>On receiving the SRv6 node SID allocation, each node (PCC) uses the local
+         routing information to determine the next-hop and download the 
+         forwarding instructions accordingly.  The PCInitiate message in this
+         case MUST have FEC object.</t>
+
+
+         <t>On receiving the SRv6 node SID allocation:<list>
+
+  <t>For the local SID, node (PCC) needs to update SID with associated 
+  function (END function in this case) in "My Local SID Table" (<xref target="I-D.filsfils-spring-srv6-network-programming"/>).</t>
+  
+  <t>For the non-local SID, node (PCC) uses the local routing information
+  to determine the next-hop and download the forwarding instructions accordingly.  </t></list></t>
+  
+  <t>The PCInitiate message in this
+  case MUST have FEC object.</t>         
+        
+
+        <t>The forwarding behavior and the end result is similar to IGP based
+        "Node-SID" in SRv6.  Thus, from anywhere in the domain, it enforces the
+        ECMP-aware shortest-path forwarding of the packet towards the related
+        node.</t>
+
+        <t>PCE relies on the Node/Prefix SRv6 SID cleanup using the same PCInitiate
+        message.</t>             
+
+       </section>
+       
+       <section title="PCECC SRv6 Adjacency SID allocation"
+             toc="default"
+             anchor="SEC_ADJ_ALLOC">
+             
+        <t><xref target='I-D.ietf-pce-segment-routing'/> extends PCEP to allow a stateful PCE
+        to compute and initiate SR-TE paths, as well as a PCC to request a
+        path subject to certain constraint(s) and optimization criteria in SR
+        networks.</t>
+
+        <t>For PCECC SR, apart from node-SID, Adj-SID is used where each adjacency
+         is allocated an Adj-SID by the PCECC.  The PCECC sends
+         PCInitiate message to update the label map of each Adj to the corresponding
+         nodes in the domain.  Each node (PCC) download the SRv6 SID
+         instructions accordingly.  Similar to SRv6 Node/Prefix Label allocation, the
+         PCInitiate message in this case uses
+         the FEC object. </t>
+        
+        <t>The forwarding behavior and the end result is similar to IGP based
+        "Adj-SID" in SRv6.</t>
+
+        <t>The Path Setup Type for segment routing MUST be set for PCECC SRv6 = TBD
+         (see <xref target="SEC_PATH"/>).  All PCEP procedures and mechanism are similar to
+        <xref target='I-D.ietf-pce-segment-routing'/>.</t>
+
+        <t>PCE relies on the Adj label cleanup using the same PCInitiate
+        message.</t>
+
+       </section>
+
+        <section title="Redundant PCEs "
+             toc="default"
+             anchor="SEC_REDUND">
+
+       <t><xref target='I-D.litkowski-pce-state-sync'/> describes synchronization
+       mechanism between the stateful PCEs. The SRv6 SIDs allocated by a PCE MUST also be 
+       synchronized among PCEs for PCECC SRv6 state synchronization. Note that the SRv6 SIDs
+       are independent to the PCECC-SRv6 paths, and remains intact till any topology 
+       change. The redundant PCEs MUST have a common view of all SRv6 SIDs allocated in the
+       domain.
+     </t>
+    
+       </section>     
+       
+       <section title="Re Delegation and Cleanup"
+             toc="default"
+             anchor="SEC_SES_TERMIN">
+        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> describes the action
+        needed for CCIs for the Basic PCECC LSP on this terminated
+        session. Similarly actions should be applied for the SRv6 SID as well.</t>
+       </section>
+
+       <section title="Synchronization of SRv6 SID Allocations"
+             toc="default"
+             anchor="SEC_DB_SYNC">
+        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> describes the synchronization of Central Controller's Instructions (CCI) via LSP state synchronization 
+   as described in <xref target='RFC8231'/> and 
+   <xref target='RFC8232'/>.  
+        Same procedures should be applied for SRv6 SIDs as well.</t>    
+        <!--<t>See <xref target="I-D.palle-pce-controller-labeldb-sync"/> for the optimizations for LABEL-DB synchronization procedure.</t>          -->
+       </section>       
+       
+       </section>
+    </section>
+    </section>
+
+    
+    <section title="PCEP messages"
+             toc="default">
+    <t>The PCEP message is as per  <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>.</t>
+   
+    
+    </section>
+
+    
+    <section title="PCEP Objects"
+             toc="default">
+
+    <section title="OPEN Object"
+             toc="default">
+
+    <section title="PCECC Capability sub-TLV"
+             toc="default"
+             anchor="SEC_PCECC_CAP_TLV">
+    <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> defined
+    the PCECC-CAPABILITY TLV.</t>
+    <t>A new I-bit is defined in PCECC-CAPABILITY sub-TLV for PCECC-SRv6:</t>
+<figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_CAP">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |               Type=TBD        |            Length=4           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             Flags                         |I|S|
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]>
+        </artwork>
+        </figure>
+
+    <t>I (PCECC-SRv6-CAPABILITY - 1 bit):  If set to 1 by a PCEP speaker, it
+      indicates that the PCEP speaker is capable for PCECC-SRv6 capability
+      and PCE would allocate node and Adj SRv6 SID on this session.</t>
+    </section>
+
+    </section>
+    
+    <section title="PATH-SETUP-TYPE TLV"
+             toc="default"
+             anchor="SEC_PATH">
+             
+    <t>The PATH-SETUP-TYPE TLV is defined in <xref target='RFC8408'/>.
+   PST = TBD is used
+   when Path is setup via PCECC SRv6 mode.</t>
+
+   <t>On a PCRpt/PCUpd/PCInitiate message, the PST=TBD indicates that this 
+   path was setup via a PCECC-SRv6 based mechanism where either the SIDs were 
+   allocated/instructed by PCE via PCECC mechanism.</t>
+
+
+    </section>
+    <section title="CCI Object"
+             toc="default"
+             anchor="SEC_CCI">
+    <t>The Central Control Instructions (CCI) Object is used by the PCE to specify the forwarding instructions is defined in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>. 
+    This document defines another object-type for SRv6 purpose. </t>
+    <t>CCI Object-Type is TBD for SRv6 as below - 
+      <figure align="left"
+                alt=""
+                height=""
+                suppress-title="true"
+                title=""
+                width=""
+                anchor="SEC_FIG9">
+          <artwork align="left"
+         alt=""
+         height=""
+         name=""
+         type=""
+         width=""
+         xml:space="preserve">
+<![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            CC-ID                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      MT-ID    |    Algorithm  |        Flags        |N|E|V|L|O|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Reserved            |   SRv6 Endpoint Function      | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                      SRv6 Identifier                          |
+|                         (128-bit)                             |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+//                        Optional TLV                         //
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]>
+        </artwork>
+        </figure>
+       </t>                 
+       <t>The field CC-ID is as described in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>. The field MT-ID, Algorithm, Flags are defined in 
+       <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>.</t>
+      <t>Reserved: MUST be set to 0 while sending and ignored on receipt.</t>
+      <t>SRv6 Endpoint Function: 16 bit field representing supported
+      functions associated with SRv6 SIDs.</t>
+      <t>SRv6 Identifier: 128 bit IPv6 addresses representing SRv6
+      segment.</t>
+      <t>[Editor's Note - It might be useful to seperate the LOC:FUNC part in the SRv6 SID]</t>
+     </section>   
+    <section title="FEC Object"
+             toc="default"
+             anchor="SEC_FEC">
+    <t>The FEC Object is used to specify the FEC information and MAY be
+   carried within PCInitiate or PCRpt message.</t>
+    <t>FEC Object (and various Object-Types) are described in <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>. SRv6 Node SID MUST includes the FEC Object-Type 2 for IPv6 Node. 
+    SRv6 Adjacency SID MUST include the FEC Object-Type=4 for IPv6 adjacency. Further FEC object types would be added in future revisions.</t>  
+    
+
+    </section>
+    </section>    
+
+  
+    <section title="Security Considerations"
+             toc="default">
+    <t>The security considerations described in 
+     <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> apply to the
+     extensions described in this document.</t>
+    </section>
+    
+    <section title="Manageability Considerations"
+             toc="default">
+      <section title="Control of Function and Policy"
+               toc="default">
+        <t> A PCE or PCC implementation SHOULD allow to configure to
+   enable/disable PCECC SR capability as a global configuration.</t>
+      </section>
+      <section title="Information and Data Models"
+               toc="default">
+        <t><xref target="RFC7420"/> describes the PCEP MIB, this MIB can be extended to get the
+           PCECC SR capability status.</t>
+   
+        <t>The PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> could be extended
+           to enable/disable PCECC SR capability.</t>
+      </section>
+      <section title="Liveness Detection and Monitoring"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new liveness
+           detection and monitoring requirements in addition to those already
+           listed in <xref target="RFC5440"/>.</t>
+      </section>
+      <section title="Verify Correct Operations"
+               toc="default">
+        <t>Mechanisms defined in this document do not imply any new operation
+   verification requirements in addition to those already listed in
+   <xref target="RFC5440"/> and <xref target="RFC8231"/>.</t>
+      </section>
+      <section title="Requirements On Other Protocols"
+               toc="default">
+        <t>PCEP extensions defined in this document do not put new requirements
+   on other protocols.</t>
+      </section>
+      <section title="Impact On Network Operations"
+               toc="default">
+        <t>PCEP implementation SHOULD allow a limit to be placed on the rate
+   of PCInitiate/PCUpd messages (as per <xref target="RFC8231"/>) sent by PCE and processed by PCC.
+   It SHOULD also allow sending a notification when a rate threshold is
+   reached.</t>
+      </section>
+    </section>
+
+    
+    <section title="IANA Considerations"
+             toc="default">
+
+      <section title="PCECC-CAPABILITY TLV" toc="default">
+      <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> defines the
+      PCECC-CAPABILITY TLV and requests that IANA creates a registry to
+      manage the value of the PCECC-CAPABILITY TLV's Flag field.  IANA
+      is requested to allocate a new bit in the PCECC-CAPABILITY TLV Flag
+      Field registry, as follows:</t>
+     <texttable anchor="CAP-TLV" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Bit</ttcol>
+      <ttcol align="left" width="30%">Description</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>TBD</c>
+       <c>I((PCECC-SRv6-CAPABILITY))</c>
+       <c>This document</c>
+     </texttable>         
+      </section>
+
+      <section title="New Path Setup Type Registry" toc="default">
+        <t>IANA is requested to allocate new PST Field in PATH-
+           SETUP-TYPE TLV.  The allocation policy for this new registry should
+           be by IETF Consensus. The new registry should contain the following value:</t>
+     <texttable anchor="PCEP-PATH-TYPE" style="none" suppress-title="true" title="" align="center">
+      <ttcol align="left" width="20%">Value</ttcol>
+      <ttcol align="left" width="30%">Description</ttcol>
+      <ttcol align="left" width="20%">Reference</ttcol>
+       <c>TBD</c>
+       <c>Path is</c>
+       <c>This document</c>
+       <c> </c>
+       <c>setup using PCECC-SRv6 mode</c>
+       <c> </c>       
+     </texttable>      
+      </section>
+
+      
+      <section title="PCEP-Error Object" toc="default">
+      <t>IANA is requested to allocate new error types and error values within
+        the "PCEP-ERROR Object Error Types and Values" sub-registry of the
+        PCEP Numbers registry for the following errors:
+
+        <vspace blankLines="1" /> 
+        
+        <?rfc subcompact="yes"?>
+
+        <list style="hanging" hangIndent="13">
+
+          <t hangText="Error-Type">Meaning</t>
+          <t hangText="----------   -------"></t>
+          <t hangText="19">Invalid operation.
+          <list style="hanging" hangIndent="37">
+            <t hangText=" Error-value = TBD :">SRv6 capability was not advertised</t>
+          </list>
+          </t>            
+        </list>
+        </t>         
+      </section>      
+      
+    </section>
+
+
+    
+    <section title="Acknowledgments"
+             toc="default">
+
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119.xml" ?>
+      
+      
+      
+      
+      <?rfc include="reference.RFC.5440.xml" ?>
+      <?rfc include="reference.RFC.7420.xml" ?>
+      
+      
+      
+      <?rfc include="reference.RFC.8174.xml"?>
+      <?rfc include="reference.RFC.8231.xml"?>
+      <?rfc include="reference.RFC.8281.xml"?>
+      <?rfc include="reference.I-D.negi-pce-segment-routing-ipv6"?>
+       <?rfc include="reference.I-D.ietf-pce-pcep-extension-for-pce-controller"?>
+        <?rfc include="reference.I-D.zhao-pce-pcep-extension-pce-controller-sr"?>
+
+      </references>
+
+    <references title="Informative References">
+
+    <?rfc include="reference.RFC.4655.xml"?>
+      <?rfc include="reference.RFC.7025.xml"?>
+      <?rfc include="reference.RFC.7399.xml"?>
+      <?rfc include="reference.RFC.7491.xml"?>
+    <?rfc include="reference.RFC.8232.xml"?>
+    <?rfc include="reference.RFC.8283.xml"?>
+    <?rfc include="reference.RFC.8402.xml"?>
+    <?rfc include="reference.RFC.8408.xml"?>
+    <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>
+    
+    <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
+   
+    <?rfc include="reference.I-D.ietf-pce-segment-routing"?>
+    <?rfc include="reference.I-D.ietf-isis-segment-routing-extensions"?>
+    <?rfc include="reference.I-D.ietf-ospf-segment-routing-extensions"?>
+    <?rfc include="reference.I-D.litkowski-pce-state-sync"?>
+    <?rfc include="reference.I-D.dhodylee-pce-pcep-ls"?>
+    
+    
+    <?rfc include="reference.I-D.filsfils-spring-srv6-network-programming"?>
+    <?rfc include="reference.I-D.ietf-6man-segment-routing-header"?>
+    <!--<?rfc include="reference.I-D.palle-pce-controller-labeldb-sync"?>-->
+
+      </references>
+    
+<section title="Contributor Addresses" toc="default">
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+       <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+
+
+Dhruv Dhody 
+Huawei Technologies
+Divyashree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: dhruv.ietf@gmail.com
+
+      
+        ]]></artwork>
+        </figure>
+      </t>
+    </section>
+
+  </back>
+</rfc>
+
