@@ -194,7 +194,7 @@ Internet-Draft                  PCE-ACTN                   February 2019
    Engineering (TE) and GMPLS Label Switched Paths (LSPs) when the
    domain sequence is not known.  Within the Hierarchical PCE (H-PCE)
    architecture, the Parent PCE (P-PCE) is used to compute a multi-
-   domain path based on the domain connectivity information.  A child
+   domain path based on the domain connectivity information.  A Child
    PCE (C-PCE) may be responsible for a single domain or multiple
    domains, it is used to compute the intra-domain path based on its
    domain topology information.
@@ -360,7 +360,7 @@ Internet-Draft                  PCE-ACTN                   February 2019
    document also identifies any gaps in PCEP, that exist at the time of
    publication of this document.
 
-   Further, ACTN, Stateful H-PCE, and PCECC are based on the same basic
+   Further, ACTN, stateful H-PCE, and PCECC are based on the same basic
    hierarchy framework and thus compatible with each other.
 
 3.  Architectural Considerations
@@ -384,7 +384,7 @@ Internet-Draft                  PCE-ACTN                   February 2019
    which PCE could be used for each of the above functions, but all
    functions are not required to be implemented via PCE.  Similarly,
    this document presents the ways in which PCEP could be used as the
-   communications medium between funcitonl components.  Operators may
+   communications medium between functional components.  Operators may
    choose to use the PCEP for multi-domain coordination via stateful
 
 
@@ -455,22 +455,22 @@ Internet-Draft                  PCE-ACTN                   February 2019
    [RFC5305] for MPLS-TE; [RFC4203] and [RFC5307] for GMPLS).  An
    alternative is offered by BGP-LS [RFC7752].
 
-   In case of H-PCE [RFC6805], the parent PCE needs to build the domain
+   In case of H-PCE [RFC6805], the Parent PCE needs to build the domain
    topology map of the child domains and their interconnectivity.
    [RFC6805] and [I-D.ietf-pce-inter-area-as-applicability] suggest that
    BGP-LS could be used as a "northbound" TE advertisement from the
-   child PCE to the parent PCE.
+   Child PCE to the Parent PCE.
 
    [I-D.dhodylee-pce-pcep-ls] proposes another approach for learning and
    maintaining the Link-State and TE information as an alternative to
-   IGPs and BGP flooding, using PCEP itself.  The child PCE can use this
-   mechanism to transport Link-State and TE information from child PCE
+   IGPs and BGP flooding, using PCEP itself.  The Child PCE can use this
+   mechanism to transport Link-State and TE information from Child PCE
    to a Parent PCE using PCEP.
 
    In ACTN, there is a need to control the level of abstraction based on
    the deployment scenario and business relationship between the
    controllers.  The mechanism used to disseminate information from PNC
-   (child PCE) to MDSC (parent PCE) should support abstraction.
+   (Child PCE) to MDSC (Parent PCE) should support abstraction.
    [RFC8453] describes a few alternative approaches of abstraction.  The
    resulting abstracted topology can be encoded using the PCEP-LS
    mechanisms [I-D.dhodylee-pce-pcep-ls] and its optical network
@@ -486,7 +486,7 @@ Internet-Draft                  PCE-ACTN                   February 2019
    the MPI.  The secondary method is called on-demand generation of
    supplementary topology via Path Compute Request/Reply.  This method
    may be needed to obtain further complementary information such as
-   potential connectivity from child PCEs in order to facilitate an end-
+   potential connectivity from Child PCEs in order to facilitate an end-
    to-end path provisioning.  PCEP is well suited to support both
    methods.
 
@@ -517,14 +517,14 @@ Internet-Draft                  PCE-ACTN                   February 2019
    (PCInitiate) message to the PCC.  As described in
    [I-D.ietf-pce-stateful-hpce], for inter-domain LSP in Hierarchical
    PCE architecture, the initiation operations can be carried out at the
-   parent PCE.  In which case, after parent PCE finishes the E2E path
-   computation, it can send the PCInitiate message to the child PCE, the
-   child PCE further propagates the initiate request to the Label
+   Parent PCE.  In which case, after Parent PCE finishes the E2E path
+   computation, it can send the PCInitiate message to the Child PCE, the
+   Child PCE further propagates the initiate request to the Label
    Switching Router (LSR).  The customer request is received by the MDSC
-   (parent PCE) and based on the business logic, global abstracted
-   topology, network conditions and local policy, the MDSC (parent PCE)
+   (Parent PCE) and based on the business logic, global abstracted
+   topology, network conditions and local policy, the MDSC (Parent PCE)
    translates this into per domain LSP initiation request that a PNC
-   (child PCE) can understand and act on.  This can be done via the
+   (Child PCE) can understand and act on.  This can be done via the
    PCInitiate message.
 
    PCEP extensions for associating opaque policy between PCEP peer
@@ -603,7 +603,7 @@ Internet-Draft                  PCE-ACTN                   February 2019
 
    As per the example in Figure 2, there are 4 domains, each with its
    own PNC and an MDSC on top.  The PNC and MDSC need PCE as a important
-   function.  The PNC (or child PCE) already uses PCEP to communicate to
+   function.  The PNC (or Child PCE) already uses PCEP to communicate to
    the network device.  It can utilize the PCEP as the MPI to
    communicate between controllers too.
 
@@ -653,15 +653,15 @@ Internet-Draft                  PCE-ACTN                   February 2019
 
                           Figure 2: ACTN with PCE
 
-   o  Building Domain Topology at MDSC: PNC (or child PCE) needs to have
+   o  Building Domain Topology at MDSC: PNC (or Child PCE) needs to have
       the TED to compute path in its domain.  As described in
       Section 3.2, it can learn the topology via IGP or BGP-LS.  PCEP-LS
       is also a proposed mechanism to carry link state and traffic
       engineering information within PCEP.  A mechanism to carry
       abstracted topology while hiding technology specific information
       between PNC and MDSC is described in [I-D.dhodylee-pce-pcep-ls].
-      At the end of this step the MDSC (or parent PCE) has the
-      abstracted topology from each of its PNC (or child PCE).  This
+      At the end of this step the MDSC (or Parent PCE) has the
+      abstracted topology from each of its PNC (or Child PCE).  This
       could be as simple as a domain topology map as described in
       [RFC6805] or it can have full topology information of all domains.
       The latter is not scalable and thus an abstracted topology of each
@@ -696,11 +696,11 @@ Internet-Draft                  PCE-ACTN                   February 2019
       *  Path Computation: As per the example in Figure 2, the VN
          instantiate requires two end to end paths between (A in Domain
          1 to B in Domain 3) and (A in Domain 1 to C in Domain 4).  The
-         MDSC (or parent PCE) triggers the end to end path computation
+         MDSC (or Parent PCE) triggers the end to end path computation
          for these two paths.  MDSC can do path computation based on the
          abstracted domain topology that it already has or it may use
          the H-PCE procedures (Section 3.1) using the PCReq and PCRep
-         messages to get the end to end path with the help of the child
+         messages to get the end to end path with the help of the Child
          PCEs (PNC).  Either way, the resultant E2E paths may be broken
          into per-domain paths.
 
@@ -738,7 +738,7 @@ Internet-Draft                  PCE-ACTN                   February 2019
          and attributes based on each domain network conditions.
 
       *  State Synchronization: The state needs to be synchronized
-         between the parent PCE and child PCE.  The mechanism described
+         between the Parent PCE and Child PCE.  The mechanism described
          in [I-D.litkowski-pce-state-sync] can be used.
 
    o  VN Modify: MDSC is requested to modify a VN, for example the
@@ -792,6 +792,11 @@ Internet-Draft                  PCE-ACTN                   February 2019
 
 7.  Security Considerations
 
+   Various security considerations for PCEP are described in [RFC5440],
+   [RFC6952], and [RFC8253].  Further, this document lists various
+   extensions of PCEP that are applicable, each of them specify various
+   security considerations which continue to apply here.
+
    The ACTN framework described in [RFC8453] defines key components and
    interfaces for managed traffic engineered networks.  It also lists
    various security considerations such as request and control of
@@ -823,17 +828,12 @@ Internet-Draft                  PCE-ACTN                   February 2019
    information to, and the level of detail (full or abstracted), should
    also be authenticated, and specific access restrictions and topology
    views should be configurable and/or policy based.  When PCEP is used
-   in MPI, the security functions as per [RFC8253] are used to fulfil
+   in MPI, the security functions as per [RFC8253] are used to fulfill
    these requirements.
 
    As per [RFC8453], regarding the CMI, suitable authentication and
    authorization of each CNC connecting to the MDSC will be required.
    If PCEP is used in CMI, the security functions as per [RFC8253] can
-   be used to support peer authentication, message encryption, and
-   integrity checks.
-
-
-
 
 
 
@@ -842,13 +842,17 @@ Dhody, et al.            Expires August 31, 2019               [Page 15]
 Internet-Draft                  PCE-ACTN                   February 2019
 
 
+   be used to support peer authentication, message encryption, and
+   integrity checks.
+
 8.  Acknowledgments
 
    The authors would like to thank Jonathan Hardwick for the inspiration
    behind this document.  Further thanks to Avantika for her comments
    with suggested text.
 
-   Thanks to Adrian Farrel and Daniel King for substantial reviews.
+   Thanks to Adrian Farrel and Daniel King for their substantial
+   reviews.
 
 9.  References
 
@@ -886,10 +890,6 @@ Internet-Draft                  PCE-ACTN                   February 2019
               Support of Generalized Multi-Protocol Label Switching
               (GMPLS)", RFC 4203, DOI 10.17487/RFC4203, October 2005,
               <https://www.rfc-editor.org/info/rfc4203>.
-
-
-
-
 
 
 
@@ -931,6 +931,12 @@ Internet-Draft                  PCE-ACTN                   February 2019
               Traffic Engineering", RFC 5623, DOI 10.17487/RFC5623,
               September 2009, <https://www.rfc-editor.org/info/rfc5623>.
 
+   [RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of
+              BGP, LDP, PCEP, and MSDP Issues According to the Keying
+              and Authentication for Routing Protocols (KARP) Design
+              Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,
+              <https://www.rfc-editor.org/info/rfc6952>.
+
    [RFC7149]  Boucadair, M. and C. Jacquenet, "Software-Defined
               Networking: A Perspective from within a Service Provider
               Environment", RFC 7149, DOI 10.17487/RFC7149, March 2014,
@@ -941,18 +947,17 @@ Internet-Draft                  PCE-ACTN                   February 2019
               DOI 10.17487/RFC7399, October 2014,
               <https://www.rfc-editor.org/info/rfc7399>.
 
-   [RFC7491]  King, D. and A. Farrel, "A PCE-Based Architecture for
-              Application-Based Network Operations", RFC 7491,
-              DOI 10.17487/RFC7491, March 2015,
-              <https://www.rfc-editor.org/info/rfc7491>.
-
-
 
 
 Dhody, et al.            Expires August 31, 2019               [Page 17]
 
 Internet-Draft                  PCE-ACTN                   February 2019
 
+
+   [RFC7491]  King, D. and A. Farrel, "A PCE-Based Architecture for
+              Application-Based Network Operations", RFC 7491,
+              DOI 10.17487/RFC7491, March 2015,
+              <https://www.rfc-editor.org/info/rfc7491>.
 
    [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
               "Recommendations for Secure Use of Transport Layer
@@ -993,11 +998,6 @@ Internet-Draft                  PCE-ACTN                   February 2019
               Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
               <https://www.rfc-editor.org/info/rfc8281>.
 
-   [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
-              Architecture for Use of PCE and the PCE Communication
-              Protocol (PCEP) in a Network with Central Control",
-              RFC 8283, DOI 10.17487/RFC8283, December 2017,
-              <https://www.rfc-editor.org/info/rfc8283>.
 
 
 
@@ -1009,6 +1009,12 @@ Dhody, et al.            Expires August 31, 2019               [Page 18]
 
 Internet-Draft                  PCE-ACTN                   February 2019
 
+
+   [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
+              Architecture for Use of PCE and the PCE Communication
+              Protocol (PCEP) in a Network with Central Control",
+              RFC 8283, DOI 10.17487/RFC8283, December 2017,
+              <https://www.rfc-editor.org/info/rfc8283>.
 
    [RFC8454]  Lee, Y., Belotti, S., Dhody, D., Ceccarelli, D., and B.
               Yoon, "Information Model for Abstraction and Control of TE
@@ -1051,12 +1057,6 @@ Internet-Draft                  PCE-ACTN                   February 2019
               procedures", draft-litkowski-pce-state-sync-04 (work in
               progress), October 2018.
 
-   [I-D.ietf-pce-association-policy]
-              Litkowski, S., Sivabalan, S., Tantsura, J., Hardwick, J.,
-              and M. Negi, "Path Computation Element communication
-              Protocol extension for associating Policies and LSPs",
-              draft-ietf-pce-association-policy-05 (work in progress),
-              February 2019.
 
 
 
@@ -1065,6 +1065,13 @@ Dhody, et al.            Expires August 31, 2019               [Page 19]
 
 Internet-Draft                  PCE-ACTN                   February 2019
 
+
+   [I-D.ietf-pce-association-policy]
+              Litkowski, S., Sivabalan, S., Tantsura, J., Hardwick, J.,
+              and M. Negi, "Path Computation Element communication
+              Protocol extension for associating Policies and LSPs",
+              draft-ietf-pce-association-policy-05 (work in progress),
+              February 2019.
 
    [I-D.dugeon-pce-stateful-interdomain]
               Dugeon, O., Meuric, J., Lee, Y., Dhody, D., and D.
@@ -1099,13 +1106,6 @@ Authors' Addresses
    Sweden
 
    EMail: daniele.ceccarelli@ericsson.com
-
-
-
-
-
-
-
 
 
 

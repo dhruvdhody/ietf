@@ -158,7 +158,7 @@
    Paths (LSPs) when the domain sequence is not known.  
    Within the Hierarchical PCE (H-PCE) architecture, 
    the Parent PCE (P-PCE) is used to compute a multi-domain
-   path based on the domain connectivity information.  A child PCE
+   path based on the domain connectivity information.  A Child PCE
    (C-PCE) may be responsible for a single domain or multiple domains,
    it is used to compute the intra-domain path based on its domain
    topology information.</t>
@@ -262,7 +262,7 @@ MPI - (MDSC-PNC Interface)
    <t>This document examines the PCE and ACTN architecture and describes how PCE architecture
    is applicable to ACTN. It also lists the PCEP extensions that are needed to use PCEP as an ACTN interface. 
    This document also identifies any gaps in PCEP, that exist at the time of publication of this document.</t>
-   <t>Further, ACTN, Stateful H-PCE, and PCECC are based on the same basic hierarchy     
+   <t>Further, ACTN, stateful H-PCE, and PCECC are based on the same basic hierarchy     
    framework and thus compatible with each other.</t>
    
 </section>
@@ -286,7 +286,7 @@ MPI - (MDSC-PNC Interface)
     <t>It should be noted that this document lists all possible ways in which PCE could be used
     for each of the above functions, but all functions are not required to be implemented via PCE. Similarly,
    this document presents the ways in which PCEP could be used as the
-   communications medium between funcitonl components. Operators 
+   communications medium between functional components. Operators 
    may choose to use the PCEP for multi-domain coordination via stateful H-PCE,
    but alternatively use RESTCONF <xref target="RFC8040"/> or BGP-LS <xref target="RFC7752"/> to get access to the topology and support abstraction function.</t>
    
@@ -336,21 +336,21 @@ MPI - (MDSC-PNC Interface)
    extensions. PCE may construct its TED by participating in the
    IGP (<xref target="RFC3630"/>  and <xref target="RFC5305"/>  for MPLS-TE; <xref target="RFC4203"/>  and <xref target="RFC5307"/>
    for GMPLS). An alternative is offered by BGP-LS <xref target="RFC7752"/>.</t>
-   <t>In case of H-PCE <xref target="RFC6805"/>, the parent PCE needs to 
+   <t>In case of H-PCE <xref target="RFC6805"/>, the Parent PCE needs to 
    build the domain topology map of the child domains and
    their interconnectivity. <xref target="RFC6805"/> and <xref target="I-D.ietf-pce-inter-area-as-applicability"/>
    suggest that BGP-LS could be used as a "northbound" TE advertisement from 
-   the child PCE to the parent PCE.</t>
+   the Child PCE to the Parent PCE.</t>
    <t><xref target="I-D.dhodylee-pce-pcep-ls"/> proposes another approach for learning and maintaining
    the Link-State and TE information as an alternative to IGPs and BGP flooding, using PCEP itself. 
-   The child PCE can use this mechanism to transport Link-State and
-   TE information from child PCE to a Parent PCE using PCEP.
+   The Child PCE can use this mechanism to transport Link-State and
+   TE information from Child PCE to a Parent PCE using PCEP.
 
    </t>
    <t>In ACTN, there is a need to control the level of abstraction based on 
    the deployment scenario and business relationship between the controllers. 
-   The mechanism used to disseminate information from PNC (child PCE) to 
-   MDSC (parent PCE) should support abstraction. 
+   The mechanism used to disseminate information from PNC (Child PCE) to 
+   MDSC (Parent PCE) should support abstraction. 
    <xref target="RFC8453"/> describes a few
    alternative approaches of abstraction. The resulting abstracted topology
    can be encoded using the PCEP-LS mechanisms <xref target="I-D.dhodylee-pce-pcep-ls"/>
@@ -365,7 +365,7 @@ MPI - (MDSC-PNC Interface)
    the whole domain by the PNC and its advertisement on the MPI. The secondary method is called 
    on-demand generation of supplementary topology via Path Compute
    Request/Reply. This method may be needed to obtain further complementary information such as 
-   potential connectivity from child PCEs in order to facilitate an end-to-end path provisioning.
+   potential connectivity from Child PCEs in order to facilitate an end-to-end path provisioning.
    PCEP is well suited to support both methods.</t>
     </section>
 	<section title="Customer Mapping" toc="default">
@@ -385,14 +385,14 @@ MPI - (MDSC-PNC Interface)
    Initiate Request (PCInitiate) message to the PCC.  As described in 
    <xref target="I-D.ietf-pce-stateful-hpce"/>, for inter-domain LSP in 
    Hierarchical PCE architecture, the initiation
-   operations can be carried out at the parent PCE. In which case, after
-   parent PCE finishes the E2E path computation, it can send the
-   PCInitiate message to the child PCE, the child PCE
+   operations can be carried out at the Parent PCE. In which case, after
+   Parent PCE finishes the E2E path computation, it can send the
+   PCInitiate message to the Child PCE, the Child PCE
    further propagates the initiate request to the Label Switching Router (LSR). The customer request
-   is received by the MDSC (parent PCE) and based on the business logic, 
+   is received by the MDSC (Parent PCE) and based on the business logic, 
    global abstracted topology, network conditions and local policy, the 
-   MDSC (parent PCE) translates this into per domain LSP initiation request that a 
-   PNC (child PCE) can understand and act on. This can be done via the PCInitiate message.</t>
+   MDSC (Parent PCE) translates this into per domain LSP initiation request that a 
+   PNC (Child PCE) can understand and act on. This can be done via the PCInitiate message.</t>
    <t>PCEP extensions for associating opaque policy between PCEP peer <xref target="I-D.ietf-pce-association-policy"/>
    can be used.</t> 
    
@@ -462,7 +462,7 @@ to allow virtualization and multi-domain coordination, the network
 <section title="Realizing ACTN with PCE (and PCEP)" toc="default" anchor="sec_real">
 <t>As per the example in <xref target="F1"/>, there are 4 domains, 
 each with its own PNC and an MDSC on top. The PNC and MDSC need PCE as 
-a important function. The PNC (or child PCE) already uses PCEP to communicate to
+a important function. The PNC (or Child PCE) already uses PCEP to communicate to
 the network device. It can utilize the PCEP as the MPI to communicate
 between controllers too.</t>
              <figure title="ACTN with PCE"
@@ -503,14 +503,14 @@ MPI  -> PCEP
             ]]></artwork>
           </figure>
     <t><list style="symbols">      
-    <t>Building Domain Topology at MDSC: PNC (or child PCE) needs to have the TED to compute path in its domain. 
+    <t>Building Domain Topology at MDSC: PNC (or Child PCE) needs to have the TED to compute path in its domain. 
     As described in <xref target="sec_topo"/>, it can learn the topology 
     via IGP or BGP-LS. PCEP-LS is also a proposed mechanism to carry link state and 
     traffic engineering information within PCEP. A mechanism to carry abstracted
     topology while hiding technology specific information between PNC and MDSC is
     described in <xref target="I-D.dhodylee-pce-pcep-ls"/>. At the end of this 
-    step the MDSC (or parent PCE) has the abstracted topology from each of its PNC 
-    (or child PCE). This could be as simple as a domain topology map as described 
+    step the MDSC (or Parent PCE) has the abstracted topology from each of its PNC 
+    (or Child PCE). This could be as simple as a domain topology map as described 
     in <xref target="RFC6805"/> or it can have full topology information of all
     domains. The latter is not scalable and thus an abstracted topology of each domain
     interconnected by inter-domain links is the most common case.
@@ -531,10 +531,10 @@ MPI  -> PCEP
         <list style="symbols">      
         <t>Path Computation: As per the example in <xref target="F1"/>, 
         the VN instantiate requires two end to end paths between (A in Domain 1 to B in Domain 3) 
-        and (A in Domain 1 to C in Domain 4). The MDSC (or parent PCE) triggers the 
+        and (A in Domain 1 to C in Domain 4). The MDSC (or Parent PCE) triggers the 
         end to end path computation for these two paths. MDSC can do path computation based on the abstracted domain topology that 
         it already has or it may use the H-PCE procedures (<xref target="sec_hpce"/>) using the PCReq and PCRep messages to get the 
-        end to end path with the help of the child PCEs (PNC).   
+        end to end path with the help of the Child PCEs (PNC).   
         Either way, the resultant E2E paths may be broken into per-domain paths.</t>
         <t>A-B: (A-B13,B13-B31,B31-B) </t>
         <t>A-C: (A-B13,B13-B31,B34-B43,B43-C)</t>
@@ -554,8 +554,8 @@ MPI  -> PCEP
         <t>Delegation: It is suggested that the per domain LSPs are delegated to
         respective PNC, so that they can control the path and attributes based
         on each domain network conditions.</t>
-        <t>State Synchronization: The state needs to be synchronized between the parent PCE
-        	and child PCE. The mechanism described in <xref target="I-D.litkowski-pce-state-sync"/> 
+        <t>State Synchronization: The state needs to be synchronized between the Parent PCE
+        	and Child PCE. The mechanism described in <xref target="I-D.litkowski-pce-state-sync"/> 
         	can be used.</t>
         </list></t>
    <t>VN Modify: MDSC is requested to modify a VN, for example the bandwidth for
@@ -590,6 +590,10 @@ MPI  -> PCEP
     
     
     <section title="Security Considerations" toc="default">
+    <t>Various security considerations for PCEP are described in <xref target="RFC5440" />,
+    <xref target="RFC6952" />, and <xref target="RFC8253" />. Further, this document lists
+    various extensions of PCEP that are applicable, each of them specify various security considerations which continue to apply here.</t>
+
     <t>The ACTN framework described in <xref target="RFC8453"/> defines key components
    and interfaces for managed traffic engineered networks. It also lists various security considerations 
    such as 
@@ -629,7 +633,7 @@ MPI  -> PCEP
    detail (full or abstracted), should also be authenticated, and
    specific access restrictions and topology views should be
    configurable and/or policy based. When PCEP is used in MPI, the security functions as per
-   <xref target="RFC8253"/> are used to fulfil these requirements.</t>
+   <xref target="RFC8253"/> are used to fulfill these requirements.</t>
 
    <t>As per <xref target="RFC8453"/>, regarding the CMI, suitable
    authentication and authorization of each CNC connecting to the MDSC
@@ -654,7 +658,7 @@ MPI  -> PCEP
     <section title="Acknowledgments" toc="default">
       <t>The authors would like to thank Jonathan Hardwick for the inspiration behind this document. 
       Further thanks to Avantika for her comments with suggested text. </t>
-      <t>Thanks to Adrian Farrel and Daniel King for substantial reviews.</t>
+      <t>Thanks to Adrian Farrel and Daniel King for their substantial reviews.</t>
     </section>
         
   </middle>
@@ -674,6 +678,7 @@ MPI  -> PCEP
 	<?rfc include="reference.RFC.5307.xml" ?>
 	<?rfc include="reference.RFC.5441.xml" ?>
 	<?rfc include="reference.RFC.5623.xml" ?>
+  <?rfc include="reference.RFC.6952.xml" ?>
 	<?rfc include="reference.RFC.7149.xml" ?>
 	<?rfc include="reference.RFC.7399.xml" ?>
 	<?rfc include="reference.RFC.7491.xml" ?>
