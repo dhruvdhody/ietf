@@ -53,7 +53,7 @@
         <email>daniele.ceccarelli@ericsson.com</email>
       </address>
     </author>
-    <date year="2018" />
+    <date year="2019" />
     <area>Routing</area>
     <workgroup>PCE Working Group</workgroup>
     <abstract>
@@ -71,9 +71,10 @@
    Element Communication Protocol (PCEP).</t>
    <t>This document examines the applicability of PCE to the ACTN framework. </t>    
    </abstract>
+
   </front>
   <middle>
-    <section title="Background" toc="default">
+    <section title="Background Information" toc="default">
     <section title="Path Computation Element (PCE)" toc="default">
    <t>The Path Computation Element Communication Protocol (PCEP) <xref target="RFC5440"/> provides
    mechanisms for Path Computation Clients (PCCs) to request a Path Computation Element (PCE) <xref target="RFC4655"/> to perform path
@@ -190,7 +191,9 @@
    ACTN requirements and the architecture
    model for ACTN including the entities Customer Network
    Controller (CNC), Multi-domain Service Coordinator (MDSC), and Provisioning Network Controller (PNC) and their interfaces.</t>
-   <t>The ACTN reference architecture is shown in <xref target="fig_actn"/> which is reproduced here from <xref target="RFC8453"/> for conveninece. As depicted in <xref target="fig_actn"/>, the ACTN architecture identifies a three-tier control hierarchy.</t>
+  
+  <t>The ACTN reference architecture is shown in <xref target="fig_actn"/> which is reproduced here from <xref target="RFC8453"/> for convenience. <xref target="RFC8453"/> remains the definitive reference for the ACTN architecture. As depicted in <xref target="fig_actn"/>, the ACTN architecture identifies a three-tier hierarchy.</t>
+
                 <figure title="ACTN Hierarchy"
              suppress-title="false" align="center" alt="" width="" height="" anchor="fig_actn">
             <artwork><![CDATA[
@@ -441,7 +444,7 @@ to allow virtualization and multi-domain coordination, the network
         required, of new connectivity of bandwidth changes in the
         physical network, via the PNC. In multi-domain environments,
         the MDSC needs to establish multiple MPIs, one for each PNC, as
-        there are multiple PNCs responsible for its domain contro</t></list></t>    
+        there are multiple PNCs responsible for its domain control.</t></list></t>    
     <t>In the case of hierarchy MDSCs, the MPI is applied recursively. 
    From an abstraction point of view, the top level MDSC which
    interfaces the CNC operates on a higher level of abstraction (i.e.,
@@ -540,7 +543,7 @@ MPI  -> PCEP
         and <xref target="I-D.leedhody-pce-vn-association"/>). 
         A suitable
         stitching mechanism would be used to stitch these per domain LSPs. 
-        One such mechanism is described in <xref target="I-D.lee-pce-lsp-stitching-hpce"/>, where 
+        One such mechanism is described in <xref target="I-D.dugeon-pce-stateful-interdomain"/>, where 
         PCEP is extended to support stitching in stateful H-PCE context.
         </t>
         <t>Per Domain Path Report: Each PNC should report the status of 
@@ -587,16 +590,63 @@ MPI  -> PCEP
     
     
     <section title="Security Considerations" toc="default">
-    <t> The ACTN framework described in <xref target="RFC8453"/> defines key components
+    <t>The ACTN framework described in <xref target="RFC8453"/> defines key components
    and interfaces for managed traffic engineered networks. It also lists various security considerations 
    such as 
    request and control of resources, confidentially of the information,
    and availability of function which should be taken into consideration. </t> 
-   <t> The security considerations discussed in [RFC5440] are relevant for
+
+   <t>As per <xref target="RFC8453"/>, securing the request and
+   control of resources, confidentiality of the information, and
+   availability of function should all be critical security
+   considerations when deploying and operating ACTN platforms.
+   From a security and reliability perspective, ACTN may encounter many
+   risks such as malicious attack and rogue elements attempting to
+   connect to various ACTN components (with PCE being one of them). 
+   Furthermore, some ACTN
+   components represent a single point of failure and threat vector and
+   must also manage policy conflicts and eavesdropping of communication
+   between different ACTN components.
+
+   <xref target="RFC8453"/> further states that all protocols used to realize the ACTN
+   framework should have rich security features, and customer,
+   application and network data should be stored in encrypted data
+   stores.</t>
+
+   <t>When PCEP is used as an ACTN interface, the security of PCEP 
+   provide by 
+   Transport Layer Security (TLS) <xref target="RFC8253"/>, as per the recommendations
+   and best current practices in <xref target="RFC7525"/>, is used.</t>  
+ 
+
+
+
+   <t>As per <xref target="RFC8453"/>, regarding the MPI, a PKI-
+   based mechanism is suggested, such as building a TLS or HTTPS
+   connection between the MDSC and PNCs, to ensure trust between the
+   physical network layer control components and the MDSC.  Which 
+   MDSC the PNC exports topology information to, and the level of
+   detail (full or abstracted), should also be authenticated, and
+   specific access restrictions and topology views should be
+   configurable and/or policy based. When PCEP is used in MPI, the security functions as per
+   <xref target="RFC8253"/> are used to fulfil these requirements.</t>
+
+   <t>As per <xref target="RFC8453"/>, regarding the CMI, suitable
+   authentication and authorization of each CNC connecting to the MDSC
+   will be required. If PCEP is used in CMI, the security functions as per 
+   <xref target="RFC8253"/> can be used to support peer authentication, message encryption, and
+   integrity checks.</t>
+
+   <!--<t>The security considerations discussed in <xref target="RFC5440"/> are relevant for
    this document, this document does not introduce any new security
-   issues. </t>
-   <t>When PCEP is used on the CMI and the MPI, this interface needs to be secured, use of <xref target="RFC8253"/> is 
-   RECOMENDED. Each PCEP extension listed in this document, presents its individual security considerations, which continue to apply.</t>
+   issues. </t>-->
+
+  
+
+
+
+   <!--<t>When PCEP is used as an ACTN interface (MPI or CMI), it needs to be secured, use of PCEP Security via TLS <xref target="RFC8253"/> is 
+   RECOMENDED. Each PCEP extension listed in this document, presents its own individual security considerations, which continue to apply.</t>-->
     </section>
       
     
@@ -604,6 +654,7 @@ MPI  -> PCEP
     <section title="Acknowledgments" toc="default">
       <t>The authors would like to thank Jonathan Hardwick for the inspiration behind this document. 
       Further thanks to Avantika for her comments with suggested text. </t>
+      <t>Thanks to Adrian Farrel and Daniel King for substantial reviews.</t>
     </section>
         
   </middle>
@@ -626,6 +677,7 @@ MPI  -> PCEP
 	<?rfc include="reference.RFC.7149.xml" ?>
 	<?rfc include="reference.RFC.7399.xml" ?>
 	<?rfc include="reference.RFC.7491.xml" ?>
+  <?rfc include="reference.RFC.7525.xml" ?>
 	<?rfc include="reference.RFC.7752.xml" ?>
   <?rfc include="reference.RFC.8040.xml"?>
 	<?rfc include="reference.RFC.8051.xml"?>
@@ -636,7 +688,7 @@ MPI  -> PCEP
   <?rfc include="reference.RFC.8454.xml"?>
 	<?rfc include="reference.I-D.ietf-pce-stateful-hpce"?>
 	
-     <?rfc include="reference.I-D.ietf-teas-actn-requirements"?>
+     <!--<?rfc include="reference.I-D.ietf-teas-actn-requirements"?>-->
 	 
      
      <?rfc include="reference.I-D.ietf-pce-inter-area-as-applicability"?>
@@ -648,7 +700,7 @@ MPI  -> PCEP
      <?rfc include="reference.I-D.ietf-pce-association-policy"?>
      
      
-     <?rfc include="reference.I-D.lee-pce-lsp-stitching-hpce"?>
+     <?rfc include="reference.I-D.dugeon-pce-stateful-interdomain"?>
      
 
     </references>
