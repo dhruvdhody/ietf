@@ -420,10 +420,10 @@ VALUE:
    <t>The Operator-configured Association Range SHOULD be included for each association type that could be both dynamic and operator-configured. For association types that are only dynamic or only operator-configured, this TLV MAY be skipped, in which case the full range of association identifier is considered dynamic or operator-configured respectively. 
     Each association type (that are defined in separate documents) can specify the default value for the operator-configured association range for their respective association type. </t>
 
-    <t>An Assoc-Type MUST be present only once in the OP-CONF-ASSOC-RANGE TLV, if the same Assoc-Type is present more than once, the PCEP
+    <!--<t>An Assoc-Type MUST be present only once in the OP-CONF-ASSOC-RANGE TLV, if the same Assoc-Type is present more than once, the PCEP
    session MUST be rejected with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
-   message).</t>
+   message).</t>-->
 
    <t>The absence of the OP-CONF-ASSOC-RANGE TLV in an OPEN object MUST be
    interpreted as an absence of explicit Operator-configured Association Range at the PCEP peer. 
@@ -433,7 +433,8 @@ VALUE:
    <t>If the Assoc-type is not recognized or supported by the PCEP speaker, it MUST ignore that respective Start-Assoc-ID and Range. If the Start-Assoc-ID or Range are set incorrectly, the PCEP
    session MUST be rejected with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
-   message). The PCEP speaker originating OP-CONF-ASSOC-RANGE TLV MUST NOT carry overlapping ranges for an association type. If a PCEP peer receives overlapping ranges for an association type, it MUST consider the Open message malformed and MUST reject the PCEP session with error type 1 and error value 1 (PCEP
+   message). </t>
+   <t>The Assoc-type MAY appear more than once in the OP-CONF-ASSOC-RANGE TLV in case of non-contiguous Operator-configured Association Range. The PCEP speaker originating this TLV MUST NOT carry overlapping ranges for an association type. If a PCEP peer receives overlapping ranges for an association type, it MUST consider the Open message malformed and MUST reject the PCEP session with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
    message).</t>
 
