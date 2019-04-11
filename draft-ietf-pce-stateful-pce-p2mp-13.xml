@@ -85,7 +85,7 @@
       </address>
     </author>
 
-    <date day="10" month="April"
+    <date day="11" month="April"
           year="2019" />
     <area>Routing</area>
     <workgroup>PCE Working Group</workgroup>
@@ -1799,15 +1799,24 @@ Bit      Meaning               Reference
    If a rogue PCC were able to request unauthorized stateful PCE
    operations then it may be able to mount a DoS attack against
    a PCE, which would disrupt the network and deny service to
-   other PCCs. Consequently, it is important that implementations
-   conform to the relevant security requirements of
-   <xref target="RFC5440"/>, <xref target="RFC8306"/> and
-   <xref target='RFC8231'></xref>, and
-   <xref target='RFC8281'></xref>. 
-   Securing the PCEP session using
+   other PCCs. Similarly an attacker may flood the PCC
+   with PCUpd messages at a rate that exceeds either the PCC's ability
+   to process them or the network's ability to signal the changes, by
+   either spoofing messages or compromising the PCE itself.</t>  
+   <t>Consequently, it is important that implementations
+   conform to the relevant security requirements as listed below - 
+   <list style="symbols">
+    <t>As per <xref target='RFC8231'></xref>, it is RECOMMENDED that these PCEP extensions
+   only be activated on authenticated and encrypted sessions across PCEs
+   and PCCs belonging to the same administrative authority, using
    Transport Layer Security (TLS) <xref target="RFC8253"/>, as per the recommendations
-   and best current practices in <xref target="RFC7525"/>, is RECOMMENDED.
-   </t>
+   and best current practices in <xref target="RFC7525"/> (unless explicitly set aside in <xref target="RFC8253"/>).</t>
+   <t>Security considerations for path computation requests and responses are as per <xref target="RFC8306"/>.</t>
+   <t>Security considerations for stateful operations (such as state report, synchronization, delegation, update, etc.) are as per <xref target='RFC8231'></xref>.</t>
+   <t>Security considerations for LSP instantiation mechanism are as per <xref target="RFC8231"/>.</t>
+   <t>Security considerations as stated in Section 10.1, Section 10.6, and Section 10.7 of <xref target="RFC5440"/> continue to apply.</t> 
+ </list></t>
+
            <!--<t> As stated in <xref target="RFC6952"/>, PCEP implementations SHOULD support the
    TCP-AO <xref target="RFC5925"/> and not use TCP MD5 because of TCP MD5's known
    vulnerabilities and weakness. PCEP also support Transport Layer Security (TLS)
@@ -1820,8 +1829,8 @@ Bit      Meaning               Reference
              toc="default">
       <t>Thanks to Quintin Zhao, Avantika and Venugopal Reddy for the review comments.</t>
       <t>Thanks to Adrian Farrel (and Jonathan Hardwick) for the review as document shepherds.</t>
-      <t>Thanks to Andy Malis for the RTGDIR review.</t>
-      <t>Thanks to Suresh Krishnan, Mirja Kuhlewind, and Benjamin Kaduk for the IESG reviews.</t>
+      <t>Thanks to Andy Malis for the RTGDIR review. Thanks to Donald Eastlake for the SECDIR review. Thanks to David Schinazi for the GENART review.</t>
+      <t>Thanks to Suresh Krishnan, Mirja Kuhlewind, Roman Danyliw, and Benjamin Kaduk for the IESG reviews.</t>
     </section>
   </middle>
   <back>
