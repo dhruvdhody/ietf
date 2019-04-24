@@ -5,7 +5,7 @@
 PCE Working Group                                               D. Dhody
 Internet-Draft                                                    Y. Lee
 Intended status: Informational                       Huawei Technologies
-Expires: October 18, 2019                                  D. Ceccarelli
+Expires: October 26, 2019                                  D. Ceccarelli
                                                                 Ericsson
                                                                  J. Shin
                                                               SK Telecom
@@ -13,7 +13,7 @@ Expires: October 18, 2019                                  D. Ceccarelli
                                                     Lancaster University
                                                      O. Gonzalez de Dios
                                                           Telefonica I+D
-                                                          April 16, 2019
+                                                          April 24, 2019
 
 
          Hierarchical Stateful Path Computation Element (PCE).
@@ -247,33 +247,33 @@ Internet-Draft               STATEFUL-HPCE                    April 2019
    As per [RFC6805], in the hierarchical PCE architecture, a P-PCE
    maintains a domain topology map that contains the child domains and
    their interconnections.  Usually, the P-PCE has no information about
-   the content of the child domains. But in case, the PCE is applied to
-   the Abstraction and Control of TE Networks (ACTN) [RFC8453], as
-   described in [I-D.ietf-pce-applicability-actn], where the
-   Provisioning Network Controller (PNC) can provide an abstract
-   topology to the Multi-Domain Service Coordinator (MDSC). Thus the P-
-   PCE in MDSC could be aware of topology information in much more
-   detail than the domain topology. 
+   the content of the child domains. But if the PCE is applied to the
+   Abstraction and Control of TE Networks (ACTN) [RFC8453] as described
+   in [I-D.ietf-pce-applicability-actn], the Provisioning Network
+   Controller (PNC) can provide an abstract topology to the Multi-Domain
+   Service Coordinator (MDSC). Thus the P-PCE in MDSC could be aware of
+   topology information in much more detail than just the domain
+   topology.
 
    In a PCEP session between a PCC (Ingress) and a C-PCE, the C-PCE acts
    as per the stateful PCE operations described in [RFC8231] and
    [RFC8281]. The same C-PCE behaves as a PCC on the PCEP session
    towards the P-PCE. The P-PCE is stateful in nature and thus maintains
    the state of the inter-domain LSPs that are reported to it. The
-   inter-domain LSP could also be delegated to the P-PCE, so that it
-   could update the inter-domain path. The trigger for this could be the
-   LSP state change reported for this LSP or any other LSP. It could
-   also be a change in topology at P-PCE such as inter-domain link
-   status. In case of use of stateful H-PCE in ACTN, a change in
-   abstract topology learned at P-PCE could also trigger the update.
-   Some other external factors (such as a measurement probe) could also
-   be a trigger at the P-PCE. Any such update would require an inter-
-   domain path computation as described in [RFC6805]. 
+   inter-domain LSP could also be delegated by the C-PCE to the P-PCE,
+   so that the P-PCE could update the inter-domain path. The trigger for
+   this update could be the LSP state change reported for this LSP or
+   any other LSP. It could also be a change in topology at the P-PCE
+   such as inter-domain link status change. In case of use of stateful
+   H-PCE in ACTN, a change in abstract topology learned by the P-PCE
+   could also trigger the update. Some other external factors (such as a
+   measurement probe) could also be a trigger at the P-PCE. Any such
+   update would require an inter-domain path recomputation as described
+   in [RFC6805]. 
 
-   The inter-domain LSP could be setup using the end-to-end signaling as
-   described in [RFC6805], additionally a per-domain stitched LSP model
-   is also applicable in a P-PCE initiation model. The Section 3.1,
-   Section 3.2, and Section 3.3 describe the end-to-end Contiguous LSP
+   The inter-domain LSP could be set up using the end-to-end signaling
+   as described in [RFC6805]. Additionally a per-domain stitched LSP
+   model is also applicable in a P-PCE initiation model. Section 3.1,
  
 
 
@@ -282,38 +282,40 @@ Dhody, et al.             Expires October 2019                  [Page 5]
 Internet-Draft               STATEFUL-HPCE                    April 2019
 
 
-   setup, where as Section 3.3.1 describe the per-domain stitching.   
+   Section 3.2, and Section 3.3 describe the end-to-end Contiguous LSP
+   setup, whereas Section 3.3.1 describe the per-domain stitching.   
 
 1.2.1  Applicability to ACTN
 
-   [RFC8453] describes framework for ACTN, where each PNC is equivalent
-   to C-PCE and P-PCE is the MDSC. In this case the P-PCE (MDSC)
-   receives the request for inter-domain path setup as part of the
-   Virtual Network (VN) operations. The Per domain stitched LSP for a P-
-   PCE initiated model is well suited for ACTN. This is described in
-   Section 3.3.1 and Section 4.1 of this document.
+   [RFC8453] describes the framework for ACTN, where each PNC is
+   equivalent to a C-PCE, and the P-PCE is the MDSC. In this case the
+   P-PCE (MDSC) receives the request for inter-domain path setup as part
+   of the Virtual Network (VN) operations. The per-domain stitched LSP
+   for a P-PCE initiated model is well suited for ACTN. This is
+   described in Section 3.3.1 and Section 4.1 of this document.
 
    [I-D.ietf-pce-applicability-actn] examines the applicability of PCE
    to the ACTN framework. To support the function of multi domain
    coordination via hierarchy, the hierarchy of stateful PCEs play a
    crucial role.  
 
-   In ACTN framework, Customer Network Controller (CNC) can request the
-   MDSC to check if there is a possibility to meet VN requirements
-   (before requesting for VN provision).  The H-PCE architecture as
-   described in [RFC6805] can supports via the use of Path Computation
-   Request (PCReq) and Path Computation Reply (PCRep) messages between
-   the P-PCE and C-PCEs. When the CNC request for VN provision, the MDSC
-   decompose this to multiple inter-domain LSP, which might be further
-   decomposed to per-domain path segments. This is described in Section
-   3.3.1. The MDSC uses the LSP Initiate Request (PCInitiate) message
-   from P-PCE towards C-PCE and the C-PCE reports the state back to P-
-   PCE via Path Computation State Report (PCRpt) message. The P-PCE
-   could make changes via the use of Path Computation Update Request
-   (PCUpd) message.  
+   In the ACTN framework, the Customer Network Controller (CNC) can
+   request the MDSC to check if there is a possibility to meet VN
+   requirements (before requesting for VN provisioning).  The H-PCE
+   architecture as described in [RFC6805] can support VN compute
+   function via the use of Path Computation Request (PCReq) and Path
+   Computation Reply (PCRep) messages between the P-PCE and C-PCEs. When
+   the CNC requests for VN provisioning, the MDSC decompose this request
+   into multiple inter-domain LSP provisioning requests, which might be
+   further decomposed to per-domain path segments. This is described in
+   Section 3.3.1. The MDSC uses the LSP Initiate Request (PCInitiate)
+   message from the P-PCE towards the C-PCE, and the C-PCE reports the
+   state back to the P-PCE via a Path Computation State Report (PCRpt)
+   message. The P-PCE could make changes to the LSP via the use of a
+   Path Computation Update Request (PCUpd) message.  
 
-   In this case, the P-PCE (as MDSC) interacts with multiple C-PCE (as
-   PNC) along the inter-domain path of the LSP.   
+   In this case, the P-PCE (as MDSC) interacts with multiple C-PCEs (as
+   PNCs) along the inter-domain path of the LSP.   
 
 1.2.2  End-to-End Contiguous LSP
 
@@ -326,10 +328,8 @@ Internet-Draft               STATEFUL-HPCE                    April 2019
    allow the optimum sequence of domains to be selected, and the optimum
    end-to-end path to be derived. 
 
-   Incase of a stateful P-PCE, the stateful P-PCE should be aware of the
-   inter-domain LSPs for it to consider them during path computation.
-   For example, a domain diverse path from another LSP. This is the
-   Passive Stateful P-PCE as described in Section 3.1. Additionally, the
+   In case of a stateful P-PCE, the stateful P-PCE has to be aware of
+   the inter-domain LSPs for it to consider them during path
  
 
 
@@ -338,21 +338,25 @@ Dhody, et al.             Expires October 2019                  [Page 6]
 Internet-Draft               STATEFUL-HPCE                    April 2019
 
 
-   inter-domain LSP could be delegated to the P-PCE, so that P-PCE could
-   trigger an update via PCUpd message. The update could be triggered on
-   receipt of the PCRpt message of status change of this LSP or other
-   LSP. The other LSP could be an associated LSP (such as protection) or
-   an unrelated LSP whose resource change leads to re-optimization at
-   the P-PCE. This is the Active Stateful Operations as described in
-   Section 3.2. Further, the P-PCE could be instructed to create an
-   inter-domain LSP on its own using the PCInitiate message for an E2E
-   contiguous LSP. The P-PCE would send the PCInitiate message to the
-   Ingress domain C-PCE, which would further instructs the Ingress PCC. 
+   computation. For example, a domain diverse path from another LSP.
+   This is the Passive Stateful P-PCE as described in Section 3.1.
+   Additionally, the inter-domain LSP could be delegated to the P-PCE,
+   so that P-PCE could trigger an update via a PCUpd message. The update
+   could be triggered on receipt of the PCRpt message that indicates a
+   status change of this LSP or some other LSP. The other LSP could be
+   an associated LSP (such as protection) or an unrelated LSP whose
+   resource change leads to re-optimization at the P-PCE. This is the
+   Active Stateful Operation as described in Section 3.2. Further, the
+   P-PCE could be instructed to create an inter-domain LSP on its own
+   using the PCInitiate message for an E2E contiguous LSP. The P-PCE
+   would send the PCInitiate message to the Ingress domain C-PCE, which
+   would further instruct the Ingress PCC. 
 
    In this document, for the Contiguous LSP, the above interactions are
    only between the ingress domain C-PCE and the P-PCE. The use of
-   stateful operations for inter-domain LSP between the transit/egress
-   domain C-PCEs towards the P-PCE is out of scope of this document. 
+   stateful operations for an inter-domain LSP between the
+   transit/egress domain C-PCEs towards the P-PCE is out of scope of
+   this document. 
 
 1.2.3  Applicability of a Stateful P-PCE
 
@@ -363,13 +367,15 @@ Internet-Draft               STATEFUL-HPCE                    April 2019
    domain LSP path computation and setup. It should be noted that though
    the stateful P-PCE has limited direct visibility inside the child
    domain, it could still trigger re-optimization with the help of child
-   PCEs based on LSP state changes, abstract topology changes or some
+   PCEs based on LSP state changes, abstract topology changes, or some
    other external factors. 
 
-   Note that, in case the C-PCE becomes aware of a topology change that
-   is hidden from P-PCE, it could take back the delegation from the P-
-   PCE to act on it. Similarly if a P-PCE could also request for
-   delegation if it needs to make a change (refer
+   The C-PCE would delegate control of the inter-domain LSP to the P-PCE
+   so that the P-PCE can make changes to it. Note that, if the C-PCE
+   becomes aware of a topology change that is hidden from the P-PCE, it
+   could take back the delegation from the P-PCE to act on it itself.
+   Similarly, a P-PCE could also request for delegation if it needs to
+   make a change to the LSP (refer to
    [I-D.ietf-pce-lsp-control-request]).  
 
 2.  Terminology
@@ -380,12 +386,6 @@ Internet-Draft               STATEFUL-HPCE                    April 2019
 3.  Hierarchical Stateful PCE
 
    As described in [RFC6805], in the hierarchical PCE architecture, a
-   P-PCE maintains a domain topology map that contains the child domains
-   (seen as vertices in the topology) and their interconnections (links
-   in the topology).  The P-PCE has no information about the content of
-   the child domains.  Each child domain has at least one PCE capable of
-   computing paths across the domain.  These PCEs are known as C-PCEs
-   and have a direct relationship with the P-PCE.  The P-PCE builds the
  
 
 
@@ -394,6 +394,12 @@ Dhody, et al.             Expires October 2019                  [Page 7]
 Internet-Draft               STATEFUL-HPCE                    April 2019
 
 
+   P-PCE maintains a domain topology map that contains the child domains
+   (seen as vertices in the topology) and their interconnections (links
+   in the topology).  The P-PCE has no information about the content of
+   the child domains.  Each child domain has at least one PCE capable of
+   computing paths across the domain.  These PCEs are known as C-PCEs
+   and have a direct relationship with the P-PCE.  The P-PCE builds the
    domain topology map either via direct configuration (allowing network
    policy to also be applied) or from learned information received from
    each C-PCE.
@@ -436,12 +442,6 @@ Internet-Draft               STATEFUL-HPCE                    April 2019
    Router (LSR), as a PCC could delegate the control to a PCE, which may
    delegate to its parent, which may further delegate it to its parent
    (if it exist or needed). Similarly update operations could also be
-   applied recursively.
-
-   [I-D.ietf-pce-hierarchy-extensions] defines the H-PCE capability TLV
-   that should be used in the OPEN message to advertise the H-PCE
-   capability. [RFC8231] defines the stateful PCE capability TLV. The
-   presence of both TLVs represent the support for stateful H-PCE
  
 
 
@@ -450,6 +450,12 @@ Dhody, et al.             Expires October 2019                  [Page 8]
 Internet-Draft               STATEFUL-HPCE                    April 2019
 
 
+   applied recursively.
+
+   [I-D.ietf-pce-hierarchy-extensions] defines the H-PCE capability TLV
+   that should be used in the OPEN message to advertise the H-PCE
+   capability. [RFC8231] defines the stateful PCE capability TLV. The
+   presence of both TLVs represent the support for stateful H-PCE
    operations as described in this document. 
 
    [I-D.litkowski-pce-state-sync] describes the procedures to allow a
@@ -489,12 +495,6 @@ Internet-Draft               STATEFUL-HPCE                    April 2019
 
    Taking the sample hierarchical domain topology example from [RFC6805]
    as the reference topology for the entirety of this document.
-
-
-
-
-
-
 
 
 
