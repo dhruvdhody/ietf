@@ -227,14 +227,14 @@
      or different head ends.</t>
 
      <t>Some associations could be created dynamically by a PCEP speaker and the associations (along with the set of LSPs) are conveyed to a PCEP peer.
-        Whereas some associations are configured by the operator on the PCEP peers involved before hand, a PCEP speaker then could ask for a LSP to join the operator-configured association. Usage of dynamic and configured association is usually dependent on the type of the association.</t>
+        Whereas some associations are configured by the operator on the PCEP peers involved beforehand, a PCEP speaker then could ask for a LSP to join the operator-configured association. Usage of dynamic and configured association is usually dependent on the type of the association.</t>
 
         <t>For the operator-configured association, the association parameters such as the association identifier, association type,
      as well as the association source IP address, are manually configured by the
    operator. In case of dynamic association, the association parameters such as the association identifier, are allocated dynamically by the PCEP speaker, the association source is set as local PCEP speaker address, unless local policy dictates otherwise, in which case association source is set based on the local policy.</t> 
 
      <t>The dynamically created association can be reported to the PCEP peer
-     via the PCEP messages as per the stateful extensions. While the operator-configured association is known to the PCEP peer before hand, a PCEP peer could ask for a LSP to join the operator-configured association via the stateful PCEP messages.</t>
+     via the PCEP messages as per the stateful extensions. While the operator-configured association is known to the PCEP peer beforehand, a PCEP peer could ask for a LSP to join the operator-configured association via the stateful PCEP messages.</t>
 
     <t>The associations are properties of the LSP and thus could be stored in the LSP state database. The dynamic association exists as long as the LSP
 state exists. In case of PCEP session termination, the LSP state clean-up MUST also take care of associations.</t>
@@ -407,10 +407,11 @@ VALUE:
    transmission and MUST be ignored on receipt.</t>
    <t>Assoc-type (2 bytes): The association type (<xref target="iana_assoc_type"/>).
         The association types are defined in separate documents.</t>
-   <t>Start-Assoc-ID (2 bytes): The start association identifier for the Operator-configured Association Range for the particular association type. The values 0 and 0xffff MUST NOT be used.</t>
-   <t>Range (2 bytes): The number of associations marked for the Operator-configured Associations. The Range MUST be greater than 0, and it MUST be such that (Start-Assoc-ID + Range) do not cross the association identifier range of 0xffff.</t>
+   <t>Start-Assoc-ID (2 bytes): The start association identifier for the Operator-configured Association Range for the particular association type. The values 0 and 0xffff MUST NOT be used and on receipt of these values in the TLV, the session is rejected with error message sent (see <xref target="pro"/>).</t>
+   <t>Range (2 bytes): The number of associations marked for the Operator-configured Associations. The Range MUST be greater than 0, and it MUST be such that (Start-Assoc-ID + Range) do not cross the association identifier range of 0xffff. In case this condition is not satisfied, the session is rejected with error message sent (see <xref target="pro"/>).</t>
 </list></t>
-<section title="Procedure">
+
+<section anchor="pro" title="Procedure">
    <t>A PCEP speaker MAY include an OP-CONF-ASSOC-RANGE TLV within an OPEN object in an Open
    message sent to a PCEP peer in order to advertise the Operator-configured Association Range for an association type. 
    The OP-CONF-ASSOC-RANGE TLV MUST NOT appear more than
@@ -617,7 +618,7 @@ VALUE:
      <t>Message formats in this document are expressed using Reduced BNF (RBNF) as used in <xref target="RFC5440"/> and defined in <xref target="RFC5511"/>.</t> 
     <section  title="Stateful PCEP messages">
 
-    <t> The ASSOCIATION Object is OPTIONAL and MAY be carried in the Path
+    <t> The ASSOCIATION Object MAY be carried in the Path
     Computation Update (PCUpd), Path Computation Report (PCRpt) and Path
     Computation Initiate (PCInitiate) messages. </t>
 
@@ -726,7 +727,7 @@ Where:
    </t>
    <t>
     When carried in a PCReq message, the ASSOCIATION Object is used to associate the path
-   computation request to an association group. The association (and the other LSPs) should be known to the PCE before hand.
+   computation request to an association group. The association (and the other LSPs) should be known to the PCE beforehand.
    These could be operator-configured or dynamically learned before via stateful PCEP messages. The R flag in ASSOCIATION object within PCReq message
    MUST be set to 0 while sending and ignored on receipt.
 
@@ -1091,7 +1092,10 @@ Where:
   </t>
   </section>
  <section title="Information and Data Models" toc="default">
-  <t>An implementation SHOULD allow the operator to view the associations configured or created dynamically. Further implementation SHOULD allow to view associations reported by each peer, and the current set of LSPs in the association.  To serve this purpose, the PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> includes association groups.</t> 
+  <t>The PCEP YANG module is defined in <xref target="I-D.ietf-pce-pcep-yang"/>.In
+   future, this YANG module should be extended or augmented to provide
+   the following additional information relating to association groups.</t>
+  <t>An implementation SHOULD allow the operator to view the associations configured or created dynamically. Further implementation SHOULD allow to view associations reported by each peer, and the current set of LSPs in the association.</t> 
   <t>It might also be useful to find out how many associations for each association type currently exist and to know how many free association identifiers are available for a particular association type and source.</t>
   </section>
  <section title="Liveness Detection and Monitoring" toc="default">
@@ -1122,6 +1126,7 @@ Where:
      <t>We would like to thank Julien Meuric for shepherding this
    document and providing comments with text suggestions.</t>
    <t>Thanks to Stig Venaas for the RTGDIR review.</t>
+   <t>Thanks to Alvaro Retana for the IESG comments.</t>
     </section>
 
    <section anchor="Contributor" title="Contributors">
@@ -1158,6 +1163,7 @@ Email: mustapha.aissaoui@nokia.com
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5511.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6780.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8126.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8231.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8281.xml"?>
@@ -1172,7 +1178,7 @@ Email: mustapha.aissaoui@nokia.com
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7525.xml"?>
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7551.xml"?>
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8051.xml"?>
-     <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8126.xml"?>      
+           
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8253.xml"?>
      
      <?rfc include="reference.I-D.ietf-pce-pcep-yang.xml"?>
