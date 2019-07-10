@@ -340,14 +340,19 @@ VALUE:   list of 2-byte association type code points, identifying
    <t>Assoc-type (2 bytes): Association type code point identifier.  IANA
    manages the "ASSOCIATION Type Field" code point registry (see <xref target="iana_assoc_type"/>).</t>
    <section title="Procedure">
-   <t>A PCEP speaker MAY include an ASSOC-Type-List TLV within an OPEN object in an Open
-   message sent to a PCEP peer in order to advertise a set of one or
+   <t>An ASSOC-Type-List TLV within an OPEN object in an Open
+   message is included by a PCEP speaker in order to advertise a set of one or
    more supported association types.  The ASSOC-Type-List TLV MUST NOT appear more than
    once in an OPEN object.  If it appears more than once, the PCEP
    session MUST be rejected with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
    message). As specified in <xref target="RFC5440"/>, a PCEP peer that does not recognize the
    ASSOC-Type-List TLV will silently ignore it.</t>  
+
+ <t>Association type (to be defined in other documents) can specify if the association type advertisement is mandatory for it. 
+Thus, the ASSOC-Type-List TLV MUST be included if at least one mandatory association type needs to be advertised and the ASSOC-Type-List TLV MAY be included otherwise.
+
+  For an association type that specifies that the advertisement is mandatory, a missing Assoc-type in the ASSOC-Type-List TLV (or missing ASSOC-Type-List TLV) is to be interpreted as the association type is not supported by the PCEP speaker.</t>   
 
    <t>The absence of the ASSOC-Type-List TLV in an OPEN object MUST be interpreted as an absence of information on the list of supported
    Association types (rather than the Association type is not supported). <!--The PCEP speaker could still use the ASSOCIATION object, if the peer does not support the association, it
@@ -356,10 +361,12 @@ VALUE:   list of 2-byte association type code points, identifying
    support the association, it will react as per the procedure described
    in <xref target="Rules"/>.</t> 
 
-   <t>Association type (to be defined in other documents) can specify if the association type advertisement is mandatory for it. For an association type that specifies that the advertisement is mandatory, a missing Assoc-type in the ASSOC-Type-List TLV (or missing ASSOC-Type-List TLV) is to be interpreted as the association type is not supported by the PCEP speaker.</t>   
-
    <t><!--It is RECOMMENDED that the PCEP implementation include all supported association-types (including optional) to ease the operations of the PCEP peer.-->
-     In case the use of the ASSOC-Type-List TLV is triggered by a mandatory association type, then it is RECOMMENDED that the PCEP implementation include all supported Association types (including optional) to ease the operations of the PCEP peer.</t>
+     In case the use of the ASSOC-Type-List TLV is triggered by support for a mandatory association type, then it is RECOMMENDED that the PCEP implementation include all supported Association types (including optional) to ease the operations of the PCEP peer.</t>
+
+
+
+  
        
    </section>
    </section>
