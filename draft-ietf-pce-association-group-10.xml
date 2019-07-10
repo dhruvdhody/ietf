@@ -97,7 +97,7 @@
     <t>This document introduces a generic mechanism to create a grouping of Label Switched Paths (LSPs) in the
        context of a Path Computation Element (PCE).
        This grouping can then be used to define associations between sets of LSPs or between a
-       set of LSPs and a set of attributes (such as configuration parameters or behaviors),
+       set of LSPs and a set of attributes (such as configuration parameters or behaviours),
        and is equally applicable to the stateful PCE (active and passive modes) as well as the stateless PCE.
        </t>
     </abstract>
@@ -197,7 +197,7 @@
       computation request to an association group, thus enabling it to associate
       a common set of policy, configuration parameters or behaviours with the request.
      </t>
-     <t>Some associations could be created dynamically, such as association between the working and protections LSPs of a tunnel, whereas
+     <t>Some associations could be created dynamically, such as association between the working and protection LSPs of a tunnel, whereas
         some associations could be created by the operator manually, such as policy-based association, where the LSP could join
         an operator-configured existing association.</t>
     <t>
@@ -302,7 +302,7 @@ state exists. In case of PCEP session termination, the LSP state clean-up MUST a
    PCEP session-setup phase, a PCEP speaker can advertise to a PCEP peer the list
    of supported Association types.</t>
    <section title="ASSOC-Type-List TLV">
-   <t>The PCEP ASSOC-Type-List TLV is optional.  It MAY be carried within an OPEN
+   <t>The PCEP ASSOC-Type-List TLV is OPTIONAL.  It MAY be carried within an OPEN
    object sent by a PCEP speaker in an Open message to a PCEP peer so as to
    indicate the list of supported Association types.</t>
 
@@ -347,7 +347,7 @@ VALUE:   list of 2-byte association type code points, identifying
    message). As specified in <xref target="RFC5440"/>, a PCEP peer that does not recognize the
    ASSOC-Type-List TLV will silently ignore it.</t>  
 
-   <t>The use of ASSOC-Type-List TLV is OPTIONAL. Thus the absence of the ASSOC-Type-List TLV in an OPEN object MUST be interpreted as an absence of information on the list of supported
+   <t>The absence of the ASSOC-Type-List TLV in an OPEN object MUST be interpreted as an absence of information on the list of supported
    Association types (rather than the Association type is not supported). <!--The PCEP speaker could still use the ASSOCIATION object, if the peer does not support the association, it
    would react as per the procedure described in <xref target="Rules"/>.-->In this case, the PCEP
    speaker could still use the ASSOCIATION object: if the peer does not
@@ -371,7 +371,7 @@ VALUE:   list of 2-byte association type code points, identifying
    PCEP session-setup phase, a PCEP speaker can advertise to a PCEP peer 
    the Operator-configured Association Range for an association type.</t>
 
-   <t>The PCEP OP-CONF-ASSOC-RANGE TLV is optional.  It MAY be carried within an OPEN
+   <t>The PCEP OP-CONF-ASSOC-RANGE TLV is OPTIONAL.  It MAY be carried within an OPEN
    object sent by a PCEP speaker in an Open message to a PCEP peer. 
    The OP-CONF-ASSOC-RANGE TLV format is compliant with the PCEP TLV format defined
    in <xref target="RFC5440"/>.  That is, the TLV is composed of 2 bytes for the type,
@@ -440,7 +440,7 @@ VALUE:
    session MUST be rejected with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
    message). </t>
-   <t>The Assoc-type MAY appear more than once in the OP-CONF-ASSOC-RANGE TLV in the case of a non-contiguous Operator-configured Association Range. The PCEP speaker originating this TLV MUST NOT carry overlapping ranges for an association type. If a PCEP peer receives overlapping ranges for an association type, it MUST consider the Open message malformed and MUST reject the PCEP session with error type 1 and error value 1 (PCEP
+   <t>A given Assoc-type MAY appear more than once in the OP-CONF-ASSOC-RANGE TLV in the case of a non-contiguous Operator-configured Association Range. The PCEP speaker originating this TLV MUST NOT carry overlapping ranges for an association type. If a PCEP peer receives overlapping ranges for an association type, it MUST consider the Open message malformed and MUST reject the PCEP session with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
    message).</t>
 
@@ -523,7 +523,7 @@ VALUE:
     </t>
     <t>
     Association type (2-byte): the association type (<xref target="iana_assoc_type"/>).
-        The association type are defined in separate documents.
+        The association types are defined in separate documents.
     </t>
 
     <t> Association ID (2-byte): the identifier of the association group.  When combined
@@ -605,7 +605,7 @@ VALUE:
     </section>
 
     <section title="Unique Identification for an Association Group" anchor="id">
-    <t>The combination of the mandatory fields Association type, Association ID and Association Source in the ASSOCIATION object uniquely identify the association group. If the optional TLVs - Global Association Source or Extended Association ID are included, then they MUST be included in combination with mandatory fields to uniquely identifying the association group. In this document, all these fields are called 'association parameters'. Note that the ASSOCIATION object MAY include other optional TLVs (not defined in this document) based on the 
+    <t>The combination of the mandatory fields Association type, Association ID and Association Source in the ASSOCIATION object uniquely identify the association group. If the optional TLVs - Global Association Source or Extended Association ID are included, then they MUST be included in combination with mandatory fields to uniquely identify the association group. In this document, all these fields are called 'association parameters'. Note that the ASSOCIATION object MAY include other optional TLVs (not defined in this document) based on the 
     association types, that provides 'information' related to the association type, this document uses the term 'association information' for it. </t>
     </section>
     </section> <!-- Object Definition -->
@@ -1126,7 +1126,7 @@ Where:
      <t>We would like to thank Julien Meuric for shepherding this
    document and providing comments with text suggestions.</t>
    <t>Thanks to Stig Venaas for the RTGDIR review.</t>
-   <t>Thanks to Alvaro Retana for the IESG comments.</t>
+   <t>Thanks to Alvaro Retana, Mirja Kuhlewind, and Martin Vigoureux for the IESG comments.</t>
     </section>
 
    <section anchor="Contributor" title="Contributors">
