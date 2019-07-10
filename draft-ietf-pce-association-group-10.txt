@@ -99,7 +99,7 @@ Table of Contents
        6.1.3.  Association Source  . . . . . . . . . . . . . . . . .  14
        6.1.4.  Unique Identification for an Association Group  . . .  14
      6.2.  Relationship with the RSVP ASSOCIATION  . . . . . . . . .  14
-     6.3.  Object Encoding in PCEP messages  . . . . . . . . . . . .  14
+     6.3.  Object Encoding in PCEP messages  . . . . . . . . . . . .  15
        6.3.1.  Stateful PCEP messages  . . . . . . . . . . . . . . .  15
        6.3.2.  Request Message . . . . . . . . . . . . . . . . . . .  17
        6.3.3.  Reply Message . . . . . . . . . . . . . . . . . . . .  18
@@ -132,7 +132,7 @@ Internet-Draft            PCE association group                July 2019
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  26
      12.2.  Informative References . . . . . . . . . . . . . . . . .  27
    Appendix A.  Example for Operator-configured Association Range  .  28
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  29
 
 1.  Introduction
 
@@ -364,6 +364,8 @@ Internet-Draft            PCE association group                July 2019
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |         Type                  |            Length             |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
      |          Assoc-type #1        |      Assoc-type #2            |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
      //                                                             //
@@ -384,8 +386,6 @@ Internet-Draft            PCE association group                July 2019
    object in an Open message sent to a PCEP peer in order to advertise a
    set of one or more supported association types.  The ASSOC-Type-List
    TLV MUST NOT appear more than once in an OPEN object.  If it appears
-   more than once, the PCEP session MUST be rejected with error type 1
-   and error value 1 (PCEP session establishment failure / Reception of
 
 
 
@@ -394,6 +394,8 @@ Minei, et al.           Expires January 11, 2020                [Page 7]
 Internet-Draft            PCE association group                July 2019
 
 
+   more than once, the PCEP session MUST be rejected with error type 1
+   and error value 1 (PCEP session establishment failure / Reception of
    an invalid Open message).  As specified in [RFC5440], a PCEP peer
    that does not recognize the ASSOC-Type-List TLV will silently ignore
    it.
@@ -443,8 +445,6 @@ Internet-Draft            PCE association group                July 2019
 
 
 
-
-
 Minei, et al.           Expires January 11, 2020                [Page 8]
 
 Internet-Draft            PCE association group                July 2019
@@ -456,6 +456,8 @@ Internet-Draft            PCE association group                July 2019
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Type                  |            Length             |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |             Reserved          |          Assoc-type #1        |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -493,8 +495,6 @@ Internet-Draft            PCE association group                July 2019
       the association identifier range of 0xffff.  In case this
       condition is not satisfied, the session is rejected with error
       message sent (see Section 5.1).
-
-
 
 
 
@@ -647,6 +647,9 @@ Internet-Draft            PCE association group                July 2019
       object in the PCRpt and the PCUpd message, the flag is ignored in
       other PCEP messages.
 
+   The unassigned flags MUST be set to zero on transmission and MUST be
+   ignored on receipt.
+
    Association type (2-byte): the association type (Section 7.4).  The
    association types are defined in separate documents.
 
@@ -662,9 +665,6 @@ Internet-Draft            PCE association group                July 2019
    provides scoping for the Association ID.  See Section 6.1.3 for
    details.
 
-   Optional TLVs: The optional TLVs follow the PCEP TLV format of
-   [RFC5440].  This document defines two optional TLVs.  Other documents
-   can define more TLVs in future.
 
 
 
@@ -673,6 +673,10 @@ Minei, et al.           Expires January 11, 2020               [Page 12]
 
 Internet-Draft            PCE association group                July 2019
 
+
+   Optional TLVs: The optional TLVs follow the PCEP TLV format of
+   [RFC5440].  This document defines two optional TLVs.  Other documents
+   can define more TLVs in future.
 
 6.1.1.  Global Association Source TLV
 
@@ -718,10 +722,6 @@ Internet-Draft            PCE association group                July 2019
 
              Figure 6: The Extended Association ID TLV format
 
-   Type: 31 (Early allocation by IANA).
-
-   Length: variable.
-
 
 
 
@@ -729,6 +729,10 @@ Minei, et al.           Expires January 11, 2020               [Page 13]
 
 Internet-Draft            PCE association group                July 2019
 
+
+   Type: 31 (Early allocation by IANA).
+
+   Length: variable.
 
    Extended Association ID: as defined in [RFC6780].
 
@@ -770,10 +774,6 @@ Internet-Draft            PCE association group                July 2019
    new association types, should clarify how the PCEP associations would
    work with RSVP associations and vice-versa.
 
-6.3.  Object Encoding in PCEP messages
-
-   Message formats in this document are expressed using Reduced BNF
-   (RBNF) as used in [RFC5440] and defined in [RFC5511].
 
 
 
@@ -785,6 +785,11 @@ Minei, et al.           Expires January 11, 2020               [Page 14]
 
 Internet-Draft            PCE association group                July 2019
 
+
+6.3.  Object Encoding in PCEP messages
+
+   Message formats in this document are expressed using Reduced BNF
+   (RBNF) as used in [RFC5440] and defined in [RFC5511].
 
 6.3.1.  Stateful PCEP messages
 
@@ -829,11 +834,6 @@ Internet-Draft            PCE association group                July 2019
 
          <association-list> ::= <ASSOCIATION> [<association-list>]
 
-   When an LSP is delegated to a stateful PCE, the stateful PCE can
-   create a new association group for this LSP, or associate it with one
-   or more existing association groups.  This is done by including the
-   ASSOCIATION Object in a PCUpd message.  A stateful PCE can also
-
 
 
 
@@ -842,6 +842,10 @@ Minei, et al.           Expires January 11, 2020               [Page 15]
 Internet-Draft            PCE association group                July 2019
 
 
+   When an LSP is delegated to a stateful PCE, the stateful PCE can
+   create a new association group for this LSP, or associate it with one
+   or more existing association groups.  This is done by including the
+   ASSOCIATION Object in a PCUpd message.  A stateful PCE can also
    remove a delegated LSP from one or more association groups by setting
    the R flag to 1 in the ASSOCIATION object.
 
@@ -875,10 +879,6 @@ Internet-Draft            PCE association group                July 2019
    Object in a PCInitiate message.  The PCInitiate message MUST include
    all the association groups that it belongs to.  The PCInitiate
    message is defined in [RFC8281] and updated as below:
-
-
-
-
 
 
 
@@ -1381,10 +1381,10 @@ Internet-Draft            PCE association group                July 2019
    We would like to thank Julien Meuric for shepherding this document
    and providing comments with text suggestions.
 
-   Thanks to Stig Venaas for the RTGDIR review.
+   Thanks to Stig Venaas for the RTGDIR review comments.
 
-   Thanks to Alvaro Retana, Mirja Kuhlewind, and Martin Vigoureux for
-   the IESG comments.
+   Thanks to Alvaro Retana, Mirja Kuhlewind, Martin Vigoureux, Barry
+   Leiba, and Eric Vyncke for the IESG comments.
 
 11.  Contributors
 
@@ -1458,6 +1458,11 @@ Minei, et al.           Expires January 11, 2020               [Page 26]
 Internet-Draft            PCE association group                July 2019
 
 
+   [RFC8051]  Zhang, X., Ed. and I. Minei, Ed., "Applicability of a
+              Stateful Path Computation Element (PCE)", RFC 8051,
+              DOI 10.17487/RFC8051, January 2017,
+              <https://www.rfc-editor.org/info/rfc8051>.
+
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
@@ -1501,11 +1506,6 @@ Internet-Draft            PCE association group                July 2019
               Computations", RFC 6007, DOI 10.17487/RFC6007, September
               2010, <https://www.rfc-editor.org/info/rfc6007>.
 
-   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
-              "Recommendations for Secure Use of Transport Layer
-              Security (TLS) and Datagram Transport Layer Security
-              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
-              2015, <https://www.rfc-editor.org/info/rfc7525>.
 
 
 
@@ -1514,15 +1514,16 @@ Minei, et al.           Expires January 11, 2020               [Page 27]
 Internet-Draft            PCE association group                July 2019
 
 
+   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "Recommendations for Secure Use of Transport Layer
+              Security (TLS) and Datagram Transport Layer Security
+              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
+              2015, <https://www.rfc-editor.org/info/rfc7525>.
+
    [RFC7551]  Zhang, F., Ed., Jing, R., and R. Gandhi, Ed., "RSVP-TE
               Extensions for Associated Bidirectional Label Switched
               Paths (LSPs)", RFC 7551, DOI 10.17487/RFC7551, May 2015,
               <https://www.rfc-editor.org/info/rfc7551>.
-
-   [RFC8051]  Zhang, X., Ed. and I. Minei, Ed., "Applicability of a
-              Stateful Path Computation Element (PCE)", RFC 8051,
-              DOI 10.17487/RFC8051, January 2017,
-              <https://www.rfc-editor.org/info/rfc8051>.
 
    [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
               "PCEPS: Usage of TLS to Provide a Secure Transport for the
@@ -1557,7 +1558,6 @@ Appendix A.  Example for Operator-configured Association Range
    example an NMS system), then the default range of <0x1000, 0xffff> is
    considered.
 
-Authors' Addresses
 
 
 
@@ -1569,6 +1569,8 @@ Minei, et al.           Expires January 11, 2020               [Page 28]
 
 Internet-Draft            PCE association group                July 2019
 
+
+Authors' Addresses
 
    Ina Minei
    Google, Inc.
@@ -1616,8 +1618,6 @@ Internet-Draft            PCE association group                July 2019
    Japan
 
    Email: yosuke.tanaka@ntt.com
-
-
 
 
 
