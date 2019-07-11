@@ -189,7 +189,7 @@
          LSPs need to share common information. E.g., to support for
          PCE-controlled make-before-break, an association between the original
          and the re-optimized path is desired. Similarly, for end-to-end protection, the association 
-         between working and protection LSPs is required (see <xref target="I-D.ietf-pce-stateful-path-protection"/). For diverse paths, an association between a group of LSPs could be used (see <xref target="I-D.ietf-pce-association-diversity"/).  Another use for the LSP grouping is for
+         between working and protection LSPs is required (see <xref target="I-D.ietf-pce-stateful-path-protection"/>). For diverse paths, an association between a group of LSPs could be used (see <xref target="I-D.ietf-pce-association-diversity"/>).  Another use for the LSP grouping is for
          applying a common set of configuration parameters or behaviours to a set of LSPs.
      </t>
     <t>
@@ -831,8 +831,8 @@ Where:
     <!--But a PCE peer cannot add new members for association group created by
     another peer.-->
     <t>If a
-    PCEP speaker does not recognize the ASSOCIATION object, it will return a PCErr
-    message with Error-Type  "Unknown Object" as described in <xref target="RFC5440"/>.
+    PCEP speaker does not recognize the ASSOCIATION object in the stateful message, it will return a PCErr
+    message with Error-Type  "Unknown Object" as described in <xref target="RFC5440"/>. In case of PCReq message, the PCE would react based on the P flag as per <xref target="RFC5440"/>.
     If a
     PCEP speaker understands the ASSOCIATION object but does not support the Association type,
     it MUST return a PCErr
@@ -851,9 +851,9 @@ Where:
     based on a local policy. </t>
 
     <t>If a PCE
-    peer is unwilling or unable to process the ASSOCIATION object, it MUST return a
+    peer is unwilling or unable to process the ASSOCIATION object in the stateful message, it MUST return a
     PCErr message with the Error-Type "Not supported object" and follow the relevant
-    procedures described in <xref target="RFC5440"/>.
+    procedures described in <xref target="RFC5440"/>. In case of PCReq message, the PCE would react based on the P flag as per <xref target="RFC5440"/>.
     On receiving a PCEP
     message with ASSOCIATION, if a
     PCEP speaker could not add the LSP to the association group for any reason, it MUST
