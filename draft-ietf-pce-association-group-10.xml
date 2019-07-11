@@ -138,11 +138,11 @@
       <xref target='RFC8281'></xref>.
       </t>
 
-      <t><xref target='RFC6780'/> defines the RSVP ASSOCIATION object, which was defined in the context of 
+      <t><xref target='RFC4872'/> defines the RSVP ASSOCIATION object, which was defined in the context of 
       GMPLS-controlled Label Switched Paths (LSPs) to be used to associate recovery LSPs with the LSP they are protecting.
    This object also has broader applicability as a mechanism to
    associate RSVP state and <xref target='RFC6780'/> described how the ASSOCIATION
-   object can be more generally applied.</t>
+   object can be more generally applied by defining the Extended ASSOCIATION Object.</t>
 
        <t> This document introduces a generic mechanism to create a grouping of LSPs.
        This grouping can then be used to define associations between sets of LSPs or between a
@@ -189,7 +189,7 @@
          LSPs need to share common information. E.g., to support for
          PCE-controlled make-before-break, an association between the original
          and the re-optimized path is desired. Similarly, for end-to-end protection, the association 
-         between working and protection LSPs is required. Another use for the LSP grouping is for
+         between working and protection LSPs is required (see <xref target="I-D.ietf-pce-stateful-path-protection"/). For diverse paths, an association between a group of LSPs could be used (see <xref target="I-D.ietf-pce-association-diversity"/).  Another use for the LSP grouping is for
          applying a common set of configuration parameters or behaviours to a set of LSPs.
      </t>
     <t>
@@ -234,7 +234,7 @@
    operator. In case of dynamic association, the association parameters such as the association identifier, are allocated dynamically by the PCEP speaker, the association source is set as local PCEP speaker address, unless local policy dictates otherwise, in which case association source is set based on the local policy.</t> 
 
      <t>The dynamically created association can be reported to the PCEP peer
-     via the PCEP messages as per the stateful extensions. While the operator-configured association is known to the PCEP peer beforehand, a PCEP peer could ask for a LSP to join the operator-configured association via the stateful PCEP messages.</t>
+     via the PCEP messages as per the stateful extensions. When the operator-configured association is known to the PCEP peer beforehand, a PCEP peer could ask for a LSP to join the operator-configured association via the stateful PCEP messages.</t>
 
     <t>The associations are properties of the LSP and thus could be stored in the LSP state database. The dynamic association exists as long as the LSP
 state exists. In case of PCEP session termination, the LSP state clean-up MUST also take care of associations.</t>
@@ -447,10 +447,10 @@ VALUE:
    In this case, the default behavior as per each association type applies. If the association 
    source is not a PCEP speaker, the default value for the operator-configured association range is used for the association source.</t> 
 
-   <t>If the Assoc-type is not recognized or supported by the PCEP speaker, it MUST ignore that respective Start-Assoc-ID and Range. If the Start-Assoc-ID or Range are set incorrectly, the PCEP
+   <t>If the Assoc-type is not recognized or supported by the PCEP speaker, it MUST ignore that respective Start-Assoc-ID and Range. If the Assoc-type is recognized/supported but the Start-Assoc-ID or Range are set incorrectly, the PCEP
    session MUST be rejected with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
-   message). </t>
+   message). The incorrect range include the case when the (Start-Assoc-ID + Range) crosses the association identifier range of 0xffff.</t>
    <t>A given Assoc-type MAY appear more than once in the OP-CONF-ASSOC-RANGE TLV in the case of a non-contiguous Operator-configured Association Range. The PCEP speaker originating this TLV MUST NOT carry overlapping ranges for an association type. If a PCEP peer receives overlapping ranges for an association type, it MUST consider the Open message malformed and MUST reject the PCEP session with error type 1 and error value 1 (PCEP
    session establishment failure / Reception of an invalid Open
    message).</t>
@@ -562,7 +562,7 @@ VALUE:
     <section anchor="Global-association-src" title="Global Association Source TLV">
 
       <t> The Global Association Source TLV is an optional TLV for use in the Association Object. 
-        The meaning and the usage of Global Association Source is as per <xref target="RFC6780"/>.
+        The meaning and the usage of Global Association Source is as per Section 4 of <xref target="RFC6780"/>.
       </t>
 
    <figure anchor="Global-Association-Object-Fmt1" title="The Global Association Source TLV  format">
@@ -581,7 +581,7 @@ VALUE:
         </figure>
     <t> Type: 30 (Early allocation by IANA). </t>
     <t> Length: Fixed value of 4 bytes. </t>
-    <t> Global Association Source: as defined in <xref target="RFC6780"/>. </t>
+    <t> Global Association Source: as defined in Section 4 of <xref target="RFC6780"/>. </t>
 
     </section>
 
@@ -590,7 +590,7 @@ VALUE:
     <section anchor="EXT-association" title="Extended Association ID TLV">
 
       <t> The Extended Association ID TLV is an optional TLV for use in
-      the Association Object. The meaning and the usage of Extended Association ID is as per <xref target="RFC6780"/>.
+      the Association Object. The meaning and the usage of Extended Association ID is as per Section 4 of <xref target="RFC6780"/>.
       </t>
 
    <figure anchor="Ext-id-Object-Fmt1" title="The Extended Association ID  TLV  format">
@@ -609,7 +609,7 @@ VALUE:
         </figure>
     <t> Type: 31 (Early allocation by IANA). </t>
     <t> Length: variable. </t>
-    <t> Extended Association ID: as defined in <xref target="RFC6780"/>. </t>
+    <t> Extended Association ID: as defined in Section 4 of <xref target="RFC6780"/>. </t>
 
     </section>
     <section title="Association Source" anchor="AssocSrc">
@@ -620,7 +620,7 @@ VALUE:
     </section>
 
     <section title="Unique Identification for an Association Group" anchor="id">
-    <t>The combination of the mandatory fields Association type, Association ID and Association Source in the ASSOCIATION object uniquely identify the association group. If the optional TLVs - Global Association Source or Extended Association ID are included, then they MUST be included in combination with mandatory fields to uniquely identify the association group. In this document, all these fields are called 'association parameters'. Note that the ASSOCIATION object MAY include other optional TLVs (not defined in this document) based on the 
+    <t>The combination of the mandatory fields Association type, Association ID and Association Source in the ASSOCIATION object uniquely identify the association group. If the optional TLVs - Global Association Source or Extended Association ID are included, then they MUST be included in combination with mandatory fields to uniquely identify the association group. In this document, all these fields are collectively called 'association parameters'. Note that the ASSOCIATION object MAY include other optional TLVs (not defined in this document) based on the 
     association types, that provides 'information' related to the association type, this document uses the term 'association information' for it. </t>
     </section>
     </section> <!-- Object Definition -->
@@ -640,8 +640,8 @@ VALUE:
     <t> When carried in PCRpt message, it is used to report the association
     group membership pertaining to a LSP to a stateful PCE. 
     The PCRpt message are used for both initial state synchronization operations (Section 5.6 of
-    <xref target="RFC8231"/>) as well as whenever the state of the LSP changes. The
-    associations MUST be included during the state synchronization operations.</t>
+    <xref target="RFC8231"/>) as well as whenever the state of the LSP changes. If the LSP belongs to an 
+    association group, then the associations MUST be included during the state synchronization operations.</t>
     <t>The PCRpt message can also be used to remove an LSP from one or more association groups
     by setting the R flag to 1  in the ASSOCIATION object.</t>
     <t>When an LSP is first reported to the PCE, the PCRpt message MUST include all the association groups that it belongs to. Any subsequent report message SHOULD include only the associations that are being modified or removed.</t>
@@ -1141,7 +1141,7 @@ Where:
      <t>We would like to thank Julien Meuric for shepherding this
    document and providing comments with text suggestions.</t>
    <t>Thanks to Stig Venaas for the RTGDIR review comments.</t>
-   <t>Thanks to Alvaro Retana, Mirja Kuhlewind, Martin Vigoureux, Barry Leiba, Eric Vyncke, and Suresh Krishnan for the IESG comments.</t>
+   <t>Thanks to Alvaro Retana, Mirja Kuhlewind, Martin Vigoureux, Barry Leiba, Eric Vyncke, Suresh Krishnan, and Benjamin Kaduk for the IESG comments.</t>
     </section>
 
    <section anchor="Contributor" title="Contributors">
@@ -1178,6 +1178,7 @@ Email: mustapha.aissaoui@nokia.com
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5511.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6780.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7525.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8051.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8126.xml"?>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml"?>
@@ -1191,13 +1192,14 @@ Email: mustapha.aissaoui@nokia.com
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4872.xml"?>
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4873.xml"?>
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6007.xml"?>
-     <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7525.xml"?>
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7551.xml"?>
      
            
      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8253.xml"?>
      
      <?rfc include="reference.I-D.ietf-pce-pcep-yang.xml"?>
+     <?rfc include="reference.I-D.ietf-pce-stateful-path-protection.xml"?>
+     <?rfc include="reference.I-D.ietf-pce-association-diversity.xml"?>
    </references>
    <section title="Example for Operator-configured Association Range" anchor="ex">
     <t>Consider an association type T1 (which allows both dynamic and operator-configured association with a default range of &lt;0x1000, 0xffff&gt;). Consider that, because of need of the network, the PCE needs to create more dynamic associations and would like to change the association range to &lt;0xbffe, 0xffff&gt; instead. During PCEP session establishment the PCE would advertise the new range, the PCC could skip advertising as the default values are used. If a PCC is creating a dynamic association (with PCC as association source) it needs to pick a free association identifier for type T1 in the range of &lt;0x1, 0x0fff&gt; whereas if a PCE is creating a dynamic association (with PCE as association source) it needs to pick a free association identifier from the range &lt;0x1, 0xbffd&gt;. Similarly if an operator-configured association is manually configured with the PCC as association source, it should be from the range &lt;0x1000, 0xffff&gt; whereas if the PCE is association source, it should be from &lt;0xbffe, 0xffff&gt;. In case the association source is not a PCEP peer (for example an NMS system), then the default range of &lt;0x1000, 0xffff&gt; is considered.</t>
