@@ -17,7 +17,8 @@ Expires: January 11, 2020                         Individual Contributor
                                                            July 10, 2019
 
 
-  PCEP Extensions for Establishing Relationships Between Sets of LSPs
+ Path Computation Element Communication Protocol (PCEP) Extensions for
+ Establishing Relationships Between Sets of Label Switched Paths (LSPs)
                   draft-ietf-pce-association-group-10
 
 Abstract
@@ -48,8 +49,7 @@ Status of This Memo
    working documents as Internet-Drafts.  The list of current Internet-
    Drafts is at https://datatracker.ietf.org/drafts/current/.
 
-   Internet-Drafts are draft documents valid for a maximum of six months
-   and may be updated, replaced, or obsoleted by other documents at any
+
 
 
 
@@ -58,6 +58,8 @@ Minei, et al.           Expires January 11, 2020                [Page 1]
 Internet-Draft            PCE association group                July 2019
 
 
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
@@ -89,7 +91,7 @@ Table of Contents
      3.4.  Operator-configured Association Range . . . . . . . . . .   6
    4.  Discovery of Supported Association Types  . . . . . . . . . .   6
      4.1.  ASSOC-Type-List TLV . . . . . . . . . . . . . . . . . . .   7
-       4.1.1.  Procedure . . . . . . . . . . . . . . . . . . . . . .   7
+       4.1.1.  Procedure . . . . . . . . . . . . . . . . . . . . . .   8
    5.  Operator-configured Association Range TLV . . . . . . . . . .   8
      5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  10
    6.  ASSOCIATION Object  . . . . . . . . . . . . . . . . . . . . .  11
@@ -104,8 +106,6 @@ Table of Contents
        6.3.2.  Request Message . . . . . . . . . . . . . . . . . . .  17
        6.3.3.  Reply Message . . . . . . . . . . . . . . . . . . . .  18
      6.4.  Processing Rules  . . . . . . . . . . . . . . . . . . . .  19
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  21
-     7.1.  PCEP Object . . . . . . . . . . . . . . . . . . . . . . .  21
 
 
 
@@ -114,6 +114,8 @@ Minei, et al.           Expires January 11, 2020                [Page 2]
 Internet-Draft            PCE association group                July 2019
 
 
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  21
+     7.1.  PCEP Object . . . . . . . . . . . . . . . . . . . . . . .  21
      7.2.  PCEP TLV  . . . . . . . . . . . . . . . . . . . . . . . .  22
      7.3.  Association Flags . . . . . . . . . . . . . . . . . . . .  22
      7.4.  Association Type  . . . . . . . . . . . . . . . . . . . .  23
@@ -160,8 +162,6 @@ Internet-Draft            PCE association group                July 2019
 
    This document introduces a generic mechanism to create a grouping of
    LSPs.  This grouping can then be used to define associations between
-   sets of LSPs or between a set of LSPs and a set of attributes (such
-   as configuration parameters or behaviours), and is equally applicable
 
 
 
@@ -170,6 +170,8 @@ Minei, et al.           Expires January 11, 2020                [Page 3]
 Internet-Draft            PCE association group                July 2019
 
 
+   sets of LSPs or between a set of LSPs and a set of attributes (such
+   as configuration parameters or behaviours), and is equally applicable
    to stateful PCE (active and passive modes) and stateless PCE.  The
    associations could be created dynamically and conveyed to a PCEP peer
    within PCEP, or it could be configured manually by an operator on the
@@ -215,8 +217,6 @@ Internet-Draft            PCE association group                July 2019
    policy-based association, where the LSP could join an operator-
    configured existing association.
 
-   Rather than creating separate mechanisms for each use case, this
-   document defines a generic mechanism that can be reused as needed.
 
 
 
@@ -225,6 +225,9 @@ Minei, et al.           Expires January 11, 2020                [Page 4]
 
 Internet-Draft            PCE association group                July 2019
 
+
+   Rather than creating separate mechanisms for each use case, this
+   document defines a generic mechanism that can be reused as needed.
 
 3.2.  Relationship with the SVEC List
 
@@ -271,9 +274,6 @@ Internet-Draft            PCE association group                July 2019
 
    The dynamically created association can be reported to the PCEP peer
    via the PCEP messages as per the stateful extensions.  While the
-   operator-configured association is known to the PCEP peer beforehand,
-   a PCEP peer could ask for a LSP to join the operator-configured
-   association via the stateful PCEP messages.
 
 
 
@@ -281,6 +281,10 @@ Minei, et al.           Expires January 11, 2020                [Page 5]
 
 Internet-Draft            PCE association group                July 2019
 
+
+   operator-configured association is known to the PCEP peer beforehand,
+   a PCEP peer could ask for a LSP to join the operator-configured
+   association via the stateful PCEP messages.
 
    The associations are properties of the LSP and thus could be stored
    in the LSP state database.  The dynamic association exists as long as
@@ -325,10 +329,6 @@ Internet-Draft            PCE association group                July 2019
    This section defines PCEP extensions so as to support the capability
    advertisement of the association types supported by a PCEP speaker.
 
-   A new PCEP ASSOC-Type-List (Association Types list) TLV is defined.
-   The PCEP ASSOC-Type-List TLV is carried within an OPEN object.  This
-   way, during PCEP session-setup phase, a PCEP speaker can advertise to
-   a PCEP peer the list of supported Association types.
 
 
 
@@ -337,6 +337,11 @@ Minei, et al.           Expires January 11, 2020                [Page 6]
 
 Internet-Draft            PCE association group                July 2019
 
+
+   A new PCEP ASSOC-Type-List (Association Types list) TLV is defined.
+   The PCEP ASSOC-Type-List TLV is carried within an OPEN object.  This
+   way, during PCEP session-setup phase, a PCEP speaker can advertise to
+   a PCEP peer the list of supported Association types.
 
 4.1.  ASSOC-Type-List TLV
 
@@ -380,12 +385,7 @@ Internet-Draft            PCE association group                July 2019
    manages the "ASSOCIATION Type Field" code point registry (see
    Section 7.4).
 
-4.1.1.  Procedure
 
-   An ASSOC-Type-List TLV within an OPEN object in an Open message is
-   included by a PCEP speaker in order to advertise a set of one or more
-   supported association types.  The ASSOC-Type-List TLV MUST NOT appear
-   more than once in an OPEN object.  If it appears more than once, the
 
 
 
@@ -394,6 +394,12 @@ Minei, et al.           Expires January 11, 2020                [Page 7]
 Internet-Draft            PCE association group                July 2019
 
 
+4.1.1.  Procedure
+
+   An ASSOC-Type-List TLV within an OPEN object in an Open message is
+   included by a PCEP speaker in order to advertise a set of one or more
+   supported association types.  The ASSOC-Type-List TLV MUST NOT appear
+   more than once in an OPEN object.  If it appears more than once, the
    PCEP session MUST be rejected with error type 1 and error value 1
    (PCEP session establishment failure / Reception of an invalid Open
    message).  As specified in [RFC5440], a PCEP peer that does not
@@ -436,12 +442,6 @@ Internet-Draft            PCE association group                July 2019
    The PCEP OP-CONF-ASSOC-RANGE TLV is OPTIONAL.  It MAY be carried
    within an OPEN object sent by a PCEP speaker in an Open message to a
    PCEP peer.  The OP-CONF-ASSOC-RANGE TLV format is compliant with the
-   PCEP TLV format defined in [RFC5440].  That is, the TLV is composed
-   of 2 bytes for the type, 2 bytes specifying the TLV length, and a
-   Value field.  The Length field defines the length of the value
-   portion in bytes.
-
-   The PCEP OP-CONF-ASSOC-RANGE TLV has the following format:
 
 
 
@@ -449,6 +449,13 @@ Minei, et al.           Expires January 11, 2020                [Page 8]
 
 Internet-Draft            PCE association group                July 2019
 
+
+   PCEP TLV format defined in [RFC5440].  That is, the TLV is composed
+   of 2 bytes for the type, 2 bytes specifying the TLV length, and a
+   Value field.  The Length field defines the length of the value
+   portion in bytes.
+
+   The PCEP OP-CONF-ASSOC-RANGE TLV has the following format:
 
    TYPE:    29 (Early allocation by IANA)
    LENGTH:  N * 8 (where N is the number of association types)
@@ -491,13 +498,6 @@ Internet-Draft            PCE association group                July 2019
 
       Range (2 bytes): The number of associations marked for the
       Operator-configured Associations.  The Range MUST be greater than
-      0, and it MUST be such that (Start-Assoc-ID + Range) do not cross
-      the association identifier range of 0xffff.  In case this
-      condition is not satisfied, the session is rejected with error
-      message sent (see Section 5.1).
-
-
-
 
 
 
@@ -505,6 +505,11 @@ Minei, et al.           Expires January 11, 2020                [Page 9]
 
 Internet-Draft            PCE association group                July 2019
 
+
+      0, and it MUST be such that (Start-Assoc-ID + Range) do not cross
+      the association identifier range of 0xffff.  In case this
+      condition is not satisfied, the session is rejected with error
+      message sent (see Section 5.1).
 
 5.1.  Procedure
 
@@ -550,11 +555,6 @@ Internet-Draft            PCE association group                July 2019
    error type 1 and error value 1 (PCEP session establishment failure /
    Reception of an invalid Open message).
 
-   There may be cases where an operator-configured association was
-   configured with association parameters (such as association
-   identifier, association type and association source) at the local
-   PCEP speaker, and later the PCEP session gets established with the
-
 
 
 Minei, et al.           Expires January 11, 2020               [Page 10]
@@ -562,6 +562,10 @@ Minei, et al.           Expires January 11, 2020               [Page 10]
 Internet-Draft            PCE association group                July 2019
 
 
+   There may be cases where an operator-configured association was
+   configured with association parameters (such as association
+   identifier, association type and association source) at the local
+   PCEP speaker, and later the PCEP session gets established with the
    association source and a new operator-configured range is learned
    during session establishment.  At this time, the local PCEP speaker
    MUST remove any associations that are not in the new operator-
@@ -602,10 +606,6 @@ Internet-Draft            PCE association group                July 2019
 
    ASSOCIATION Object-Type is 2 for IPv6 and its format is shown in
    Figure 4:
-
-
-
-
 
 
 
