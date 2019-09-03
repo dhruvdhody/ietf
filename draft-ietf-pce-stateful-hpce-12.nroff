@@ -8,9 +8,9 @@
 .ds LF Dhody, et al.
 .ds RF FORMFEED[Page %]
 .ds LH Internet-Draft
-.ds RH August 2019
+.ds RH September 2019
 .ds CH STATEFUL-HPCE
-.ds CF Expires February 2020
+.ds CF Expires March 2020
 .hy 0
 .nh
 .ad l
@@ -20,14 +20,14 @@
 .tl 'PCE Working Group''D. Dhody'
 .tl '\%Internet-Draft''Huawei Technologies'
 .tl 'Intended status: Informational''Y. Lee'
-.tl 'Expires: February 22, 2020''Futurewei Technologies'
+.tl 'Expires: March 06, 2020''Futurewei Technologies'
 .tl '''D. Ceccarelli'
 .tl '''Ericsson'
 .tl '''J. Shin'
 .tl '''SK Telecom'
 .tl '''D. King'
 .tl '''Lancaster University'
-.tl '''August 21, 2019'
+.tl '''September 03, 2019'
 .fi
 .in 3
 
@@ -77,6 +77,7 @@ Table of Contents
        1.2.2.  End-to-End Contiguous LSP  . . . . . . . . . . . . . .  5
        1.2.3.  Applicability of a Stateful P-PCE  . . . . . . . . . .  6
    2.  Terminology  . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     2.1.  Requirement Language . . . . . . . . . . . . . . . . . . .  7
    3.  Hierarchical Stateful PCE  . . . . . . . . . . . . . . . . . .  7
      3.1.  Passive Operations . . . . . . . . . . . . . . . . . . . .  9
      3.2.  Active Operations  . . . . . . . . . . . . . . . . . . . . 11
@@ -89,7 +90,7 @@ Table of Contents
      5.3.  Liveness Detection and Monitoring  . . . . . . . . . . . . 16
      5.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 16
      5.5.  Requirements On Other Protocols  . . . . . . . . . . . . . 16
-     5.6.  Impact On Network Operations . . . . . . . . . . . . . . . 16
+     5.6.  Impact On Network Operations . . . . . . . . . . . . . . . 17
      5.7.  Error Handling between PCEs  . . . . . . . . . . . . . . . 17
    6.  Other Considerations . . . . . . . . . . . . . . . . . . . . . 17
      6.1.  Applicability to Inter-Layer Traffic Engineering . . . . . 17
@@ -224,6 +225,16 @@ TED: Traffic Engineering Database
 
 .ti 6
 VN: Virtual Network
+
+.ti 0
+2.1.  Requirement Language
+
+.in 3
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY",
+and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 [RFC2119] [RFC8174] when, and only when, they
+appear in all capitals, as shown here.
 
 .ti 0
 3.  Hierarchical Stateful PCE
@@ -524,7 +535,7 @@ The security consideration for PCE-Initiated LSP as per [RFC8281] is also applic
 
 Further, section 6.3 describes the use of path-key [RFC5520] for confidentiality between C-PCE and P-PCE. 
 
-Thus securing the PCEP session (between the P-PCE and the C-PCE) using the TCP Authentication Option (TCP-AO) [RFC5925] or Transport Layer Security (TLS) [RFC8253] mechanisms are recommended.
+Thus it is RECOMMENDED to secure the PCEP session (between the P-PCE and the C-PCE) using either Transport Layer Security (TLS) [RFC8253] per the recommendations and best current practices in [RFC7525] or TCP Authentication Option (TCP-AO) [RFC5925].
 
 .ti 0
 5.  Manageability Considerations
@@ -633,7 +644,7 @@ There are no IANA considerations.
 
 Thanks to Manuela Scarella, Haomian Zheng, Sergio Marmo, Stefano Parodi, Giacomo Agostini, Jeff Tantsura, Rajan Rao, Adrian Farrel and Haomian Zheng, for their reviews and suggestions.
 
-Thanks to Tal Mazrahi for the RTGDIR review and Paul Kyzivat for the GENART review.
+Thanks to Tal Mazrahi for the RTGDIR review, Paul Kyzivat for the GENART review, and Stephen Farrell for SECDIR review.
 
 .ti 0
 9.  References
@@ -641,14 +652,14 @@ Thanks to Tal Mazrahi for the RTGDIR review and Paul Kyzivat for the GENART revi
 .ti 0
 9.1.  Normative References
 
-.nf
-[RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
-           Element (PCE)-Based Architecture", RFC 4655,
-           DOI 10.17487/RFC4655, August 2006,
-           \%<https://www.rfc-editor.org/info/rfc4655>.
-
 .fi
+.ti 3
 .in 14
+[RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, \%<https://www.rfc-editor.org/info/rfc2119>.
+
+.ti 3
+[RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation Element (PCE)-Based Architecture", RFC 4655, DOI 10.17487/RFC4655, August 2006, \%<https://www.rfc-editor.org/info/rfc4655>.
+
 .ti 3
 [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation Element (PCE) Communication Protocol (PCEP)", RFC 5440,
 DOI 10.17487/RFC5440, March 2009, \%<http://www.rfc-editor.org/info/rfc5440>.
@@ -658,6 +669,9 @@ DOI 10.17487/RFC5440, March 2009, \%<http://www.rfc-editor.org/info/rfc5440>.
 
 .ti 3
 [RFC6805]  King, D., Ed. and A. Farrel, Ed., "The Application of the Path Computation Element Architecture to the Determination of a Sequence of Domains in MPLS and GMPLS", RFC 6805, DOI 10.17487/RFC6805, November 2012, \%<http://www.rfc-editor.org/info/rfc6805>.
+
+.ti 3
+[RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, \%<https://www.rfc-editor.org/info/rfc8174>.
 
 .nf
 .in 3
@@ -696,6 +710,9 @@ DOI 10.17487/RFC5440, March 2009, \%<http://www.rfc-editor.org/info/rfc5440>.
 
 .ti 3
 [RFC5925]  Touch, J., Mankin, A., and R. Bonica, "The TCP Authentication Option", RFC 5925, DOI 10.17487/RFC5925, June 2010, \%<https://www.rfc-editor.org/info/rfc5925>.
+
+.ti 3
+[RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre, "Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015, \%<https://www.rfc-editor.org/info/rfc7525>.
 
 .nf
 .in 3
@@ -751,7 +768,7 @@ DOI 10.17487/RFC5440, March 2009, \%<http://www.rfc-editor.org/info/rfc5440>.
            Sivabalan, S., Parker, J., and M. Negi, "Ability for a
            stateful Path Computation Element (PCE) to request and
            obtain control of a LSP", draft-ietf-pce-lsp-control-
-           \%request-07 (work in progress), July 2019.
+           \%request-08 (work in progress), August 2019.
 
 [I-D.ietf-pce-enhanced-errors]
            Pouyllau, et al., "Extensions to PCEP for Enhanced Errors"
