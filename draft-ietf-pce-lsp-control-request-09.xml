@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc category="std" docName="draft-ietf-pce-lsp-control-request-09" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en">
+  <front>
+    <title abbrev="LSP Control Request">
+    Ability for a Stateful Path Computation Element (PCE) to request and obtain control of a Label Switched Path (LSP)</title>
+
+     <author fullname="Aswatnarayan Raghuram" initials="A." surname="Raghuram">
+      <organization>AT&amp;T</organization>
+      <address>
+        <postal>
+          <street>200 S Laurel Aevenue</street>
+          <city>Middletown</city>
+          <region>NJ</region> 
+          <code>07748</code>
+          <country>USA</country>
+        </postal>
+        <email>ar2521@att.com</email>
+      </address>
+    </author>
+
+  <author fullname="Al Goddard" initials="A." surname="Goddard">
+      <organization>AT&amp;T</organization>
+      <address>
+        <postal>
+          <street>200 S Laurel Aevenue</street>
+          <city>Middletown</city>
+          <region>NJ</region>
+          <code>07748</code>
+          <country>USA</country>
+        </postal>
+        <email>ag6941@att.com</email>
+      </address>
+    </author>
+
+<author fullname="Jay Karthik" initials="J." surname="Karthik">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>125 High Street</street>
+          <city>Boston</city>
+          <region>Massachusetts</region>
+          <code>02110</code>
+          <country>USA</country>
+        </postal>
+        <email>jakarthi@cisco.com</email>
+      </address>
+    </author>
+
+ <author fullname="Siva Sivabalan" initials="S." surname="Sivabalan">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>2000 Innovation Drive</street>
+          <city>Kanata</city>
+          <region>Ontario</region>
+          <code>K2K 3E8</code>
+          <country>Canada</country>
+        </postal>
+        <email>msiva@cisco.com</email>
+      </address>
+    </author>
+   
+<author initials="M" surname="Negi" fullname="Mahendra Singh Negi">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka</region>
+          <code>560066</code>
+          <country>India</country>
+        </postal>
+        <email>mahend.ietf@gmail.com</email>
+      </address>
+    </author>
+
+    <date year="2019"/>
+
+    <workgroup>PCE Working Group</workgroup>
+
+<abstract>
+
+<t>A Stateful Path Computation Element (PCE) retains information about the placement of Multiprotocol Label Switching (MPLS) Traffic Engineering Label Switched Paths (TE LSPs). When a PCE has stateful control over LSPs it may send indications to LSP head-ends to modify the attributes (especially the paths) of the LSPs. A Path Computation Client (PCC) has set up LSPs under local configuration may delegate control of those LSPs to a stateful PCE.</t>
+
+<t>There are use-cases in which a stateful PCE may wish to obtain control of locally configured LSPs of which it is aware but that have not been delegated to the PCE.</t>
+
+<t>This document describes an extension to the Path Computation Element communication Protocol (PCEP) to enable a PCE to make such requests.</t>
+
+
+</abstract> 
+
+</front>
+
+<middle>
+
+<section anchor="Introduction" title="Introduction">
+
+<t>Stateful Path Computation Element (PCE) communication Protocol (PCEP) extensions <xref target="RFC8231"/> specifies a set of extensions to PCEP <xref target="RFC5440"/> to enable stateful control of Traffic Engineering Label Switched Paths (TE LSPs) between and across PCEP sessions in compliance with <xref target="RFC4657"/>.  It includes mechanisms to effect LSP state synchronization between Path Computation Clients (PCCs) and PCEs, delegation of control of LSPs to PCE, and PCE control of timing and sequence of path computations within and across PCEP sessions. The stateful PCEP defines the following two useful network operations:
+
+<list style="symbols">
+        <t>Delegation: As per <xref target="RFC8051"/>, an operation to grant a PCE temporary rights to modify a
+      subset of LSP parameters on one or more LSPs of a PCC.  LSPs are
+      delegated from a PCC to a PCE and are referred to as "delegated"
+      LSPs.</t>
+       
+ <t>Revocation: As per <xref target="RFC8231"/>, an operation performed by a PCC on a previously
+      delegated LSP.  Revocation revokes the rights granted to the PCE
+      in the delegation operation.</t>
+</list>
+</t>
+
+<t>For Redundant Stateful PCEs (section 5.7.4. of <xref target="RFC8231"/>), during a PCE failure, one of the redundant PCE could request to take control over an LSP.  The redundant PCEs may use a local policy or a proprietary election mechanism to decide which PCE would take control. In this case, a mechanism is needed for a stateful PCE to request control of one or more LSPs from a PCC, so that a newly elected primary PCE can request to take over control.</t> 
+
+<t>In case of virtualized PCEs (vPCE) running as virtual network function (VNF), as the computation load in the network increases, a new instance of vPCE could be instantiated to balance the current load. The PCEs could use proprietary algorithm to decide which LSPs to be assigned to the new vPCE. Thus having a mechanism for the PCE to request control of some LSPs is needed.</t>
+
+<t>In some deployments, the operator would like to use stateful PCE for global optimization algorithms but would still like to keep the control of the LSP at the PCC. In such cases, a stateful PCE could request to take control during the global optimization and return the delegation once done.</t>
+
+<t>Note that <xref target="RFC8231"/> specifies a mechanism for a PCC to delegate an orphaned LSP to another PCE. The mechanism defined in this document can be used in conjunction to <xref target="RFC8231"/>. Ultimately, it is the PCC that decides which PCE to delegate the orphaned LSP.</t>
+
+<!-- Dhruv commented this section
+<t>Some network operators prefer head-end (PCC) based reactivity to network events (e.g., link failure). For example, typically operators would like to reduce the time that backup LSP are being used for fast-reroute protection as the links that a backup LSP traverses may be congested when fast-reroute is active. PCC based LSP failure detection and re-routing mechanisms enable operators to minimize the duration of such congestion and meet operational requirements/constraints. As such, during normal operations, it may be preferable for PCC to have full control of its LSPs. However, operators shall prefer to use PCE for planned events such as centralized optimization and placement of LSPs. In this case, it is preferable for a PCE to obtain the control of one or more LSPs from a PCC, rather than waiting for the PCC to delegate the control. Once the PCE completes its operation, it relinquishes the control of the LSPs. Such capability enables operators  to combine the benefits of both centralized and distributed control of TE LSPs to get the best of both worlds.</t> 
+-->
+
+<t>This specification provides a simple extension, by using this a PCE can request control of one or more LSPs from any PCC over the stateful PCEP session. The procedures for granting and relinquishing control of the LSPs are specified in accordance with the specification <xref target="RFC8231"/>. </t>
+
+</section> <!-- Introduction -->
+
+<section title="Terminology">
+<t> This document uses the following terms defined in <xref target="RFC5440"/>:
+	<list style="hanging">
+     <t hangText="  PCC:">Path Computation Client.</t>
+     <t hangText="  PCE:">Path Computation Element.</t>
+     <t hangText="  PCEP:">Path Computation Element communication Protocol.</t>
+     </list>
+</t>
+
+<t>This document uses the following terms defined in <xref target="RFC8231"/>:
+  <list style="hanging">
+     <t hangText="  PCRpt:">Path Computation State Report message.</t>
+     <t hangText="  PCUpd:">Path Computation Update Request message.</t>
+     <t hangText="  PLSP-ID:">A PCEP-specific identifier for the LSP.</t>
+     <t hangText="  SRP:">Stateful PCE Request Parameters.</t>
+      </list>
+</t>
+
+<t>Readers of this document are expected to have some familiarity with <xref target="RFC8231"/>.</t>
+
+<section title="Requirements Language">
+
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.</t>
+</section>
+</section> <!-- Terminology --> 
+
+<section anchor="LSP-Gain-Flag" title="LSP Control Request Flag">
+
+<t>The Stateful PCE Request Parameters (SRP) object is defined in Section 7.2 of <xref target="RFC8231"/>, it includes a Flags field.</t>
+
+<!-- changed from LSp to SRP by Dhruv
+ <figure anchor="LSP-Object" title="The LSP Object">
+        <artwork align="center"><![CDATA[
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |          PLSP-ID                      |Flags|G|C|    O|A|R|S|D|
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                             TLVs                              |
+  ~                                                               ~        
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        ]]></artwork>
+      </figure>
+      -->
+      <!--
+ <figure anchor="SRP-Object" title="The SRP Object">
+        <artwork align="center"><![CDATA[  
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                          Flags                            |C|R|
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                        SRP-ID-number                          |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                                                               |
+      //                      Optional TLVs                          //
+      |                                                               |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+        
+        ]]></artwork>
+      </figure> -->           
+
+<t>A new flag, the "LSP-Control Request Flag" (C), is introduced in the SRP object. On a PCUpd message, a PCE sets the C Flag to 1 to indicate that it wishes to gain control of LSPs. The LSPs are identified by the LSP object. A PLSP-ID of value other than 0 and 0xFFFFF is used to identify the LSP for which the PCE requests control. The PLSP-ID value of 0 indicates that the PCE is requesting control of all LSPs originating from the PCC that it wishes to delegate. The C Flag has no meaning in other PCEP messages that carry SRP object and the flag MUST be set to 0 on transmission and MUST be ignored on receipt.</t>
+
+</section> 
+
+<section anchor="Operation" title="Operation"> 
+
+<t>During normal operation, a PCC that wishes to delegate the control of an LSP sets the D Flag (delegate, Section 7.3 of <xref target="RFC8231"/>) to 1 in all PCRpt messages pertaining to the LSP. The PCE confirms the delegation by setting D Flag to 1 in all PCUpd messages pertaining to the LSP. The PCC revokes the control of the LSP from the PCE by setting D Flag to 0 in PCRpt messages pertaining to the LSP. If the PCE wishes to relinquish the control of the LSP, it sets D Flag to 0 in all PCUpd messages pertaining to the LSP.</t>
+
+<t>If a PCE wishes to gain control over an LSP, it sends a PCUpd message with C Flag set to 1 in SRP object. The LSP for which the PCE requests control is identified by the PLSP-ID. The PLSP-ID of 0 indicates that the PCE wants control over all LSPs originating from the PCC. A PCC that receives a PCUpd message with C Flag set to 1 and PLSP-ID of 0 MUST NOT trigger the error condition for unknown PLSP-ID in an LSP update request as per <xref target="RFC8231"/>. The D Flag and C Flag are mutually exclusive in PCUpd message. The PCE SHOULD NOT send control request for LSP which is already delegated to the PCE, i.e. if the D Flag is set in the PCUpd message, then C Flag SHOULD NOT be set. If a PCC receives a PCUpd message with D Flag set in the LSP object (i.e. LSP is already delegated) and
+the C Flag is also set (i.e. PCE is making a control request), the PCC MUST ignore the C Flag. A PCC can decide to delegate the control of the LSP at its own discretion. If the PCC grants or denies the control, it sends a PCRpt message with D Flag set to 1 and 0 respectively in accordance with stateful PCEP <xref target="RFC8231"/>. If the PCC does not grant the control, it MAY choose to not respond, and the PCE MAY choose to retry requesting the control preferably using exponentially increasing timer. A PCE ignores the C Flag on the PCRpt message. Note that, if the PCUpd message with C Flag set is received for a currently non-delegated LSP (for which the PCE is requesting delegation), this MUST NOT trigger the error handling as specified in <xref target="RFC8231"/> (a PCErr with Error-type=19 (Invalid Operation)
+   and error-value 1 (Attempted LSP Update Request for a non-delegated
+   LSP)).</t>
+
+<t>As per <xref target="RFC8231"/>, a PCC cannot delegate an LSP to more than one PCE at any time. If a PCE requests control of an LSP that has already been delegated by the PCC to another PCE, the PCC MAY ignore the request, or MAY revoke
+   the delegation to the first PCE before delegating it to the second. This choice is a matter of local policy.</t>
+
+<!--<t>It should be noted that a legacy implementation of PCC, that does not understand the C Flag in PCUpd message, would simply ignore the flag (and the request to grant control over the LSP). At the same time it would trigger the error condition as specified in <xref target="RFC8231"/> (a PCErr with Error-type=19 (Invalid Operation)
+   and error-value 1 (Attempted LSP Update Request for a non-delegated
+   LSP)).</t>-->
+
+
+   <t>It should be noted that a legacy implementation of PCC, that does not
+  support this extension would trigger the error condition as specified 
+  in <xref target="RFC8231"/> (a PCErr with Error-type=19 (Invalid Operation) and 
+  error-value 1 (Attempted LSP Update Request for a non-delegated LSP)) as
+  the D Flag would be unset in this update request. Further, in case of PLSP-ID of 0, the error condition as specified 
+  in <xref target="RFC8231"/> (a PCErr with Error-type=19 (Invalid Operation) and 
+  error-value 3 (Attempted LSP Update Request for an LSP identified by an unknown PSP-ID)) would be triggered.</t>
+
+<t><xref target="RFC8281"/> describes the setup,
+   maintenance and teardown of PCE-initiated LSPs under the stateful PCE
+   model. It also specifies how a PCE MAY obtain control over an orphaned LSP
+   that was PCE-initiated. A PCE implementation can apply the mechanism described
+   in this document in conjunction with those in <xref target="RFC8281"/>.</t>
+
+
+</section>
+<section anchor="Imp" title="Implementation Status">
+<t>[Note to the RFC Editor - remove this section before publication, as well as remove the reference to RFC 7942.]</t>
+<t>This section records the status of known implementations of the
+     protocol defined by this specification at the time of posting of
+     this Internet-Draft, and is based on a proposal described in
+     <xref target="RFC7942"/>.  The description of implementations in this section is
+     intended to assist the IETF in its decision processes in
+     progressing drafts to RFCs.  Please note that the listing of any
+     individual implementation here does not imply endorsement by the
+     IETF.  Furthermore, no effort has been spent to verify the
+     information presented here that was supplied by IETF contributors.
+     This is not intended as, and must not be construed to be, a
+     catalog of available implementations or their features.  Readers
+     are advised to note that other implementations may exist.</t>
+
+     <t>According to <xref target="RFC7942"/>, "this will allow reviewers and working
+     groups to assign due consideration to documents that have the
+     benefit of running code, which may serve as evidence of valuable
+     experimentation and feedback that have made the implemented
+     protocols more mature.  It is up to the individual working groups
+     to use this information as they see fit".</t>
+<section anchor="Onos" title="Huawei's Proof of Concept based on ONOS">
+  <t>The PCE function was developed in the ONOS open source platform. This extension was implemented on a private version as a proof of concept to enable multi-instance support.
+  <list style="symbols">
+    <t>Organization: Huawei</t>
+    <t>Implementation: Huawei's PoC based on ONOS</t>
+    <t>Description: PCEP as a southbound plugin was added to ONOS. To support multi-instance ONOS deployment in a cluster, this extension in PCEP is used. Refer https://wiki.onosproject.org/display/ONOS/PCEP+Protocol</t> 
+    <t>Maturity Level: Prototype</t>
+    <t>Coverage: Full</t>
+    <t>Contact: satishk@huawei.com</t>
+  </list></t>
+</section>
+</section>
+<section anchor="Security" title="Security Considerations">
+
+<t>The security considerations listed in <xref target="RFC8231"/> and <xref target="RFC8281"/>
+   apply to this document as well. However, this document also
+   introduces a new attack vector. An attacker may flood the PCC with request to delegate all of its LSPs
+   at a rate which exceeds the PCC's ability to process them, either by spoofing messages or by compromising the PCE itself. 
+   The PCC SHOULD be configured with a threshold rate for the delegation requests received from the PCE. If the threshold is reached, it is RECOMMENDED to log the issue.</t>
+   
+   <t>As per <xref target="RFC8231"/>, it is RECOMMENDED
+   that these PCEP extensions only be activated on authenticated and
+   encrypted sessions across PCEs and PCCs belonging to the same
+   administrative authority, using Transport Layer Security (TLS)
+   <xref target="RFC8253"/>, as per the recommendations and best current practices in
+   <xref target="RFC7525"/> (unless explicitly excluded in <xref target="RFC8253"/>). 
+ </t>
+
+</section>
+
+<section anchor="IANA" title="IANA Considerations">
+
+ <section anchor="IANA-srp" title="SRP Object Flags">
+<t>IANA maintains a registry called the "Path Computation Element Protocol (PCEP) Numbers" registry.  It contains a subregistry called
+   the "SRP Object Flag Field" registry.  This document requests IANA to allocate following code point in the "SRP Object Flag Field" subregistry.</t>
+
+ <texttable style="none" suppress-title="true" title="" align="center">
+  <ttcol align="left" width="20%">Bit</ttcol> 
+  <ttcol align="left" width="30%">Description</ttcol> 
+  <ttcol align="left" width="20%">Reference</ttcol> 
+  <c>TBD</c> 
+  <c>LSP-Control</c> 
+  <c>This document</c> 
+  </texttable></section>
+
+  </section>
+
+
+<section title="Manageability Considerations" toc="default">
+ <t>
+  All manageability requirements and considerations listed in <xref target="RFC5440" pageno="false" format="default"/> 
+  and <xref target="RFC8231" pageno="false" format="default"/> 
+  apply to PCEP protocol extensions defined in this document. In addition, requirements and considerations listed in this section apply. 
+  </t>
+ <section title="Control of Function and Policy" toc="default">
+ <t>
+  A PCC implementation SHOULD allow the operator to configure the policy based on which it honors the request to control the LSPs. This includes the handling of the case where an LSP
+  control request is received for an LSP that is currently delegated to some other PCE. A PCC implementation SHOULD also allow the operator to configure the threshold rate based on which it accepts the delegation requests from the PCE.
+  Further, the operator MAY be allowed to trigger the LSP control request for a particular LSP at the PCE. 
+  A PCE implementation SHOULD also allow the operator to configure an exponentially increasing timer to retry the control requests for which the PCE did not get a response.
+  </t>
+  </section>
+ <section title="Information and Data Models" toc="default">
+  <t>The PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> could be extended to include mechanism to trigger the LSP control request.</t> 
+  </section>
+ <section title="Liveness Detection and Monitoring" toc="default">
+ <t>
+  Mechanisms defined in this document do not imply any new liveness detection and monitoring requirements in addition to those already listed in <xref target="RFC5440" pageno="false" format="default"/>. 
+  </t>
+  </section>
+ <section title="Verify Correct Operations" toc="default">
+ <t>
+  Mechanisms defined in this document do not imply any new operation verification requirements in addition to those already listed in <xref target="RFC5440" pageno="false" format="default"/> 
+  and <xref target="RFC8231" pageno="false" format="default"/>. 
+  </t>
+  </section>
+ <section title="Requirements On Other Protocols" toc="default">
+  <t>Mechanisms defined in this document do not imply any new requirements on other protocols.</t> 
+  </section>
+ <section title="Impact On Network Operations" toc="default">
+ <t>
+  Mechanisms defined in <xref target="RFC5440" pageno="false" format="default"/> 
+  and 
+  <xref target="RFC8231" pageno="false" format="default"/> also apply to PCEP extensions defined in this document. 
+  Further, the mechanism described in this document can help the operator to request control of the LSPs at a particular PCE.</t>
+  </section>
+  </section>
+
+   
+
+
+<section anchor="Acknowledgement" title="Acknowledgements">
+<t>Thanks to Jonathan Hardwick to remind the authors to not use suggested values in IANA section.</t>
+<t>Thanks to Adrian Farrel, Haomian Zheng and Tomonori Takeda for their valuable comments.</t>
+<t>Thanks to Shawn M. Emery for security directorate's review.</t>
+<t>Thanks to Francesca Palombini for GENART review.</t>
+</section>
+
+</middle>
+
+<back>
+
+<references title="Normative References">
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml"?>
+
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8231.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8281.xml"?>
+     
+</references>
+<references title="Informative References">
+<?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4657.xml"?>
+<?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7525.xml"?>
+<?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7942.xml"?>
+<?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8051.xml"?>
+<?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8253.xml"?>
+
+<?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang"?>
+
+</references>
+<section title="Contributor Addresses" toc="default">
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+          <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Dhruv Dhody
+Huawei Technologies
+Divyashree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: dhruv.ietf@gmail.com
+
+        ]]></artwork>
+        </figure>
+      </t>
+
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+          <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Jon Parker
+Cisco Systems, Inc.
+2000 Innovation Drive
+Kanata, Ontario  K2K 3E8
+Canada
+
+EMail: jdparker@cisco.com
+
+        ]]></artwork>
+        </figure>
+      </t>
+
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+          <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Chaitanya Yadlapalli
+AT&T
+200 S Laurel Aevenue
+Middletown NJ 07748
+USA
+
+EMail: cy098d@att.com
+        ]]></artwork>
+        </figure>
+      </t>      
+
+    </section>
+
+</back>
+
+</rfc>
