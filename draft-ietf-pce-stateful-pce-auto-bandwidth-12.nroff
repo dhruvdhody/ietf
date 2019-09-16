@@ -8,9 +8,9 @@
 .ds LF Dhody, et al.
 .ds RF FORMFEED[Page %]
 .ds LH Internet-Draft
-.ds RH September 14, 2019
+.ds RH September 16, 2019
 .ds CH Auto-Bandwidth with Stateful PCE
-.ds CF Expires March 17, 2020
+.ds CF Expires March 19, 2020
 .hy 0
 .nh
 .ad l
@@ -20,13 +20,13 @@
 .tl 'PCE Working Group''D. Dhody, Ed.'
 .tl '\%Internet-Draft''Huawei Technologies'
 .tl 'Intended status: Standards Track''R. Gandhi, Ed.'
-.tl 'Expires: March 17, 2020''Cisco Systems, Inc.'
+.tl 'Expires: March 19, 2020''Cisco Systems, Inc.'
 .tl '''U. Palle'
 .tl '''R. Singh'
 .tl '''Individual Contributor'
 .tl '''L. Fang'
 .tl '''Expedia, Inc.'
-.tl '''September 14, 2019'
+.tl '''September 16, 2019'
 .fi
 .in 3
 
@@ -145,11 +145,11 @@ Table of Contents
 
 [RFC8231] specifies extensions to PCEP to enable stateful control of MPLS TE LSPs.  It describes two mode of operations - Passive stateful PCE and Active stateful PCE.  Further, [RFC8281] describes the setup, maintenance and teardown of PCE-Initiated LSPs for the stateful PCE model.  In this document, the focus is on Active stateful PCE where the LSPs are controlled by the PCE.  
 
-Over time, based on the varying traffic pattern, an LSP established with a certain bandwidth may require to adjust the bandwidth reserved in the network dynamically.  The head-end Label Switch Router (LSR) monitors the actual bandwidth demand of the established LSP and periodically computes new bandwidth.  The head-end LSR adjusts the bandwidth reservation of the LSP based on the computed bandwidth automatically.  This feature is commonly referred to as Auto-Bandwidth.  The Auto-Bandwidth feature is described in detail in Section 4 of this document.  
+Over time, based on the varying traffic pattern, an LSP established with a certain bandwidth may require adjustment of the bandwidth reserved in the network dynamically.  The head-end Label Switch Router (LSR) monitors the actual bandwidth demand of the established LSP and periodically computes new bandwidth.  The head-end LSR adjusts the bandwidth reservation of the LSP based on the computed bandwidth automatically.  This feature is commonly referred to as Auto-Bandwidth.  The Auto-Bandwidth feature is described in detail in Section 4 of this document.  
 
-In the model considered in this document, the PCC (head-end of the LSP) collects the traffic rate samples flowing through the LSP and calculates the new adjusted bandwidth.  The PCC reports the calculated bandwidth to be adjusted to the PCE.  This is similar to the Passive stateful PCE model, while the Passive stateful PCE uses path request/reply mechanism, the Active stateful PCE uses report/update mechanism.  In case of PCE-Initiated LSP, the PCC is requested during the LSP initiation to monitor and calculate the new adjusted bandwidth.  [RFC8051] describes the \%use-case for Auto-Bandwidth adjustment for Passive and Active stateful PCE.
+In the model considered in this document, the PCC (head-end of the LSP) collects the traffic rate samples flowing through the LSP and calculates the new adjusted bandwidth.  The PCC reports the calculated bandwidth to be adjusted to the PCE.  This is similar to the Passive stateful PCE model: while the Passive stateful PCE uses a path request/reply mechanism, the Active stateful PCE uses a report/update mechanism.  In case of PCE-Initiated LSP, the PCC is requested during the LSP initiation to monitor and calculate the new adjusted bandwidth.  [RFC8051] describes the \%use-case for Auto-Bandwidth adjustment for Passive and Active stateful PCE.
 
-This document defines the PCEP extensions needed to support Auto-Bandwidth feature in a Active stateful PCE model where the LSP bandwidth to be adjusted is calculated on the PCC (head-end of the LSP). The use of PCE to calculate the bandwidth to be adjusted is out of scope of this document. 
+This document defines the PCEP extensions needed to support an Auto-Bandwidth feature in an Active stateful PCE model where the LSP bandwidth to be adjusted is calculated on the PCC (head-end of the LSP). The use of PCE to calculate the bandwidth to be adjusted is out of scope of this document. 
 
 
 .ti 0
@@ -219,7 +219,7 @@ Up-Adjustment-Threshold:  This parameter is used to decide when the LSP bandwidt
 Down-Adjustment-Threshold:  This parameter is used to decide when the LSP bandwidth should be adjusted.  If the percentage or absolute difference between the current bandwidth reservation and the current MaxAvgBw is greater than or equal to the threshold value, the LSP bandwidth is adjusted (downsized) to the current bandwidth demand (Adjusted Bandwidth) at the Down-Adjustment-Interval expiry.
 
 .ti 3
-Overflow-Count:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden increase in traffic demand.  This value indicates how many times consecutively, the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP is greater than or equal to the Overflow-Threshold value.  
+Overflow-Count:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden increase in traffic demand.  This value indicates how many times, consecutively, the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP is greater than or equal to the Overflow-Threshold value.  
 
 .ti 3
 Overflow-Threshold:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden increase in traffic demand.  If the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP is greater than or equal to the threshold value, the overflow condition is set to be met.  The LSP bandwidth is adjusted to the current bandwidth demand bypassing the Up-Adjustment-Interval if the overflow condition is met consecutively for the Overflow-Count.
@@ -286,13 +286,13 @@ Table 1: Requirements for Auto-Bandwidth PCEP extensions
 
 .fi
 
-The PCEP speaker supporting this document must have a mechanism to advertise the automatic bandwidth adjustment capability for both PCC-Initiated and PCE-Initiated LSPs. 
+A PCEP speaker supporting this document must have a mechanism to advertise the automatic bandwidth adjustment capability for both PCC-Initiated and PCE-Initiated LSPs. 
 
 Auto-bandwidth deployment considerations for PCEP extensions are summarized below:
 
 .in 6
 .ti 3
-o  It is required to identify and inform the PCC, which LSPs are enabled with Auto-Bandwidth feature.  Not all LSPs in some deployments would like their bandwidth to be dependent on the \%real-time bandwidth usage but be constant as set by the operator.
+o  It is necessary to identify and inform the PCC which LSPs have the \%Auto-Bandwidth feature enabled.  In some deployments, not all LSPs would like their bandwidth to be dependent on the \%real-time bandwidth usage, but would rather be constant as set by the operator.
 
 .in 6
 .ti 3
@@ -306,17 +306,19 @@ o  In addition, an operator should be able to specify the auto-bandwidth adjustm
 4.1.  Auto-Bandwidth Overview
 
 .in 3
-The Auto-Bandwidth feature allows automatic and dynamic adjustment of the reserved bandwidth of an LSP over time (i.e., without network operator intervention) to accommodate the varying traffic demand of the LSP.  If the traffic flowing through the LSP is lower than the configured or current reserved bandwidth of the LSP, the extra bandwidth is being reserved needlessly and being wasted.  Conversely, if the actual traffic flowing through the LSP is higher than the configured or current reserved bandwidth of the LSP, it can potentially cause congestion or packet loss in the network.  The initial LSP bandwidth can be set to an arbitrary value (including zero), in practice, it can be operator expected value based on design and planning.  The head-end Label Switch Router (LSR) monitors the actual traffic flowing through the LSP and uses that information to adjust the bandwidth reservation of the LSP in the network.  Bandwidth adjustment must not cause disruption to the traffic flow carried by the LSP.  One way to achieve this is to use the \%make-before-break signaling method [RFC3209].
+The Auto-Bandwidth feature allows automatic and dynamic adjustment of the reserved bandwidth of an LSP over time (i.e., without network operator intervention) to accommodate the varying traffic demand of the LSP.  If the traffic flowing through the LSP is lower than the configured or current reserved bandwidth of the LSP, the extra bandwidth is being reserved needlessly and being wasted.  Conversely, if the actual traffic flowing through the LSP is higher than the configured or current reserved bandwidth of the LSP, it can potentially cause congestion or packet loss in the network.  The initial LSP bandwidth can be set to an arbitrary value (including zero).  In practice, it can be set to an expected value based on design and planning.  The head-end Label Switch Router (LSR) monitors the actual traffic flowing through the LSP and uses that information to adjust the bandwidth reservation of the LSP in the network.  Bandwidth adjustment must not cause disruption to the traffic flow carried by the LSP.  One way to achieve this is to use the \%make-before-break signaling method [RFC3209].
 
 
 .ti 0
 4.2.  Auto-bandwidth Theory of Operation
 
-This section describes the Auto-Bandwidth feature in a general way.  When the Auto-Bandwidth feature is enabled, the measured traffic rate is periodically sampled at each Sample-Interval (which can be configured by an operator and the default value as 5 minutes) by the PCC, when the PCC is the head-end node of the LSP. A very low Sample-Interval could have some undesirable interactions with transport protocols (see Section 6.6). The traffic rate samples are accumulated over the Adjustment-Interval period (in the Up or Down direction) (which can be configured by an operator and the default value as 24 hours).  The PCC, in-charge of calculating the bandwidth to be adjusted, can decide to adjust the bandwidth of the LSP to the highest traffic rate sample (MaxAvgBw) amongst the set of bandwidth samples collected over the \%adjustment-interval period (in the Up or Down direction) depending on the operator policy.
+This section describes the Auto-Bandwidth feature in a general way.  When the \%Auto-Bandwidth feature is enabled, the measured traffic rate is periodically sampled at each Sample-Interval by the PCC, when the PCC is the head-end node of the LSP.  The sample interval can be configured by an operator, with a default value of 5 minutes. A very low Sample-Interval could have some undesirable interactions with transport protocols (see Section 6.6).
+   
+The traffic rate samples are accumulated over the Adjustment-Interval period (in the Up or Down direction).  The period can be configured by an operator, with a default value of 24 hours. The PCC in-charge of calculating the bandwidth to be adjusted can decide to adjust the bandwidth of the LSP to the highest traffic rate sample (MaxAvgBw) amongst the set of bandwidth samples collected over the \%Adjustment-Interval period (in the Up or Down direction) depending on the operator policy.
 
-Note that the highest traffic rate sample could be higher or lower than the current LSP bandwidth.  Only if the difference between the current bandwidth demand (MaxAvgBw) and the current bandwidth reservation is greater than or equal to the Adjustment-Threshold (percentage or absolute value) (which can be configured by an operator and the default as 5 percentage), the LSP bandwidth is adjusted (upsized) to the current bandwidth demand (MaxAvgBw).  Similarly, if the difference between the current bandwidth reservation and the current bandwidth demand (MaxAvgBw) is greater than or equal to the \%Down-Adjustment-Threshold (percentage or absolute value), the LSP bandwidth is adjusted (downsized) to the current bandwidth demand (MaxAvgBw).  Some LSPs are less eventful while other LSPs may encounter a lot of changes in the traffic pattern.  The thresholds and intervals for bandwidth adjustment are configured based on the traffic pattern of the LSP.
+Note that the highest traffic rate sample could be higher or lower than the current LSP bandwidth.  Only if the difference between the current bandwidth demand (MaxAvgBw) and the current bandwidth reservation is greater than or equal to the Adjustment-Threshold the LSP bandwidth is adjusted (upsized) to the current bandwidth demand (MaxAvgBw). The Adjustment-Threshold could be an absolute value or a percentage. The threshold can be configured by an operator, with a default value of 5 percentage. Similarly, if the difference between the current bandwidth reservation and the current bandwidth demand (MaxAvgBw) is greater than or equal to the \%Down-Adjustment-Threshold (percentage or absolute value), the LSP bandwidth is adjusted (downsized) to the current bandwidth demand (MaxAvgBw).  Some LSPs are less eventful while other LSPs may encounter a lot of changes in the traffic pattern.  The thresholds and intervals for bandwidth adjustment are configured based on the traffic pattern of the LSP.  
 
-In order to avoid frequent re-signaling, an operator may set a longer \%adjustment-interval value (Up and/or Down).  However, longer adjustment-interval can result in an undesirable effect of masking sudden changes in traffic demands of an LSP.  To avoid this, the Auto-Bandwidth feature may \%pre-maturely expire the adjustment-interval and adjust the LSP bandwidth to accommodate the sudden bursts of increase in traffic demand as an overflow condition or decrease in traffic demand as an underflow condition.  An operator needs to configure appropriate values for the \%Overflow-Threshold and/or \%Underflow-Threshold parameters and they do not have default values defined in this document.
+In order to avoid frequent re-signaling, an operator may set a longer \%adjustment-interval value (Up and/or Down).  However, a longer Adjustment-Interval can result in an undesirable effect of masking sudden changes in traffic demands of an LSP.  To avoid this, the Auto-Bandwidth feature may prematurely expire the adjustment interval and adjust the LSP bandwidth to accommodate the sudden bursts of increase in traffic demand as an overflow condition or decrease in traffic demand as an underflow condition.  An operator needs to configure appropriate values for the \%Overflow-Threshold and/or \%Underflow-Threshold parameters and they do not have default values defined in this document.
 
 All thresholds in this document could be represented in both absolute value and percentage, and could be used together.  This is provided to accommodate the cases where the LSP bandwidth reservation may become very large or very small over time.  For example, an operator may use the percentage threshold to handle small to large bandwidth values and absolute values to handle very large bandwidth values.  The \%auto-bandwidth adjustment is made when either one of the two thresholds, the absolute or percentage, is crossed.
 
@@ -344,10 +346,10 @@ During PCEP Initialization Phase, PCEP speakers (PCE or PCC) advertise their sup
 o  The PCEP protocol extensions for Auto-Bandwidth adjustments MUST NOT be used if one or both PCEP speakers have not included the "Auto-Bandwidth Capability" TLV in their respective OPEN message.
 
 .ti 3
-o  The PCEP speaker that does not recognize the extensions defined in this document sends the PCErr message with \%error-type 2 (capability not supported) as per Section 6.9 in [RFC5440].
+o  A PCEP speaker that does not recognize the extensions defined in this document sends the PCErr message with \%error-type 2 (capability not supported) as per Section 6.9 in [RFC5440].
 
 .ti 3
-o  If the PCEP speaker that supports the extensions defined in this document but did not advertise this capability, then upon receipt of AUTO-BANDWIDTH-ATTRIBUTES TLV in the LSP Attributes (LSPA) object, it SHOULD generate a PCErr with error-type 19 (Invalid Operation), error-value TBD4 (\%Auto-Bandwidth capability was not advertised) and ignore the \%AUTO-BANDWIDTH-ATTRIBUTES TLV.
+o  If a PCEP speaker that supports the extensions defined in this document but did not advertise this capability, then upon receipt of AUTO-BANDWIDTH-ATTRIBUTES TLV in the LSP Attributes (LSPA) object, it SHOULD generate a PCErr with error-type 19 (Invalid Operation), error-value TBD4 (\%Auto-Bandwidth capability was not advertised) and ignore the \%AUTO-BANDWIDTH-ATTRIBUTES TLV.
 .in 3
 
 .ti 0
@@ -429,10 +431,10 @@ Type Len Name
 12   8   Underflow-Threshold sub-TLV
 13   8   Underflow-Threshold-Percentage sub-TLV
 
-Future specification can define additional sub-TLVs.
+Future specifications can define additional sub-TLVs.
 
 .fi
-The sub-TLVs are encoded to inform the PCEP peer of the various sampling and adjustment parameters.  If sub-TLVs are not present, the default values as specified in this document are used or otherwise based on the local policy are assumed.
+The sub-TLVs are encoded to inform the PCEP peer of the various sampling and adjustment parameters.  In case of a missing sub-TLV, as per the local policy, either the defualt value (as specified in this document) or some other operator configured value is used. 
 
 All \%sub-TLVs are optional and any unrecognized sub-TLV MUST be ignored.  If a sub-TLV of the same type appears more than once, only the first occurrence is processed and all others MUST be ignored.
 
@@ -578,7 +580,7 @@ The Type is 5, Length is 8 octets, and the value comprises of -
 .fi
 .in 6
 .ti 3
-o  Reserved: SHOULD be set to zero on transmission and MUST be ignored on receipt.
+o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
 o  Percentage: The Adjustment-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  The default value is 5 percent.
@@ -643,7 +645,7 @@ The Type is 7, Length is 8 octets, and the value comprises of -
 .fi
 .in 6
 .ti 3
-o  Reserved: SHOULD be set to zero on transmission and MUST be ignored on receipt.
+o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
 o  Percentage: The Down-Adjustment-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  The default value equals the adjustment-threshold-percentage.
@@ -738,7 +740,7 @@ The Type is 10, Length is 8 octets, and the value comprises of -
 .fi
 .in 6
 .ti 3
-o  Reserved: SHOULD be set to zero on transmission and MUST be ignored on receipt.
+o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
 o  Count: The Overflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the overflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the (up) adjustment-interval.
@@ -774,7 +776,7 @@ The Type is 11, Length is 8 octets, and the value comprises of -
 o  Percentage: The Overflow-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  If the percentage increase of the current MaxAvgBw from the current bandwidth reservation is greater than or equal to the threshold percentage, the overflow condition is met.
 
 .ti 3
-o  Reserved: SHOULD be set to zero on transmission and MUST be ignored on receipt.
+o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
 o  Count: The Overflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the overflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the (up) adjustment-interval.
@@ -807,7 +809,7 @@ The Type is 12, Length is 8 octets, and the value comprises of -
 .fi
 .in 6
 .ti 3
-o  Reserved: SHOULD be set to zero on transmission and MUST be ignored on receipt.
+o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
 o  Count: The Underflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the underflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the down-adjustment-interval.
@@ -843,7 +845,7 @@ The Type is 13, Length is 8 octets, and the value comprises of -
 o  Percentage: The Underflow-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  If the percentage decrease of the current MaxAvgBw from the current bandwidth reservation is greater than or equal to the threshold percentage, the underflow condition is met.
 
 .ti 3
-o  Reserved: SHOULD be set to zero on transmission and MUST be ignored on receipt.
+o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
 o  Count: The Underflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the underflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the down-adjustment-interval.
@@ -1117,7 +1119,7 @@ TBD3        Auto-Bandwidth Overwhelm State        [This document]
 [IEEE.754.1985]  Institute of Electrical and Electronics Engineers, "Standard for Binary Floating-Point Arithmetic", IEEE Standard 754, August 1985.
 
 .fi
-.bp
+.bp 
 .ti 0
 Acknowledgments
 
@@ -1126,7 +1128,7 @@ Authors would like to thank Robert Varga, Venugopal Reddy, Reeja Paul, Sandeep B
 
 Thanks to Daniel Franke, Joe Clarke, David Black, and Erik Kline for the directorate reviews.
 
-Thanks to Mirja Kuhlewind for the IESG review.
+Thanks to Mirja Kuhlewind and Barry Leiba for the IESG review.
 
 .nf
 .ti 0
