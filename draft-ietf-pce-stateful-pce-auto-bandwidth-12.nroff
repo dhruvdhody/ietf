@@ -903,19 +903,23 @@ The RBNF definition of the PCRpt message \%[RFC8231] is unchanged by this docume
 
 As per [RFC5440], the PCEP Notification message (PCNtf) can be sent by a PCEP speaker to notify its peer of a specific event.
 
-A PCEP speaker (PCE or PCC) SHOULD notify its PCEP peer (PCC or PCE) when it is in overwhelmed state due to the auto-bandwidth feature.  Upon receipt of such notification, the peer SHOULD NOT send any PCEP messages related to auto-bandwidth adjustment.  If a PCEP message related to auto-bandwidth is received during in overwhelmed state, it MUST be ignored.
+A PCEP speaker (PCE or PCC) SHOULD notify its PCEP peer (PCC or PCE) when it is in overwhelmed state due to the auto-bandwidth feature.  An implementation needs to make an attempt to send this notification when overwhelmed by auto-bandwidth adjustments unless sending this notification would only serve to increase the load further. Note that when the notification is not sent the bandwidth adjustments as requested would be delayed. 
+
+Upon receipt of auto-bandwidth overwhelm notification, the peer SHOULD NOT send any PCEP messages related to auto-bandwidth adjustment.  If a PCEP message related to auto-bandwidth adjustment is received during in overwhelmed state, it MUST be ignored.
 
 .in 6
 .ti 3
-o  When a PCEP speaker is overwhelmed, it SHOULD notify its peer by sending a PCNtf message with Notification Type = TBD3 (Auto-bandwidth Overwhelm State) and Notification Value = 1 (Entering auto-bandwidth overwhelm state).  Optionally, OVERLOADED-DURATION TLV [RFC5440] MAY be included that specifies the time period during which no further PCEP messages related to auto-bandwidth adjustment should be sent.  
+o  When a PCEP speaker is overwhelmed, it SHOULD notify its peer by sending a PCNtf message with Notification-Type = TBD3 (Auto-bandwidth Overwhelm State) and Notification-Value = 1 (Entering auto-bandwidth overwhelm state).  Optionally, OVERLOADED-DURATION TLV [RFC5440] MAY be included that specifies the time period during which no further PCEP messages related to auto-bandwidth adjustment should be sent.  
 
 .ti 3
 .in 6
-o  When the PCEP speaker is no longer in the overwhelm state and is available to process the auto-bandwidth adjustments, it SHOULD notify its peer by sending a PCNtf message with Notification Type = TBD3 (Auto-bandwidth Overwhelm State) and Notification Value = 2 (Clearing auto-bandwidth overwhelm state).
+o  When the PCEP speaker is no longer in the overwhelm state and is available to process the auto-bandwidth adjustments, it SHOULD notify its peers by sending a PCNtf message with Notification Type = TBD3 (Auto-bandwidth Overwhelm State) and Notification Value = 2 (Clearing auto-bandwidth overwhelm state). A PCEP speaker SHOULD send such notification to all peers to with a Notification message (Notification-Type=TBD3, Notification-Value=1) was sent earlier unless an OVERLOADED-DURATION TLV was included and the PCEP speakers wishes for the peer to wait for the expiration of that period of time before receiving further PCEP messages related to auto-bandwidth adjustment. 
 
 .in 3
 .ti 3
-When Auto-Bandwidth feature is deployed, a PCE can send this notification to PCC when a PCC is reporting frequent auto-bandwidth adjustments.  If a PCC is overwhelmed with re-signaling, it can also notify the PCE to not adjust the LSP bandwidth while in overwhelm state.
+When Auto-Bandwidth feature is deployed, a PCE can send this notification to PCC when a PCC is reporting frequent auto-bandwidth adjustments.  If a PCC is overwhelmed with re-signaling, it can also notify the PCE to not adjust the LSP bandwidth while in overwhelm state. 
+
+Some dampening notification procedure (as per [RFC5440]) to avoid oscillations of the overwhelm state is RECOMMENDED. On receipt of an auto-bandwidth overwhelm notification from the PCE, a PCC should consider the impact on the entire network. Moving the delegations of auto-bandwidth enabled LSP to another PCE could cause further overloading. 
 
 
 .ti 0
