@@ -20,14 +20,14 @@
 .tl 'PCE Working Group''D. Dhody'
 .tl '\%Internet-Draft''Huawei Technologies'
 .tl 'Intended status: Informational''Y. Lee'
-.tl 'Expires: March 18, 2020''SKKU'
+.tl 'Expires: March 20, 2020''SKKU'
 .tl '''D. Ceccarelli'
 .tl '''Ericsson'
 .tl '''J. Shin'
 .tl '''SK Telecom'
 .tl '''D. King'
 .tl '''Lancaster University'
-.tl '''September 15, 2019'
+.tl '''September 17, 2019'
 .fi
 .in 3
 
@@ -126,7 +126,7 @@ A stateful PCE is capable of considering, for the purposes of path computation, 
 
 \%[RFC8231] also describes the active stateful PCE. The active PCE functionality allows a PCE to reroute an existing LSP or make changes to the attributes of an existing LSP, or delegate control of specific LSPs to a new PCE.
 
-The ability to compute shortest constrained TE LSPs in Multiprotocol Label Switching (MPLS) and Generalized MPLS (GMPLS) networks across multiple domains has been identified as a key motivation for PCE development.  [RFC6805] describes a Hierarchical PCE (H-PCE) architecture which can be used for computing end-to-end paths for \%inter-domain MPLS Traffic Engineering (TE) and GMPLS Label Switched Paths (LSPs).  Within the Hierarchical PCE (H-PCE) architecture [RFC6805], the Parent PCE \%(P-PCE) is used to compute a multi-domain path based on the domain connectivity information.  A Child PCE \%(C-PCE) may be responsible for a single domain or multiple domains, it is used to compute the intra-domain path based on its domain topology information.
+The ability to compute constrained paths for TE LSPs in Multiprotocol Label Switching (MPLS) and Generalized MPLS (GMPLS) networks across multiple domains has been identified as a key motivation for PCE development.  [RFC6805] describes a Hierarchical PCE (H-PCE) architecture which can be used for computing end-to-end paths for \%inter-domain MPLS Traffic Engineering (TE) and GMPLS Label Switched Paths (LSPs).  Within the Hierarchical PCE (H-PCE) architecture [RFC6805], the Parent PCE \%(P-PCE) is used to compute a multi-domain path based on the domain connectivity information.  A Child PCE \%(C-PCE) may be responsible for a single domain or multiple domains, it is used to compute the intra-domain path based on its domain topology information.
 
 This document presents general considerations for stateful PCEs, and not Stateless PCEs, in the hierarchical PCE architecture.  It focuses on the behavior changes and additions to the existing stateful PCE mechanisms (including PCE-initiated LSP setup and active PCE usage) in the context of networks using the H-PCE architecture.
 
@@ -147,7 +147,7 @@ The inter-domain LSP could be set up using the end-to-end signaling as described
 
 [RFC8453] describes a framework for the Abstraction and Control of TE Networks (ACTN), where each Provisioning Network Controller (PNC) is equivalent to a \%C-PCE, and the \%P-PCE is the Multi-Domain Service Coordinator (MDSC).  The Per-Domain stitched LSP as per the Hierarchical PCE architecture described in Section 3.3.1 and Section 4.1 is well suited for ACTN deployments.
 
-[RFC8637] examines the applicability of PCE to the ACTN framework. To support the function of multi-domain coordination via hierarchy, the hierarchy of stateful PCEs play a crucial role.
+[RFC8637] examines the applicability of PCE to the ACTN framework. To support the function of multi-domain coordination via hierarchy, the hierarchy of stateful PCEs plays a crucial role.
 
 In the ACTN framework, a Customer Network Controller (CNC) can request the MDSC to check whether there is a possibility to meet Virtual Network (VN) requirements before requesting that the VN be provisioned.  The H-PCE architecture as described in [RFC6805] can support this function using PCReq and PCRep messages between the \%P-PCE and \%C-PCEs. When the CNC requests VN provisioning, the MDSC decomposes this request into multiple inter-domain LSP provisioning requests, which might be further decomposed to per-domain path segments. This is described in Section 3.3.1. The MDSC uses the LSP Initiate Request (PCInitiate) message from the \%P-PCE towards the \%C-PCE, and the \%C-PCE reports the state back to the \%P-PCE via a Path Computation State Report (PCRpt) message. The \%P-PCE could make changes to the LSP via the use of a Path Computation Update Request (PCUpd) message.
 
@@ -156,7 +156,7 @@ In this case, the \%P-PCE (as MDSC) interacts with multiple C-PCEs (as PNCs) alo
 .ti 0
 1.2.2.  End-to-End Contiguous LSP
 
-Different signaling methods for inter-domain RSVP-TE signaling are identified in [RFC4726].  Contiguous LSPs are achieved using the procedures of [RFC3209] and [RFC3473] to create a single end-to-end LSP that spans all domains. [RFC6805] describes the technique to establish the optimum path when the sequence of domains is not known in advance.  It shows how the PCE architecture can be extended to allow the optimum sequence of domains to be selected, and the optimum \%end-to-end path to be derived.
+Different signaling options for inter-domain RSVP-TE signaling are identified in [RFC4726].  Contiguous LSPs are achieved using the procedures of [RFC3209] and [RFC3473] to create a single end-to-end LSP that spans all domains. [RFC6805] describes the technique to establish the optimum path when the sequence of domains is not known in advance.  It shows how the PCE architecture can be extended to allow the optimum sequence of domains to be selected, and the optimum \%end-to-end path to be derived.
 
 A stateful \%P-PCE has to be aware of the inter-domain LSPs for it to consider them during path computation. For instance when a domain diverse path is required from another LSP, the \%P-PCE needs to be aware of the LSP. This is the Passive Stateful \%P-PCE as described in Section 3.1. Additionally, the inter-domain LSP could be delegated to the \%P-PCE, so that \%P-PCE could trigger an update via a PCUpd message. The update could be triggered on receipt of the PCRpt message that indicates a status change of this LSP or some other LSP. The other LSP could be an associated LSP (such as protection \%[I-D.ietf-pce-stateful-path-protection]) or an unrelated LSP whose resource change leads to re-optimization at the \%P-PCE. This is the Active Stateful Operation as described in Section 3.2. Further, the \%P-PCE could be instructed to create an inter-domain LSP on its own using the PCInitiate message for an E2E contiguous LSP. The \%P-PCE would send the PCInitiate message to the Ingress domain \%C-PCE, which would further instruct the Ingress PCC.
 
@@ -364,7 +364,7 @@ The first is sent by the PCE to a PCC for modifying LSP attributes. The PCC send
 
 As per [RFC8051], Delegation is an operation to grant a PCE temporary rights to modify a subset of LSP parameters on one or more PCC's LSPs.  The \%C-PCE may further choose to delegate to its \%P-PCE based on a local policy.  The PCRpt message with the "D" (delegate) flag is sent from \%C-PCE to \%P-PCE.
 
-To update an LSP, a PCE sends an LSP Update Request to the PCC using a PCUpd message.  For an LSP delegated to a \%P-PCE via the \%C-PCE, the \%P-PCE can use the same PCUpd message to request a change to the \%C-PCE (the Ingress domain PCE).  The PCE further propagates the update request to the PCC.
+To update an LSP, a PCE sends an LSP Update Request to the PCC using a PCUpd message.  For an LSP delegated to a \%P-PCE via the \%C-PCE, the \%P-PCE can use the same PCUpd message to request a change to the \%C-PCE (the Ingress domain PCE).  The \%C-PCE further propagates the update request to the PCC.
 
 The \%P-PCE uses the same mechanism described in Section 3.1 to compute the end to end path using PCReq and PCRep messages.
 
@@ -402,7 +402,7 @@ For active operations, the following steps are required when delegating the LSP,
 3.3.  PCE Initiation of LSPs
 
 .in 3
-[RFC8281] describes the setup, maintenance and teardown of PCE- initiated LSPs under the stateful PCE model, without the need for local configuration on the PCC, thus allowing for a dynamic network that is centrally controlled and deployed.  To instantiate or delete an LSP, the PCE sends the Path Computation LSP Initiate Request (PCInitiate) message to the PCC.  In case of an inter-domain LSP in Hierarchical PCE architecture, the initiation operations can be carried out at the \%P-PCE.  In which case after the \%P-PCE finishes the E2E path computation, it can send the PCInitiate message to the \%C-PCE (the Ingress domain PCE), the PCE further propagates the initiate request to the PCC.
+[RFC8281] describes the setup, maintenance and teardown of PCE- initiated LSPs under the stateful PCE model, without the need for local configuration on the PCC, thus allowing for a dynamic network that is centrally controlled and deployed.  To instantiate or delete an LSP, the PCE sends the Path Computation LSP Initiate Request (PCInitiate) message to the PCC.  In case of an inter-domain LSP in Hierarchical PCE architecture, the initiation operations can be carried out at the \%P-PCE.  In which case after the \%P-PCE finishes the E2E path computation, it can send the PCInitiate message to the \%C-PCE (the Ingress domain PCE), the \%C-PCE further propagates the initiate request to the PCC.
 
 The following steps are performed for \%PCE-initiated operations, again using the reference architecture described in Figure 1 (Hierarchical Domain Topology Example):
 
@@ -652,7 +652,7 @@ Thanks to Manuela Scarella, Haomian Zheng, Sergio Marmo, Stefano Parodi, Giacomo
 
 Thanks to Tal Mazrahi for the RTGDIR review, Paul Kyzivat for the GENART review, and Stephen Farrell for SECDIR review.
 
-Thanks to Barry Leiba for IESG review. 
+Thanks to Barry Leiba and Martin Vigoureux for IESG review. 
 
 .ti 0
 9.  References
