@@ -128,7 +128,7 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
      6.3.  Liveness Detection and Monitoring  . . . . . . . . . . . . 25
      6.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 25
      6.5.  Requirements On Other Protocols  . . . . . . . . . . . . . 25
-     6.6.  Impact On Network Operations . . . . . . . . . . . . . . . 25
+     6.6.  Impact On Network Operations . . . . . . . . . . . . . . . 26
    7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 26
    8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 26
      8.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . . . 26
@@ -1303,10 +1303,11 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    A PCEP speaker (PCE or PCC) SHOULD notify its PCEP peer (PCC or PCE)
    when it is in overwhelmed state due to the auto-bandwidth feature. 
    An implementation needs to make an attempt to send this notification
-   when overwhelmed by auto-bandwidth adjustments unless sending this
+   (when overwhelmed by auto-bandwidth adjustments) unless sending this
    notification would only serve to increase the load further. Note that
-   when the notification is not sent the bandwidth adjustments as
-   requested would be delayed. 
+   when the notification is not received the PCEP speaker would continue
+   to request bandwidth adjustments even when they could not be handled
+   in a timely fashion. 
 
    Upon receipt of auto-bandwidth overwhelm notification, the peer
    SHOULD NOT send any PCEP messages related to auto-bandwidth
@@ -1337,7 +1338,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    notification to PCC when a PCC is reporting frequent auto-bandwidth
    adjustments.  If a PCC is overwhelmed with re-signaling, it can also
    notify the PCE to not adjust the LSP bandwidth while in overwhelm
-   state.
  
 
 
@@ -1345,6 +1345,8 @@ Dhody, et al.            Expires March 20, 2020                [Page 24]
 
 Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
+
+   state.
 
    Some dampening notification procedure (as per [RFC5440]) to avoid
    oscillations of the overwhelm state is RECOMMENDED. On receipt of an
@@ -1392,8 +1394,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    The mechanisms defined in this document do not add any new
    requirements on other protocols.
 
-6.6.  Impact On Network Operations
-
  
 
 
@@ -1401,6 +1401,8 @@ Dhody, et al.            Expires March 20, 2020                [Page 25]
 
 Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
+
+6.6.  Impact On Network Operations
 
    In order to avoid any unacceptable impact on network operations, an
    implementation SHOULD allow a limit to be placed on the number of
@@ -1448,8 +1450,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    to make the following allocations from the "PCEP TLV Type Indicators"
    sub-registry of the PCEP Numbers registry, as follows:
 
-   Value   Name                                      Reference
-   -----------------------------------------------------------------
  
 
 
@@ -1458,6 +1458,8 @@ Dhody, et al.            Expires March 20, 2020                [Page 26]
 Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
 
+   Value   Name                                      Reference
+   -----------------------------------------------------------------
    TBD2    AUTO-BANDWIDTH-CAPABILITY                 [This document]
    TBD1    AUTO-BANDWIDTH-ATTRIBUTES                 [This document]
 
@@ -1504,8 +1506,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
     2   Adjustment-Interval sub-TLV                  [This document]
     3   Down-Adjustment-Interval sub-TLV             [This document]
     4   Adjustment-Threshold sub-TLV                 [This document]
-    5   Adjustment-Threshold-Percentage sub-TLV      [This document]
-    6   Down-Adjustment-Threshold sub-TLV            [This document]
  
 
 
@@ -1514,6 +1514,8 @@ Dhody, et al.            Expires March 20, 2020                [Page 27]
 Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
 
+    5   Adjustment-Threshold-Percentage sub-TLV      [This document]
+    6   Down-Adjustment-Threshold sub-TLV            [This document]
     7   Down-Adjustment-Threshold-Percentage sub-TLV [This document]
     8   Minimum-Bandwidth sub-TLV                    [This document]
     9   Maximum-Bandwidth sub-TLV                    [This document]
@@ -1553,8 +1555,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
                                         overwhelm state
                Notification-value=2:    Clearing Auto-Bandwidth 
                                         overwhelm state
-
-
 
 
 

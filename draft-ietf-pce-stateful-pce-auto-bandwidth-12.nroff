@@ -115,7 +115,7 @@ Table of Contents
      6.3.  Liveness Detection and Monitoring  . . . . . . . . . . . . 25
      6.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 25
      6.5.  Requirements On Other Protocols  . . . . . . . . . . . . . 25
-     6.6.  Impact On Network Operations . . . . . . . . . . . . . . . 25
+     6.6.  Impact On Network Operations . . . . . . . . . . . . . . . 26
    7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 26
    8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 26
      8.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . . . 26
@@ -903,7 +903,7 @@ The RBNF definition of the PCRpt message \%[RFC8231] is unchanged by this docume
 
 As per [RFC5440], the PCEP Notification message (PCNtf) can be sent by a PCEP speaker to notify its peer of a specific event.
 
-A PCEP speaker (PCE or PCC) SHOULD notify its PCEP peer (PCC or PCE) when it is in overwhelmed state due to the auto-bandwidth feature.  An implementation needs to make an attempt to send this notification when overwhelmed by auto-bandwidth adjustments unless sending this notification would only serve to increase the load further. Note that when the notification is not sent the bandwidth adjustments as requested would be delayed. 
+A PCEP speaker (PCE or PCC) SHOULD notify its PCEP peer (PCC or PCE) when it is in overwhelmed state due to the auto-bandwidth feature.  An implementation needs to make an attempt to send this notification (when overwhelmed by auto-bandwidth adjustments) unless sending this notification would only serve to increase the load further. Note that when the notification is not received the PCEP speaker would continue to request bandwidth adjustments even when they could not be handled in a timely fashion. 
 
 Upon receipt of auto-bandwidth overwhelm notification, the peer SHOULD NOT send any PCEP messages related to auto-bandwidth adjustment.  If a PCEP message related to auto-bandwidth adjustment is received during in overwhelmed state, it MUST be ignored.
 
