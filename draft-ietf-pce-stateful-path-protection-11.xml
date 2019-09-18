@@ -117,7 +117,7 @@ When the working LSP fails, protection LSP(s) is/are activated. When the working
 by the PCE, there is benefit in a mode of operation where protection LSPs are as well. <xref target="RFC8051"/> describes applicability of path protection in PCE deployments.</t>
 
 <t>This document specifies a stateful PCEP extension to associate two or more LSPs for the purpose of setting up 
-path protection. The proposed extension covers the following scenarios:
+path protection. The extension defined in this document covers the following scenarios:
     <list style="symbols">
     <t>A PCC initiates a protection LSP and retains the control of the LSP. The PCC computes the path itself or makes a 
         request for path computation to a PCE. After the path setup, it reports the information and state of the path to the PCE. 
@@ -188,12 +188,12 @@ path protection. The proposed extension covers the following scenarios:
 
 <section anchor="Path-Protection-Association-Type" title="Path Protection Association Type">
 
-<t>LSPs are not associated by listing the other LSPs with which they interact, but rather by making them 
-belong to an association group referred to as "Path Protection Association Group" (PPAG) in this document. 
-All LSPs join a PPAG individually. PPAG is based on the generic Association object used to associate two 
-or more LSPs specified in <xref target="I-D.ietf-pce-association-group"/>. A member of a PPAG can 
-take the role of working or protection LSP. This document defines a new Association type called 
-"Path Protection Association Type" of value TBD1. A PPAG can have one working LSP and/or one or more
+<t>As per <xref target="I-D.ietf-pce-association-group"/>, LSPs are not associated by listing the other LSPs with which they interact, but rather by making them 
+belong to an association groups. All LSPs join an association group individually. The generic ASSOCIATION object is used to associate two 
+or more LSPs as specified in <xref target="I-D.ietf-pce-association-group"/>. This document defines a new Association type called 
+"Path Protection Association Type" of value TBD1 and a "Path Protection Association Group" (PPAG). 
+A member LSP of a PPAG can 
+take the role of working or protection LSP.  A PPAG can have one working LSP and/or one or more
 protection LSPs. The source, destination and Tunnel ID (as carried in LSP-IDENTIFIERS TLV <xref target="RFC8231"/>, with description as per <xref target="RFC3209"/>) of all LSPs within a PPAG MUST be the same. As per <xref target="RFC3209"/>, TE tunnel is used to associate a set of LSPs during reroute or to spread a traffic trunk over multiple paths.</t>
 
 <t>The format of the Association object used for PPAG is specified in 
@@ -244,7 +244,7 @@ protection LSPs. The source, destination and Tunnel ID (as carried in LSP-IDENTI
    speaker by defining a ASSOC-Type-List TLV to be carried within an
    OPEN object.  This capability exchange for the Association type
    described in this document (i.e.  Path Protection Association Type) MAY be
-   done before using the policy association, i.e., the PCEP speaker MAY
+   done before using this association, i.e., the PCEP speaker MAY
    include the Path Protection Association Type (TBD1) in the ASSOC-Type-List TLV
    before using the PPAG in the PCEP messages.</t>
    <t>This Association type is dynamic in nature and created by the PCC or PCE for
@@ -256,8 +256,8 @@ protection LSPs. The source, destination and Tunnel ID (as carried in LSP-IDENTI
 </section> 
 
 <section anchor="Path-Protection-Association-TLV" title="Path Protection Association TLV">
-<t>The Path Protection Association TLV is an optional TLV for use with the Path Protection
-Association Type. The Path Protection Association TLV MUST NOT be present more than once. 
+<t>The Path Protection Association TLV is an optional TLV for use in the ASSOCIATION Object
+with the Path Protection Association Type. The Path Protection Association TLV MUST NOT be present more than once. 
 If it appears more than once,
 only the first occurrence is processed and any others MUST be ignored. </t>
 
@@ -289,12 +289,13 @@ flag option). </t>-->
     <list>
     <t>Protecting (P): 1 bit - This bit is as defined in Section 14.1 of <xref target="RFC4872"/> to indicate if the LSP is a working (0) or protection (1) LSP.</t>
     <t>Secondary (S): 1 bit - This bit is as defined in Section 14.1 of <xref target="RFC4872"/> to indicate if the LSP is a primary (0) or secondary (1) LSP. The S flag is ignored if the P flag is not set.</t>
-    <t>Protection Type (PT): 6 bits - This field is as defined in Section 14.1 of <xref target="RFC4872"/> to indicate the LSP protection type in use.</t>
+    <t>Protection Type (PT): 6 bits - This field is as defined in Section 14.1 of <xref target="RFC4872"/> to indicate the LSP protection type in use. Any type already defined or
+   that could be defined in the future for use in the RSVP-TE PROTECTION object is acceptable in this TLV unless explicitly stated otherwise.</t>
     <t>Unassigned bits are considered reserved.  They MUST be set to 0 on
    transmission and MUST be ignored on receipt. </t>
  </list></t>
 
-<t>If the TLV is missing, it is considered that the LSP is a working LSP (i.e. as if the P bit is unset).</t>
+<t>If the TLV is missing in PPAG, it is considered that the LSP is a working LSP (i.e. as if the P bit is unset).</t>
 </section> <!-- PPAG TLV -->
 </section> <!-- PCEP extensions --> 
 
@@ -355,26 +356,27 @@ flag option). </t>-->
     </section> <!-- State Synchronization --> 
 
 <section anchor="Operation-Error-Handling" title="Error Handling"> 
-  <t>As per the processing rules specified in section 5.4 of
+  <t>As per the processing rules specified in section 6.4 of
    <xref target="I-D.ietf-pce-association-group"/>, if a PCEP speaker does not support
    this Path Protection Association Type, it would return a PCErr message with
    Error-Type 26 "Association Error" and Error-Value 1 "Association type is not supported".</t> 
   <t>All LSPs (working or protection) within a PPAG MUST belong to the same TE Tunnel (as described in <xref target="RFC3209"/>) and have the same source and destination. 
-  If a PCEP speaker attempts to add an LSP to a PPAG and the Tunnel ID (as carried in LSP-IDENTIFIERS TLV <xref target="RFC8231"/>, with description as per <xref target="RFC3209"/>) or source or destination of the LSP is different from 
-  the LSP(s) in the PPAG, the PCC MUST send PCErr with Error-Type 26 (Association Error) <xref target="I-D.ietf-pce-association-group"/>
-  and Error-Value TBD3 (Tunnel ID or End points mismatch for Path Protection Association). In case of Path Protection, LSP-IDENTIFIERS TLV SHOULD be included for all LSPs (including Segment Routing (SR) <xref target="I-D.ietf-pce-segment-routing"/>).</t>
+  If a PCEP speaker attempts to add or update an LSP to a PPAG and the Tunnel ID (as carried in LSP-IDENTIFIERS TLV <xref target="RFC8231"/>, with description as per <xref target="RFC3209"/>) or source or destination of the LSP is different from 
+  the LSP(s) in the PPAG, the PCEP speaker MUST send PCErr with Error-Type 26 (Association Error) <xref target="I-D.ietf-pce-association-group"/>
+  and Error-Value TBD3 (Tunnel ID or End points mismatch for Path Protection Association). In case of Path Protection, LSP-IDENTIFIERS TLV SHOULD be included for all LSPs (including Segment Routing (SR) <xref target="I-D.ietf-pce-segment-routing"/>). If the Protection Type (PT) (in Path Protection Association TLV) is different from the LSPs in the PPAG, the PCEP speaker MUST send PCErr with Error-Type 26 (Association Error) <xref target="I-D.ietf-pce-association-group"/>
+  and Error-Value 6 (Association information mismatch) as per <xref target="I-D.ietf-pce-association-group"/>.</t>
 
   <t>When the PCEP peer does not support the protection type set in PPAG, the PCEP peer MUST send PCErr with Error-Type 26 (Association Error) 
   <xref target="I-D.ietf-pce-association-group"/> and Error-Value TBD5 (Protection type is not supported).</t>
 
   <t>A given LSP MAY belong to more than one PPAG. If there is a conflict between any of the two PPAGs, the PCEP peer MUST send PCErr with Error-Type 26 (Association Error) <xref target="I-D.ietf-pce-association-group"/> and Error-Value 6 (Association information mismatch) as per <xref target="I-D.ietf-pce-association-group"/>.</t>
   
-  <t>When the protection type is set to 1+1, there MUST be only one working LSP and one protection LSP within a PPAG.
+  <t>When the protection type is set to 1+1, there MUST be at maximum, only one working LSP and one protection LSP within a PPAG.
   If a PCEP speaker attempts to add another working/protection LSP,
   the PCEP peer MUST send PCErr with Error-Type 26 (Association Error) <xref target="I-D.ietf-pce-association-group"/> 
   and Error-Value TBD4 (Attempt to add another working/protection LSP for Path Protection Association).</t> 
 
-  <t>When the protection type is set to 1:N, there MUST be only one working LSP and number of protection LSPs MUST NOT be more than N within a PPAG. If a PCEP speaker attempts to add another working/protection LSP,
+  <t>When the protection type is set to 1:N, there MUST be at maximum, only one working LSP and number of protection LSPs MUST NOT be more than N within a PPAG. If a PCEP speaker attempts to add another working/protection LSP,
   the PCEP peer MUST send PCErr with Error-Type 26 (Association Error) <xref target="I-D.ietf-pce-association-group"/> 
   and Error-Value TBD4 (Attempt to add another working/protection LSP for Path Protection Association).</t>
 
@@ -405,8 +407,8 @@ flag option). </t>-->
         objects identifying both the protection association group and the disjoint association group for the group of LSPs.</t>
         <t><xref target="RFC4872"/> introduces the concept and mechanisms to support the
    association of one LSP to another LSP across different RSVP Traffic Engineering (RSVP-TE) sessions using ASSOCIATION and PROTECTION object.
-   The information in the PPAG TLV in PCEP as received from the PCE is used
-   to trigger the signalling of working LSP and protection LSP, with the Path
+   The information in the Path Protection Association TLV in PCEP as received from the PCE is used
+   to trigger the signaling of working LSP and protection LSP, with the Path
    Protection Association Flags mapped to the corresponding fields in the
    PROTECTION Object in RSVP-TE.</t>
 
@@ -427,7 +429,7 @@ flag option). </t>-->
     
     </section>
     
-    <section title="PPAG TLV">
+    <section title="Path Protection Association TLV">
 
       <t> This document defines a new TLV for carrying additional information of LSPs within a path protection association group.
       IANA is requested to make the assignment of a new value for the
@@ -451,7 +453,7 @@ is created within the "Path Computation
 </list>
 </t>
    
-<texttable anchor="PPAG-TLV-Table-IANA" title="PPAG TLV">
+<texttable anchor="PPAG-TLV-Table-IANA" title="Path Protection Association TLV Flag Field">
     <ttcol align="center">Bit Number</ttcol>
     <ttcol align="center">Name</ttcol>
     <ttcol align="center">Reference</ttcol>
@@ -474,6 +476,7 @@ is created within the "Path Computation
         IANA is requested to allocate new error values within the "PCEP-ERROR
    Object Error Types and Values" sub-registry of the PCEP Numbers
    registry, as follows:</t>
+          <t>Error-type: 26 "Association Error" <xref target="I-D.ietf-pce-association-group"/></t> 
           <texttable>
            <ttcol> Error-value </ttcol><ttcol> Meaning </ttcol><ttcol> Reference </ttcol>
            <c> TBD3 </c> <c>Tunnel ID or End points mismatch for Path Protection Association</c> <c> This document</c>
@@ -496,7 +499,7 @@ is created within the "Path Computation
    an attack vector by creating associations as described in <xref target="I-D.ietf-pce-association-group"/>.
    Adding a spurious protection LSP to the Path Protection Association group could give false sense of network reliability, which leads to issues when the working LSP is down and the protection LSP fails as well. Thus securing the PCEP session using
    Transport Layer Security (TLS) <xref target="RFC8253"/>, as per the
-   recommendations and best current practices in <xref target="RFC7525"/>, is
+   recommendations and best current practices in BCP 195 <xref target="RFC7525"/>, is
    RECOMMENDED.
         </t>
     </section>
@@ -551,9 +554,11 @@ is created within the "Path Computation
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3209"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4872"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7525"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8126"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8231"?>
+        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8253"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8281"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-association-group"?>        
     </references>
@@ -562,9 +567,9 @@ is created within the "Path Computation
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4655"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4657"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7420"?>
-        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7525"?>
+        
         <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8051"?>
-        <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8253"?>
+        
         <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-association-diversity"?>
         <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-segment-routing"?>
