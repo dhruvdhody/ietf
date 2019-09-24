@@ -15,21 +15,21 @@ Expires: March 20, 2020                                             SKKU
                                                       September 17, 2019
 
 
-         Hierarchical Stateful Path Computation Element (PCE).
+          Hierarchical Stateful Path Computation Element (PCE)
                     draft-ietf-pce-stateful-hpce-14
 
 Abstract
 
    A Stateful Path Computation Element (PCE) maintains information on
-   the current network state, including: computed Label Switched Path
-   (LSPs), reserved resources within the network, and pending path
-   computation requests. This information may then be considered when
-   computing new traffic-engineered LSPs, and for associated and
-   dependent LSPs, received from Path Computation Clients (PCCs). The
-   Path computation response from a PCE is helpful for the PCC to
-   gracefully establish the computed LSP.
+   the current network state received from the Path Computation Clients
+   (PCCs), including: computed Label Switched Path (LSPs), reserved
+   resources within the network, and pending path computation requests.
+   This information may then be considered when computing path for a new
+   traffic-engineered LSP or for any associated/dependent LSPs. The Path
+   computation response from a PCE is helpful for the PCC to gracefully
+   establish the computed LSP.
 
-   The Hierarchical Path Computation Element (H-PCE) architecture,
+   The Hierarchical Path Computation Element (H-PCE) architecture
    provides an architecture to allow the optimum sequence of
    inter-connected domains to be selected, and network policy to be
    applied if applicable, via the use of a hierarchical relationship
@@ -102,7 +102,7 @@ Table of Contents
      5.1.  Control of Function and Policy . . . . . . . . . . . . . . 16
      5.2.  Information and Data Models  . . . . . . . . . . . . . . . 16
      5.3.  Liveness Detection and Monitoring  . . . . . . . . . . . . 16
-     5.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 16
+     5.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 17
      5.5.  Requirements On Other Protocols  . . . . . . . . . . . . . 17
      5.6.  Impact On Network Operations . . . . . . . . . . . . . . . 17
      5.7.  Error Handling between PCEs  . . . . . . . . . . . . . . . 17
@@ -119,12 +119,12 @@ Internet-Draft               STATEFUL-HPCE                September 2019
      6.2.  Scalability Considerations . . . . . . . . . . . . . . . . 18
      6.3.  Confidentiality  . . . . . . . . . . . . . . . . . . . . . 18
    7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 18
-   8.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 18
+   8.  Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . 19
    9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 19
      9.1.  Normative References . . . . . . . . . . . . . . . . . . . 19
      9.2.  Informative References . . . . . . . . . . . . . . . . . . 20
    Contributors . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 22
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 23
 
 
 
@@ -179,15 +179,15 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    Paths (LSPs).  Within the Hierarchical PCE (H-PCE) architecture
    [RFC6805], the Parent PCE (P-PCE) is used to compute a multi-domain
    path based on the domain connectivity information.  A Child PCE
-   (C-PCE) may be responsible for a single domain or multiple domains,
-   it is used to compute the intra-domain path based on its domain
-   topology information.
+   (C-PCE) may be responsible for a single domain or multiple domains.
+   The C-PCE is used to compute the intra-domain path based on its
+   domain topology information.
 
    This document presents general considerations for stateful PCEs, and
    not Stateless PCEs, in the hierarchical PCE architecture.  It focuses
    on the behavior changes and additions to the existing stateful PCE
-   mechanisms (including PCE-initiated LSP setup and active PCE usage)
-   in the context of networks using the H-PCE architecture.
+   mechanisms (including PCE-initiated LSP setup and active stateful PCE
+   usage) in the context of networks using the H-PCE architecture.
 
    In this document, Sections 3.1 and 3.2 focus on end to end (E2E)
    inter-domain TE LSP. Section 3.3.1 describes the operations for
@@ -230,11 +230,11 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    in [RFC6805].
 
 
-   The inter-domain LSP could be set up using the end-to-end signaling
-   as described in [RFC6805]. Additionally, a per-domain stitched LSP
-   model is also applicable in a P-PCE initiation model. Section 3.1,
-   Section 3.2, and Section 3.3 describe the end-to-end Contiguous LSP
-   setup, whereas Section 3.3.1 describes the per-domain stitching.
+   The end-to-end inter-domain path computation and setup is described
+   in [RFC6805]. Additionally, a per-domain stitched LSP model is also
+   applicable in a P-PCE initiation model. Section 3.1, Section 3.2, and
+   Section 3.3 describe the end-to-end Contiguous LSP setup, whereas
+   Section 3.3.1 describes the per-domain stitching.
 
 1.2.1.  Applicability to ACTN
 
@@ -269,11 +269,11 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 
 1.2.2.  End-to-End Contiguous LSP
 
-   Different signaling options for inter-domain RSVP-TE signaling are
-   identified in [RFC4726].  Contiguous LSPs are achieved using the
-   procedures of [RFC3209] and [RFC3473] to create a single end-to-end
-   LSP that spans all domains. [RFC6805] describes the technique to
-   establish the optimum path when the sequence of domains is not known
+   Different signaling options for inter-domain RSVP-TE are identified
+   in [RFC4726].  Contiguous LSPs are achieved using the procedures of
+   [RFC3209] and [RFC3473] to create a single end-to-end LSP that spans
+   all domains. [RFC6805] describes the technique to establish the
+   optimum path when the sequence of domains is not known in advance. 
  
 
 
@@ -282,8 +282,8 @@ Dhody, et al.              Expires March 2020                   [Page 5]
 Internet-Draft               STATEFUL-HPCE                September 2019
 
 
-   in advance.  It shows how the PCE architecture can be extended to
-   allow the optimum sequence of domains to be selected, and the optimum
+   It shows how the PCE architecture can be extended to allow the
+   optimum sequence of domains to be selected, and the optimum
    end-to-end path to be derived.
 
    A stateful P-PCE has to be aware of the inter-domain LSPs for it to
@@ -306,8 +306,8 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    In this document, for the Contiguous LSP, the above interactions are
    only between the ingress domain C-PCE and the P-PCE. The use of
    stateful operations for an inter-domain LSP between the
-   transit/egress domain C-PCEs towards the P-PCE is out of scope of
-   this document.
+   transit/egress domain C-PCEs and the P-PCE is out of scope of this
+   document.
 
 1.2.3.  Applicability of a Stateful P-PCE
 
@@ -396,13 +396,14 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 
    P-PCE maintains a domain topology map that contains the child domains
    (seen as vertices in the topology) and their interconnections (links
-   in the topology).  The P-PCE has no information about the content of
-   the child domains.  Each child domain has at least one PCE capable of
-   computing paths across the domain.  These PCEs are known as C-PCEs
-   and have a direct relationship with the P-PCE.  The P-PCE builds the
-   domain topology map either via direct configuration (allowing network
-   policy to also be applied) or from learned information received from
-   each C-PCE.
+   in the topology).  Usually, the P-PCE has no information about the
+   content of the child domains.  Each child domain has at least one PCE
+   capable of computing paths across the domain.  These PCEs are known
+   as Child PCEs (C-PCEs) [RFC6805] and have a direct relationship with
+   the P-PCE.  The P-PCE builds the domain topology map either via
+   direct configuration or from learned information received from each
+   C-PCE. The network policy could be be applied while building the
+   domain topology map. This has been described in detail in [RFC6805]. 
 
    Note that, in the scope of this document, both the C-PCEs and the P-
    PCE are stateful in nature.
@@ -420,8 +421,7 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    PCE architecture. These include:
 
    LSP State Report (EC-EP):  a child stateful PCE sends an LSP state
-      report to a Parent Stateful PCE whenever the state of a LSP
-      changes.
+      report to a Parent Stateful PCE to indicate the state of a LSP.
 
    LSP State Synchronization (EC-EP):  after the session between the
       Child and Parent stateful PCEs is initialized, the P-PCE must
@@ -456,9 +456,12 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    [I-D.ietf-pce-hierarchy-extensions] defines the H-PCE Capability TLV
    that is used in the Open message to advertise the H-PCE capability.
    [RFC8231] defines the Stateful PCE Capability TLV used in the Open
-   message to indicate stateful support.  The presence of both TLVs in
-   an Open message indicates the support for stateful H-PCE operations
-   described in this document.
+   message to indicate stateful support. To indicates the support for
+   stateful H-PCE operations described in this document, a PCEP speaker
+   MUST include both TLVs in an Open message. It is RECOMMENDED that any
+   implementation that supports stateful operations [RFC8231] and H-PCE
+   [I-D.ietf-pce-hierarchy-extensions] would also implements the
+   stateful H-PCE operations as described in this document. 
 
    Further consideration may be made for optional procedures for
    stateful communication coordination between PCEs, including
@@ -468,9 +471,9 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    described in Section 3 of [I-D.litkowski-pce-state-sync] are also
    applicable to Child and Parent PCE communication. The
    SPEAKER-IDENTITY-TLV (defined in [RFC8232]) is included in the LSP
-   object to identify the Ingress (PCC). The PLSP-ID used in the
-   forwarded PCRpt by the C-PCE to P-PCE is same as the original one
-   used by the PCC.
+   object to identify the Ingress (PCC). The PLSP-ID (PCEP-specific
+   identifier for the LSP, as per [RFC8231]) used in the forwarded PCRpt
+   by the C-PCE to P-PCE is same as the original one used by the PCC.
 
 3.1.  Passive Operations
 
@@ -495,9 +498,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    C-PCE may dictate which LSPs are reported to the P-PCE.  The PCRpt
    message is sent from C-PCE to P-PCE.
 
-   State synchronization mechanisms as described in [RFC8231] and
-   [RFC8232] are applicable to a PCEP session between C-PCE and P-PCE as
-   well.
  
 
 
@@ -506,8 +506,12 @@ Dhody, et al.              Expires March 2020                   [Page 9]
 Internet-Draft               STATEFUL-HPCE                September 2019
 
 
-   We use the hierarchical domain topology example from [RFC6805] as the 
-   reference topology for the entirety of this document.  It is shown in 
+   State synchronization mechanisms as described in [RFC8231] and
+   [RFC8232] are applicable to a PCEP session between C-PCE and P-PCE as
+   well.
+
+   We use the hierarchical domain topology example from [RFC6805] as the
+   reference topology for the entirety of this document.  It is shown in
    Figure 1.
 
       -----------------------------------------------------------------
@@ -550,10 +554,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
      |                                                                 |
       -----------------------------------------------------------------
 
-              Figure 1: Hierarchical Domain Topology Example
-
-
-   Steps 1 to 11 are exactly as described in section 4.6.2 of [RFC6805]
  
 
 
@@ -562,6 +562,10 @@ Dhody, et al.              Expires March 2020                  [Page 10]
 Internet-Draft               STATEFUL-HPCE                September 2019
 
 
+              Figure 1: Hierarchical Domain Topology Example
+
+
+   Steps 1 to 11 are exactly as described in section 4.6.2 of [RFC6805]
    (Hierarchical PCE End-to-End Path Computation Procedure), the
    following additional steps are added for stateful PCE, to be executed
    at the end:
@@ -603,13 +607,9 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    sent from C-PCE to P-PCE.
 
    To update an LSP, a PCE sends an LSP Update Request to the PCC using
-   a PCUpd message.  For an LSP delegated to a P-PCE via the C-PCE, the
+   a PCUpd message.  For an LSP delegated to a P-PCE via the C-PCE; the
    P-PCE can use the same PCUpd message to request a change to the C-PCE
    (the Ingress domain PCE).  The C-PCE further propagates the update
-   request to the PCC.
-
-   The P-PCE uses the same mechanism described in Section 3.1 to compute
-   the end to end path using PCReq and PCRep messages.
  
 
 
@@ -617,6 +617,11 @@ Dhody, et al.              Expires March 2020                  [Page 11]
 
 Internet-Draft               STATEFUL-HPCE                September 2019
 
+
+   request to the PCC.
+
+   The P-PCE uses the same mechanism described in Section 3.1 to compute
+   the end to end path using PCReq and PCRep messages.
 
    For active operations, the following steps are required when
    delegating the LSP, again using the reference architecture described
@@ -661,17 +666,17 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    (the Ingress domain PCE), the C-PCE further propagates the initiate
    request to the PCC.
 
-   The following steps are performed for PCE-initiated operations, again
-   using the reference architecture described in Figure 1 (Hierarchical
-   Domain Topology Example):
-
-
  
 
 
 Dhody, et al.              Expires March 2020                  [Page 12]
 
 Internet-Draft               STATEFUL-HPCE                September 2019
+
+
+   The following steps are performed for PCE-initiated operations, again
+   using the reference architecture described in Figure 1 (Hierarchical
+   Domain Topology Example):
 
 
    (A)  The P-PCE (PCE5) is requested to initiate a LSP. Steps 4 to 10
@@ -717,11 +722,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 
    (A)  The P-PCE (PCE5) is requested to initiate a LSP. Steps 4 to 10
         of section 4.6.2 of [RFC6805] are executed to determine the end
-        to end path, which are broken into per-domain LSPs say -
-
-        o  S-BN41
-
-        o  BN41-BN33
  
 
 
@@ -729,6 +729,12 @@ Dhody, et al.              Expires March 2020                  [Page 13]
 
 Internet-Draft               STATEFUL-HPCE                September 2019
 
+
+        to end path, which are broken into per-domain LSPs say -
+
+        o  S-BN41
+
+        o  BN41-BN33
 
         o  BN33-D
 
@@ -772,12 +778,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 
    (M)  The PCE4 further reports the status of the LSP to the P-PCE
         (PCE5).
-
-   For LSP (S-BN41)
-
-   (N)  The P-PCE (PCE5) sends the initiate request to the child PCE
-        (PCE1) via PCInitiate message for LSP (S-BN41).
-
  
 
 
@@ -785,6 +785,11 @@ Dhody, et al.              Expires March 2020                  [Page 14]
 
 Internet-Draft               STATEFUL-HPCE                September 2019
 
+
+   For LSP (S-BN41)
+
+   (N)  The P-PCE (PCE5) sends the initiate request to the child PCE
+        (PCE1) via PCInitiate message for LSP (S-BN41).
 
    (O)  The PCE1 further propagates the initiate message to node S.
 
@@ -819,7 +824,8 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    The security considerations listed in [RFC8231],[RFC6805] and
    [RFC5440] apply to this document as well. As per [RFC6805], it is
    expected that the parent PCE will require all child PCEs to use full
-   security when communicating with the parent.
+   security (i.e. the highest security mechanism available for PCEP)
+   when communicating with the parent.
 
    Any multi-domain operation necessarily involves the exchange of
    information across domain boundaries.  This is bound to represent a
@@ -828,12 +834,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    allows individual PCEs to maintain confidentiality of their domain
    path information using path-keys [RFC5520], and the hierarchical PCE
    architecture is specifically designed to enable as much isolation of
-   domain topology and capabilities information as is possible. The LSP
-   state in the PCRpt message must continue to maintain the internal
-   domain confidentiality when required.
-
-   The security consideration for PCE-Initiated LSP as per [RFC8281] is
-   also applicable from P-PCE to C-PCE. 
  
 
 
@@ -842,13 +842,21 @@ Dhody, et al.              Expires March 2020                  [Page 15]
 Internet-Draft               STATEFUL-HPCE                September 2019
 
 
+   domain topology and capabilities information as is possible. The LSP
+   state in the PCRpt message must continue to maintain the internal
+   domain confidentiality when required.
+
+   The security consideration for PCE-Initiated LSP as per [RFC8281] is
+   also applicable from P-PCE to C-PCE. 
+
    Further, section 6.3 describes the use of path-key [RFC5520] for
    confidentiality between C-PCE and P-PCE. 
 
    Thus it is RECOMMENDED to secure the PCEP session (between the P-PCE
-   and the C-PCE) using either Transport Layer Security (TLS) [RFC8253]
-   per the recommendations and best current practices in [RFC7525] or
-   TCP Authentication Option (TCP-AO) [RFC5925].
+   and the C-PCE) using Transport Layer Security (TLS) [RFC8446] (per
+   the recommendations and best current practices in BCP 195 [RFC7525])
+   and/or TCP Authentication Option (TCP-AO) [RFC5925]. The guidance for
+   implementing PCEP with TLS can be found in [RFC8253].
 
    In case of TLS, due care needs to be taken while exposing the
    parameters of the X.509 certificate, such as subjectAltName:otherName
@@ -882,14 +890,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 
 5.3.  Liveness Detection and Monitoring
 
-   Mechanisms defined in this document do not imply any new liveness
-   detection and monitoring requirements in addition to those already
-   listed in [RFC5440].
-
-5.4.  Verify Correct Operations
-
-   Mechanisms defined in this document do not imply any new operation
-   verification requirements in addition to those already listed in
  
 
 
@@ -898,6 +898,14 @@ Dhody, et al.              Expires March 2020                  [Page 16]
 Internet-Draft               STATEFUL-HPCE                September 2019
 
 
+   Mechanisms defined in this document do not imply any new liveness
+   detection and monitoring requirements in addition to those already
+   listed in [RFC5440].
+
+5.4.  Verify Correct Operations
+
+   Mechanisms defined in this document do not imply any new operation
+   verification requirements in addition to those already listed in
    [RFC5440] and [RFC8231].
 
 5.5.  Requirements On Other Protocols
@@ -915,10 +923,12 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 
 5.7.  Error Handling between PCEs
 
-   Error types and notifications useful for correct PCEP operation may
-   be implemented for managing parent and child PCE interaction. PCEP
-   Error behavior propagation, notification and error criticality level,
-   are further defined in [I-D.ietf-pce-enhanced-errors].
+   Apart from the basic error handling described in this document, an
+   implementation could also use the enhanced error and notification
+   mechanism for stateful H-PCE operations as per [I-D.ietf-pce-
+   enhanced-errors]. Enhanced features such as error behavior
+   propagation, notification and error criticality level, are further
+   defined in [I-D.ietf-pce-enhanced-errors].
 
 6.  Other Considerations
 
@@ -936,6 +946,14 @@ Internet-Draft               STATEFUL-HPCE                September 2019
                                                 /| PCE      |
                                                / +----------+
                                               /     /   Stateful
+ 
+
+
+Dhody, et al.              Expires March 2020                  [Page 17]
+
+Internet-Draft               STATEFUL-HPCE                September 2019
+
+
                                              /     /    P-PCE
                                             /     /
                                            /     /
@@ -946,14 +964,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
           +---+    +---+                    /     +---+    +---+
          + LSR +--+ LSR +........................+ LSR +--+ LSR +
          + H1  +  + H2  +                 /      + H3  +  + H4  +
- 
-
-
-Dhody, et al.              Expires March 2020                  [Page 17]
-
-Internet-Draft               STATEFUL-HPCE                September 2019
-
-
           +---+    +---+\         +-----+/       /+---+    +---+
                          \        | PCE |       /
                           \       | Lo  |      /
@@ -992,6 +1002,13 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 7.  IANA Considerations
 
    There are no IANA considerations.
+ 
+
+
+Dhody, et al.              Expires March 2020                  [Page 18]
+
+Internet-Draft               STATEFUL-HPCE                September 2019
+
 
 8.  Acknowledgments
 
@@ -1001,14 +1018,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 
    Thanks to Tal Mazrahi for the RTGDIR review, Paul Kyzivat for the
    GENART review, and Stephen Farrell for SECDIR review.
-
- 
-
-
-Dhody, et al.              Expires March 2020                  [Page 18]
-
-Internet-Draft               STATEFUL-HPCE                September 2019
-
 
    Thanks to Barry Leiba and Martin Vigoureux for IESG review. 
 
@@ -1037,11 +1046,29 @@ Internet-Draft               STATEFUL-HPCE                September 2019
               DOI 10.17487/RFC5520, April 2009,
               <https://www.rfc-editor.org/info/rfc5520>.
 
+   [RFC5925]  Touch, J., Mankin, A., and R. Bonica, "The TCP
+              Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
+              June 2010, <https://www.rfc-editor.org/info/rfc5925>.
+
    [RFC6805]  King, D., Ed. and A. Farrel, Ed., "The Application of the
               Path Computation Element Architecture to the Determination
               of a Sequence of Domains in MPLS and GMPLS", RFC 6805, DOI
               10.17487/RFC6805, November 2012,
               <http://www.rfc-editor.org/info/rfc6805>.
+
+   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "Recommendations for Secure Use of Transport Layer
+ 
+
+
+Dhody, et al.              Expires March 2020                  [Page 19]
+
+Internet-Draft               STATEFUL-HPCE                September 2019
+
+
+              Security (TLS) and Datagram Transport Layer Security
+              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
+              2015, <https://www.rfc-editor.org/info/rfc7525>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1053,18 +1080,21 @@ Internet-Draft               STATEFUL-HPCE                September 2019
               DOI 10.17487/RFC8231, September 2017,
               <https://www.rfc-editor.org/info/rfc8231>.
 
+   [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
+              "PCEPS: Usage of TLS to Provide a Secure Transport for the
+              Path Computation Element Communication Protocol (PCEP)",
+              RFC 8253, DOI 10.17487/RFC8253, October 2017,
+              <https://www.rfc-editor.org/info/rfc8253>.
+
    [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
               Computation Element Communication Protocol (PCEP)
               Extensions for PCE-Initiated LSP Setup in a Stateful PCE
               Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
               <https://www.rfc-editor.org/info/rfc8281>.
- 
 
-
-Dhody, et al.              Expires March 2020                  [Page 19]
-
-Internet-Draft               STATEFUL-HPCE                September 2019
-
+   [RFC8446]   Rescorla, E., "The Transport Layer Security (TLS)
+              Protocol Version 1.3", RFC 8446, DOI 10.17487/RFC8446,
+              August 2018, <https://www.rfc-editor.org/info/rfc8446>.
 
 9.2.  Informative References
 
@@ -1084,21 +1114,19 @@ Internet-Draft               STATEFUL-HPCE                September 2019
               Engineering", RFC 4726, DOI 10.17487/RFC4726, November
               2006, <https://www.rfc-editor.org/info/rfc4726>.
 
+ 
+
+
+Dhody, et al.              Expires March 2020                  [Page 20]
+
+Internet-Draft               STATEFUL-HPCE                September 2019
+
+
    [RFC5623]  Oki, E., Takeda, T., Le Roux, JL., and A. Farrel,
               "Framework for PCE-Based Inter-Layer MPLS and GMPLS
               Traffic Engineering", RFC 5623, DOI 10.17487/RFC5623,
               September 2009,
               <https://www.rfc-editor.org/info/rfc5623>.
-
-   [RFC5925]  Touch, J., Mankin, A., and R. Bonica, "The TCP
-              Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
-              June 2010, <https://www.rfc-editor.org/info/rfc5925>.
-
-   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
-              "Recommendations for Secure Use of Transport Layer
-              Security (TLS) and Datagram Transport Layer Security
-              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
-              2015, <https://www.rfc-editor.org/info/rfc7525>.
 
    [RFC8051]  Zhang, X., Ed. and I. Minei, Ed., "Applicability of a
               Stateful Path Computation Element (PCE)", RFC 8051,
@@ -1110,20 +1138,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
               Synchronization Procedures for a Stateful PCE", RFC 8232,
               DOI 10.17487/RFC8232, September 2017,
               <https://www.rfc-editor.org/info/rfc8232>.
-
-   [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
-              "PCEPS: Usage of TLS to Provide a Secure Transport for the
-              Path Computation Element Communication Protocol (PCEP)",
- 
-
-
-Dhody, et al.              Expires March 2020                  [Page 20]
-
-Internet-Draft               STATEFUL-HPCE                September 2019
-
-
-              RFC 8253, DOI 10.17487/RFC8253, October 2017,
-              <https://www.rfc-editor.org/info/rfc8253>.
 
    [RFC8453]  Ceccarelli, D., Ed. and Y. Lee, Ed., "Framework for
               Abstraction and Control of TE Networks (ACTN)", RFC 8453,
@@ -1156,6 +1170,14 @@ Internet-Draft               STATEFUL-HPCE                September 2019
               draft-ietf-pce-pcep-yang-12 (work in progress), July 2019.
 
    [I-D.dugeon-pce-stateful-interdomain]
+ 
+
+
+Dhody, et al.              Expires March 2020                  [Page 21]
+
+Internet-Draft               STATEFUL-HPCE                September 2019
+
+
               Dugeon, O., Meuric, J., Lee, Y., Dhody, D., and D.
               Ceccarelli, "PCEP Extension for Stateful Inter-Domain
               Tunnels", draft-dugeon-pce-stateful-interdomain-02 (work
@@ -1170,14 +1192,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
 
    [I-D.ietf-pce-enhanced-errors]
               Pouyllau, et al., "Extensions to PCEP for Enhanced Errors"
- 
-
-
-Dhody, et al.              Expires March 2020                  [Page 21]
-
-Internet-Draft               STATEFUL-HPCE                September 2019
-
-
               , draft-ietf-pce-enhanced-errors-06 (work in progress),
               August 2019.
 
@@ -1212,6 +1226,14 @@ Contributors
    Telefonica I+D
    Don Ramon de la Cruz 82-84
    Madrid,   28045
+ 
+
+
+Dhody, et al.              Expires March 2020                  [Page 22]
+
+Internet-Draft               STATEFUL-HPCE                September 2019
+
+
    Spain
    Phone: +34913128832
 
@@ -1226,13 +1248,6 @@ Authors' Addresses
    India
 
    EMail: dhruv.ietf@gmail.com
- 
-
-
-Dhody, et al.              Expires March 2020                  [Page 22]
-
-Internet-Draft               STATEFUL-HPCE                September 2019
-
 
    Young Lee
    SKKU
@@ -1260,21 +1275,6 @@ Internet-Draft               STATEFUL-HPCE                September 2019
    UK
 
    EMail: d.king@lancaster.ac.uk
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
