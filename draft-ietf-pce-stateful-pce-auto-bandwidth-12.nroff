@@ -8,9 +8,9 @@
 .ds LF Dhody, et al.
 .ds RF FORMFEED[Page %]
 .ds LH Internet-Draft
-.ds RH September 17, 2019
+.ds RH September 25, 2019
 .ds CH Auto-Bandwidth with Stateful PCE
-.ds CF Expires March 20, 2020
+.ds CF Expires March 28, 2020
 .hy 0
 .nh
 .ad l
@@ -20,13 +20,13 @@
 .tl 'PCE Working Group''D. Dhody, Ed.'
 .tl '\%Internet-Draft''Huawei Technologies'
 .tl 'Intended status: Standards Track''R. Gandhi, Ed.'
-.tl 'Expires: March 20, 2020''Cisco Systems, Inc.'
+.tl 'Expires: March 28, 2020''Cisco Systems, Inc.'
 .tl '''U. Palle'
 .tl '''R. Singh'
 .tl '''Individual Contributor'
 .tl '''L. Fang'
 .tl '''Expedia, Inc.'
-.tl '''September 17, 2019'
+.tl '''September 25, 2019'
 .fi
 .in 3
 
@@ -81,54 +81,54 @@ Table of Contents
    3.  Requirements for PCEP Extensions . . . . . . . . . . . . . . .  7
    4.  Architectural Overview . . . . . . . . . . . . . . . . . . . .  8
      4.1.  Auto-Bandwidth Overview  . . . . . . . . . . . . . . . . .  8
-     4.2.  Auto-bandwidth Theory of Operation . . . . . . . . . . . .  8
+     4.2.  Auto-bandwidth Theory of Operation . . . . . . . . . . . .  9
      4.3.  Scaling Considerations . . . . . . . . . . . . . . . . . . 10
    5.  PCEP Extensions  . . . . . . . . . . . . . . . . . . . . . . . 10
      5.1.  Capability Advertisement . . . . . . . . . . . . . . . . . 10
        5.1.1.  AUTO-BANDWIDTH-CAPABILITY TLV  . . . . . . . . . . . . 11
-     5.2.  AUTO-BANDWIDTH-ATTRIBUTES TLV  . . . . . . . . . . . . . . 11
+     5.2.  AUTO-BANDWIDTH-ATTRIBUTES TLV  . . . . . . . . . . . . . . 12
        5.2.1.  Sample-Interval sub-TLV  . . . . . . . . . . . . . . . 13
-       5.2.2.  Adjustment Intervals . . . . . . . . . . . . . . . . . 13
+       5.2.2.  Adjustment Intervals . . . . . . . . . . . . . . . . . 14
          5.2.2.1.  Adjustment-Interval sub-TLV  . . . . . . . . . . . 14
          5.2.2.2.  Down-Adjustment-Interval sub-TLV . . . . . . . . . 14
        5.2.3.  Adjustment Thresholds  . . . . . . . . . . . . . . . . 15
          5.2.3.1.  Adjustment-Threshold sub-TLV . . . . . . . . . . . 15
          5.2.3.2.  Adjustment-Threshold-Percentage sub-TLV  . . . . . 16
          5.2.3.3.  Down-Adjustment-Threshold sub-TLV  . . . . . . . . 17
-         5.2.3.4.  Down-Adjustment-Threshold-Percentage sub-TLV . . . 17
-       5.2.4.  Minimum and Maximum Bandwidth Values . . . . . . . . . 18
-         5.2.4.1.  Minimum-Bandwidth sub-TLV  . . . . . . . . . . . . 18
+         5.2.3.4.  Down-Adjustment-Threshold-Percentage sub-TLV . . . 18
+       5.2.4.  Minimum and Maximum Bandwidth Values . . . . . . . . . 19
+         5.2.4.1.  Minimum-Bandwidth sub-TLV  . . . . . . . . . . . . 19
          5.2.4.2.  Maximum-Bandwidth sub-TLV  . . . . . . . . . . . . 19
-       5.2.5.  Overflow and Underflow Conditions  . . . . . . . . . . 19
+       5.2.5.  Overflow and Underflow Conditions  . . . . . . . . . . 20
          5.2.5.1.  Overflow-Threshold sub-TLV . . . . . . . . . . . . 20
-         5.2.5.2.  Overflow-Threshold-Percentage sub-TLV  . . . . . . 20
-         5.2.5.3.  Underflow-Threshold sub-TLV  . . . . . . . . . . . 21
-         5.2.5.4.  Underflow-Threshold-Percentage sub-TLV . . . . . . 22
-     5.3.  BANDWIDTH Object . . . . . . . . . . . . . . . . . . . . . 23
-     5.4.  The PCInitiate Message . . . . . . . . . . . . . . . . . . 23
+         5.2.5.2.  Overflow-Threshold-Percentage sub-TLV  . . . . . . 21
+         5.2.5.3.  Underflow-Threshold sub-TLV  . . . . . . . . . . . 22
+         5.2.5.4.  Underflow-Threshold-Percentage sub-TLV . . . . . . 23
+     5.3.  BANDWIDTH Object . . . . . . . . . . . . . . . . . . . . . 24
+     5.4.  The PCInitiate Message . . . . . . . . . . . . . . . . . . 24
      5.5.  The PCUpd Message  . . . . . . . . . . . . . . . . . . . . 24
      5.6.  The PCRpt Message  . . . . . . . . . . . . . . . . . . . . 24
-     5.7.  The PCNtf Message  . . . . . . . . . . . . . . . . . . . . 24
-   6.  Manageability Considerations . . . . . . . . . . . . . . . . . 25
-     6.1.  Control of Function and Policy . . . . . . . . . . . . . . 25
+     5.7.  The PCNtf Message  . . . . . . . . . . . . . . . . . . . . 25
+   6.  Manageability Considerations . . . . . . . . . . . . . . . . . 26
+     6.1.  Control of Function and Policy . . . . . . . . . . . . . . 26
      6.2.  Information and Data Models  . . . . . . . . . . . . . . . 26
-     6.3.  Liveness Detection and Monitoring  . . . . . . . . . . . . 26
-     6.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 26
-     6.5.  Requirements On Other Protocols  . . . . . . . . . . . . . 26
-     6.6.  Impact On Network Operations . . . . . . . . . . . . . . . 26
-   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 27
-   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 27
-     8.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . . . 27
-     8.2.  AUTO-BANDWIDTH-CAPABILITY TLV Flag Field . . . . . . . . . 27
-     8.3.  AUTO-BANDWIDTH-ATTRIBUTES Sub-TLV  . . . . . . . . . . . . 28
-     8.4.  Error Object . . . . . . . . . . . . . . . . . . . . . . . 28
-     8.5.  Notification Object  . . . . . . . . . . . . . . . . . . . 29
-   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 30
-     9.1.  Normative References . . . . . . . . . . . . . . . . . . . 30
-     9.2.  Informative References . . . . . . . . . . . . . . . . . . 30
-   Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . . . 32
-   Contributors' Addresses  . . . . . . . . . . . . . . . . . . . . . 32
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 33
+     6.3.  Liveness Detection and Monitoring  . . . . . . . . . . . . 27
+     6.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 27
+     6.5.  Requirements On Other Protocols  . . . . . . . . . . . . . 27
+     6.6.  Impact On Network Operations . . . . . . . . . . . . . . . 27
+   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 28
+   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 28
+     8.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . . . 28
+     8.2.  AUTO-BANDWIDTH-CAPABILITY TLV Flag Field . . . . . . . . . 28
+     8.3.  AUTO-BANDWIDTH-ATTRIBUTES Sub-TLV  . . . . . . . . . . . . 29
+     8.4.  Error Object . . . . . . . . . . . . . . . . . . . . . . . 29
+     8.5.  Notification Object  . . . . . . . . . . . . . . . . . . . 30
+   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+     9.1.  Normative References . . . . . . . . . . . . . . . . . . . 31
+     9.2.  Informative References . . . . . . . . . . . . . . . . . . 31
+   Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . . . 33
+   Contributors' Addresses  . . . . . . . . . . . . . . . . . . . . . 33
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 34
 .fi
 .in 3
 
@@ -145,9 +145,11 @@ Table of Contents
 
 [RFC8231] specifies extensions to PCEP to enable stateful control of MPLS TE LSPs.  It describes two mode of operations - Passive stateful PCE and Active stateful PCE.  Further, [RFC8281] describes the setup, maintenance and teardown of PCE-Initiated LSPs for the stateful PCE model.  In this document, the focus is on Active stateful PCE where the LSPs are controlled by the PCE.  
 
-Over time, based on the varying traffic pattern, an LSP established with a certain bandwidth may require adjustment of the bandwidth reserved in the network dynamically.  The head-end Label Switch Router (LSR) monitors the actual bandwidth demand of the established LSP and periodically computes new bandwidth.  The head-end LSR adjusts the bandwidth reservation of the LSP based on the computed bandwidth automatically.  This feature is commonly referred to as Auto-Bandwidth.  The Auto-Bandwidth feature is described in detail in Section 4 of this document.  
+Over time, based on the varying traffic pattern, an LSP established with a certain bandwidth may require adjustment of the bandwidth reserved in the network dynamically.  The head-end Label Switch Router (LSR) monitors the actual bandwidth demand of the established LSP and periodically computes new bandwidth.  The head-end LSR adjusts the bandwidth reservation of the LSP based on the computed bandwidth automatically.  This feature, when available in the head-end Label Switching Router (LSR) implementation, is common referred to as Auto-Bandwidth.  The Auto-Bandwidth feature is described in detail in Section 4 of this document.  
 
 In the model considered in this document, the PCC (head-end of the LSP) collects the traffic rate samples flowing through the LSP and calculates the new adjusted bandwidth.  The PCC reports the calculated bandwidth to be adjusted to the PCE.  This is similar to the Passive stateful PCE model: while the Passive stateful PCE uses a path request/reply mechanism, the Active stateful PCE uses a report/update mechanism.  In case of PCE-Initiated LSP, the PCC is requested during the LSP initiation to monitor and calculate the new adjusted bandwidth.  [RFC8051] describes the \%use-case for Auto-Bandwidth adjustment for Passive and Active stateful PCE.
+
+Another approach would be to send the measured values itself to the PCE, which is considered out of scope for this document.
 
 This document defines the PCEP extensions needed to support an Auto-Bandwidth feature in an Active stateful PCE model where the LSP bandwidth to be adjusted is calculated on the PCC (head-end of the LSP). The use of PCE to calculate the bandwidth to be adjusted is out of scope of this document. 
 
@@ -185,14 +187,16 @@ TE LSP:  Traffic Engineering Label Switched Path.
 
 The reader is assumed to be familiar with the terminology defined in [RFC5440], [RFC8231], and [RFC8281].
 
+In this document, the PCC is considered to be the head end LSR of the LSP. Other types of PCC are not in scope. 
+
 The following auto-bandwidth terminology is defined in this document.
 
 .in 6
 .ti 3
-Maximum Average Bandwidth (MaxAvgBw):  The maximum average bandwidth represents the current traffic bandwidth demand of the LSP during a time interval.  This is the maximum value of the traffic bandwidth rate samples (Bandwidth-Samples) in a given time interval.
+Maximum Average Bandwidth (MaxAvgBw):  The maximum average bandwidth represents the current 'measured' traffic bandwidth demand of the LSP during a time interval.  This is the maximum value of the traffic bandwidth rate samples (Bandwidth-Samples) in a given time interval.
 
 .ti 3
-Adjusted Bandwidth:  This is the Auto-Bandwidth computed bandwidth that is used to adjust the bandwidth reservation of the LSP.
+Adjusted Bandwidth:  This is the Auto-Bandwidth 'computed' bandwidth that is used to adjust the bandwidth reservation of the LSP.
 
 .ti 3
 Sample-Interval:  The periodic time interval at which the measured traffic rate of the LSP is collected as a Bandwidth-Sample.
@@ -222,16 +226,16 @@ Down-Adjustment-Threshold:  This parameter is used to decide when the LSP bandwi
 Overflow-Count:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden increase in traffic demand.  This value indicates how many times, consecutively, the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP needs to be greater than or equal to the Overflow-Threshold value in order to meet the overflow condition.  
 
 .ti 3
-Overflow-Threshold:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden increase in traffic demand.  If the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP is greater than or equal to the threshold value, the overflow condition is said to be met.  The LSP bandwidth is adjusted to the current bandwidth demand bypassing the Up-Adjustment-Interval if the overflow condition is met consecutively for the Overflow-Count.
+Overflow-Threshold:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden increase in traffic demand.  If the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP is greater than or equal to the threshold value, the overflow condition is said to be met.  The LSP bandwidth is adjusted to the current bandwidth demand bypassing the Up-Adjustment-Interval if the overflow condition is met consecutively for the Overflow-Count. The Overflow-Threshold needs to be greater than or equal to the Up-Adjustment-Threshold.
 
 .ti 3
 Underflow-Count:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden decrease in traffic demand.  This value indicates how many times consecutively, the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP needs to be greater than or equal to the Underflow-Threshold value in order to meet the underflow condition. 
 
 .ti 3
-Underflow-Threshold:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden decrease in traffic demand.  If the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP is greater than or equal to the threshold value, the underflow condition is said to be met.  The LSP bandwidth is adjusted to the current bandwidth demand bypassing the Down-Adjustment-Interval if the underflow condition is met consecutively for the Underflow-Count.
+Underflow-Threshold:  This parameter is used to decide when the LSP bandwidth should be adjusted when there is a sudden decrease in traffic demand.  If the percentage or absolute difference between the current MaxAvgBw and the current bandwidth reservation of the LSP is greater than or equal to the threshold value, the underflow condition is said to be met.  The LSP bandwidth is adjusted to the current bandwidth demand bypassing the Down-Adjustment-Interval if the underflow condition is met consecutively for the Underflow-Count. The Underflow-Threshold needs to be greater than or equal to the Down-Adjustment-Threshold.
 
 .ti 3
-Minimum-Threshold:  The increase or decrease of the LSP bandwidth should be at least or above the minimum-threshold represented as an absolute bandwidth value before the bandwidth adjustment for the LSP is made.  This threshold can be seen as a suppression threshold that is used along with a percentage threshold to avoid unnecessary auto-bandwidth adjustments and re-signaling of the LSP at low bandwidth values.
+Minimum-Threshold: When percentage-based thresholds are in use, they are accompanied by this minimum threshold, which is used to enforce that the magnitude of deviation of calculated LSP bandwidth to be adjusted from the current bandwidth reservations exceeds a specific non-percentage-based criterion (represented as an absolute bandwidth value) before any adjustments are made. This serves to suppress unnecessary auto-bandwidth adjustments and re-signaling of the LSP at low bandwidth values.
 .in 3
 
 
@@ -520,7 +524,7 @@ The Type is 3, Length is 4 octets, and the value comprises of -
 
 .in 6
 .ti 3
-o  Down-Adjustment-Interval: The 4-octet time interval for downward bandwidth adjustments.  The valid range is from 1 to 604800, in seconds.  The default value equals the adjustment-interval.  The \%down-adjustment-interval parameter MUST NOT be less than the sample-interval, otherwise the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Down-Adjustment-Interval: The 4-octet time interval for downward bandwidth adjustments.  The valid range is from 1 to 604800 (7 days), in seconds.  The default value equals the adjustment-interval.  The \%down-adjustment-interval parameter MUST NOT be less than the sample-interval, otherwise the Sub-TLV MUST be ignored and the previous value is maintained.
 .in 3
 
 .ti 0
@@ -555,6 +559,8 @@ o  Adjustment-Threshold: The absolute Adjustment-Threshold bandwidth difference 
 .in 3
 If the modulus of difference between the current MaxAvgBw and the current bandwidth reservation is greater than or equal to the threshold value, the LSP bandwidth is adjusted to the current bandwidth demand (MaxAvgBw).
 
+.in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
 
 .ti 0
 5.2.3.2.  Adjustment-Threshold-Percentage sub-TLV
@@ -584,14 +590,16 @@ The Type is 5, Length is 8 octets, and the value comprises of -
 o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
-o  Percentage: The Adjustment-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  The default value is 5 percent. In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Percentage: The Adjustment-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  The default value is 5 percent. 
 
 .ti 3
 o  Minimum-Threshold: The absolute Minimum-Threshold bandwidth value, encoded in IEEE floating point format (see [IEEE.754.1985]), expressed in bytes per second.  The increase or decrease of the LSP bandwidth MUST be at least or above the minimum-threshold before the bandwidth adjustment is made.  The default value is 0.
 
 .in 3
 If the percentage absolute difference between the current MaxAvgBw and the current bandwidth reservation is greater than or equal to the threshold percentage, and the difference in the bandwidth is at least or above the Minimum-Threshold, the LSP bandwidth is adjusted to the current bandwidth demand (MaxAvgBw).
+
 .in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
 
 .ti 0
 5.2.3.3.  Down-Adjustment-Threshold sub-TLV
@@ -621,6 +629,9 @@ o  Down-Adjustment-Threshold: The absolute Down-Adjustment-Threshold bandwidth v
 .in 3
 If the difference between current bandwidth reservation and the current MaxAvgBw is greater than or equal to the threshold value, the LSP bandwidth is adjusted to the current bandwidth demand (MaxAvgBw).
 
+.in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+
 .ti 0
 5.2.3.4.  Down-Adjustment-Threshold-Percentage sub-TLV
 
@@ -649,14 +660,16 @@ The Type is 7, Length is 8 octets, and the value comprises of -
 o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
-o  Percentage: The Down-Adjustment-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  The default value equals the adjustment-threshold-percentage. In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Percentage: The Down-Adjustment-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  The default value equals the adjustment-threshold-percentage. 
 
 .ti 3
 o  Minimum-Threshold: The absolute Minimum-Threshold bandwidth value, encoded in IEEE floating point format (see [IEEE.754.1985]), expressed in bytes per second.  The decrease of the LSP bandwidth MUST be at least or above the minimum-threshold before the bandwidth adjustment is made.  The default value equals the minimum-threshold for the adjustment-threshold-percentage.
 
 .in 3
 If the percentage difference between the current bandwidth reservation and the current MaxAvgBw is greater than or equal to the threshold percentage, and the difference in the bandwidth is at least or above the Minimum-Threshold, the LSP bandwidth is adjusted to the current bandwidth demand (MaxAvgBw).
+
 .in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
 
 .ti 0
 5.2.4.  Minimum and Maximum Bandwidth Values
@@ -684,7 +697,9 @@ The Type is 8, Length is 4 octets, and the value comprises of -
 .in 6
 .ti 3
 o  Minimum-Bandwidth: The 4-octet bandwidth value encoded in IEEE floating point format (see [IEEE.754.1985]), expressed in bytes per second.  The default minimum-bandwidth value is set to 0.  Refer to Section 3.1.2 of [RFC3471] for a table of commonly used values.
+
 .in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
 
 .ti 0
 5.2.4.2.  Maximum-Bandwidth sub-TLV
@@ -709,7 +724,9 @@ The Type is 9, Length is 4 octets, and the value comprises of -
 .in 6
 .ti 3
 o  Maximum-Bandwidth: The 4-octet bandwidth value encoded in IEEE floating point format (see [IEEE.754.1985]), expressed in bytes per second.  The default maximum-bandwidth value is not set.  Refer to Section 3.1.2 of [RFC3471] for a table of commonly used values.
+
 .in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
 
 .ti 0
 5.2.5.  Overflow and Underflow Conditions
@@ -744,11 +761,13 @@ The Type is 10, Length is 8 octets, and the value comprises of -
 o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
-o  Count: The Overflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the overflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the (up) adjustment-interval. In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Count: The Overflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the overflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the (up) adjustment-interval. 
 
 .ti 3
 o  Overflow-Threshold: The absolute Overflow-Threshold bandwidth value, encoded in IEEE floating point format (see [IEEE.754.1985]), expressed in bytes per second.  Refer to Section 3.1.2 of [RFC3471] for a table of commonly used values.  If the difference of the current MaxAvgBw from the current bandwidth reservation is greater than or equal to the threshold value, the overflow condition is met.
+
 .in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
 
 .ti 0
 5.2.5.2.  Overflow-Threshold-Percentage sub-TLV
@@ -774,17 +793,19 @@ The Type is 11, Length is 8 octets, and the value comprises of -
 .fi
 .in 6
 .ti 3
-o  Percentage: The Overflow-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  If the percentage increase of the current MaxAvgBw from the current bandwidth reservation is greater than or equal to the threshold percentage, the overflow condition is met. In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Percentage: The Overflow-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  If the percentage increase of the current MaxAvgBw from the current bandwidth reservation is greater than or equal to the threshold percentage, the overflow condition is met. 
 
 .ti 3
 o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
-o  Count: The Overflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the overflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the (up) adjustment-interval. In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Count: The Overflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the overflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the (up) adjustment-interval. 
 
 .ti 3
 o  Minimum-Threshold: The absolute Minimum-Threshold bandwidth value, encoded in IEEE floating point format (see [IEEE.754.1985]), expressed in bytes per second.  The increase of the LSP bandwidth MUST be at least or above the minimum-threshold before the bandwidth adjustment is made.
+
 .in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
 
 .ti 0
 5.2.5.3.  Underflow-Threshold sub-TLV
@@ -813,11 +834,14 @@ The Type is 12, Length is 8 octets, and the value comprises of -
 o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
-o  Count: The Underflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the underflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the down-adjustment-interval. In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Count: The Underflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the underflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the down-adjustment-interval. 
 
 .ti 3
 o  Underflow-Threshold: The absolute Underflow-Threshold bandwidth value, encoded in IEEE floating point format (see [IEEE.754.1985]), expressed in bytes per second.  Refer to Section 3.1.2 of [RFC3471] for a table of commonly used values.  If the difference of the current MaxAvgBw from the current bandwidth reservation is greater than or equal to the threshold value, the underflow condition is met.
+
 .in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+
 
 .ti 0
 5.2.5.4.  Underflow-Threshold-Percentage sub-TLV
@@ -843,17 +867,19 @@ The Type is 13, Length is 8 octets, and the value comprises of -
 .fi
 .in 6
 .ti 3
-o  Percentage: The Underflow-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  If the percentage decrease of the current MaxAvgBw from the current bandwidth reservation is greater than or equal to the threshold percentage, the underflow condition is met. In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Percentage: The Underflow-Threshold value (7 bits), encoded in percentage (an integer from 1 to 100).  The value 0 is considered to be invalid.  If the percentage decrease of the current MaxAvgBw from the current bandwidth reservation is greater than or equal to the threshold percentage, the underflow condition is met. 
 
 .ti 3
 o  Reserved: MUST be set to zero on transmission and MUST be ignored on receipt.
 
 .ti 3
-o  Count: The Underflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the underflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the down-adjustment-interval. In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
+o  Count: The Underflow-Count value (5 bits), encoded in integer.  The value 0 is considered to be invalid.  The number of consecutive samples for which the underflow condition MUST be met for the LSP bandwidth to be immediately adjusted to the current bandwidth demand, bypassing the down-adjustment-interval. 
 
 .ti 3
 o  Minimum-Threshold: The absolute Minimum-Threshold bandwidth value, encoded in IEEE floating point format (see [IEEE.754.1985]), expressed in bytes per second.  The decrease of the LSP bandwidth MUST be at least or above the minimum-threshold before the bandwidth adjustment is made.
+
 .in 3
+In case of an invalid value, the Sub-TLV MUST be ignored and the previous value is maintained.
 
 .ti 0
 5.3.  BANDWIDTH Object
@@ -933,6 +959,8 @@ The Auto-Bandwidth feature SHOULD be controlled per LSP (at PCC (head-end of the
 
 The Maximum-Bandwidth (and Minimum-Bandwidth) should be set to acceptable limit to avoid impact on the rest of the MPLS-TE domain.
 
+The operator should make sure that the Overflow-Threshold is greater than or at least equal to the Up-Adjustment-Threshold. And similarly, make sure that the Underflow-Threshold is greater than or at least equal to the Down-Adjustment-Threshold.
+
 .ti 0
 6.2.  Information and Data Models
 
@@ -949,6 +977,8 @@ The mechanisms defined in this document do not imply any new liveness detection 
 
 The mechanisms defined in this document do not imply any new operation verification requirements in addition to those already listed in [RFC5440].
 
+In case of an invalid value, the Sub-TLV would get ignored and the previous value would be maintained. In such case the implementation SHOULD log the event.
+
 .ti 0
 6.5.  Requirements On Other Protocols
 
@@ -957,7 +987,7 @@ The mechanisms defined in this document do not add any new requirements on other
 .ti 0
 6.6.  Impact On Network Operations
    
-In order to avoid any unacceptable impact on network operations, an implementation SHOULD allow a limit to be placed on the number of LSPs that can be enabled with auto-bandwidth feature.  For each LSP enabled with auto-bandwidth feature there is an extra load on PCC, as it needs to monitor the traffic and report the calculated bandwidth to be adjusted to the PCE. The PCE further re-compute paths based on the requested bandwidth and update the path to the PCC, which in turns triggers the re-signalling of the path. All these steps adds extra load and churn in the network and thus operator needs to take due care while enabling this features on a number of LSPs.
+In order to avoid any unacceptable impact on network operations, an implementation SHOULD allow a limit to be placed on the number of LSPs that can be enabled with auto-bandwidth feature.  For each LSP enabled with auto-bandwidth feature there is an extra load on PCC, as it needs to monitor the traffic and report the calculated bandwidth to be adjusted to the PCE. The PCE further re-compute paths based on the requested bandwidth and update the path to the PCC, which in turns triggers the re-signaling of the path. All these steps adds extra load and churn in the network and thus operator needs to take due care while enabling this features on a number of LSPs.
 
 An implementation MAY allow a limit to be placed on the rate of auto-bandwidth related messages sent by a PCEP speaker and received by a peer.  An implementation SHOULD also allow sending a notification when a PCEP speaker is overwhelmed or the rate of messages reach a threshold.
 
@@ -1136,7 +1166,7 @@ Authors would like to thank Robert Varga, Venugopal Reddy, Reeja Paul, Sandeep B
 
 Thanks to Daniel Franke, Joe Clarke, David Black, and Erik Kline for the directorate reviews.
 
-Thanks to Mirja Kuhlewind, Barry Leiba, and Benjamin Kaduk for the IESG review.
+Thanks to Mirja Kuhlewind, Barry Leiba, Benjamin Kaduk, and Roman Danyliw for the IESG review.
 
 .nf
 .ti 0

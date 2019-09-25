@@ -5,13 +5,13 @@
 PCE Working Group                                          D. Dhody, Ed.
 Internet-Draft                                       Huawei Technologies
 Intended status: Standards Track                          R. Gandhi, Ed.
-Expires: March 20, 2020                              Cisco Systems, Inc.
+Expires: March 28, 2020                              Cisco Systems, Inc.
                                                                 U. Palle
                                                                 R. Singh
                                                   Individual Contributor
                                                                  L. Fang
                                                            Expedia, Inc.
-                                                      September 17, 2019
+                                                      September 25, 2019
 
 
   PCEP Extensions for MPLS-TE LSP Automatic Bandwidth Adjustment with
@@ -53,9 +53,9 @@ Status of This Memo
  
 
 
-Dhody, et al.            Expires March 20, 2020                 [Page 1]
+Dhody, et al.            Expires March 28, 2020                 [Page 1]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
 
 
 Copyright Notice
@@ -86,62 +86,62 @@ Table of Contents
    3.  Requirements for PCEP Extensions . . . . . . . . . . . . . . .  7
    4.  Architectural Overview . . . . . . . . . . . . . . . . . . . .  8
      4.1.  Auto-Bandwidth Overview  . . . . . . . . . . . . . . . . .  8
-     4.2.  Auto-bandwidth Theory of Operation . . . . . . . . . . . .  8
+     4.2.  Auto-bandwidth Theory of Operation . . . . . . . . . . . .  9
      4.3.  Scaling Considerations . . . . . . . . . . . . . . . . . . 10
    5.  PCEP Extensions  . . . . . . . . . . . . . . . . . . . . . . . 10
      5.1.  Capability Advertisement . . . . . . . . . . . . . . . . . 10
        5.1.1.  AUTO-BANDWIDTH-CAPABILITY TLV  . . . . . . . . . . . . 11
-     5.2.  AUTO-BANDWIDTH-ATTRIBUTES TLV  . . . . . . . . . . . . . . 11
+     5.2.  AUTO-BANDWIDTH-ATTRIBUTES TLV  . . . . . . . . . . . . . . 12
        5.2.1.  Sample-Interval sub-TLV  . . . . . . . . . . . . . . . 13
-       5.2.2.  Adjustment Intervals . . . . . . . . . . . . . . . . . 13
+       5.2.2.  Adjustment Intervals . . . . . . . . . . . . . . . . . 14
          5.2.2.1.  Adjustment-Interval sub-TLV  . . . . . . . . . . . 14
          5.2.2.2.  Down-Adjustment-Interval sub-TLV . . . . . . . . . 14
        5.2.3.  Adjustment Thresholds  . . . . . . . . . . . . . . . . 15
          5.2.3.1.  Adjustment-Threshold sub-TLV . . . . . . . . . . . 15
          5.2.3.2.  Adjustment-Threshold-Percentage sub-TLV  . . . . . 16
          5.2.3.3.  Down-Adjustment-Threshold sub-TLV  . . . . . . . . 17
-         5.2.3.4.  Down-Adjustment-Threshold-Percentage sub-TLV . . . 17
-       5.2.4.  Minimum and Maximum Bandwidth Values . . . . . . . . . 18
-         5.2.4.1.  Minimum-Bandwidth sub-TLV  . . . . . . . . . . . . 18
+         5.2.3.4.  Down-Adjustment-Threshold-Percentage sub-TLV . . . 18
+       5.2.4.  Minimum and Maximum Bandwidth Values . . . . . . . . . 19
+         5.2.4.1.  Minimum-Bandwidth sub-TLV  . . . . . . . . . . . . 19
          5.2.4.2.  Maximum-Bandwidth sub-TLV  . . . . . . . . . . . . 19
-       5.2.5.  Overflow and Underflow Conditions  . . . . . . . . . . 19
+       5.2.5.  Overflow and Underflow Conditions  . . . . . . . . . . 20
          5.2.5.1.  Overflow-Threshold sub-TLV . . . . . . . . . . . . 20
  
 
 
-Dhody, et al.            Expires March 20, 2020                 [Page 2]
+Dhody, et al.            Expires March 28, 2020                 [Page 2]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
 
 
-         5.2.5.2.  Overflow-Threshold-Percentage sub-TLV  . . . . . . 20
-         5.2.5.3.  Underflow-Threshold sub-TLV  . . . . . . . . . . . 21
-         5.2.5.4.  Underflow-Threshold-Percentage sub-TLV . . . . . . 22
-     5.3.  BANDWIDTH Object . . . . . . . . . . . . . . . . . . . . . 23
-     5.4.  The PCInitiate Message . . . . . . . . . . . . . . . . . . 23
+         5.2.5.2.  Overflow-Threshold-Percentage sub-TLV  . . . . . . 21
+         5.2.5.3.  Underflow-Threshold sub-TLV  . . . . . . . . . . . 22
+         5.2.5.4.  Underflow-Threshold-Percentage sub-TLV . . . . . . 23
+     5.3.  BANDWIDTH Object . . . . . . . . . . . . . . . . . . . . . 24
+     5.4.  The PCInitiate Message . . . . . . . . . . . . . . . . . . 24
      5.5.  The PCUpd Message  . . . . . . . . . . . . . . . . . . . . 24
      5.6.  The PCRpt Message  . . . . . . . . . . . . . . . . . . . . 24
-     5.7.  The PCNtf Message  . . . . . . . . . . . . . . . . . . . . 24
-   6.  Manageability Considerations . . . . . . . . . . . . . . . . . 25
-     6.1.  Control of Function and Policy . . . . . . . . . . . . . . 25
+     5.7.  The PCNtf Message  . . . . . . . . . . . . . . . . . . . . 25
+   6.  Manageability Considerations . . . . . . . . . . . . . . . . . 26
+     6.1.  Control of Function and Policy . . . . . . . . . . . . . . 26
      6.2.  Information and Data Models  . . . . . . . . . . . . . . . 26
-     6.3.  Liveness Detection and Monitoring  . . . . . . . . . . . . 26
-     6.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 26
-     6.5.  Requirements On Other Protocols  . . . . . . . . . . . . . 26
-     6.6.  Impact On Network Operations . . . . . . . . . . . . . . . 26
-   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 27
-   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 27
-     8.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . . . 27
-     8.2.  AUTO-BANDWIDTH-CAPABILITY TLV Flag Field . . . . . . . . . 27
-     8.3.  AUTO-BANDWIDTH-ATTRIBUTES Sub-TLV  . . . . . . . . . . . . 28
-     8.4.  Error Object . . . . . . . . . . . . . . . . . . . . . . . 28
-     8.5.  Notification Object  . . . . . . . . . . . . . . . . . . . 29
-   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 30
-     9.1.  Normative References . . . . . . . . . . . . . . . . . . . 30
-     9.2.  Informative References . . . . . . . . . . . . . . . . . . 30
-   Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . . . 32
-   Contributors' Addresses  . . . . . . . . . . . . . . . . . . . . . 32
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 33
+     6.3.  Liveness Detection and Monitoring  . . . . . . . . . . . . 27
+     6.4.  Verify Correct Operations  . . . . . . . . . . . . . . . . 27
+     6.5.  Requirements On Other Protocols  . . . . . . . . . . . . . 27
+     6.6.  Impact On Network Operations . . . . . . . . . . . . . . . 27
+   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 28
+   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 28
+     8.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . . . 28
+     8.2.  AUTO-BANDWIDTH-CAPABILITY TLV Flag Field . . . . . . . . . 28
+     8.3.  AUTO-BANDWIDTH-ATTRIBUTES Sub-TLV  . . . . . . . . . . . . 29
+     8.4.  Error Object . . . . . . . . . . . . . . . . . . . . . . . 29
+     8.5.  Notification Object  . . . . . . . . . . . . . . . . . . . 30
+   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+     9.1.  Normative References . . . . . . . . . . . . . . . . . . . 31
+     9.2.  Informative References . . . . . . . . . . . . . . . . . . 31
+   Acknowledgments  . . . . . . . . . . . . . . . . . . . . . . . . . 33
+   Contributors' Addresses  . . . . . . . . . . . . . . . . . . . . . 33
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 34
 
 
 
@@ -165,9 +165,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
  
 
 
-Dhody, et al.            Expires March 20, 2020                 [Page 3]
+Dhody, et al.            Expires March 28, 2020                 [Page 3]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
 
 
    Over time, based on the varying traffic pattern, an LSP established
@@ -176,9 +176,10 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    Router (LSR) monitors the actual bandwidth demand of the established
    LSP and periodically computes new bandwidth.  The head-end LSR
    adjusts the bandwidth reservation of the LSP based on the computed
-   bandwidth automatically.  This feature is commonly referred to as
-   Auto-Bandwidth.  The Auto-Bandwidth feature is described in detail in
-   Section 4 of this document.  
+   bandwidth automatically.  This feature, when available in the head-
+   end Label Switching Router (LSR) implementation, is common referred
+   to as Auto-Bandwidth.  The Auto-Bandwidth feature is described in
+   detail in Section 4 of this document.  
 
    In the model considered in this document, the PCC (head-end of the
    LSP) collects the traffic rate samples flowing through the LSP and
@@ -190,6 +191,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    requested during the LSP initiation to monitor and calculate the new
    adjusted bandwidth.  [RFC8051] describes the use-case for Auto-
    Bandwidth adjustment for Passive and Active stateful PCE.
+
+   Another approach would be to send the measured values itself to the
+   PCE, which is considered out of scope for this document.
 
    This document defines the PCEP extensions needed to support an Auto-
    Bandwidth feature in an Active stateful PCE model where the LSP
@@ -214,16 +218,17 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
    PCE:  Path Computation Element.
 
-   PCEP:  Path Computation Element Communication Protocol.
-
-   TE LSP:  Traffic Engineering Label Switched Path.
-
  
 
 
-Dhody, et al.            Expires March 20, 2020                 [Page 4]
+Dhody, et al.            Expires March 28, 2020                 [Page 4]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
+   PCEP:  Path Computation Element Communication Protocol.
+
+   TE LSP:  Traffic Engineering Label Switched Path.
 
 
 2.3.  Terminology
@@ -231,15 +236,18 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    The reader is assumed to be familiar with the terminology defined in
    [RFC5440], [RFC8231], and [RFC8281].
 
+   In this document, the PCC is considered to be the head end LSR of the
+   LSP. Other types of PCC are not in scope. 
+
    The following auto-bandwidth terminology is defined in this document.
 
    Maximum Average Bandwidth (MaxAvgBw):  The maximum average bandwidth
-      represents the current traffic bandwidth demand of the LSP during
-      a time interval.  This is the maximum value of the traffic
-      bandwidth rate samples (Bandwidth-Samples) in a given time
+      represents the current 'measured' traffic bandwidth demand of the
+      LSP during a time interval.  This is the maximum value of the
+      traffic bandwidth rate samples (Bandwidth-Samples) in a given time
       interval.
 
-   Adjusted Bandwidth:  This is the Auto-Bandwidth computed bandwidth
+   Adjusted Bandwidth:  This is the Auto-Bandwidth 'computed' bandwidth
       that is used to adjust the bandwidth reservation of the LSP.
 
    Sample-Interval:  The periodic time interval at which the measured
@@ -266,6 +274,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
    Up-Adjustment-Threshold:  This parameter is used to decide when the
       LSP bandwidth should be adjusted.  If the percentage or absolute
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                 [Page 5]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
       difference between the current MaxAvgBw and the current bandwidth
       reservation is greater than or equal to the threshold value, the
       LSP bandwidth is adjusted (upsized) to the current bandwidth
@@ -274,14 +290,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    Down-Adjustment-Threshold:  This parameter is used to decide when the
       LSP bandwidth should be adjusted.  If the percentage or absolute
       difference between the current bandwidth reservation and the
- 
-
-
-Dhody, et al.            Expires March 20, 2020                 [Page 5]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
       current MaxAvgBw is greater than or equal to the threshold value,
       the LSP bandwidth is adjusted (downsized) to the current bandwidth
       demand (Adjusted Bandwidth) at the Down-Adjustment-Interval
@@ -303,7 +311,8 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       condition is said to be met.  The LSP bandwidth is adjusted to the
       current bandwidth demand bypassing the Up-Adjustment-Interval if
       the overflow condition is met consecutively for the Overflow-
-      Count.
+      Count. The Overflow-Threshold needs to be greater than or equal to
+      the Up-Adjustment-Threshold.
 
    Underflow-Count:  This parameter is used to decide when the LSP
       bandwidth should be adjusted when there is a sudden decrease in
@@ -321,21 +330,25 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       condition is said to be met.  The LSP bandwidth is adjusted to the
       current bandwidth demand bypassing the Down-Adjustment-Interval if
       the underflow condition is met consecutively for the Underflow-
-      Count.
-
-   Minimum-Threshold:  The increase or decrease of the LSP bandwidth
-      should be at least or above the minimum-threshold represented as
-      an absolute bandwidth value before the bandwidth adjustment for
-      the LSP is made.  This threshold can be seen as a suppression
-      threshold that is used along with a percentage threshold to avoid
-      unnecessary auto-bandwidth adjustments and re-signaling of the LSP
-      at low bandwidth values.
  
 
 
-Dhody, et al.            Expires March 20, 2020                 [Page 6]
+Dhody, et al.            Expires March 28, 2020                 [Page 6]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
+      Count. The Underflow-Threshold needs to be greater than or equal
+      to the Down-Adjustment-Threshold.
+
+   Minimum-Threshold: When percentage-based thresholds are in use, they
+      are accompanied by this minimum threshold, which is used to
+      enforce that the magnitude of deviation of calculated LSP
+      bandwidth to be adjusted from the current bandwidth reservations
+      exceeds a specific non-percentage-based criterion (represented as
+      an absolute bandwidth value) before any adjustments are made. This
+      serves to suppress unnecessary auto-bandwidth adjustments and re-
+      signaling of the LSP at low bandwidth values.
 
 
 3.  Requirements for PCEP Extensions
@@ -373,6 +386,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
     AUTO-BANDWIDTH ATTRIBUTES  |    |  AUTO-BANDWIDTH ATTRIBUTES
                                |    |  (For Delegated LSPs)
                                |    |
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                 [Page 7]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
                                |    |  REQUESTED BANDWIDTH
                                v    |          
                              ----------  
@@ -386,14 +407,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
    A PCEP speaker supporting this document must have a mechanism to
    advertise the automatic bandwidth adjustment capability for both PCC-
- 
-
-
-Dhody, et al.            Expires March 20, 2020                 [Page 7]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
    Initiated and PCE-Initiated LSPs. 
 
    Auto-bandwidth deployment considerations for PCEP extensions are
@@ -429,6 +442,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    design and planning.  The head-end Label Switch Router (LSR) monitors
    the actual traffic flowing through the LSP and uses that information
    to adjust the bandwidth reservation of the LSP in the network. 
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                 [Page 8]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    Bandwidth adjustment must not cause disruption to the traffic flow
    carried by the LSP.  One way to achieve this is to use the
    make-before-break signaling method [RFC3209].
@@ -442,14 +463,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    PCC is the head-end node of the LSP.  The sample interval can be
    configured by an operator, with a default value of 5 minutes. A very
    low Sample-Interval could have some undesirable interactions with
- 
-
-
-Dhody, et al.            Expires March 20, 2020                 [Page 8]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
    transport protocols (see Section 6.6).
 
    The traffic rate samples are accumulated over the Adjustment-Interval
@@ -485,6 +498,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    and adjust the LSP bandwidth to accommodate the sudden bursts of
    increase in traffic demand as an overflow condition or decrease in
    traffic demand as an underflow condition.  An operator needs to
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                 [Page 9]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    configure appropriate values for the Overflow-Threshold and/or
    Underflow-Threshold parameters and they do not have default values
    defined in this document.
@@ -497,14 +518,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    values and absolute values to handle very large bandwidth values. 
    The auto-bandwidth adjustment is made when either one of the two
    thresholds, the absolute or percentage, is crossed.
-
- 
-
-
-Dhody, et al.            Expires March 20, 2020                 [Page 9]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
    When using the (adjustment/overflow/underflow) percentage thresholds,
    if the LSP bandwidth changes rapidly at very low values, it may
@@ -541,6 +554,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
    During PCEP Initialization Phase, PCEP speakers (PCE or PCC)
    advertise their support of Automatic Bandwidth adjustment feature.  A
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 10]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    PCEP speaker includes the AUTO-BANDWIDTH-CAPABILITY TLV, in the OPEN
    Object to advertise its support for PCEP Auto-Bandwidth extensions. 
    The presence of the AUTO-BANDWIDTH-CAPABILITY TLV in the OPEN Object
@@ -553,14 +574,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
    o  A PCEP speaker that does not recognize the extensions defined in
       this document would simply ignore the TLVs as per [RFC5440].
-
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 10]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
    o  If a PCEP speaker that supports the extensions defined in this
       document but did not advertise this capability, then upon receipt
@@ -597,6 +610,13 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    auto-bandwidth adjustment, as well as the objects, TLVs and
    procedures defined in this document.
 
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 11]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
 
 5.2.  AUTO-BANDWIDTH-ATTRIBUTES TLV
 
@@ -610,13 +630,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    TLV is also carried in the LSPA object with the PCUpd message to
    direct the PCC (LSP head-end) to make updates to auto-bandwidth
    attributes such as Adjustment-Interval.
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 11]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
    The TLV is encoded in all PCEP messages for the LSP while the auto-
    bandwidth adjustment feature is enabled, the absence of the TLV
@@ -653,6 +666,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
    Type Len Name
    -------------------------------------------------------------------
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 12]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
     1   4   Sample-Interval sub-TLV
     2   4   Adjustment-Interval sub-TLV
     3   4   Down-Adjustment-Interval sub-TLV
@@ -666,13 +687,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    11   8   Overflow-Threshold-Percentage sub-TLV
    12   8   Underflow-Threshold sub-TLV
    13   8   Underflow-Threshold-Percentage sub-TLV
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 12]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
    Future specifications can define additional sub-TLVs.
 
@@ -708,6 +722,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    o  Sample-Interval: The 4-octet time interval for bandwidth sample
       collection.  The valid range is from 1 to 604800 (7 days), in
       seconds.  The default value is 300 seconds.  Due care needs to be
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 13]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
       taken in case of a very low Sample-Interval, as it can have some
       undesirable interactions with transport protocols (see Section
       6.6). The sample-interval parameter MUST NOT be greater than the
@@ -722,14 +744,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    and downward (Down-Adjustment-Interval) trends. An implementation MAY
    require to set a different adjustment interval values for when the
    bandwidth usage trend is downwards from when it is moving upwards. In
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 13]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
    that case, the operator could use the Down-Adjustment-Interval sub-
    TLV which overrides the Adjustment-Interval value for Down-
    Adjustment-Interval. 
@@ -764,6 +778,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 5.2.2.2.  Down-Adjustment-Interval sub-TLV
 
    The Down-Adjustment-Interval sub-TLV specifies a time interval in
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 14]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    seconds at which bandwidth adjustment should be made when MaxAvgBw is
    less than the current bandwidth reservation of the LSP.  This
    parameter overrides the Adjustment-Interval for the downward trend.
@@ -778,24 +800,17 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                  Down-Adjustment-Interval                     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 14]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
                   Down-Adjustment-Interval sub-TLV format
 
    The Type is 3, Length is 4 octets, and the value comprises of -
 
    o  Down-Adjustment-Interval: The 4-octet time interval for downward
-      bandwidth adjustments.  The valid range is from 1 to 604800, in
-      seconds.  The default value equals the adjustment-interval.  The
-      down-adjustment-interval parameter MUST NOT be less than the
-      sample-interval, otherwise the Sub-TLV MUST be ignored and the
-      previous value is maintained.
+      bandwidth adjustments.  The valid range is from 1 to 604800 (7
+      days), in seconds.  The default value equals the adjustment-
+      interval.  The down-adjustment-interval parameter MUST NOT be less
+      than the sample-interval, otherwise the Sub-TLV MUST be ignored
+      and the previous value is maintained.
 
 5.2.3.  Adjustment Thresholds
 
@@ -819,6 +834,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
 5.2.3.1.  Adjustment-Threshold sub-TLV
 
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 15]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    The Adjustment-Threshold sub-TLV is used to decide when the LSP
    bandwidth should be adjusted in upward or downward direction. This
    sub-TLV specify the absolute value for Up-Adjustment-Threshold and
@@ -834,13 +857,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
                     Adjustment-Threshold sub-TLV format
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 15]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
    The Type is 4, Length is 4 octets, and the value comprises of -
 
@@ -855,6 +871,8 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    threshold value, the LSP bandwidth is adjusted to the current
    bandwidth demand (MaxAvgBw).
 
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
 
 5.2.3.2.  Adjustment-Threshold-Percentage sub-TLV
 
@@ -872,6 +890,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    |                  Reserved                       |  Percentage |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                        Minimum-Threshold                      |
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 16]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
              Adjustment-Threshold-Percentage sub-TLV format
@@ -883,21 +909,11 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
    o  Percentage: The Adjustment-Threshold value (7 bits), encoded in
       percentage (an integer from 1 to 100).  The value 0 is considered
-      to be invalid.  The default value is 5 percent. In case of an
-      invalid value, the Sub-TLV MUST be ignored and the previous value
-      is maintained.
+      to be invalid.  The default value is 5 percent. 
 
    o  Minimum-Threshold: The absolute Minimum-Threshold bandwidth value,
       encoded in IEEE floating point format (see [IEEE.754.1985]),
       expressed in bytes per second.  The increase or decrease of the
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 16]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
       LSP bandwidth MUST be at least or above the minimum-threshold
       before the bandwidth adjustment is made.  The default value is 0.
 
@@ -906,6 +922,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    threshold percentage, and the difference in the bandwidth is at least
    or above the Minimum-Threshold, the LSP bandwidth is adjusted to the
    current bandwidth demand (MaxAvgBw).
+
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
 
 5.2.3.3.  Down-Adjustment-Threshold sub-TLV
 
@@ -927,6 +946,13 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
                 Down-Adjustment-Threshold sub-TLV format
 
    The Type is 6, Length is 4 octets, and the value comprises of -
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 17]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
 
    o  Down-Adjustment-Threshold: The absolute Down-Adjustment-Threshold
       bandwidth value, encoded in IEEE floating point format (see
@@ -938,6 +964,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    current MaxAvgBw is greater than or equal to the threshold value, the
    LSP bandwidth is adjusted to the current bandwidth demand (MaxAvgBw).
 
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
+
 5.2.3.4.  Down-Adjustment-Threshold-Percentage sub-TLV
 
    The Down-Adjustment-Threshold-Percentage sub-TLV is used to decide
@@ -946,13 +975,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    Adjustment-Threshold-Percentage for the downward trend. This sub-TLV
    is used only when there is a need for different threshold percentage
    in the upward and downward directions.
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 17]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -974,13 +996,20 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    o  Percentage: The Down-Adjustment-Threshold value (7 bits), encoded
       in percentage (an integer from 1 to 100).  The value 0 is
       considered to be invalid.  The default value equals the
-      adjustment-threshold-percentage. In case of an invalid value, the
-      Sub-TLV MUST be ignored and the previous value is maintained.
+      adjustment-threshold-percentage. 
 
    o  Minimum-Threshold: The absolute Minimum-Threshold bandwidth value,
       encoded in IEEE floating point format (see [IEEE.754.1985]),
       expressed in bytes per second.  The decrease of the LSP bandwidth
       MUST be at least or above the minimum-threshold before the
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 18]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
       bandwidth adjustment is made.  The default value equals the
       minimum-threshold for the adjustment-threshold-percentage.
 
@@ -989,6 +1018,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    threshold percentage, and the difference in the bandwidth is at least
    or above the Minimum-Threshold, the LSP bandwidth is adjusted to the
    current bandwidth demand (MaxAvgBw).
+
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
 
 5.2.4.  Minimum and Maximum Bandwidth Values
 
@@ -1002,14 +1034,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |           Type=8              |           Length=4            |
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 18]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                        Minimum-Bandwidth                      |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1024,6 +1048,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       Refer to Section 3.1.2 of [RFC3471] for a table of commonly used
       values.
 
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
+
 5.2.4.2.  Maximum-Bandwidth sub-TLV
 
    The Maximum-Bandwidth sub-TLV specify the maximum bandwidth allowed
@@ -1031,6 +1058,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    cannot be adjusted above the maximum bandwidth value.
 
     0                   1                   2                   3
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 19]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |           Type=9              |           Length=4            |
@@ -1048,6 +1083,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       Refer to Section 3.1.2 of [RFC3471] for a table of commonly used
       values.
 
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
+
 5.2.5.  Overflow and Underflow Conditions
 
    The sub-TLVs in this section are encoded to inform the PCEP peer the
@@ -1058,13 +1096,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    count (as long as the difference in the bandwidth is at least or
    above the Minimum-Threshold).  By default, the threshold values for
    overflow and underflow conditions are not set.
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 19]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
 5.2.5.1.  Overflow-Threshold sub-TLV
 
@@ -1083,6 +1114,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
                     Overflow-Threshold sub-TLV format
 
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 20]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    The Type is 10, Length is 8 octets, and the value comprises of -
 
    o  Reserved: MUST be set to zero on transmission and MUST be ignored
@@ -1092,9 +1131,7 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       value 0 is considered to be invalid.  The number of consecutive
       samples for which the overflow condition MUST be met for the LSP
       bandwidth to be immediately adjusted to the current bandwidth
-      demand, bypassing the (up) adjustment-interval. In case of an
-      invalid value, the Sub-TLV MUST be ignored and the previous value
-      is maintained.
+      demand, bypassing the (up) adjustment-interval. 
 
    o  Overflow-Threshold: The absolute Overflow-Threshold bandwidth
       value, encoded in IEEE floating point format (see
@@ -1103,6 +1140,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       difference of the current MaxAvgBw from the current bandwidth
       reservation is greater than or equal to the threshold value, the
       overflow condition is met.
+
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
 
 5.2.5.2.  Overflow-Threshold-Percentage sub-TLV
 
@@ -1114,14 +1154,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |           Type=11             |           Length=8            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 20]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
    |  Percentage |             Reserved                  |  Count  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                        Minimum-Threshold                      |
@@ -1135,26 +1167,33 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       percentage (an integer from 1 to 100).  The value 0 is considered
       to be invalid.  If the percentage increase of the current MaxAvgBw
       from the current bandwidth reservation is greater than or equal to
-      the threshold percentage, the overflow condition is met. In case
-      of an invalid value, the Sub-TLV MUST be ignored and the previous
-      value is maintained.
+      the threshold percentage, the overflow condition is met. 
 
    o  Reserved: MUST be set to zero on transmission and MUST be ignored
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 21]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
       on receipt.
 
    o  Count: The Overflow-Count value (5 bits), encoded in integer.  The
       value 0 is considered to be invalid.  The number of consecutive
       samples for which the overflow condition MUST be met for the LSP
       bandwidth to be immediately adjusted to the current bandwidth
-      demand, bypassing the (up) adjustment-interval. In case of an
-      invalid value, the Sub-TLV MUST be ignored and the previous value
-      is maintained.
+      demand, bypassing the (up) adjustment-interval. 
 
    o  Minimum-Threshold: The absolute Minimum-Threshold bandwidth value,
       encoded in IEEE floating point format (see [IEEE.754.1985]),
       expressed in bytes per second.  The increase of the LSP bandwidth
       MUST be at least or above the minimum-threshold before the
       bandwidth adjustment is made.
+
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
 
 5.2.5.3.  Underflow-Threshold sub-TLV
 
@@ -1170,13 +1209,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                      Underflow-Threshold                      |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 21]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
                     Underflow-Threshold sub-TLV format
 
@@ -1189,17 +1221,27 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       The value 0 is considered to be invalid.  The number of
       consecutive samples for which the underflow condition MUST be met
       for the LSP bandwidth to be immediately adjusted to the current
-      bandwidth demand, bypassing the down-adjustment-interval. In case
-      of an invalid value, the Sub-TLV MUST be ignored and the previous
-      value is maintained.
+      bandwidth demand, bypassing the down-adjustment-interval. 
 
    o  Underflow-Threshold: The absolute Underflow-Threshold bandwidth
       value, encoded in IEEE floating point format (see
       [IEEE.754.1985]), expressed in bytes per second.  Refer to Section
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 22]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
       3.1.2 of [RFC3471] for a table of commonly used values.  If the
       difference of the current MaxAvgBw from the current bandwidth
       reservation is greater than or equal to the threshold value, the
       underflow condition is met.
+
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
+
 
 5.2.5.4.  Underflow-Threshold-Percentage sub-TLV
 
@@ -1224,17 +1266,7 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       percentage (an integer from 1 to 100).  The value 0 is considered
       to be invalid.  If the percentage decrease of the current MaxAvgBw
       from the current bandwidth reservation is greater than or equal to
-      the threshold percentage, the underflow condition is met. In case
-      of an invalid value, the Sub-TLV MUST be ignored and the previous
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 22]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
-      value is maintained.
+      the threshold percentage, the underflow condition is met. 
 
    o  Reserved: MUST be set to zero on transmission and MUST be ignored
       on receipt.
@@ -1243,15 +1275,23 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       The value 0 is considered to be invalid.  The number of
       consecutive samples for which the underflow condition MUST be met
       for the LSP bandwidth to be immediately adjusted to the current
-      bandwidth demand, bypassing the down-adjustment-interval. In case
-      of an invalid value, the Sub-TLV MUST be ignored and the previous
-      value is maintained.
+      bandwidth demand, bypassing the down-adjustment-interval. 
 
    o  Minimum-Threshold: The absolute Minimum-Threshold bandwidth value,
       encoded in IEEE floating point format (see [IEEE.754.1985]),
       expressed in bytes per second.  The decrease of the LSP bandwidth
       MUST be at least or above the minimum-threshold before the
       bandwidth adjustment is made.
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 23]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
+   In case of an invalid value, the Sub-TLV MUST be ignored and the
+   previous value is maintained.
 
 5.3.  BANDWIDTH Object
 
@@ -1282,14 +1322,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    The Routing Backus-Naur Format (RBNF) definition of the PCInitiate
    message [RFC8281] is unchanged by this document.
 
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 23]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
 5.5.  The PCUpd Message
 
    A PCUpd message is a PCEP message sent by a PCE to a PCC to update
@@ -1306,6 +1338,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 5.6.  The PCRpt Message
 
    The PCRpt message [RFC8231] is a PCEP message sent by a PCC to a PCE
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 24]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    to report the status of one or more LSPs.
 
    For PCE-Initiated LSPs [RFC8281], the PCC creates the LSP using the
@@ -1338,14 +1378,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
    Upon receipt of auto-bandwidth overwhelm notification, the peer
    SHOULD NOT send any PCEP messages related to auto-bandwidth
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 24]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
    adjustment.  If a PCEP message related to auto-bandwidth adjustment
    is received during in overwhelmed state, it MUST be ignored.
 
@@ -1362,6 +1394,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
       notify its peers by sending a PCNtf message with Notification Type
       = TBD3 (Auto-bandwidth Overwhelm State) and Notification Value = 2
       (Clearing auto-bandwidth overwhelm state). A PCEP speaker SHOULD
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 25]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
       send such notification to all peers to with a Notification message
       (Notification-Type=TBD3, Notification-Value=1) was sent earlier
       unless an OVERLOADED-DURATION TLV was included and the PCEP
@@ -1394,15 +1434,12 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    SHOULD be configurable by an operator.
 
    The Maximum-Bandwidth (and Minimum-Bandwidth) should be set to
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 25]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
    acceptable limit to avoid impact on the rest of the MPLS-TE domain.
+
+   The operator should make sure that the Overflow-Threshold is greater
+   than or at least equal to the Up-Adjustment-Threshold. And similarly,
+   make sure that the Underflow-Threshold is greater than or at least
+   equal to the Down-Adjustment-Threshold.
 
 6.2.  Information and Data Models
 
@@ -1413,6 +1450,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    controls and indicators for support of auto-bandwidth feature. 
    Support for various configuration knobs as well as counters of
    messages sent/received containing the TLVs defined in this document
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 26]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    could be added.
 
 6.3.  Liveness Detection and Monitoring
@@ -1426,6 +1471,10 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    The mechanisms defined in this document do not imply any new
    operation verification requirements in addition to those already
    listed in [RFC5440].
+
+   In case of an invalid value, the Sub-TLV would get ignored and the
+   previous value would be maintained. In such case the implementation
+   SHOULD log the event.
 
 6.5.  Requirements On Other Protocols
 
@@ -1441,7 +1490,7 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    it needs to monitor the traffic and report the calculated bandwidth
    to be adjusted to the PCE. The PCE further re-compute paths based on
    the requested bandwidth and update the path to the PCC, which in
-   turns triggers the re-signalling of the path. All these steps adds
+   turns triggers the re-signaling of the path. All these steps adds
    extra load and churn in the network and thus operator needs to take
    due care while enabling this features on a number of LSPs.
 
@@ -1450,13 +1499,6 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    peer.  An implementation SHOULD also allow sending a notification
    when a PCEP speaker is overwhelmed or the rate of messages reach a
    threshold.
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 26]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
    Due care is required by the operator if a Sample-Interval value
    significantly smaller than the default (5 minute) is used, as a small
@@ -1464,6 +1506,14 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    undesirable interactions with transport protocols. These undesirable
    interactions result from providing insufficient time for transport
    protocol reactions to a prior bandwidth adjustment to settle out
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 27]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    before bandwidth samples are taken for the next bandwidth adjustment.
 
 7.  Security Considerations
@@ -1506,19 +1556,20 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
    Each bit should be tracked with the following qualities:
 
       o  Bit number (counting from bit 0 as the most significant bit)
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 27]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
 
       o  Capability description
 
       o  Defining RFC
 
    The initial contents of the sub-registry are empty, with all bits
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 28]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    marked unassigned
 
 8.3.  AUTO-BANDWIDTH-ATTRIBUTES Sub-TLV
@@ -1562,19 +1613,19 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 8.4.  Error Object
 
    This document defines a new Error-Value for PCErr message of Error-
- 
-
-
-Dhody, et al.            Expires March 20, 2020                [Page 28]
-
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
-
-
    Type 19 (Invalid Operation) [RFC8231].  IANA is requested to allocate
    new error-value within the "PCEP-ERROR Object Error Types and Values"
    subregistry of the PCEP Numbers registry, as follows:
 
    Error-Type  Meaning & error values                Reference
+ 
+
+
+Dhody, et al.            Expires March 28, 2020                [Page 29]
+
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
+
+
    -----------------------------------------------------------------
    19          Invalid Operations  
 
@@ -1618,12 +1669,17 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
 
 
 
+
+
+
+
+
  
 
 
-Dhody, et al.            Expires March 20, 2020                [Page 29]
+Dhody, et al.            Expires March 28, 2020                [Page 30]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
 
 
 9.  References
@@ -1677,9 +1733,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
  
 
 
-Dhody, et al.            Expires March 20, 2020                [Page 30]
+Dhody, et al.            Expires March 28, 2020                [Page 31]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
 
 
    [RFC3209]  Awduche, D., Berger, L., Gan, D., Li, T., Srinivasan, V.,
@@ -1733,9 +1789,9 @@ Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
  
 
 
-Dhody, et al.            Expires March 20, 2020                [Page 31]
+Dhody, et al.            Expires March 28, 2020                [Page 32]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
 
 
 Acknowledgments
@@ -1747,8 +1803,8 @@ Acknowledgments
    Thanks to Daniel Franke, Joe Clarke, David Black, and Erik Kline for
    the directorate reviews.
 
-   Thanks to Mirja Kuhlewind, Barry Leiba, and Benjamin Kaduk for the
-   IESG review.
+   Thanks to Mirja Kuhlewind, Barry Leiba, Benjamin Kaduk, and Roman
+   Danyliw for the IESG review.
 
 Contributors' Addresses
 
@@ -1789,9 +1845,9 @@ Contributors' Addresses
  
 
 
-Dhody, et al.            Expires March 20, 2020                [Page 32]
+Dhody, et al.            Expires March 28, 2020                [Page 33]
 
-Internet-Draft      Auto-Bandwidth with Stateful PCE  September 17, 2019
+Internet-Draft      Auto-Bandwidth with Stateful PCE  September 25, 2019
 
 
 Authors' Addresses
@@ -1845,4 +1901,4 @@ Authors' Addresses
 
 
 
-Dhody, et al.            Expires March 20, 2020                [Page 33]
+Dhody, et al.            Expires March 28, 2020                [Page 34]
