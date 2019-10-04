@@ -225,10 +225,8 @@ the C Flag is also set (i.e. PCE is making a control request), the PCC MUST igno
    LSP)).</t>-->
 
    <t>It should be noted that a legacy implementation of PCC that does not
-  support this extension would trigger the error condition as specified 
-  in <xref target="RFC8231"/> (a PCErr with Error-type=19 (Invalid Operation) and 
-  error-value 1 (Attempted LSP Update Request for a non-delegated LSP)), as any control request would have the
-  D Flag (delegate) unset and it would be considered as attempt to update a non-delegated LSP. Further, in case of PLSP-ID of 0, the error condition as specified 
+  support this extension would receive a control request PCUpd message with C flag set and D flag (delegate) unset, it would ignore the C flag and trigger the error condition for the D flag as specified in <xref target="RFC8231"/> (a PCErr with Error-type=19 (Invalid Operation) and 
+  error-value 1 (Attempted LSP Update Request for a non-delegated LSP)). Further, in case of PLSP-ID of 0, the error condition as specified 
   in <xref target="RFC8231"/> (a PCErr with Error-type=19 (Invalid Operation) and 
   error-value 3 (Attempted LSP Update Request for an LSP identified by an unknown PSP-ID)) would be triggered.</t>
 
@@ -283,14 +281,14 @@ the C Flag is also set (i.e. PCE is making a control request), the PCC MUST igno
 
    <t>A PCC is the ultimate arbiter of delegation. As per <xref target="RFC8231"/>, a local policy at PCC is used to influence the delegation. A PCC can also revoke the delegation at any time. A PCC MUST NOT blindly trust the control requests and SHOULD take local policy and other factors into consideration before honoring the request. </t>
 
-   <t>Note that, a PCE may not be sure if a PCC supports this feature. A PCE would try sending a control request to a 'legacy' PCC, which would in turn respond with an error as described in <xref target="Operation"/>. So a PCE would learn this fact only when it wants to take control over an LSP.</t>
+   <t>Note that, a PCE may not be sure if a PCC supports this feature. A PCE would try sending a control request to a 'legacy' PCC, which would in turn respond with an error as described in <xref target="Operation"/>. So a PCE would learn this fact only when it wants to take control over an LSP. A PCE might also be susceptible to a downgrade attacks by falsifying the error condition.</t>
    
    <t>As per <xref target="RFC8231"/>, it is RECOMMENDED
    that these PCEP extensions only be activated on authenticated and
    encrypted sessions across PCEs and PCCs belonging to the same
    administrative authority, using Transport Layer Security (TLS)
    <xref target="RFC8253"/>, as per the recommendations and best current practices in
-   [BCP195] <xref target="RFC7525"/> (unless explicitly excluded in <xref target="RFC8253"/>). 
+   BCP 195 <xref target="RFC7525"/> (unless explicitly excluded in <xref target="RFC8253"/>). 
  </t>
 
 </section>

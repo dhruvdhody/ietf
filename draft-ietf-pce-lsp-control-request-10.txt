@@ -5,12 +5,12 @@
 PCE Working Group                                            A. Raghuram
 Internet-Draft                                                A. Goddard
 Intended status: Standards Track                                    AT&T
-Expires: April 3, 2020                                        J. Karthik
+Expires: April 5, 2020                                        J. Karthik
                                                             S. Sivabalan
                                                      Cisco Systems, Inc.
                                                                  M. Negi
                                                      Huawei Technologies
-                                                         October 1, 2019
+                                                         October 3, 2019
 
 
   Ability for a Stateful Path Computation Element (PCE) to request and
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Raghuram, et al.          Expires April 3, 2020                 [Page 1]
+Raghuram, et al.          Expires April 5, 2020                 [Page 1]
 
 Internet-Draft             LSP Control Request              October 2019
 
 
-   This Internet-Draft will expire on April 3, 2020.
+   This Internet-Draft will expire on April 5, 2020.
 
 Copyright Notice
 
@@ -86,7 +86,7 @@ Table of Contents
      5.1.  Huawei's Proof of Concept based on ONOS . . . . . . . . .   6
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-     7.1.  SRP Object Flags  . . . . . . . . . . . . . . . . . . . .   7
+     7.1.  SRP Object Flags  . . . . . . . . . . . . . . . . . . . .   8
    8.  Manageability Considerations  . . . . . . . . . . . . . . . .   8
      8.1.  Control of Function and Policy  . . . . . . . . . . . . .   8
      8.2.  Information and Data Models . . . . . . . . . . . . . . .   8
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Raghuram, et al.          Expires April 3, 2020                 [Page 2]
+Raghuram, et al.          Expires April 5, 2020                 [Page 2]
 
 Internet-Draft             LSP Control Request              October 2019
 
@@ -165,7 +165,7 @@ Internet-Draft             LSP Control Request              October 2019
 
 
 
-Raghuram, et al.          Expires April 3, 2020                 [Page 3]
+Raghuram, et al.          Expires April 5, 2020                 [Page 3]
 
 Internet-Draft             LSP Control Request              October 2019
 
@@ -221,7 +221,7 @@ Internet-Draft             LSP Control Request              October 2019
 
 
 
-Raghuram, et al.          Expires April 3, 2020                 [Page 4]
+Raghuram, et al.          Expires April 5, 2020                 [Page 4]
 
 Internet-Draft             LSP Control Request              October 2019
 
@@ -271,19 +271,19 @@ Internet-Draft             LSP Control Request              October 2019
    policy.
 
    It should be noted that a legacy implementation of PCC that does not
-   support this extension would trigger the error condition as specified
-   in [RFC8231] (a PCErr with Error-type=19 (Invalid Operation) and
-   error-value 1 (Attempted LSP Update Request for a non-delegated
+   support this extension would receive a control request PCUpd message
+   with C flag set and D flag (delegate) unset, it would ignore the C
+   flag and trigger the error condition for the D flag as specified in
 
 
 
-Raghuram, et al.          Expires April 3, 2020                 [Page 5]
+Raghuram, et al.          Expires April 5, 2020                 [Page 5]
 
 Internet-Draft             LSP Control Request              October 2019
 
 
-   LSP)), as any control request would have the D Flag (delegate) unset
-   and it would be considered as attempt to update a non-delegated LSP.
+   [RFC8231] (a PCErr with Error-type=19 (Invalid Operation) and error-
+   value 1 (Attempted LSP Update Request for a non-delegated LSP)).
    Further, in case of PLSP-ID of 0, the error condition as specified in
    [RFC8231] (a PCErr with Error-type=19 (Invalid Operation) and error-
    value 3 (Attempted LSP Update Request for an LSP identified by an
@@ -333,7 +333,7 @@ Internet-Draft             LSP Control Request              October 2019
 
 
 
-Raghuram, et al.          Expires April 3, 2020                 [Page 6]
+Raghuram, et al.          Expires April 5, 2020                 [Page 6]
 
 Internet-Draft             LSP Control Request              October 2019
 
@@ -370,30 +370,35 @@ Internet-Draft             LSP Control Request              October 2019
    PCE would try sending a control request to a 'legacy' PCC, which
    would in turn respond with an error as described in Section 4.  So a
    PCE would learn this fact only when it wants to take control over an
-   LSP.
+   LSP.  A PCE might also be susceptible to a downgrade attacks by
+   falsifying the error condition.
 
    As per [RFC8231], it is RECOMMENDED that these PCEP extensions only
    be activated on authenticated and encrypted sessions across PCEs and
    PCCs belonging to the same administrative authority, using Transport
    Layer Security (TLS) [RFC8253], as per the recommendations and best
-   current practices in [BCP195] [RFC7525] (unless explicitly excluded
-   in [RFC8253]).
+   current practices in BCP 195 [RFC7525] (unless explicitly excluded in
+   [RFC8253]).
 
 7.  IANA Considerations
+
+
+
+
+
+
+
+
+Raghuram, et al.          Expires April 5, 2020                 [Page 7]
+
+Internet-Draft             LSP Control Request              October 2019
+
 
 7.1.  SRP Object Flags
 
    IANA maintains a registry called the "Path Computation Element
    Protocol (PCEP) Numbers" registry.  It contains a subregistry called
    the "SRP Object Flag Field" registry.  This document requests IANA to
-
-
-
-Raghuram, et al.          Expires April 3, 2020                 [Page 7]
-
-Internet-Draft             LSP Control Request              October 2019
-
-
    allocate following code point in the "SRP Object Flag Field"
    subregistry.
 
@@ -440,12 +445,7 @@ Internet-Draft             LSP Control Request              October 2019
 
 
 
-
-
-
-
-
-Raghuram, et al.          Expires April 3, 2020                 [Page 8]
+Raghuram, et al.          Expires April 5, 2020                 [Page 8]
 
 Internet-Draft             LSP Control Request              October 2019
 
@@ -501,7 +501,7 @@ Internet-Draft             LSP Control Request              October 2019
 
 
 
-Raghuram, et al.          Expires April 3, 2020                 [Page 9]
+Raghuram, et al.          Expires April 5, 2020                 [Page 9]
 
 Internet-Draft             LSP Control Request              October 2019
 
@@ -557,7 +557,7 @@ Internet-Draft             LSP Control Request              October 2019
 
 
 
-Raghuram, et al.          Expires April 3, 2020                [Page 10]
+Raghuram, et al.          Expires April 5, 2020                [Page 10]
 
 Internet-Draft             LSP Control Request              October 2019
 
@@ -613,7 +613,7 @@ Authors' Addresses
 
 
 
-Raghuram, et al.          Expires April 3, 2020                [Page 11]
+Raghuram, et al.          Expires April 5, 2020                [Page 11]
 
 Internet-Draft             LSP Control Request              October 2019
 
@@ -669,4 +669,4 @@ Internet-Draft             LSP Control Request              October 2019
 
 
 
-Raghuram, et al.          Expires April 3, 2020                [Page 12]
+Raghuram, et al.          Expires April 5, 2020                [Page 12]
