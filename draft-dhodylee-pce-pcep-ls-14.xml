@@ -29,14 +29,14 @@
       </address>
     </author>
     <author fullname="Young Lee" initials="Y" surname="Lee">
-      <organization>Futurewei Technologies</organization>
+      <organization>SKKU</organization>
       <address>
         <postal>
-          <street>5700 Tennyson Parkway, Suite 600</street>
-          <city>Plano</city>
-          <region>TX</region>
-          <code>75024</code>
-          <country>USA</country>
+          <street>Sung Kyun Kwan University</street>
+          <city>Seoul</city>
+          <region></region>
+          <code></code>
+          <country>South Korea</country>
         </postal>
         <email>younglee.tx@gmail.com</email>
       </address>
@@ -197,7 +197,7 @@
    to exchange this information within PCEP.  <xref target="RFC8453"/> defines three types of
    topology abstraction - (1) Native/White Topology; (2) Black Topology;
    and (3) Grey Topology.  Based on the local policy, the PNC (or child PCE) would share the domain topology to the MDSC (or Parent PCE)
-   based on the abstraction type.  The protocol extention defined in this document can carry any type of topology abstraction.</t>
+   based on the abstraction type.  The protocol extension defined in this document can carry any type of topology abstraction.</t>
    
 
    </section>
@@ -219,7 +219,7 @@
     may not need to know about any OSPF or IS-IS or BGP protocol specifics.</t>
 
     <t>It SHOULD be possible to encode only the changes in link-state (and TE) properties
-    (after the initial sync) in PCEP messages. This leads to faster convergance. </t>
+    (after the initial sync) in PCEP messages. This leads to faster convergence. </t>
 
     <t>The same mechanism should be used for both MPLS TE as well as GMPLS,
     optical and impairment aware properties.</t>
@@ -258,7 +258,7 @@
       also carried in the message to identify a node or link and that remains constant for the
       lifetime of a PCEP session. This identifier on its own is sufficient
       when no IGP or BGP-LS running in the network for PCE to learn link-state (and TE) information.
-      Incase PCE learns some information from PCEP and some
+      In case PCE learns some information from PCEP and some
       from the existing mechanism, the PCC SHOULD include the mapping of IGP or BGP-LS
       identifier to map the information populated via PCEP with IGP/BGP-LS.
       See <xref target="sec_lsrpt"/> for details.</t>
@@ -597,7 +597,7 @@ Where:
           </figure>
      <t>Protocol-ID (8-bit): The field provide the source information.
      The protocol could be an IGP, BGP-LS or an abstraction algorithm.
-     Incase PCC only provides local information of the PCC,
+     In case PCC only provides local information of the PCC,
      it MUST use Protocol-ID
      as Direct. The following values are defined (some of them are same as
      <xref target="RFC7752"/>):</t>
@@ -614,9 +614,10 @@ Where:
 |      5      | Static configuration             |
 |      6      | OSPFv3                           |
 |      7      | BGP                              |
-|      8      | PCEP                             |
-|      9      | Abstraction                      |
-|      10     | Unspecified                      |    
+|      8      | RSVP-TE                          |
+|      9      | Segment Routing                  |
+|      10     | PCEP                             |    
+|      11     | Abstraction                      |    
 +-------------+----------------------------------+
             ]]></artwork>
           </figure>
@@ -740,7 +741,7 @@ Where:
    <t>As described in <xref target="RFC7752"/>,
    each link is anchored by a pair of Router-IDs that are used by the
    underlying IGP, namely, 48 Bit ISO System-ID for IS-IS and 32 bit
-   Router-ID for OSPFv2 and OSPFv3.  Incase of additional auxiliary
+   Router-ID for OSPFv2 and OSPFv3.  In case of additional auxiliary
    Router-IDs used for TE, these MUST also be included in the link
    attribute TLV (see <xref target="link_attr"/>).</t>
 
@@ -802,24 +803,39 @@ Where:
           </figure>
    </section>
    <section title="Node Descriptors Sub-TLVs" anchor="node_subtlv">
-   <t>The Node Descriptor Sub-TLV type Type and lengths are listed in
-   the following table:</t>
+   <t>The Node Descriptors TLV	(Local and Remote) carries one or more Node Descriptor Sub-TLV follows the format of all PCEP TLVs as defined
+   in <xref target="RFC5440"/>, however, the Type values are selected from a new PCEP-LS sub-TLV IANA registry (see <xref target="subtlv"/>).</t>
+
+   <t>Type values are chosen so that there can be commonality with BGP-LS <xref target="RFC7752"/>.  This is possible because the "BGP-LS Node Descriptor, Link
+   Descriptor, Prefix Descriptor, and Attribute TLVs" registry marks
+   0-255 as reserved.  Thus the space of the sub-TLV values for the Type
+   field can be partitioned as shown below - 
+      <figure><artwork>
+Range          |
+---------------+---------------------------------------------
+0              | Reserved - must not be allocated.
+               |
+1 .. 255       | New PCEP sub-TLV allocated according to the
+               | registry defined in this document.
+               |
+256 ..   65535 | Per BGP registry defined by [RFC7752].
+               | Not to be allocated in this registry.
+</artwork></figure></t>   
+<t>All Node Descriptors TLVs defined for BGP-LS can then be used with PCEP-LS as well. One new PCEP sub-TLVs for Node Descriptor are defined in this document.</t>
+
              <figure title=""
              suppress-title="true" align="center" alt="" width="" height="" >
             <artwork align="center"><![CDATA[
 +----------+-------------------+----------+----------------+
 | Sub-TLV  | Description       |   Length |Value defined in|
 +----------+-------------------+----------+----------------+
-|        0 | Reserved          |        - |        -       |
-|        1 | Autonomous System |        4 |  [RFC7752]     | 
-|        2 | BGP-LS Identifier |        4 |  / section     |
-|        3 | OSPF Area-ID      |        4 |    3.2.1.4     |
-|        4 | Router-ID         | Variable |                |
+|      1   | SPEAKER-ENTITY-ID | Variable | [RFC8232]      |
 +----------+-------------------+----------+----------------+
             ]]></artwork>
           </figure>
+<t>A new sub-TLV type (1) is allocated for SPEAKER-ENTITY-ID sub-TLV. The length and value field are as per <xref target="RFC8232"/>.</t>
 
-   <t>The sub-TLV values in Node Descriptor TLVs are defined
+   <!--<t>The sub-TLV values in Node Descriptor TLVs are defined
    as follows (similar to <xref target="RFC7752"/>):
    <list style="symbols">
    <t>Autonomous System:  opaque value (32 Bit AS Number)</t>
@@ -838,7 +854,7 @@ Where:
 
 
       </list>
-      </t>
+      </t>-->
    </section>
    <section title="Link Descriptors TLV">
    <t>The Link Descriptors TLV contains Link Descriptors for each link.
@@ -867,30 +883,9 @@ Where:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             ]]></artwork>
           </figure>
-   <t>The Link Descriptor Sub-TLV type and lengths are listed in
-   the following table:</t>
-             <figure title=""
-             suppress-title="true" align="center" alt="" width="" height="" >
-            <artwork align="center"><![CDATA[
-+-----------+---------------------+---------------+-----------------+
-|  Sub-TLV  | Description         |   IS-IS TLV   | Value defined   |
-|           |                     |    /Sub-TLV   | in:             |
-+-----------+---------------------+---------------+-----------------+
-|    6      | Link Local/Remote   |      22/4     | [RFC5307]/1.1   |
-|           | Identifiers         |               |                 |
-|    7      | IPv4 interface      |      22/6     | [RFC5305]/3.2   |
-|           | address             |               |                 |
-|    8      | IPv4 neighbor       |      22/8     | [RFC5305]/3.3   |
-|           | address             |               |                 |
-|    9      | IPv6 interface      |     22/12     | [RFC6119]/4.2   |
-|           | address             |               |                 |
-|    10     | IPv6 neighbor       |     22/13     | [RFC6119]/4.3   |
-|           | address             |               |                 |
-|    5      | Multi-Topology      |       -       | [RFC7752]/      |
-|           | identifier          |               | 3.2.1.5         |
-+-----------+---------------------+---------------+-----------------+
-            ]]></artwork>
-          </figure>
+<t>All Link Descriptors TLVs defined for BGP-LS can then be used with PCEP-LS as well. No new PCEP sub-TLVs for Link Descriptor are defined in this document.</t>
+
+   
 <t>The format and semantics of the 'value' fields in most 'Link
    Descriptor' sub-TLVs correspond to the format and semantics of value
    fields in IS-IS Extended IS Reachability sub-TLVs, defined in
@@ -924,27 +919,7 @@ Where:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             ]]></artwork>
           </figure>
-
-   <t>The value contains
-   one or more Prefix Descriptor Sub-TLVs defined below - </t>
-
-             <figure title=""
-             suppress-title="true" align="center" alt="" width="" height="" >
-            <artwork align="center"><![CDATA[
-
-+--------------+-----------------------+----------+-----------------+
-|   TLV Code   | Description           |  Length  | Value defined   |
-|    Point     |                       |          | in:             |
-+--------------+-----------------------+----------+-----------------+
-|   5          | Multi-Topology        | variable | [RFC7752]       |
-|              | Identifier            |          | /3.2.1.5        |
-|   11         | OSPF Route Type       |    1     | [RFC7752]       |
-|              |                       |          | /3.2.3.1        |
-|   12         | IP Reachability       | variable | [RFC7752]       |
-|              | Information           |          | /3.2.3.2        |
-+--------------+-----------------------+----------+-----------------+
-            ]]></artwork>
-          </figure>
+<t>All PrefiX Descriptors TLVs defined for BGP-LS can then be used with PCEP-LS as well. No new PCEP sub-TLVs for Prefix Descriptor are defined in this document.</t>
    </section>
    <section title="PCEP-LS Attributes">
    <section title="Node Attributes TLV" anchor="node_attr">
@@ -964,32 +939,7 @@ Where:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             ]]></artwork>
           </figure>
-   <t>The Node Attributes Sub-TLV type and lengths are listed in
-   the following table:</t>
-             <figure title=""
-             suppress-title="true" align="center" alt="" width="" height="" >
-            <artwork align="center"><![CDATA[
-+--------------+-----------------------+----------+-----------------+
-|   Sub TLV    | Description           |   Length | Value defined   |
-|              |                       |          | in:             |
-+--------------+-----------------------+----------+-----------------+
-|     5        | Multi-Topology        | variable | [RFC7752]       |
-|              | Identifier            |          | /3.2.1.5        |
-|     13       | Node Flag Bits        |        1 | [RFC7752]       |
-|              |                       |          | /3.3.1.1        |
-|     14       | Opaque Node           | variable | [RFC7752]       |
-|              | Properties            |          | /3.3.1.5        |
-|     15       | Node Name             | variable | [RFC7752]       |
-|              |                       |          | /3.3.1.3        |
-|     16       | IS-IS Area Identifier | variable | [RFC7752]       |
-|              |                       |          | /3.3.1.2        |
-|     17       | IPv4 Router-ID of     |        4 | [RFC5305]/4.3   |
-|              | Local Node            |          |                 |
-|     18       | IPv6 Router-ID of     |       16 | [RFC6119]/4.1   |
-|              | Local Node            |          |                 |
-+--------------+-----------------------+----------+-----------------+
-            ]]></artwork>
-          </figure>
+<t>All Node Attributes TLVs defined for BGP-LS can then be used with PCEP-LS as well. No new PCEP sub-TLVs for Node Attributes are defined in this document.</t>          
 
       </section>
    <section title="Link Attributes TLV" anchor="link_attr">
@@ -1015,75 +965,15 @@ Where:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             ]]></artwork>
           </figure>
-   <t>The following 'Link Attribute' sub-TLVs are valid :</t>
-             <figure title=""
-             suppress-title="true" align="center" alt="" width="" height="" >
-            <artwork align="center"><![CDATA[
-+-----------+---------------------+--------------+------------------+
-|  Sub-TLV  | Description         |  IS-IS TLV   | Defined in:      |
-|           |                     |   /Sub-TLV   |                  |
-|           |                     |  BGP-LS TLV  |                  |
-+-----------+---------------------+--------------+------------------+
-|    17     | IPv4 Router-ID of   |   134/---    | [RFC5305]/4.3    |
-|           | Local Node          |              |                  |
-|    18     | IPv6 Router-ID of   |   140/---    | [RFC6119]/4.1    |
-|           | Local Node          |              |                  |
-|    19     | IPv4 Router-ID of   |   134/---    | [RFC5305]/4.3    |
-|           | Remote Node         |              |                  |
-|    20     | IPv6 Router-ID of   |   140/---    | [RFC6119]/4.1    |
-|           | Remote Node         |              |                  |
-|    6      | Link Local/Remote   |     22/4     | [RFC5307]/1.1    |
-|           | Identifiers         |              |                  |
-|    22     | Administrative      |     22/3     | [RFC5305]/3.1    |
-|           | group (color)       |              |                  |
-|    23     | Maximum link        |     22/9     | [RFC5305]/3.3    |
-|           | bandwidth           |              |                  |
-|    24     | Max. reservable     |    22/10     | [RFC5305]/3.5    |
-|           | link bandwidth      |              |                  |
-|    25     | Unreserved          |    22/11     | [RFC5305]/3.6    |
-|           | bandwidth           |              |                  |
-|    26     | TE Default Metric   |    22/18     | [RFC7752]        |
-|           |                     |              | /3.3.2.3         |
-|    27     | Link Protection     |    22/20     | [RFC5307]/1.2    |
-|           | Type                |              |                  |
-|    28     | MPLS Protocol Mask  |     1094     | [RFC7752]        |
-|           |                     |              | /3.3.2.2         |
-|    29     | IGP Metric          |     1095     | [RFC7752]        |
-|           |                     |              | /3.3.2.4         |
-|    30     | Shared Risk Link    |     1096     | [RFC7752]        |
-|           | Group               |              | /3.3.2.5         |
-|    31     | Opaque link         |     1097     | [RFC7752]        |
-|           | attributes          |              | /3.3.2.6         |
-|    32     | Link Name attribute |     1098     | [RFC7752]        |
-|           |                     |              | /3.3.2.7         |
-|    33     | Unidirectional      |     22/33    | [RFC7810]/4.1    |
-|           | Link Delay          |              |                  |
-|    34     | Min/Max             |     22/34    | [RFC7810]/4.2    |
-|           | Unidirectional Link |              |                  |
-|           | Delay               |              |                  |
-|    35     | Unidirectional      |     22/35    | [RFC7810]/4.3    |
-|           | Delay Variation     |              |                  |
-|    36     | Unidirectional      |     22/36    | [RFC7810]/4.4    |
-|           | Link Loss           |              |                  |
-|    37     | Unidirectional      |     22/37    | [RFC7810]/4.5    |
-|           | Residual Bandwidth  |              |                  |
-|    38     | Unidirectional      |     22/38    | [RFC7810]/4.6    |
-|           | Available Bandwidth |              |                  |
-|    39     | Unidirectional      |     22/39    | [RFC7810]/4.7    |
-|           | Bandwidth           |              |                  |
-|           | Utilization         |              |                  |
-|    40     | Extended Admin      |     22/14    | [RFC7308]/2.1    |
-|           | Group (EAG)         |              |                  |
-+-----------+---------------------+--------------+------------------+
-            ]]></artwork>
-          </figure>
+<t>All Link Attributes TLVs defined for BGP-LS can then be used with PCEP-LS as well. No new PCEP sub-TLVs for Link Attributes are defined in this document.</t>          
+
       </section>
       <section title="Prefix Attributes TLV" >
    <t>This TLV is applicable for LS Prefix Object-Types for both IPv4 and IPv6.
    Prefixes are learned from the IGP (IS-IS or OSPF) or BGP topology with a set
    of IGP attributes (such as metric, route tags, etc.). This section describes the
    different attributes related to the IPv4/IPv6 prefixes.  Prefix
-   Attributes TLVs SHOULD be encoded in the LS Prefix Object.
+   Attributes TLVs SHOULD be encoded in the LS Prefix Object.</t>
 
 <figure title=""
              suppress-title="true" align="center" alt="" width="" height="" >
@@ -1099,38 +989,17 @@ Where:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
             ]]></artwork>
           </figure>
-   The following 'Prefix Attribute' sub-TLVs are valid :
+<t>All Prefix Attributes TLVs defined for BGP-LS can then be used with PCEP-LS as well. No new PCEP sub-TLVs for Prefix Attributes are defined in this document.</t>          
 
-<figure title=""
-             suppress-title="true" align="center" alt="" width="" height="" >
-            <artwork align="center"><![CDATA[
-+-----------+---------------------+--------------+------------------+
-|  Sub-TLV  | Description         |  BGP-LS TLV  | Defined in:      |
-+-----------+---------------------+--------------+------------------+
-|    41     | IGP Flags           |     1152     | [RFC7752]        |
-|           |                     |              | /3.3.3.1         |
-|    42     | Route Tag           |     1153     | [RFC7752]        |
-|           |                     |              | /3.3.3.2         |
-|    43     | Extended Tag        |     1154     | [RFC7752]        |
-|           |                     |              | /3.3.3.3         |
-|    44     | Prefix Metric       |     1155     | [RFC7752]        |
-|           |                     |              | /3.3.3.4         |
-|    45     | OSPF Forwarding     |     1156     | [RFC7752]        |
-|           | Address             |              | /3.3.3.5         |
-|    46     | Opaque Prefix       |     1157     | [RFC7752]        |
-|           | Attribute           |              | /3.3.3.6         |
-+-----------+---------------------+--------------+------------------+
-            ]]></artwork>
-          </figure> </t>
       </section>
       </section>
       <section title="Removal of an Attribute" toc="default">
       <t>One of a key objective of PCEP-LS is to encode
       and carry only the impacted attributes of a Node, a Link or a Prefix. 
-      To accommodate this requirement, incase of a removal of an attribute,
+      To accommodate this requirement, in case of a removal of an attribute,
       the sub-TLV MUST be included with no 'value' field and length=0 
       to indicate that the attribute is removed. On receiving a sub-TLV
-      with zero length, the receiver removes the attribute from the database.</t>
+      with zero length, the receiver removes the attribute from the database. An absence of a sub-TLV that was included earlier MUST be interpreted as no change.</t>
       </section>
       </section>
       </section>
@@ -1199,8 +1068,8 @@ Where:
    capabilities.</t>
    <t>An implementation SHOULD also provide the statistics:
    <list style="symbols">
-   <t>Total number of LSRpt sent/received, as well as per neighbor</t>
-   <t>Number of error received for LSRpt, per neighbor</t>
+   <t>Total number of LSRpt sent/received, as well as per neighbour</t>
+   <t>Number of error received for LSRpt, per neighbour</t>
    <t>Total number of locally originated Link-State Information</t>
 </list></t>
    <t>These statistics should be recorded as absolute counts since system
@@ -1234,7 +1103,7 @@ Where:
 <t>   This document requests IANA actions to allocate code points for the
    protocol elements defined in this document.</t>
 <section title="PCEP Messages">
-<t> IANA created a registry for PCEP messages.  Each PCEP message has a
+<t>IANA created a registry for "PCEP Messages".  Each PCEP message has a
    message type value. This document defines a new PCEP message value.</t>
    <t>
         <figure title="" suppress-title="false" align="center" alt="" width="" height="">
@@ -1282,11 +1151,12 @@ Value       Meaning                        Reference
 4           Direct                         [This I-D]
 5           Static configuration           [This I-D]
 6           OSPFv3                         [This I-D]
-7           BGP-LS                         [This I-D]
-8           PCEP-LS                        [This I-D]   
-9           Abstraction                    [This I-D]
-10          Unspecified                    [This I-D]
-
+7           BGP                            [This I-D]
+8           RSVP-TE                        [This I-D]
+9           Segment Routing                [This I-D]   
+10          PCEP                           [This I-D]
+11          Abstraction                    [This I-D]
+12-255      Unassigned
 ]]></artwork>
         </figure>
       </t>   
@@ -1372,115 +1242,42 @@ Value     Meaning                        Reference
     <section title="PCEP-LS Sub-TLV Type Indicators" anchor="subtlv">
    <t>This document specifies the PCEP-LS Sub-TLVs.  IANA
    is requested to create an "PCEP-LS Sub-TLV Types"
-   sub-registry in the "PCEP TLV Type Indicators" for the sub-TLVs
+   sub-registry for the sub-TLVs
    carried in the PCEP-LS TLV (Local and Remote Node Descriptors TLV,
    Link Descriptors TLV, Prefix Descriptors TLV, Node Attributes TLV,
-   Link Attributes TLV and Prefix Attributes TLV.  This document defines
-   the following types: </t>
-<t>
-        <figure title="" suppress-title="false" align="center" alt="" width="" height="">
-          <artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height=""><![CDATA[
-+-----------+---------------------+---------------+-----------------+
-|  Sub-TLV  | Description         |     Ref       | Value defined   |
-|           |                     |     Sub-TLV   | in:             |
-+-----------+---------------------+---------------+-----------------+
-|    1      | Autonomous System   |      512      | [RFC7752]       |
-|           |                     |               | /3.2.1.4        |
-|    2      | BGP-LS Identifier   |      513      | [RFC7752]       |
-|           |                     |               | /3.2.1.4        |
-|    3      | OSPF Area-ID        |      514      | [RFC7752]       |
-|           |                     |               | /3.2.1.4        |
-|    4      | Router-ID           |      515      | [RFC7752]       |
-|           |                     |               | /3.2.1.4        |
-|    5      | Multi-Topology-ID   |      263      | [RFC7752]       |
-|           |                     |               | /3.2.1.5        |
-|    6      | Link Local/Remote   |      22/4     | [RFC5307]/1.1   |
-|           | Identifiers         |               |                 |
-|    7      | IPv4 interface      |      22/6     | [RFC5305]/3.2   |
-|           | address             |               |                 |
-|    8      | IPv4 neighbor       |      22/8     | [RFC5305]/3.3   |
-|           | address             |               |                 |
-|    9      | IPv6 interface      |     22/12     | [RFC6119]/4.2   |
-|           | address             |               |                 |
-|    10     | IPv6 neighbor       |     22/13     | [RFC6119]/4.3   |
-|           | address             |               |                 |
-|    11     | OSPF Route Type     |      264      | [RFC7752]       |
-|           |                     |               | /3.2.3.1        |
-|    12     | IP Reachability     |      265      | [RFC7752]       |
-|           | Information         |               | /3.2.3.2        |
-|    13     | Node Flag Bits      |      1024     | [RFC7752]       |
-|           |                     |               | /3.3.1.1        |
-|    14     | Opaque Node         |      1025     | [RFC7752]       |
-|           | Properties          |               | /3.3.1.5        |
-|    15     | Node Name           |      1026     | [RFC7752]       |
-|           |                     |               | /3.3.1.3        |
-|    16     | IS-IS Area          |      1027     | [RFC7752]       |
-|           | Identifier          |               | /3.3.1.2        |
-|    17     | IPv4 Router-ID of   |      134/--   | [RFC5305]/4.3   |
-|           | Local Node          |               |                 |
-|    18     | IPv6 Router-ID of   |      140/--   | [RFC6119]/4.1   |
-|           | Local Node          |               |                 |
-|    19     | IPv4 Router-ID of   |      134/--   | [RFC5305]/4.3   |
-|           | Remote Node         |               |                 |
-|    20     | IPv6 Router-ID of   |      140/--   | [RFC6119]/4.1   |
-|           | Remote Node         |               |                 |
-|    22     | Administrative      |     22/3      | [RFC5305]/3.1   |
-|           | group (color)       |               |                 |
-|    23     | Maximum link        |     22/9      | [RFC5305]/3.3   |
-|           | bandwidth           |               |                 |
-|    24     | Max. reservable     |    22/10      | [RFC5305]/3.5   |
-|           | link bandwidth      |               |                 |
-|    25     | Unreserved          |    22/11      | [RFC5305]/3.6   |
-|           | bandwidth           |               |                 |
-|    26     | TE Default Metric   |    22/18      | [RFC7752]       |
-|           |                     |               | /3.3.2.3        |
-|    27     | Link Protection     |    22/20      | [RFC5307]/1.2   |
-|           | Type                |               |                 |
-|    28     | MPLS Protocol Mask  |     1094      | [RFC7752]       |
-|           |                     |               | /3.3.2.2        |
-|    29     | IGP Metric          |     1095      | [RFC7752]       |
-|           |                     |               | /3.3.2.4        |
-|    30     | Shared Risk Link    |     1096      | [RFC7752]       |
-|           | Group               |               | /3.3.2.5        |
-|    31     | Opaque link         |     1097      | [RFC7752]       |
-|           | attributes          |               | /3.3.2.6        |
-|    32     | Link Name attribute |     1098      | [RFC7752]       |
-|           |                     |               | /3.3.2.7        |
-|    33     | Unidirectional      |     22/33     | [RFC7810]/4.1   |
-|           | Link Delay          |               |                 |
-|    34     | Min/Max             |     22/34     | [RFC7810]/4.2   |
-|           | Unidirectional Link |               |                 |
-|           | Delay               |               |                 |
-|    35     | Unidirectional      |     22/35     | [RFC7810]/4.3   |
-|           | Delay Variation     |               |                 |
-|    36     | Unidirectional      |     22/36     | [RFC7810]/4.4   |
-|           | Link Loss           |               |                 |
-|    37     | Unidirectional      |     22/37     | [RFC7810]/4.5   |
-|           | Residual Bandwidth  |               |                 |
-|    38     | Unidirectional      |     22/38     | [RFC7810]/4.6   |
-|           | Available Bandwidth |               |                 |
-|    39     | Unidirectional      |     22/39     | [RFC7810]/4.7   |
-|           | Bandwidth           |               |                 |
-|           | Utilization         |               |                 |
-|    40     | Extended Admin      |     22/14     | [RFC7308]/2.1   |
-|           | Group (EAG)         |               |                 |
-|    41     | IGP Flags           |     1152      | [RFC7752]       |
-|           |                     |               | /3.3.3.1        |
-|    42     | Route Tag           |     1153      | [RFC7752]       |
-|           |                     |               | /3.3.3.2        |
-|    43     | Extended Tag        |     1154      | [RFC7752]       |
-|           |                     |               | /3.3.3.3        |
-|    44     | Prefix Metric       |     1155      | [RFC7752]       |
-|           |                     |               | /3.3.3.4        |
-|    45     | OSPF Forwarding     |     1156      | [RFC7752]       |
-|           | Address             |               | /3.3.3.5        |
-|    46     | Opaque Prefix       |     1157      | [RFC7752]       |
-|           | Attribute           |               | /3.3.3.6        |
-+-----------+---------------------+---------------+-----------------+
-]]></artwork>
-        </figure>
-      </t>
-      <t>New values are to be assigned by Standards Action <xref target="RFC8126"/>.</t>
+   Link Attributes TLV and Prefix Attributes TLV.  </t>
+   <t>Allocations from this registry are to be made according to the following assignment policies <xref target="RFC8126" />:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+Range          | Assignment policy
+---------------+---------------------------------------------------
+0              | Reserved - must not be allocated.
+               |
+1 .. 251       | Specification Required    
+               |
+252 .. 255	   | Experimental Use        
+               |       
+256 ..   65535 | Reserved - must not be allocated.
+               | Usage mirrors the BGP-LS TLV registry [RFC7752]
+               | & [I-D.ietf-idr-flow-spec-v6].
+       ]]>
+     </artwork>
+   </figure>
+   <t>IANA is requested to pre-populate this registry with values defined in this
+      document as follows, taking the new values from the range 1 to 251:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+ Value | Meaning
+-------+------------------------
+ 1     | SPEAKER-ENTITY-ID
+       ]]>
+     </artwork>
+   </figure>
+
     </section>
     </section>
     <section title="TLV Code Points Summary">
@@ -1495,7 +1292,7 @@ Value     Meaning                        Reference
 |    TBD7   | Routing Universe    |      --       | Sec 9.2.1       |
 |    TBD15  | Route               |      --       | Sec 9.2.2       |
 |           | Distinguisher       |               |                 |
-|     *     | Virtual Network     |      --       | [leedhody-pce-  |
+|     *     | Virtual Network     |      --       | [ietf-pce-      |
 |           |                     |               | vn-association] |  
 |    TBD8   | Local Node          |      256      | [RFC7752]       |
 |           | Descriptors         |               | /3.2.1.2        |
@@ -1511,7 +1308,7 @@ Value     Meaning                        Reference
 * this TLV is defined in a different PCEP document
 ]]></artwork>
         </figure>
-<t>Refer <xref target="subtlv"/> for the table of Sub-TLVs.</t>
+<!--<t>Refer <xref target="subtlv"/> for the table of Sub-TLVs.</t>-->
 
     </section>
     <section title="Implementation Status">
@@ -1563,8 +1360,8 @@ Value     Meaning                        Reference
     <?rfc include="reference.RFC.6119.xml" ?>
 
     <?rfc include="reference.RFC.7752"?>
-    <?rfc include="reference.RFC.7810"?>
     <?rfc include="reference.RFC.8174"?>
+    <?rfc include="reference.RFC.8232.xml"?>
     </references>
     <references title="Informative References">
       <?rfc include="reference.RFC.3630.xml" ?>
@@ -1586,6 +1383,7 @@ Value     Meaning                        Reference
       <?rfc include="reference.RFC.8126.xml" ?>
       <?rfc include="reference.RFC.8202.xml" ?>
       <?rfc include="reference.RFC.8231.xml"?>
+
       <?rfc include="reference.RFC.8253.xml"?>
       <?rfc include="reference.RFC.8281.xml"?>
       <?rfc include="reference.RFC.8283.xml"?>
@@ -1601,7 +1399,7 @@ Value     Meaning                        Reference
       <?rfc include="reference.I-D.leedhody-pce-vn-association"?>
       
 
-<reference anchor="ONOS-PCEP" target="https://wiki.onosproject.org/display/ONOS/PCEP+Protocol">
+<!--<reference anchor="ONOS-PCEP" target="https://wiki.onosproject.org/display/ONOS/PCEP+Protocol">
   <front>
     <title>Support for PCEP in ONOS</title>
     <author/>
@@ -1614,91 +1412,11 @@ Value     Meaning                        Reference
     <author/>
     <date/>
   </front>
-</reference>
+</reference>-->
 
 
     </references>
-    <section title="Reusing BGP-LS codepoints" toc="default">
-      <t>This document creates a new registry for the PCEP-LS sub-TLVs (<xref target="subtlv"/>) and define new sub-TLV codepoints. Another approach could be to use the BGP-LS registry which is already defined for use in BGP. 
-      This is possible because the "BGP-LS Node Descriptor, Link Descriptor, Prefix Descriptor, and
-      Attribute TLVs" registry marks 0-255 as reserved. Thus the space of the sub-TLV values for the Type field can be partitioned as shown below - 
-      <figure><artwork>
-Range          |
----------------+---------------------------------------------
-0              | Reserved - must not be allocated.
-               |
-1 .. 255       | New PCEP sub-TLV allocated according to the
-               | registry defined in this document.
-               |
-256 ..   65535 | Per BGP registry defined by [RFC7752].
-               | Not to be allocated in this registry.
-</artwork></figure></t>
-<t>[Editor's Note - If this approach is agreed by the WG, the document would be updated with new sub-TLV type values.]</t>
 
-    </section>
-    <section title="Relevant OSPF TLV and sub-TLV" toc="default">
-    <t>This section list the relevant TLVs and sub-TLVs defined for
-    OSPF.</t>
-    <t>
-        <figure title="" suppress-title="false" align="center" alt="" width="" height="">
-          <artwork xml:space="preserve" name="" type="" align="center" alt="" width="" height=""><![CDATA[
-+-----------+---------------------+---------------+-----------------+
-|  Sub-TLV  | Description         |     OSPF-TE   | Value defined   |
-|           |                     |     Sub-TLV   | in:             |
-+-----------+---------------------+---------------+-----------------+
-|    6      | Link Local/Remote   |      11       | [RFC4203]/1.1   |
-|           | Identifiers         |               |                 |
-|    7      | IPv4 interface      |      3        | [RFC3630]/2.5.3 |
-|           | address             |               |                 |
-|    8      | IPv4 neighbor       |      4        | [RFC3630]/2.5.4 |
-|           | address             |               |                 |
-|    9      | IPv6 interface      |      19       | [RFC5329]/4.3   |
-|           | address             |               |                 |
-|    10     | IPv6 neighbor       |      20       | [RFC5329]/4.4   |
-|           | address             |               |                 |
-|    17     | IPv4 Router-ID of   |      1        | [RFC3630]/2.4.1 |
-|           | Local Node          |               |                 |
-|    18     | IPv6 Router-ID of   |      3        | [RFC5329]/3     |
-|           | Local Node          |               |                 |
-|    19     | IPv4 Router-ID of   |      1        | [RFC3630]/2.4.1 |
-|           | Remote Node         |               |                 |
-|    20     | IPv6 Router-ID of   |      3        | [RFC5329]/3     |
-|           | Remote Node         |               |                 |
-|    22     | Administrative      |      9        | [RFC3630]/2.5.9 |
-|           | group (color)       |               |                 |
-|    23     | Maximum link        |      6        | [RFC3630]/2.5.6 |
-|           | bandwidth           |               |                 |
-|    24     | Max. reservable     |      7        | [RFC3630]/2.5.7 |
-|           | link bandwidth      |               |                 |
-|    25     | Unreserved          |      8        | [RFC3630]/2.5.8 |
-|           | bandwidth           |               |                 |
-|    27     | Link Protection     |      14       | [RFC4203]/1.2   |
-|           | Type                |               |                 |
-|    30     | Shared Risk Link    |      16       | [RFC4203]/1.3   |
-|           | Group               |               |                 |
-|    33     | Unidirectional      |      27       | [RFC7471]/4.1   |
-|           | Link Delay          |               |                 |
-|    34     | Min/Max             |      28       | [RFC7471]/4.2   |
-|           | Unidirectional Link |               |                 |
-|           | Delay               |               |                 |
-|    35     | Unidirectional      |      29       | [RFC7471]/4.3   |
-|           | Delay Variation     |               |                 |
-|    36     | Unidirectional      |      30       | [RFC7471]/4.4   |
-|           | Link Loss           |               |                 |
-|    37     | Unidirectional      |      31       | [RFC7471]/4.5   |
-|           | Residual Bandwidth  |               |                 |
-|    38     | Unidirectional      |      32       | [RFC7471]/4.6   |
-|           | Available Bandwidth |               |                 |
-|    39     | Unidirectional      |      33       | [RFC7471]/4.7   |
-|           | Bandwidth           |               |                 |
-|           | Utilization         |               |                 |
-|    40     | Extended Admin      |      26       | [RFC7308]/2.1   |
-|           | Group (EAG)         |               |                 |
-+-----------+---------------------+---------------+-----------------+
-]]></artwork>
-        </figure>
-      </t>
-    </section>
 
     <section title="Examples" toc="default">
     <t>These examples are for illustration purposes only to show how the new
@@ -1722,22 +1440,22 @@ RTA
 ---
 LS Node                                   
    TLV - Local Node Descriptors
-       Sub-TLV - 3: OSPF Area-ID: 0.0.0.0
-       Sub-TLV - 4: Router-ID: 1.1.1.1
+       Sub-TLV - 514: OSPF Area-ID: 0.0.0.0
+       Sub-TLV - 515: Router-ID: 1.1.1.1
    TLV - Node Attributes TLV 
        Sub-TLV(s)
 
 
 LS Link
    TLV - Local Node Descriptors
-       Sub-TLV - 3: OSPF Area-ID: 0.0.0.0
-       Sub-TLV - 4: Router-ID: 1.1.1.1
+       Sub-TLV - 514: OSPF Area-ID: 0.0.0.0
+       Sub-TLV - 515: Router-ID: 1.1.1.1
    TLV - Remote Node Descriptors
-       Sub-TLV - 3: OSPF Area-ID: 0.0.0.0
-       Sub-TLV - 4: Router-ID: 2.2.2.2
+       Sub-TLV - 514: OSPF Area-ID: 0.0.0.0
+       Sub-TLV - 515: Router-ID: 2.2.2.2
    TLV - Link Descriptors    
-       Sub-TLV - 7: IPv4 interface: 10.1.1.1    
-       Sub-TLV - 8: IPv4 neighbor: 10.1.1.2
+       Sub-TLV - 259: IPv4 interface: 10.1.1.1    
+       Sub-TLV - 260: IPv4 neighbor: 10.1.1.2
    TLV - Link Attributes TLV    
        Sub-TLV(s)
 
@@ -1745,21 +1463,21 @@ RTB
 ---
 LS Node                                   
    TLV - Local Node Descriptors
-       Sub-TLV - 3: OSPF Area-ID: 0.0.0.0
-       Sub-TLV - 4: Router-ID: 2.2.2.2
+       Sub-TLV - 514: OSPF Area-ID: 0.0.0.0
+       Sub-TLV - 515: Router-ID: 2.2.2.2
    TLV - Node Attributes TLV
        Sub-TLV(s)
 
 LS Link
    TLV - Local Node Descriptors
-       Sub-TLV - 3: OSPF Area-ID: 0.0.0.0
-       Sub-TLV - 4: Router-ID: 2.2.2.2
+       Sub-TLV - 514: OSPF Area-ID: 0.0.0.0
+       Sub-TLV - 515: Router-ID: 2.2.2.2
    TLV - Remote Node Descriptors
-       Sub-TLV - 3: OSPF Area-ID: 0.0.0.0
-       Sub-TLV - 4: Router-ID: 1.1.1.1
+       Sub-TLV - 514: OSPF Area-ID: 0.0.0.0
+       Sub-TLV - 515: Router-ID: 1.1.1.1
    TLV - Link Descriptors    
-       Sub-TLV - 7: IPv4 interface: 10.1.1.2    
-       Sub-TLV - 8: IPv4 neighbor: 10.1.1.1
+       Sub-TLV - 259: IPv4 interface: 10.1.1.2    
+       Sub-TLV - 260: IPv4 neighbor: 10.1.1.1
    TLV - Link Attributes TLV    
        Sub-TLV(s)       
 ]]></artwork>
@@ -1789,45 +1507,45 @@ PCE1
 ----
 LS Node                                   
    TLV - Local Node Descriptors
-       Sub-TLV - 1: Autonomous System: 100 (Domain 1)
-       Sub-TLV - 4: Router-ID: 11.11.11.11 (abstract)
+       Sub-TLV - 512: Autonomous System: 100 (Domain 1)
+       Sub-TLV - 515: Router-ID: 11.11.11.11 (abstract)
 
 LS Link
    TLV - Local Node Descriptors
-       Sub-TLV - 1: Autonomous System: 100
-       Sub-TLV - 4: Router-ID: 11.11.11.11 (abstract)
+       Sub-TLV - 512: Autonomous System: 100
+       Sub-TLV - 515: Router-ID: 11.11.11.11 (abstract)
    TLV - Remote Node Descriptors
-       Sub-TLV - 1: Autonomous System: 200 (Domain 2)
-       Sub-TLV - 4: Router-ID: 22.22.22.22 (abstract)
+       Sub-TLV - 512: Autonomous System: 200 (Domain 2)
+       Sub-TLV - 515: Router-ID: 22.22.22.22 (abstract)
    TLV - Link Descriptors    
-       Sub-TLV - 7: IPv4 interface: 11.1.1.1    
-       Sub-TLV - 8: IPv4 neighbor: 11.1.1.2        
+       Sub-TLV - 259: IPv4 interface: 11.1.1.1    
+       Sub-TLV - 260: IPv4 neighbor: 11.1.1.2        
    TLV - Link Attributes TLV    
        Sub-TLV(s)          
        
 LS Link
    TLV - Local Node Descriptors
-       Sub-TLV - 1: Autonomous System: 100
-       Sub-TLV - 4: Router-ID: 11.11.11.11 (abstract)
+       Sub-TLV - 512: Autonomous System: 100
+       Sub-TLV - 515: Router-ID: 11.11.11.11 (abstract)
    TLV - Remote Node Descriptors
-       Sub-TLV - 1: Autonomous System: 200
-       Sub-TLV - 4: Router-ID: 22.22.22.22 (abstract)
+       Sub-TLV - 512: Autonomous System: 200
+       Sub-TLV - 515: Router-ID: 22.22.22.22 (abstract)
    TLV - Link Descriptors    
-       Sub-TLV - 7: IPv4 interface: 12.1.1.1    
-       Sub-TLV - 8: IPv4 neighbor: 12.1.1.2   
+       Sub-TLV - 259: IPv4 interface: 12.1.1.1    
+       Sub-TLV - 260: IPv4 neighbor: 12.1.1.2   
    TLV - Link Attributes TLV    
        Sub-TLV(s)               
 
 LS Link
    TLV - Local Node Descriptors
-       Sub-TLV - 1: Autonomous System: 100
-       Sub-TLV - 4: Router-ID: 11.11.11.11 (abstract)
+       Sub-TLV - 512: Autonomous System: 100
+       Sub-TLV - 515: Router-ID: 11.11.11.11 (abstract)
    TLV - Remote Node Descriptors
-       Sub-TLV - 1: Autonomous System: 400 (Domain 4) 
-       Sub-TLV - 4: Router-ID: 44.44.44.44 (abstract)
+       Sub-TLV - 512: Autonomous System: 400 (Domain 4) 
+       Sub-TLV - 515: Router-ID: 44.44.44.44 (abstract)
    TLV - Link Descriptors    
-       Sub-TLV - 7: IPv4 interface: 13.1.1.1    
-       Sub-TLV - 8: IPv4 neighbor: 13.1.1.2   
+       Sub-TLV - 259: IPv4 interface: 13.1.1.1    
+       Sub-TLV - 260: IPv4 neighbor: 13.1.1.2   
    TLV - Link Attributes TLV    
        Sub-TLV(s)               
 
@@ -1847,18 +1565,13 @@ using the similar LS node and link objects encodings.</t>
     <figure title="" suppress-title="false" align="left" alt="" width="" height="">
           <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
 Udayasree Palle
-Huawei Technologies
-Divyashree Techno Park, Whitefield
-Bangalore, Karnataka  560066
-India
 
 EMail: udayasreereddy@gmail.com
 
 Sergio Belotti
-Alcatel-Lucent
-Italy
+Nokia
 
-EMail: sergio.belotti@alcatel-lucent.com
+EMail: sergio.belotti@nokia.com
 
 Satish Karunanithi
 Huawei Technologies
