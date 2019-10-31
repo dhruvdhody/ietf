@@ -82,8 +82,7 @@ module: ietf-pcep
         |  |  +--ro global-source    uint32
         |  |  +--ro extended-id      string
         |  |  +--ro lsp* [plsp-id pcc-id lsp-id]
-        |  |     +--ro plsp-id
-        |  |     |       -> /pcep/entity/lsp-db/lsp/plsp-id
+        |  |     +--ro plsp-id    -> /pcep/entity/lsp-db/lsp/plsp-id
         |  |     +--ro pcc-id     -> /pcep/entity/lsp-db/lsp/pcc-id
         |  |     +--ro lsp-id     -> /pcep/entity/lsp-db/lsp/lsp-id
         |  +--ro lsp* [plsp-id pcc-id lsp-id]
@@ -114,7 +113,8 @@ module: ietf-pcep
         |     +--ro association-list*
         |             [type id source global-source extended-id]
         |             {association}?
-        |        +--ro type             leafref
+        |        +--ro type
+        |        |       -> /pcep/entity/lsp-db/association-list/type
         |        +--ro id
         |        |       -> /pcep/entity/lsp-db/association-list/id
         |        +--ro source           leafref
@@ -149,13 +149,14 @@ module: ietf-pcep
         |     |        +--:(label)
         |     |           +--ro label-hop
         |     |              +--ro te-label
-        |     |                    ...
-        |     +--ro pcc-original?
-        |     |       -> /pcep/entity/peers/peer/addr
+        |     |                 +--ro (technology)?
+        |     |                 |     ...
+        |     |                 +--ro direction?
+        |     |                         te-label-direction
+        |     +--ro pcc-original?    -> /pcep/entity/peers/peer/addr
         |     +--ro req-id?          uint32
         |     +--ro retrieved?       boolean
-        |     +--ro pcc-retrieved?
-        |     |       -> /pcep/entity/peers/peer/addr
+        |     +--ro pcc-retrieved?   -> /pcep/entity/peers/peer/addr
         |     +--ro creation-time?   yang:timestamp
         |     +--ro discard-time?    uint32
         |     +--ro reuse-time?      uint32
@@ -203,8 +204,7 @@ module: ietf-pcep
               |     |  +--rw key-chain?
               |     |          key-chain:key-chain-ref
               |     +--:(auth-key)
-              |     |  +--rw crypto-algorithm
-              |     |  |       identityref
+              |     |  +--rw crypto-algorithm            identityref
               |     |  +--rw (key-string-style)?
               |     |     +--:(keystring)
               |     |     |  +--rw keystring?            string
@@ -216,10 +216,28 @@ module: ietf-pcep
               |        +--rw (role)?
               |           +--:(server)
               |           |  +--rw tls-server
-              |           |        ...
+              |           |     +--rw server-identity
+              |           |     |     ...
+              |           |     +--rw client-authentication!
+              |           |     |     ...
+              |           |     +--rw hello-params
+              |           |     |       {tls-server-hello-params-config}?
+              |           |     |     ...
+              |           |     +--rw keepalives!
+              |           |             {tls-server-keepalives}?
+              |           |           ...
               |           +--:(client)
               |              +--rw tls-client
-              |                    ...
+              |                 +--rw client-identity
+              |                 |     ...
+              |                 +--rw server-authentication
+              |                 |     ...
+              |                 +--rw hello-params
+              |                 |       {tls-client-hello-params-config}?
+              |                 |     ...
+              |                 +--rw keepalives!
+              |                         {tls-client-keepalives}?
+              |                       ...
               +--ro discontinuity-time?     yang:timestamp
               +--ro initiate-session?       boolean
               +--ro session-exists?         boolean
@@ -259,8 +277,7 @@ module: ietf-pcep
                     +--ro assoc-type-list {association}?
                     |  +--ro assoc-type* [at]
                     |     +--ro at    identityref
-                    +--ro speaker-entity-id?      string
-                    |       {sync-opt}?
+                    +--ro speaker-entity-id?      string {sync-opt}?
                     +--ro discontinuity-time?     yang:timestamp
 
   rpcs:
