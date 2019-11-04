@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd"[]>
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc category="std" docName="draft-ietf-pce-binding-label-sid-01" ipr="trust200902">
+  <front>
+    <title abbrev="Binding Label/SID">
+    Carrying Binding Label/Segment-ID in PCE-based Networks.</title>
+
+    <author fullname="Siva Sivabalan" initials="S." surname="Sivabalan">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>2000 Innovation Drive</street>
+          <city>Kanata</city>
+          <region>Ontario</region>
+          <code>K2K 3E8</code>
+          <country>Canada</country>
+        </postal>
+        <email>msiva@cisco.com</email>
+      </address>
+    </author>
+
+
+
+<author fullname="Clarence Filsfils" initials="C." surname="Filsfils">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>Pegasus Parc</street>
+          <city>De kleetlaan 6a</city>
+          <region>DIEGEM</region>
+          <code>BRABANT 1831</code>
+          <country>BELGIUM</country>
+        </postal>
+        <email>cfilsfil@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Jeff Tantsura" initials="J." surname="Tantsura">
+          <organization>Apstra, Inc.</organization>
+          <address>
+            <postal>
+              <street></street>
+              <city></city>
+              <region></region>
+              <code></code>
+              <country></country>
+            </postal>
+            <email>jefftant.ietf@gmail.com</email>
+          </address>
+        </author>
+
+    <author fullname="Jonathan Hardwick" initials="J."  surname="Hardwick">
+   <organization>Metaswitch Networks</organization>
+      <address>
+        <postal>
+          <street>100 Church Street</street>
+          <city>Enfield</city>
+          <region>Middlesex</region>
+          <country>UK</country>
+        </postal>
+        <email>Jonathan.Hardwick@metaswitch.com</email>
+      </address>
+    </author>
+
+    <author fullname="Stefano Previdi" initials="S." surname="Previdi">
+      <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street></street>
+          <city></city>
+          <region></region>
+          <code></code>
+          <country></country>
+        </postal>
+        <email>stefano@previdi.net</email>
+      </address>
+    </author>
+
+    <!--<author fullname="Dhruv Dhody" initials="D."  surname="Dhody">
+   <organization>Huawei Technologies</organization>
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+          <city>Bangalore</city>
+          <region>Karnataka 560066</region>
+          <country>India</country>
+        </postal>
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>-->
+    <author fullname="Cheng Li" initials="C." surname="Li">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+          <city>Beijing</city>
+          <region/>
+          <code>100095</code>
+          <country>China</country>
+        </postal>
+        <phone/> 
+        <facsimile/>
+        <email>chengli13@huawei.com</email>
+        <uri/>
+      </address>
+    </author>
+
+    <date year="2019" />
+
+    <workgroup>PCE Working Group</workgroup>
+
+<abstract>
+
+<t>In order to provide greater scalability, network opacity, and service
+   independence, Segment Routing (SR) utilizes a Binding Segment Identifier (BSID). 
+   It is possible to associate a BSID to RSVP-TE signaled Traffic Engineering Label Switching Path or binding Segment-ID (SID) to SR Traffic Engineering path. Such a binding label/SID can be used by an upstream node for steering traffic into the appropriate TE path to enforce SR policies. This document proposes an approach for reporting binding label/SID to Path Computation Element (PCE) for supporting PCE-based Traffic Engineering policies.</t>
+
+</abstract>
+
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.
+      </t>
+    </note> 
+</front>
+
+<middle>
+
+<section anchor="Introduction" title="Introduction">
+
+<t>A PCE can compute Traffic Engineering paths (TE paths) through a network that are subject to various constraints. Currently, TE paths are either set up using the RSVP-TE signaling protocol or Segment Routing (SR).
+  We refer to such paths as RSVP-TE paths and SR-TE paths respectively in this document.</t>
+
+  <t>As per <xref target="RFC8402"/> SR allows a headend node to steer a packet flow
+   along any path. The headend node is said to steer a flow into an Segment Routing
+   Policy (SR Policy). Further, as per <xref target="I-D.ietf-spring-segment-routing-policy"/>, an SR Policy is a framework that enables instantiation of an ordered
+   list of segments on a node for implementing a source routing policy
+   with a specific intent for traffic steering from that node.</t>
+
+  <t>As described in <xref target="RFC8402"/>, Binding Segment Identifier (BSID) is bound to an Segment Routed (SR) Policy,
+   instantiation of which may involve a list of SIDs.  Any packets
+   received with an active segment equal to BSID are steered onto the
+   bound SR Policy.  A BSID may be either a local (SR Local Block (SRLB)) or a global (SR Global Block (SRGB)) SID. As per Section 6.4 of <xref target="I-D.ietf-spring-segment-routing-policy"/> a BSID can also be associated with any type of interfaces or tunnel to enable the use of a non-SR interface or tunnels as segments in a SID-list.</t>
+
+
+<!--<t>Similar to assigning label to a Forwarding Equivalence Class (FEC) via Label Distribution Protocol (LDP), a binding label can be assigned to a RSVP-TE LSP. If the topmost label of an incoming packet is the binding label, the packet is steered onto the RSVP-TE LSP.
+  As such, any upstream node can use binding labels to steer the packets that it originates to appropriate TE LSPs to enforce TE/SR policy. Similarly, a binding SID, see <xref target="I-D.ietf-isis-segment-routing-extensions"/>, <xref target="I-D.ietf-idr-segment-routing-te-policy"/>
+and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. Note that if an SR-TE path is represented as a forwarding-adjacency (FA), then the corresponding adjacency SID can be used as the binding SID. In such case, the path is advertised using the routing protocols as described in <xref target="RFC4206"/>. The binding SID provides an alternate mechanism without additional overhead on routing protocols.</t>-->
+
+<t><xref target="RFC5440"/> describes the Path Computation Element Protocol (PCEP) for communication between a Path Computation Client (PCC) and a PCE or between a pair of PCEs as per <xref target="RFC4655"/>. <xref target="RFC8231"/> specifies extension to PCEP that allows a PCC to delegate its LSPs to a stateful PCE. A stateful PCE can then update the state of LSPs delegated to it. <xref target="RFC8281"/> specifies a mechanism allowing a PCE to dynamically instantiate an LSP on a PCC by sending the path and characteristics. The PCEP extension to setup and maintain SR-TE paths is specified in <xref target="I-D.ietf-pce-segment-routing"/>.</t>
+
+<t><xref target="I-D.ietf-pce-segment-routing"/> provides a mechanism for a network controller
+   (acting as a PCE) to instantiate candidate paths for an SR Policy
+   onto a head-end node (acting as a PCC) using PCEP.  For more
+   information on the SR Policy Architecture, see
+   <xref target="I-D.ietf-spring-segment-routing-policy"/>.</t>
+
+<t>Binding label/SID has local significance to the ingress node of the corresponding TE path. When a stateful PCE is deployed for setting up TE paths, it may be desirable to report the binding label or SID to the stateful PCE for the purpose of enforcing end-to-end TE/SR policy. A sample Data Center (DC) use-case is illustrated in the following diagram. In the MPLS DC network, an SR LSP (without traffic engineering) is established using a prefix SID advertised by BGP (see <xref target="I-D.ietf-idr-bgp-prefix-sid"/>). In IP/MPLS WAN, an SR-TE LSP is setup using the PCE. The list of SIDs of the SR-TE LSP is {A, B, C, D}. The gateway node 1 (which is the PCC) allocates a binding SID X and reports it to the PCE. In order for the access node to steer the traffic over the SR-TE LSP, the PCE passes the SID stack {Y, X} where Y is the prefix SID of the gateway node-1 to the access node. In the absence of the binding SID X, the PCE should pass the SID stack {Y, A, B, C, D} to the access node. This example also illustrates the additional benefit of using the binding SID to reduce the number of SIDs imposed on the access nodes with a limited forwarding capacity.</t>
+
+<figure anchor="Capability-TLV-Fmt" title="A sample Use-case of Binding SID">
+<artwork align="center"><![CDATA[
+
+           SID stack
+           {Y, X}              +-----+
+    _ _ _ _ _ _ _ _ _ _ _ _ _ _| PCE |
+   |                           +-----+
+   |                              ^
+   |                              | Binding
+   |           .-----.            | SID (X)     .-----.
+   |          (       )           |            (       )
+   V       .--(         )--.      |        .--(         )--.
++------+  (                 )  +-------+  (                 )  +-------+
+|Access|_(  MPLS DC Network  )_|Gateway|_(    IP/MPLS WAN    )_|Gateway|
+| Node | (  ==============>  ) |Node-1 | ( ================> ) |Node-2 |
++------+  (     SR path     )  +-------+  (    SR-TE path   )  +-------+
+           '--(         )--'    Prefix     '--(         )--'
+               (       )        SID of         (       )
+                '-----'         Node-1          '-----'
+                                is Y            SIDs for SR-TE LSP:
+                                                {A, B, C, D}
+
+
+]]></artwork>
+</figure>
+
+<t>A PCC could report the binding label/SID allocated by it to the stateful PCE via Path Computation State Report (PCRpt) message. It is also possible for a stateful PCE to request a PCC to allocate a specific binding label/SID by sending an Path Computation Update Request (PCUpd) message. If the PCC can successfully allocate the specified binding value, it reports the binding value to the PCE. Otherwise, the PCC sends an error message to the PCE indicating the cause of the failure. A local policy or configuration at the PCC SHOULD dictate if the binding label/SID needs to be assigned.</t>
+
+<t>In this document, we introduce a new OPTIONAL TLV that a PCC can use in order to report the binding label/SID associated with a TE LSP, or a PCE to request a PCC to allocate a specific binding label/SID value. This TLV is intended for TE LSPs established using RSVP-TE, SR, or any other future method. Also, in the case of SR-TE LSPs, the TLV can carry a binding MPLS label (for SR-TE path with MPLS data-plane) or a binding IPv6 SID (e.g., IPv6 address for SR-TE paths with IPv6 data-plane). Binding value means either MPLS label or SID throughout this document.</t>
+
+  <t>Additionally, to support the PCE based central controller <xref target="RFC8283"/> operation where the PCE would take responsibility for
+   managing some part of the MPLS label space for each of the routers that it controls, the PCE could directly make the binding label/SID allocation and inform the PCC. 
+   See <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> for details. </t>
+
+
+</section> <!-- Introduction -->
+
+<section title="Terminology">
+<t>The following terminologies are used in this document:
+
+	<list style="hanging">
+     <t hangText="BSID:"> Binding Segment Identifier.</t>
+     <t hangText="LER:"> Label Edge Router.</t>
+     <t hangText="LSP:"> Label Switched Path.</t>
+     <t hangText="LSR:"> Label Switching Router.</t>
+     <t hangText="PCC:"> Path Computation Client.</t>
+     <t hangText="PCE:"> Path Computation Element</t>
+     <t hangText="PCEP:"> Path Computation Element Protocol.</t>
+     <t hangText="RSVP-TE:"> Resource ReserVation Protocol-Traffic Engineering.</t>
+     <t hangText="SID:"> Segment Identifier.</t>
+     <t hangText="SR:"> Segment Routing.</t>
+     <t hangText="SRGB:"> Segment Routing Global Block.</t>
+     <t hangText="SRLB:"> Segment Routing Local Block.</t>
+     <t hangText="TLV:"> Type, Length, and Value.</t>
+      </list>
+</t>
+</section> <!-- Terminology -->
+
+<section anchor="TE-PATH-BINDING-TLV" title="Path Binding TLV">
+
+<t>The new optional TLV is called "TE-PATH-BINDING TLV" (whose format is shown in the figure below) is defined to carry binding label or SID for a TE path. This TLV is associated with the LSP object specified in (<xref target="RFC8231"/>). The type of this TLV is to be allocated by IANA.</t>
+
+      <figure anchor="BINDING-LABEL-TLV-FORMAT" title="TE-PATH-BINDING TLV">
+        <artwork align="center"><![CDATA[
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |             Type              |             Length            |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |      BT       |                 Reserved                      |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  ~            Binding Value (variable length)                    ~
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+        ]]></artwork>
+      </figure>
+
+
+<t>TE-PATH-BINDING TLV is a generic TLV such that it is able to carry MPLS label binding as well as SRv6 Binding SID. It is formatted according to the rules specified in <xref target="RFC5440"/>.</t>
+ <t>Binding Type (BT): A one byte field identifies the type of binding included in the TLV. This document specifies the following BT values:
+
+      <list style="symbols">
+        <t>BT = 0: The binding value is an MPLS label carried in the format specified in <xref target="RFC5462"/> where only the label value is valid, and other fields (TC, S, and TTL) fields MUST be considered invalid. The Length MUST be set to 6.</t>
+        <t>BT = 1: Similar to the case where BT is 0 except that all the fields on the MPLS label entry are set on transmission. However, the receiver MAY choose to override TC, S, and TTL values according its local policy.</t>
+        <t>BT = 2: The binding value is a SRv6 SID with a format of an 16 byte IPv6 address, representing the binding SID for SRv6.</t>
+      </list>
+ </t>
+ <t>Reserved: MUST be set to 0 while sending and ignored on receipt.</t>
+ <t>Binding Value: A variable length field, padded with trailing zeros to a 4-byte boundary. For the BT as 0, the 20 bits represents the MPLS label. For the BT as 1, the 32-bits represents the label stack entry as per <xref target="RFC5462"/>. For the BT as 2, the 128-bits represent the SRv6 SID.</t>
+
+</section> <!-- Path-setup-type-tlv -->
+
+<section anchor="Operation" title="Operation">
+
+<t>The binding value is allocated by the PCC and reported to a PCE via PCRpt message. If a PCE does not recognize the TE-PATH-BINDING TLV, it would ignore the TLV in accordance with (<xref target="RFC5440"/>). If a PCE recognizes the TLV but does not support the TLV, it MUST send PCErr with Error-Type = 2 (Capability not supported).</t>
+
+<t>If a TE-PATH-BINDING TLV is absent in PCRpt message, PCE MUST assume that the corresponding LSP does not have any binding. If there are more than one TE-PATH-BINDING TLVs, only the first TLV MUST be processed and the rest MUST be silently ignored. If a PCE recognizes an invalid binding value (e.g., label value from the reserved label space when MPLS label binding is used), it MUST send the PCErr message with Error-Type = 10 ("Reception of an invalid object") and Error Value = 2 ("Bad label value") as specified in <xref target="I-D.ietf-pce-segment-routing"/>.</t>
+
+<t>If a PCE requires a PCC to allocate a specific binding value, it may do so by sending a PCUpd or PCInitiate message containing a TE-PATH-BINDING TLV. If the value can be successfully allocated, the PCC reports the binding value to the PCE. If the PCC considers the binding value specified by the PCE invalid, it MUST send a PCErr message with Error-Type = TBD2 ("Binding label/SID failure") and Error Value = TBD3 ("Invalid SID"). If the binding value is valid, but the PCC is unable to allocate the binding value, it MUST send a PCErr message with Error-Type = TBD2 ("Binding label/SID failure") and Error Value = TBD4 ("Unable to allocate the specified label/SID").</t>
+
+<t>If a PCC receives TE-PATH-BINDING TLV in any message other than PCUpd or PCInitiate, it MUST close the corresponding PCEP session with the reason "Reception of a malformed PCEP message" (according to <xref target="RFC5440"/>). Similarly, if a PCE receives a TE-PATH-BINDING TLV in any message other than a PCRpt or if the TE-PATH-BINDING TLV is associated with any object other than LSP object, the PCE MUST close the corresponding PCEP session with the reason "Reception of a malformed PCEP message" (according to <xref target="RFC5440"/>).</t>
+
+<t>If a PCC wishes to withdraw or modify a previously reported binding value, it MUST send a PCRpt message without any TE-PATH-BINDING TLV or with the TE-PATH-BINDING TLV containing the new binding value respectively.</t>
+
+<t>If a PCE wishes to modify a previously requested binding value, it MUST send a PCUpd message with TE-PATH-BINDING TLV containing the new binding value. Absence of TE-PATH-BINDING TLV in PCUpd message means that the PCE does not specify a binding value in which case the binding value allocation is governed by the PCC's local policy.</t>
+
+<t>If a PCC receives a valid binding value from a PCE which is different than the current binding value, it MUST try to allocate the new value. If the new binding value is successfully allocated, the PCC MUST report the new value to the PCE. Otherwise, it MUST send a PCErr message with Error-Type = TBD2 ("Binding label/SID failure") and Error Value = TBD4 ("Unable to allocate the specified label/SID").</t>
+
+<t>In some cases, a stateful PCE can request the PCC to allocate a binding value. It may do so by sending a PCUpd message containing an empty TE-PATH-BINDING TLV, i.e., no binding value is specified (making the length field of the TLV as 2). A PCE can also make the request PCC to allocate a binding at the time of initiation by sending a PCInitiate message with an empty TE-PATH-BINDING TLV.</t>
+</section>
+<section anchor="SR-ERO" title="Binding SID in SR-ERO">
+  <t>In PCEP messages, LSP route information is carried in the Explicit
+   Route Object (ERO), which consists of a sequence of subobjects. 
+   <xref target="I-D.ietf-pce-segment-routing"/> defines a new ERO subobject "SR-ERO
+   subobject" capable of carrying a SID as well as the identity of the
+   node/adjacency (NAI) represented by the SID. The NAI Type (NT) field indicates the type and format of the NAI contained in the SR-ERO. In case of binding SID, the NAI MUST NOT be included and NT MUST be set to zero. So as per Section 5.2.1 of <xref target="I-D.ietf-pce-segment-routing"/>, for NT=0, the F bit is set to 1, the S bit needs to be zero and the
+   Length is 8. Further the M bit is set. If these conditions are not met, the entire ERO MUST be considered invalid and a PCErr message is sent with Error-Type = 10 ("Reception of an invalid object") and Error-Value = 11 ("Malformed object").</t>
+  </section>
+<section anchor="SRv6-ERO" title="Binding SID in SRv6-ERO/">
+  <t><xref target="I-D.ietf-pce-segment-routing"/> defines a new ERO subobject "SRv6-ERO subobject" for SRv6 SID. The NAI MUST NOT be included and NT MUST be set to zero. So as per Section 5.2.1 of <xref target="I-D.ietf-pce-segment-routing"/>, for NT=0, the F bit is set to 1, the S bit needs to be zero and the
+   Length is 24. If these conditions are not met, the entire ERO is considered invalid and a PCErr message is sent with Error-Type = 10 ("Reception of an invalid object") and Error-Value = 11 ("Malformed object") (as per <xref target="I-D.ietf-pce-segment-routing"/>).</t>
+  </section>  
+<section anchor="Imp" title="Implementation Status">
+<t>[Note to the RFC Editor - remove this section before publication, as well as remove the reference to RFC 7942.]</t>
+<t>This section records the status of known implementations of the
+     protocol defined by this specification at the time of posting of
+     this Internet-Draft, and is based on a proposal described in
+     <xref target="RFC7942"/>.  The description of implementations in this section is
+     intended to assist the IETF in its decision processes in
+     progressing drafts to RFCs.  Please note that the listing of any
+     individual implementation here does not imply endorsement by the
+     IETF.  Furthermore, no effort has been spent to verify the
+     information presented here that was supplied by IETF contributors.
+     This is not intended as, and must not be construed to be, a
+     catalog of available implementations or their features.  Readers
+     are advised to note that other implementations may exist.</t>
+
+     <t>According to <xref target="RFC7942"/>, "this will allow reviewers and working
+     groups to assign due consideration to documents that have the
+     benefit of running code, which may serve as evidence of valuable
+     experimentation and feedback that have made the implemented
+     protocols more mature.  It is up to the individual working groups
+     to use this information as they see fit".</t>
+<section anchor="Huawei" title="Huawei">
+  <t>
+  <list style="symbols">
+    <t>Organization: Huawei</t>
+    <t>Implementation: Huawei's Router and Controller</t>
+    <t>Description: An experimental code-point is used and plan to request early code-point allocation from IANA after WG adoption.</t> 
+    <t>Maturity Level: Production</t>
+    <t>Coverage: Full</t>
+    <t>Contact: chengli13@huawei.com</t>
+  </list></t>
+</section>
+</section>
+<section anchor="Security" title="Security Considerations">
+
+<t>The security considerations described in <xref target="RFC5440"/>, <xref target="RFC8231"/>, <xref target="RFC8281"/> and <xref target="I-D.ietf-pce-segment-routing"/>
+are applicable to this specification. No additional security measure is required.</t>
+
+<t>As described <xref target="I-D.ietf-pce-segment-routing"/>, SR allows a network controller to instantiate and control paths in the network. A rouge PCE can manipulate binding SID
+allocations to move traffic around for some other LSPs that uses BSID in its SR-ERO.</t>
+
+<t>Thus, as per <xref target="RFC8231"/>, it is RECOMMENDED
+   that these PCEP extensions only be activated on authenticated and
+   encrypted sessions across PCEs and PCCs belonging to the same
+   administrative authority, using Transport Layer Security (TLS)
+   <xref target="RFC8253"/>, as per the recommendations and best current practices in
+   BCP195 <xref target="RFC7525"/> (unless explicitly set aside in <xref target="RFC8253"/>). 
+ </t> 
+
+</section>
+<section title="Manageability Considerations" toc="default">
+ <t>
+  All manageability requirements and considerations listed in <xref target="RFC5440" pageno="false" format="default" />, <xref target="RFC8231" pageno="false" format="default" />, and 
+  <xref target="I-D.ietf-pce-segment-routing"/> apply to PCEP protocol extensions defined in this document. In addition, requirements and considerations listed in this section apply. 
+  </t>
+ <section title="Control of Function and Policy" toc="default">
+ <t>
+  A PCC implementation SHOULD allow the operator to configure the policy based on which PCC needs to allocates the binding label/SID. 
+  </t>
+  </section>
+ <section title="Information and Data Models" toc="default">
+  <t>The PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> could be extended to include policy configuration for binding label/SID allocation.</t> 
+  </section>
+ <section title="Liveness Detection and Monitoring" toc="default">
+ <t>
+  Mechanisms defined in this document do not imply any new liveness detection and monitoring requirements in addition to those already listed in <xref target="RFC5440" pageno="false" format="default" />. 
+  </t>
+  </section>
+ <section title="Verify Correct Operations" toc="default">
+ <t>
+  Mechanisms defined in this document do not imply any new operation verification requirements in addition to those already listed in <xref target="RFC5440" pageno="false" format="default" />, <xref target="RFC8231" pageno="false" format="default" />, and <xref target="I-D.ietf-pce-segment-routing"/>. 
+  </t>
+  </section>
+ <section title="Requirements On Other Protocols" toc="default">
+  <t>Mechanisms defined in this document do not imply any new requirements on other protocols.</t> 
+  </section>
+ <section title="Impact On Network Operations" toc="default">
+ <t>
+  Mechanisms defined in <xref target="RFC5440" pageno="false" format="default" />,  
+  <xref target="RFC8231" pageno="false" format="default" />, and <xref target="I-D.ietf-pce-segment-routing"/> also apply to PCEP extensions defined in this document. 
+  Further, the mechanism described in this document can help the operator to request control of the LSPs at a particular PCE.</t>
+  </section>
+  </section>
+<section anchor="IANA" title="IANA Considerations">
+
+<section anchor="TLV" title="PCEP TLV Type Indicators">
+  <t>This document defines a new PCEP TLV; IANA is requested
+   to make the following allocations from the "PCEP TLV Type Indicators"
+   sub-registry of the PCEP Numbers registry, as follows:</t>
+      <texttable anchor="TLV-Type" style="none" suppress-title="true">
+        <ttcol align="center" width='15%'>Value</ttcol>
+        <ttcol align="left" width='30%'>Name </ttcol>
+        <ttcol align="left" width='55%'>Reference </ttcol>
+        <c></c><c>&nbsp;</c><c></c>
+        <c>TBD1</c><c>TE-PATH-BINDING</c><c>This document</c>
+      </texttable>
+<section anchor="TVL-Type" title="TE-PATH-BINDING TLV ">
+
+<t>IANA is requested to create a sub-registry to manage the value of the Binding Type field in the
+   TE-PATH-BINDING TLV.</t>
+
+      <texttable anchor="BT" style="none" suppress-title="true">
+        <ttcol align="center" width='15%'>Value</ttcol>
+        <ttcol align="left" width='30%'>Description </ttcol>
+        <ttcol align="left" width='55%'>Reference </ttcol>
+        <c></c><c>&nbsp;</c><c></c>
+        <c>0</c><c>MPLS Label</c><c>This document</c>
+        <c>1</c><c>MPLS Label Stack Entry</c><c>This document</c>
+        <c>2</c><c>SRv6 SID</c><c>This document</c>
+      </texttable>
+
+</section>
+</section>
+
+<section anchor="Error-Type" title="PCEP Error Type and Value">
+        <t>This document defines a new Error-type and Error-Values for the PCErr message.  IANA is requested to allocate
+   new error-type and error-values within the "PCEP-ERROR Object Error Types and Values"
+   subregistry of the PCEP Numbers registry, as follows:
+
+        <vspace blankLines="1" />
+
+        <?rfc subcompact="yes"?>
+
+        <list style="hanging" hangIndent="13">
+
+          <t hangText="Error-Type">Meaning</t>
+          <t hangText="----------   -------"></t>
+          <t hangText="TBD2">Binding label/SID failure:
+          <list style="hanging" hangIndent="37">
+            <t hangText=" Error-value = TBD3:">Invalid SID</t>
+            <t hangText=" Error-value = TBD4:">Unable to allocate the specified label/SID</t>
+          </list>
+          </t>
+        </list>
+        </t>
+      </section>
+
+</section>
+<section anchor="Acknowledgement" title="Acknowledgements">
+<t>We like to thank Milos Fabian for his valuable comments.</t>
+
+</section>
+
+</middle>
+
+<back>
+
+<references title="Normative References">
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5440.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5462.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7525.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7942.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8231.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8253.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8281.xml"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8402.xml"?>
+
+      
+
+      
+      
+
+      
+
+
+<?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-segment-routing"?>
+
+
+
+</references>
+<references title="Informative References">
+  <!--<?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4206.xml"?>-->
+  <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4655.xml"?>
+  <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8283.xml"?>
+  <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing-policy"?>
+  <!--<?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-idr-segment-routing-te-policy"?>-->
+  <!--<?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-isis-segment-routing-extensions"?>-->
+  <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-idr-bgp-prefix-sid"?>
+  <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-extension-for-pce-controller"?>
+  <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang"?>
+  </references>
+
+<!--<section anchor="sec_pcecc" title="PCE based Central Controller">
+  <t><xref target="RFC8283"/> introduces the architecture for PCE as a central controller
+   as an extension of the architecture described in <xref target="RFC4655"/> and
+   assumes the continued use of PCEP as the protocol used between PCE
+   and PCC.  <xref target="RFC8283"/>  further examines the motivations and
+   applicability for PCEP as a Southbound Interface (SBI), and
+   introduces the implications for the protocol.</t>
+   <t>As per <xref target="RFC8283"/>, PCE as a central controller can allocate and
+   provision the node/prefix/adjacency label (SID) via PCEP. It can also be used to allocate the binding SID as described in this section.</t> 
+
+
+   <t>The PCECC Capability as per
+   <xref target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> should also be
+   advertised on the PCEP session, along with the SR sub-TLVs before using this procedure.</t>
+
+   <t>A P flag in LSP object is introduced in <xref target="I-D.li-pce-sr-path-segment"/> to indicate the allocation needs to be made by the PCE. The same flag is also set for the binding SID allocation request. A PCC would set this bit to 1 to request for
+      allocation of the binding label/SID by the PCE in the PCReq or PCRpt
+      message.  A PCE would also set this bit to 1 to indicate that the
+      binding label/SID is allocated by PCE and encoded in the PCRep,
+      PCUpd or PCInitiate message (the TE-PATH-BINDING TLV is present in
+      LSP object).  Further, a PCE would set this bit to 0 to indicate
+      that the path identifier is allocated by the PCC as described above.</t>
+
+   <t>The ingress PCC could request the binding label/SID to be allocated by the PCE
+   via PCRpt message as per <xref target="RFC8231"/>.  The delegate flag (D-flag) MUST
+   also be set for this LSP.  The TE-PATH-BINDING TLV MAY be included with no Binding
+   Value. The PCECC would allocated the binding label/SID and further respond to
+   Ingress PCC with PCUpd message as per <xref target="RFC8231"/> and MUST include the
+   TE-PATH-BINDING TLV in a LSP object.  The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>
+
+   <t>The PCE could allocate the binding label/SID on its own accord for a PCE-
+   Initiated (or delegated LSP).  The allocated binding label/SID needs to be
+   informed to the PCC.  The PCE would use the
+   PCInitiate message <xref target="RFC8281"/> or PCUpd message <xref target="RFC8231"/> towards the
+   PCC and MUST include the TE-PATH-BINDING TLV in the LSP object. The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>  
+
+ </section> -->
+ <section title="Contributor Addresses" toc="default">
+    <t>
+    <figure title="" suppress-title="false" align="left" alt="" width="" height="">
+       <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
+Dhruv Dhody
+Huawei Technologies
+Divyashree Techno Park, Whitefield
+Bangalore, Karnataka  560066
+India
+
+EMail: dhruv.ietf@gmail.com
+
+Mahendra Singh Negi
+
+EMail: mahend.ietf@gmail.com
+        ]]></artwork>
+        </figure>
+      </t>
+    </section>
+
+</back>
+
+</rfc>
