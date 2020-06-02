@@ -36,7 +36,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-barth-pce-segment-routing-policy-cp-05" ipr="trust200902">
+<rfc category="std" docName="draft-barth-pce-segment-routing-policy-cp-06" ipr="trust200902">
 <!-- category values: std, bcp, info, exp, and historic
 ipr values: full3667, noModification3667, noDerivatives3667
 you can add the attributes updates="NNNN" and obsoletes="NNNN" 
@@ -118,7 +118,7 @@ they will automatically be output with "(if approved)" -->
       </address>
     </author>
 
-    <date day="04" month="June" year="2020" />
+    <date month="June" year="2020" />
 
     <workgroup>PCE Working Group</workgroup>
 
@@ -245,6 +245,7 @@ they will automatically be output with "(if approved)" -->
         <t>Protocol Origin of candidate path.</t>
         <t>Originator of candidate path.</t>
         <t>Discriminator of candidate path.</t>
+        <t>Optionally, the candidate path name.</t>
       </list>
 </t>
 
@@ -287,10 +288,17 @@ they will automatically be output with "(if approved)" -->
 
 <t>Association type = TBD1 "SR Policy Association Type" for SR Policy Association Group (SRPAG).</t>
 
-<t>This Association type is operator-configured association in nature and created by the operator manually on the PCEP peers.  A SR path belonging to this association is conveyed via PCEP messages to the PCEP peer.  Operator-configured Association Range need not be set for this association-type, and MUST be ignored, so that the full range of association identifier can be utilized.
-</t>
+<!--<t>This Association type is dynamic in nature and created by the operator manually on the PCEP peers.  A SR path belonging to this association is conveyed via PCEP messages to the PCEP peer.  Operator-configured Association Range need not be set for this association-type, and MUST be ignored, so that the full range of association identifier can be utilized.
+</t>-->
 
-<t>SRPAG MUST carry additional TLVs to communicate Association Information. This document specifies four new TLVs to carry Association Information: SRPOLICY-POL-ID TLV, SRPOLICY-CPATH-NAME TLV, SRPOLICY-CPATH-ID TLV, SRPOLICY-CPATH-PREFERENCE TLV. These four TLVs encode the Policy Identifiers, SR Policy candidate path name, Candidate path identifiers and Candidate path preference, respectively. When any of the mandatory TLVs are missing from the SRPAG association object, the PCE MUST send a PCErr message with Error Code = 26 "Association Error", Error Type = TBD7 "Missing mandatory SRPAG TLV".</t>
+<t>This Association type is dynamic in nature and created by the PCC or
+   PCE for the candidate paths belonging to the same SR policy (as described in
+   <xref target="I-D.ietf-spring-segment-routing-policy"/>).  These associations are conveyed via PCEP messages
+   to the PCEP peer. Operator-configured Association
+   Range MUST NOT be set for this Association type and MUST be ignored.</t>
+
+
+<t>SRPAG MUST carry additional TLVs to communicate Association Information. This document specifies five new TLVs to carry Association Information: SRPOLICY-POL-ID TLV, SRPOLICY-POL-NAME TLV, SRPOLICY-CPATH-ID TLV, SRPOLICY-CPATH-NAME TLV, SRPOLICY-CPATH-PREFERENCE TLV. These five TLVs encode the Policy Identifiers, SR Policy name, Candidate path identifiers, candidate path name, and Candidate path preference, respectively. When any of the mandatory TLVs are missing from the SRPAG association object, the PCE MUST send a PCErr message with Error Code = 26 "Association Error", Error Type = TBD7 "Missing mandatory SRPAG TLV".</t>
 
 <t>A given LSP MUST belong to at most one SRPAG, since a candidate path cannot belong to multiple SR policies. If a PCEP speaker receives a PCEP message with more than one SRPAG for an LSP, then the PCEP speaker MUST send a PCErr message with Error-Type 26 "Association Error" and Error-Value TBD8 "Multiple SRPAG for one LSP". If the message is a PCRpt message, then the PCEP speaker MUST close the PCEP connection. Closing the PCEP connection is necessary because ignoring PCRpt messages may lead to inconsistent LSP DB state between the two PCEP peers.</t>
 
@@ -392,6 +400,32 @@ they will automatically be output with "(if approved)" -->
 <t>Discriminator: 32-bit value that encodes the Discriminator of the candidate path.</t>
 
 </section> <!-- Cpath-identifiers-tlv -->
+
+<section anchor="SRPOLICY-CPATH-NAME" title="SR Policy Candidate Path Name TLV">
+
+<t>The SRPOLICY-CPATH-NAME TLV is an optional TLV for the SRPAG Association. At most one SRPOLICY-CPATH-NAME TLV can be carried and only the first occurrence is processed and any others MUST be ignored.</t>
+
+<figure anchor="SRPOLICY-CPATH-NAME-TLV-FORMAT" title="The SRPOLICY-CPATH-NAME TLV format">
+<artwork align="center"><![CDATA[
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |             Type              |             Length            |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                                                               |
+  ~                 SR Policy Candidate Path Name                 ~
+  |                                                               |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+</figure>
+
+<t>Type: TBD11 for "SRPOLICY-CPATH-NAME" TLV.</t>
+
+<t>Length: indicates the total length of the TLV in octets and MUST be greater than 0. The TLV MUST be zero-padded so that the TLV is 4-octet aligned.</t>
+
+<t>SR Policy Candidate Path Name: SR Policy Candidate Path Name, as defined in <xref target="I-D.ietf-spring-segment-routing-policy"/>. It SHOULD be a string of printable ASCII characters, without a NULL terminator.</t>
+
+</section> <!-- SRPOLICY-CPATH-NAME -->
 
 <section anchor="Cpath-preference-tlv" title="SR Policy Candidate Path Preference TLV">
 
@@ -581,7 +615,7 @@ they will automatically be output with "(if approved)" -->
 </section>
 
 <section title="SRPAG TLVs">
-<t>This document defines four new TLVs for carrying additional information about SR policy and SR candidate paths. IANA is requested to make the assignment of a new value for the existing "PCEP TLV Type Indicators" registry as follows:</t>
+<t>This document defines five new TLVs for carrying additional information about SR policy and SR candidate paths. IANA is requested to make the assignment of a new value for the existing "PCEP TLV Type Indicators" registry as follows:</t>
 <t>
 <figure>
         <artwork align="left"><![CDATA[
@@ -594,6 +628,8 @@ they will automatically be output with "(if approved)" -->
 | TBD3       | SRPOLICY-POL-NAME                 | This document    |
 +------------+-----------------------------------+------------------+
 | TBD4       | SRPOLICY-CPATH-ID                 | This document    |
++------------+-----------------------------------+------------------+
+| TBD11      | SRPOLICY-CPATH-NAME               | This document    |
 +------------+-----------------------------------+------------------+
 | TBD5       | SRPOLICY-CPATH-PREFERENCE         | This document    |
 +------------+-----------------------------------+------------------+

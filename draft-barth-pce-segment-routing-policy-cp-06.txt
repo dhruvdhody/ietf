@@ -5,17 +5,17 @@
 PCE Working Group                                           M. Koldychev
 Internet-Draft                                              S. Sivabalan
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 6, 2020                                       C. Barth
+Expires: December 4, 2020                                       C. Barth
                                                   Juniper Networks, Inc.
                                                                  S. Peng
                                                      Huawei Technologies
                                                               H. Bidgoli
                                                                    Nokia
-                                                           June 04, 2020
+                                                            June 2, 2020
 
 
     PCEP extension to support Segment Routing Policy Candidate Paths
-              draft-barth-pce-segment-routing-policy-cp-05
+              draft-barth-pce-segment-routing-policy-cp-06
 
 Abstract
 
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Koldychev, et al.       Expires December 6, 2020                [Page 1]
+Koldychev, et al.       Expires December 4, 2020                [Page 1]
 
 Internet-Draft                  SR Policy                      June 2020
 
 
-   This Internet-Draft will expire on December 6, 2020.
+   This Internet-Draft will expire on December 4, 2020.
 
 Copyright Notice
 
@@ -86,37 +86,38 @@ Table of Contents
      3.4.  Minimal signaling overhead  . . . . . . . . . . . . . . .   5
    4.  Procedure . . . . . . . . . . . . . . . . . . . . . . . . . .   6
      4.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   6
-     4.2.  Choice of Association Parameters  . . . . . . . . . . . .   7
+     4.2.  Choice of Association Parameters  . . . . . . . . . . . .   8
      4.3.  Multiple Optimization Objectives and Constraints  . . . .   8
    5.  SR Policy Association Group . . . . . . . . . . . . . . . . .   8
      5.1.  SR Policy Identifiers TLV . . . . . . . . . . . . . . . .   9
      5.2.  SR Policy Name TLV  . . . . . . . . . . . . . . . . . . .  10
      5.3.  SR Policy Candidate Path Identifiers TLV  . . . . . . . .  11
-     5.4.  SR Policy Candidate Path Preference TLV . . . . . . . . .  12
-   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     6.1.  PCC Initiated SR Policy with single candidate-path  . . .  12
+     5.4.  SR Policy Candidate Path Name TLV . . . . . . . . . . . .  12
+     5.5.  SR Policy Candidate Path Preference TLV . . . . . . . . .  12
+   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .  13
+     6.1.  PCC Initiated SR Policy with single candidate-path  . . .  13
      6.2.  PCC Initiated SR Policy with multiple candidate-paths . .  13
-     6.3.  PCE Initiated SR Policy with single candidate-path  . . .  13
-     6.4.  PCE Initiated SR Policy with multiple candidate-paths . .  14
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
+     6.3.  PCE Initiated SR Policy with single candidate-path  . . .  14
+     6.4.  PCE Initiated SR Policy with multiple candidate-paths . .  15
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
      7.1.  Association Type  . . . . . . . . . . . . . . . . . . . .  15
-     7.2.  PCEP Errors . . . . . . . . . . . . . . . . . . . . . . .  15
-     7.3.  SRPAG TLVs  . . . . . . . . . . . . . . . . . . . . . . .  15
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
-   9.  Acknowledgement . . . . . . . . . . . . . . . . . . . . . . .  16
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
+     7.2.  PCEP Errors . . . . . . . . . . . . . . . . . . . . . . .  16
+     7.3.  SRPAG TLVs  . . . . . . . . . . . . . . . . . . . . . . .  16
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
+   9.  Acknowledgement . . . . . . . . . . . . . . . . . . . . . . .  17
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
 
 
 
-Koldychev, et al.       Expires December 6, 2020                [Page 2]
+Koldychev, et al.       Expires December 4, 2020                [Page 2]
 
 Internet-Draft                  SR Policy                      June 2020
 
 
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  17
-   Appendix A.  Contributors . . . . . . . . . . . . . . . . . . . .  18
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  17
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  18
+   Appendix A.  Contributors . . . . . . . . . . . . . . . . . . . .  19
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
 1.  Introduction
 
@@ -160,15 +161,17 @@ Internet-Draft                  SR Policy                      June 2020
    candidate paths, with the additional knowledge that these candidate
    paths belong to the same SR policy.  This is accomplished via the use
    of the existing PCEP Association object, by defining a new
-   association type specifically for associating SR candidate paths into
-   a single SR policy.
 
 
 
-Koldychev, et al.       Expires December 6, 2020                [Page 3]
+
+Koldychev, et al.       Expires December 4, 2020                [Page 3]
 
 Internet-Draft                  SR Policy                      June 2020
 
+
+   association type specifically for associating SR candidate paths into
+   a single SR policy.
 
    [Editor's Note- Currently it is assumed that each candidate path has
    only one ERO (SID-List) within the scope of this document.  Another
@@ -215,17 +218,16 @@ Internet-Draft                  SR Policy                      June 2020
    the ASSOCIATION object, defined in this document, allow a PCEP peer
    to exchange additional parameters of SR candidate paths and of their
    associated SR policy.  For the SR policy, the parameters are: color
-   and endpoint.  For the candidate path, the parameters are: protocol
-   origin, originator, discriminator and preference.
 
 
 
-
-Koldychev, et al.       Expires December 6, 2020                [Page 4]
+Koldychev, et al.       Expires December 4, 2020                [Page 4]
 
 Internet-Draft                  SR Policy                      June 2020
 
 
+   and endpoint.  For the candidate path, the parameters are: protocol
+   origin, originator, discriminator and preference.
    [I-D.ietf-spring-segment-routing-policy] describes the concept of SR
    Policy and these parameters.
 
@@ -272,16 +274,16 @@ Internet-Draft                  SR Policy                      June 2020
    When an SR policy contains multiple candidate paths computed by a
    PCE, such candidate paths can be created, updated and deleted
    independently of each other.  This is achieved by making each
-   candidate path correspond to a unique LSP (identified via PLSP-ID).
-   For example, if an SR policy has 4 candidate paths, then if the PCE
 
 
 
-Koldychev, et al.       Expires December 6, 2020                [Page 5]
+Koldychev, et al.       Expires December 4, 2020                [Page 5]
 
 Internet-Draft                  SR Policy                      June 2020
 
 
+   candidate path correspond to a unique LSP (identified via PLSP-ID).
+   For example, if an SR policy has 4 candidate paths, then if the PCE
    wants to update one of those candidate paths, only one set of PCUpd
    and PCRpt messages needs to be exchanged.
 
@@ -331,9 +333,7 @@ Internet-Draft                  SR Policy                      June 2020
 
 
 
-
-
-Koldychev, et al.       Expires December 6, 2020                [Page 6]
+Koldychev, et al.       Expires December 4, 2020                [Page 6]
 
 Internet-Draft                  SR Policy                      June 2020
 
@@ -367,6 +367,8 @@ Internet-Draft                  SR Policy                      June 2020
 
    o  Discriminator of candidate path.
 
+   o  Optionally, the candidate path name.
+
    Candidate Path Attributes MUST NOT be used to identify the candidate
    path.  Candidate path attributes carry additional information about
    the candidate path and MAY change during the lifetime of the LSP.
@@ -381,18 +383,21 @@ Internet-Draft                  SR Policy                      June 2020
    supported".  Please note that the corresponding PCEP session is not
    reset.
 
+
+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020                [Page 7]
+
+Internet-Draft                  SR Policy                      June 2020
+
+
 4.2.  Choice of Association Parameters
 
    The Association Parameters (see Section 2) uniquely identify the
    Association.  In this section, we describe how these are to be set.
-
-
-
-
-Koldychev, et al.       Expires December 6, 2020                [Page 7]
-
-Internet-Draft                  SR Policy                      June 2020
-
 
    The Association Source MUST be set to the PCC's address.  This
    applies for both PCC-initiated and PCE-initiated candidate paths.
@@ -437,34 +442,34 @@ Internet-Draft                  SR Policy                      June 2020
    indicating the type of the association group.  This document adds a
    new Association type.
 
-   Association type = TBD1 "SR Policy Association Type" for SR Policy
-   Association Group (SRPAG).
-
-   This Association type is operator-configured association in nature
-   and created by the operator manually on the PCEP peers.  A SR path
 
 
 
-Koldychev, et al.       Expires December 6, 2020                [Page 8]
+Koldychev, et al.       Expires December 4, 2020                [Page 8]
 
 Internet-Draft                  SR Policy                      June 2020
 
 
-   belonging to this association is conveyed via PCEP messages to the
-   PCEP peer.  Operator-configured Association Range need not be set for
-   this association-type, and MUST be ignored, so that the full range of
-   association identifier can be utilized.
+   Association type = TBD1 "SR Policy Association Type" for SR Policy
+   Association Group (SRPAG).
+
+   This Association type is dynamic in nature and created by the PCC or
+   PCE for the candidate paths belonging to the same SR policy (as
+   described in [I-D.ietf-spring-segment-routing-policy]).  These
+   associations are conveyed via PCEP messages to the PCEP peer.
+   Operator-configured Association Range MUST NOT be set for this
+   Association type and MUST be ignored.
 
    SRPAG MUST carry additional TLVs to communicate Association
-   Information.  This document specifies four new TLVs to carry
-   Association Information: SRPOLICY-POL-ID TLV, SRPOLICY-CPATH-NAME
-   TLV, SRPOLICY-CPATH-ID TLV, SRPOLICY-CPATH-PREFERENCE TLV.  These
-   four TLVs encode the Policy Identifiers, SR Policy candidate path
-   name, Candidate path identifiers and Candidate path preference,
-   respectively.  When any of the mandatory TLVs are missing from the
-   SRPAG association object, the PCE MUST send a PCErr message with
-   Error Code = 26 "Association Error", Error Type = TBD7 "Missing
-   mandatory SRPAG TLV".
+   Information.  This document specifies five new TLVs to carry
+   Association Information: SRPOLICY-POL-ID TLV, SRPOLICY-POL-NAME TLV,
+   SRPOLICY-CPATH-ID TLV, SRPOLICY-CPATH-NAME TLV, SRPOLICY-CPATH-
+   PREFERENCE TLV.  These five TLVs encode the Policy Identifiers, SR
+   Policy name, Candidate path identifiers, candidate path name, and
+   Candidate path preference, respectively.  When any of the mandatory
+   TLVs are missing from the SRPAG association object, the PCE MUST send
+   a PCErr message with Error Code = 26 "Association Error", Error Type
+   = TBD7 "Missing mandatory SRPAG TLV".
 
    A given LSP MUST belong to at most one SRPAG, since a candidate path
    cannot belong to multiple SR policies.  If a PCEP speaker receives a
@@ -496,12 +501,7 @@ Internet-Draft                  SR Policy                      June 2020
 
 
 
-
-
-
-
-
-Koldychev, et al.       Expires December 6, 2020                [Page 9]
+Koldychev, et al.       Expires December 4, 2020                [Page 9]
 
 Internet-Draft                  SR Policy                      June 2020
 
@@ -557,7 +557,7 @@ Internet-Draft                  SR Policy                      June 2020
 
 
 
-Koldychev, et al.       Expires December 6, 2020               [Page 10]
+Koldychev, et al.       Expires December 4, 2020               [Page 10]
 
 Internet-Draft                  SR Policy                      June 2020
 
@@ -613,7 +613,7 @@ Internet-Draft                  SR Policy                      June 2020
 
 
 
-Koldychev, et al.       Expires December 6, 2020               [Page 11]
+Koldychev, et al.       Expires December 4, 2020               [Page 11]
 
 Internet-Draft                  SR Policy                      June 2020
 
@@ -625,12 +625,54 @@ Internet-Draft                  SR Policy                      June 2020
    Discriminator: 32-bit value that encodes the Discriminator of the
    candidate path.
 
-5.4.  SR Policy Candidate Path Preference TLV
+5.4.  SR Policy Candidate Path Name TLV
+
+   The SRPOLICY-CPATH-NAME TLV is an optional TLV for the SRPAG
+   Association.  At most one SRPOLICY-CPATH-NAME TLV can be carried and
+   only the first occurrence is processed and any others MUST be
+   ignored.
+
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |             Type              |             Length            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                                                               |
+      ~                 SR Policy Candidate Path Name                 ~
+      |                                                               |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+               Figure 4: The SRPOLICY-CPATH-NAME TLV format
+
+   Type: TBD11 for "SRPOLICY-CPATH-NAME" TLV.
+
+   Length: indicates the total length of the TLV in octets and MUST be
+   greater than 0.  The TLV MUST be zero-padded so that the TLV is
+   4-octet aligned.
+
+   SR Policy Candidate Path Name: SR Policy Candidate Path Name, as
+   defined in [I-D.ietf-spring-segment-routing-policy].  It SHOULD be a
+   string of printable ASCII characters, without a NULL terminator.
+
+5.5.  SR Policy Candidate Path Preference TLV
 
    The SRPOLICY-CPATH-PREFERENCE TLV is an optional TLV for the SRPAG
    Association.  Only one SRPOLICY-CPATH-PREFERENCE TLV can be carried
    and only the first occurrence is processed and any others MUST be
    ignored.
+
+
+
+
+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 12]
+
+Internet-Draft                  SR Policy                      June 2020
+
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -640,7 +682,7 @@ Internet-Draft                  SR Policy                      June 2020
       |                           Preference                          |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-            Figure 4: The SRPOLICY-CPATH-PREFERENCE TLV format
+            Figure 5: The SRPOLICY-CPATH-PREFERENCE TLV format
 
    Type: TBD5 for "SRPOLICY-CPATH-PREFERENCE" TLV.
 
@@ -666,14 +708,6 @@ Internet-Draft                  SR Policy                      June 2020
 
    PCRpt and PCUpd messages are exchanged in the following sequence:
 
-
-
-
-Koldychev, et al.       Expires December 6, 2020               [Page 12]
-
-Internet-Draft                  SR Policy                      June 2020
-
-
    1.  PCC sends PCRpt message to the PCE, including the LSP object and
        the SRPAG ASSOCIATION object.
 
@@ -686,6 +720,15 @@ Internet-Draft                  SR Policy                      June 2020
 6.2.  PCC Initiated SR Policy with multiple candidate-paths
 
    PCRpt and PCUpd messages are exchanged in the following sequence:
+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 13]
+
+Internet-Draft                  SR Policy                      June 2020
+
 
    1.  For each candidate path of the SR Policy, the PCC generates a
        different PLSP-ID and symbolic-name and sends multiple PCRpt
@@ -723,13 +766,6 @@ Internet-Draft                  SR Policy                      June 2020
        to be the address of the PCE that is sending the PCInitiate
        message.
 
-
-
-Koldychev, et al.       Expires December 6, 2020               [Page 13]
-
-Internet-Draft                  SR Policy                      June 2020
-
-
    3.  PCC sends a PCRpt message back to the PCE to report the newly
        created Candidate Path.  The PCRpt message contains the SRPAG
        Association object.  The Association Source is set to the IP
@@ -740,6 +776,15 @@ Internet-Draft                  SR Policy                      June 2020
 
    1.  PCE sends PCInitiate message, setting the R-flag in the LSP
        object.
+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 14]
+
+Internet-Draft                  SR Policy                      June 2020
+
 
    2.  PCC uses the PLSP-ID from the LSP object to find the candidate
        path and delete it.  If this is the last candidate path under the
@@ -775,17 +820,6 @@ Internet-Draft                  SR Policy                      June 2020
 
 7.  IANA Considerations
 
-
-
-
-
-
-
-Koldychev, et al.       Expires December 6, 2020               [Page 14]
-
-Internet-Draft                  SR Policy                      June 2020
-
-
 7.1.  Association Type
 
    This document defines a new association type: SR Policy Association
@@ -799,6 +833,14 @@ Internet-Draft                  SR Policy                      June 2020
    +----------------------+-------------------------+------------------+
    | TBD1                 | SR Policy Association   | This document    |
    +----------------------+-------------------------+------------------+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 15]
+
+Internet-Draft                  SR Policy                      June 2020
+
 
 7.2.  PCEP Errors
 
@@ -826,21 +868,10 @@ Internet-Draft                  SR Policy                      June 2020
 
 7.3.  SRPAG TLVs
 
-   This document defines four new TLVs for carrying additional
+   This document defines five new TLVs for carrying additional
    information about SR policy and SR candidate paths.  IANA is
    requested to make the assignment of a new value for the existing
    "PCEP TLV Type Indicators" registry as follows:
-
-
-
-
-
-
-
-Koldychev, et al.       Expires December 6, 2020               [Page 15]
-
-Internet-Draft                  SR Policy                      June 2020
-
 
    +------------+-----------------------------------+------------------+
    | TLV Type   | TLV Name                          | Reference        |
@@ -852,8 +883,20 @@ Internet-Draft                  SR Policy                      June 2020
    +------------+-----------------------------------+------------------+
    | TBD4       | SRPOLICY-CPATH-ID                 | This document    |
    +------------+-----------------------------------+------------------+
+   | TBD11      | SRPOLICY-CPATH-NAME               | This document    |
+   +------------+-----------------------------------+------------------+
    | TBD5       | SRPOLICY-CPATH-PREFERENCE         | This document    |
    +------------+-----------------------------------+------------------+
+
+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 16]
+
+Internet-Draft                  SR Policy                      June 2020
+
 
 8.  Security Considerations
 
@@ -888,16 +931,6 @@ Internet-Draft                  SR Policy                      June 2020
               DOI 10.17487/RFC5440, March 2009,
               <https://www.rfc-editor.org/info/rfc5440>.
 
-
-
-
-
-
-Koldychev, et al.       Expires December 6, 2020               [Page 16]
-
-Internet-Draft                  SR Policy                      June 2020
-
-
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -913,6 +946,13 @@ Internet-Draft                  SR Policy                      June 2020
               Extensions for PCE-Initiated LSP Setup in a Stateful PCE
               Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
               <https://www.rfc-editor.org/info/rfc8281>.
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 17]
+
+Internet-Draft                  SR Policy                      June 2020
+
 
    [I-D.ietf-spring-segment-routing-policy]
               Filsfils, C., Sivabalan, S., Voyer, D., Bogdanov, A., and
@@ -946,14 +986,6 @@ Internet-Draft                  SR Policy                      June 2020
               DOI 10.17487/RFC4655, August 2006,
               <https://www.rfc-editor.org/info/rfc4655>.
 
-
-
-
-Koldychev, et al.       Expires December 6, 2020               [Page 17]
-
-Internet-Draft                  SR Policy                      June 2020
-
-
    [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
               "Recommendations for Secure Use of Transport Layer
               Security (TLS) and Datagram Transport Layer Security
@@ -965,6 +997,18 @@ Internet-Draft                  SR Policy                      June 2020
               Path Computation Element Communication Protocol (PCEP)",
               RFC 8253, DOI 10.17487/RFC8253, October 2017,
               <https://www.rfc-editor.org/info/rfc8253>.
+
+
+
+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 18]
+
+Internet-Draft                  SR Policy                      June 2020
+
 
    [I-D.ietf-pce-segment-routing-ipv6]
               Negi, M., Li, C., Sivabalan, S., Kaladharan, P., and Y.
@@ -1002,14 +1046,6 @@ Authors' Addresses
    Email: mkoldych@cisco.com
 
 
-
-
-
-Koldychev, et al.       Expires December 6, 2020               [Page 18]
-
-Internet-Draft                  SR Policy                      June 2020
-
-
    Siva Sivabalan
    Cisco Systems, Inc.
    2000 Innovation Drive
@@ -1017,6 +1053,17 @@ Internet-Draft                  SR Policy                      June 2020
    Canada
 
    Email: msiva@cisco.com
+
+
+
+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 19]
+
+Internet-Draft                  SR Policy                      June 2020
 
 
    Colby Barth
@@ -1061,4 +1108,13 @@ Internet-Draft                  SR Policy                      June 2020
 
 
 
-Koldychev, et al.       Expires December 6, 2020               [Page 19]
+
+
+
+
+
+
+
+
+
+Koldychev, et al.       Expires December 4, 2020               [Page 20]
