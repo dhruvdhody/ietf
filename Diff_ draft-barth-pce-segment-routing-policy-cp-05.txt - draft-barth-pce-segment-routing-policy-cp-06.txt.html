@@ -1,0 +1,647 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0049)https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+   
+  <meta http-equiv="Content-Style-Type" content="text/css"> 
+  <title>Diff: draft-barth-pce-segment-routing-policy-cp-05.txt - draft-barth-pce-segment-routing-policy-cp-06.txt</title> 
+  <style type="text/css"> 
+    body    { margin: 0.4ex; margin-right: auto; } 
+    tr      { } 
+    td      { white-space: pre; font-family: monospace; vertical-align: top; font-size: 0.86em;} 
+    th      { font-size: 0.86em; } 
+    .small  { font-size: 0.6em; font-style: italic; font-family: Verdana, Helvetica, sans-serif; } 
+    .left   { background-color: #EEE; } 
+    .right  { background-color: #FFF; } 
+    .diff   { background-color: #CCF; } 
+    .lblock { background-color: #BFB; } 
+    .rblock { background-color: #FF8; } 
+    .insert { background-color: #8FF; } 
+    .delete { background-color: #ACF; } 
+    .void   { background-color: #FFB; } 
+    .cont   { background-color: #EEE; } 
+    .linebr { background-color: #AAA; } 
+    .lineno { color: red; background-color: #FFF; font-size: 0.7em; text-align: right; padding: 0 2px; } 
+    .elipsis{ background-color: #AAA; } 
+    .left .cont { background-color: #DDD; } 
+    .right .cont { background-color: #EEE; } 
+    .lblock .cont { background-color: #9D9; } 
+    .rblock .cont { background-color: #DD6; } 
+    .insert .cont { background-color: #0DD; } 
+    .delete .cont { background-color: #8AD; } 
+    .stats, .stats td, .stats th { background-color: #EEE; padding: 2px 0; } 
+    span.hide { display: none; color: #aaa;}    a:hover span { display: inline; }    tr.change { background-color: gray; } 
+    tr.change a { text-decoration: none; color: black } 
+  </style> 
+     <script>
+var chunk_index = 0;
+var old_chunk = null;
+
+function format_chunk(index) {
+    var prefix = "diff";
+    var str = index.toString();
+    for (x=0; x<(4-str.length); ++x) {
+        prefix+='0';
+    }
+    return prefix + str;
+}
+
+function find_chunk(n){
+    return document.querySelector('tr[id$="' + n + '"]');
+}
+
+function change_chunk(offset) {
+    var index = chunk_index + offset;
+    var new_str;
+    var new_chunk;
+
+    new_str = format_chunk(index);
+    new_chunk = find_chunk(new_str);
+    if (!new_chunk) {
+        return;
+    }
+    if (old_chunk) {
+        old_chunk.style.outline = "";
+    }
+    old_chunk = new_chunk;
+    old_chunk.style.outline = "1px solid red";
+    window.location.replace("#" + new_str)
+    window.scrollBy(0,-100);
+    chunk_index = index;
+}
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+    case 78:
+        change_chunk(1);
+        break;
+    case 80:
+        change_chunk(-1);
+        break;
+    }
+};
+   </script> 
+</head> 
+<body> 
+  <table border="0" cellpadding="0" cellspacing="0"> 
+  <tbody><tr id="part-1" bgcolor="orange"><th></th><th><a href="https://tools.ietf.org/rfcdiff?url2=draft-barth-pce-segment-routing-policy-cp-05.txt" style="color:#008; text-decoration:none;">&lt;</a>&nbsp;<a href="https://tools.ietf.org/html/draft-barth-pce-segment-routing-policy-cp-05.txt" style="color:#008">draft-barth-pce-segment-routing-policy-cp-05.txt</a>&nbsp;</th><th> </th><th>&nbsp;<a href="https://tools.ietf.org/html/draft-barth-pce-segment-routing-policy-cp-06.txt" style="color:#008">draft-barth-pce-segment-routing-policy-cp-06.txt</a>&nbsp;<a href="https://tools.ietf.org/rfcdiff?url1=draft-barth-pce-segment-routing-policy-cp-06.txt" style="color:#008; text-decoration:none;">&gt;</a></th><th></th></tr> 
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">PCE Working Group                                           M. Koldychev</td><td> </td><td class="right">PCE Working Group                                           M. Koldychev</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Internet-Draft                                              S. Sivabalan</td><td> </td><td class="right">Internet-Draft                                              S. Sivabalan</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Intended status: Standards Track                     Cisco Systems, Inc.</td><td> </td><td class="right">Intended status: Standards Track                     Cisco Systems, Inc.</td><td class="lineno"></td></tr>
+      <tr id="diff0001"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">Expires: <span class="delete">November 5</span>, 2020                                       C. Barth</td><td> </td><td class="rblock">Expires: <span class="insert">December 6</span>, 2020                                       C. Barth</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                  Juniper Networks, Inc.</td><td> </td><td class="right">                                                  Juniper Networks, Inc.</td><td class="lineno"></td></tr>
+      <tr id="diff0002"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                                                 <span class="delete">  C. Li</span></td><td> </td><td class="rblock">                                                                 <span class="insert">S. Peng</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                     Huawei Technologies</td><td> </td><td class="right">                                                     Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                              H. Bidgoli</td><td> </td><td class="right">                                                              H. Bidgoli</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">                                                                   Nokia</td><td> </td><td class="right">                                                                   Nokia</td><td class="lineno"></td></tr>
+      <tr id="diff0003"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">                                                           <span class="delete"> May</span> 04, 2020</td><td> </td><td class="rblock">                                                           <span class="insert">June</span> 04, 2020</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">    PCEP extension to support Segment Routing Policy Candidate Paths</td><td> </td><td class="right">    PCEP extension to support Segment Routing Policy Candidate Paths</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              draft-barth-pce-segment-routing-policy-cp-05</td><td> </td><td class="right">              draft-barth-pce-segment-routing-policy-cp-05</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Abstract</td><td> </td><td class="right">Abstract</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document introduces a mechanism to specify a Segment Routing</td><td> </td><td class="right">   This document introduces a mechanism to specify a Segment Routing</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (SR) policy, as a collection of SR candidate paths.  An SR policy is</td><td> </td><td class="right">   (SR) policy, as a collection of SR candidate paths.  An SR policy is</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   identified by &lt;headend, color, end-point&gt; tuple.  An SR policy can</td><td> </td><td class="right">   identified by &lt;headend, color, end-point&gt; tuple.  An SR policy can</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   contain one or more candidate paths where each candidate path is</td><td> </td><td class="right">   contain one or more candidate paths where each candidate path is</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-2" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-2"><em> page 2, line 4<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-2"><em> page 2, line 4<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are working documents of the Internet Engineering</td><td> </td><td class="right">   Internet-Drafts are working documents of the Internet Engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Task Force (IETF).  Note that other groups may also distribute</td><td> </td><td class="right">   Task Force (IETF).  Note that other groups may also distribute</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   working documents as Internet-Drafts.  The list of current Internet-</td><td> </td><td class="right">   working documents as Internet-Drafts.  The list of current Internet-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Drafts is at https://datatracker.ietf.org/drafts/current/.</td><td> </td><td class="right">   Drafts is at https://datatracker.ietf.org/drafts/current/.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Internet-Drafts are draft documents valid for a maximum of six months</td><td> </td><td class="right">   Internet-Drafts are draft documents valid for a maximum of six months</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and may be updated, replaced, or obsoleted by other documents at any</td><td> </td><td class="right">   and may be updated, replaced, or obsoleted by other documents at any</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   time.  It is inappropriate to use Internet-Drafts as reference</td><td> </td><td class="right">   time.  It is inappropriate to use Internet-Drafts as reference</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   material or to cite them other than as "work in progress."</td><td> </td><td class="right">   material or to cite them other than as "work in progress."</td><td class="lineno"></td></tr>
+      <tr id="diff0004"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   This Internet-Draft will expire on <span class="delete">November 5</span>, 2020.</td><td> </td><td class="rblock">   This Internet-Draft will expire on <span class="insert">December 6</span>, 2020.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Copyright Notice</td><td> </td><td class="right">Copyright Notice</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Copyright (c) 2020 IETF Trust and the persons identified as the</td><td> </td><td class="right">   Copyright (c) 2020 IETF Trust and the persons identified as the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document authors.  All rights reserved.</td><td> </td><td class="right">   document authors.  All rights reserved.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td> </td><td class="right">   This document is subject to BCP 78 and the IETF Trust's Legal</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Provisions Relating to IETF Documents</td><td> </td><td class="right">   Provisions Relating to IETF Documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   (https://trustee.ietf.org/license-info) in effect on the date of</td><td> </td><td class="right">   (https://trustee.ietf.org/license-info) in effect on the date of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   publication of this document.  Please review these documents</td><td> </td><td class="right">   publication of this document.  Please review these documents</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-3" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-3"><em> page 2, line 37<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-3"><em> page 2, line 37<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.2.  Instantiation of SR policy candidate paths  . . . . . . .   5</td><td> </td><td class="right">     3.2.  Instantiation of SR policy candidate paths  . . . . . . .   5</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.3.  Avoid computing lower preference candidate paths  . . . .   5</td><td> </td><td class="right">     3.3.  Avoid computing lower preference candidate paths  . . . .   5</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     3.4.  Minimal signaling overhead  . . . . . . . . . . . . . . .   5</td><td> </td><td class="right">     3.4.  Minimal signaling overhead  . . . . . . . . . . . . . . .   5</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   4.  Procedure . . . . . . . . . . . . . . . . . . . . . . . . . .   6</td><td> </td><td class="right">   4.  Procedure . . . . . . . . . . . . . . . . . . . . . . . . . .   6</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     4.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   6</td><td> </td><td class="right">     4.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   6</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     4.2.  Choice of Association Parameters  . . . . . . . . . . . .   7</td><td> </td><td class="right">     4.2.  Choice of Association Parameters  . . . . . . . . . . . .   7</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     4.3.  Multiple Optimization Objectives and Constraints  . . . .   8</td><td> </td><td class="right">     4.3.  Multiple Optimization Objectives and Constraints  . . . .   8</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   5.  SR Policy Association Group . . . . . . . . . . . . . . . . .   8</td><td> </td><td class="right">   5.  SR Policy Association Group . . . . . . . . . . . . . . . . .   8</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     5.1.  SR Policy Identifiers TLV . . . . . . . . . . . . . . . .   9</td><td> </td><td class="right">     5.1.  SR Policy Identifiers TLV . . . . . . . . . . . . . . . .   9</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     5.2.  SR Policy Name TLV  . . . . . . . . . . . . . . . . . . .  10</td><td> </td><td class="right">     5.2.  SR Policy Name TLV  . . . . . . . . . . . . . . . . . . .  10</td><td class="lineno"></td></tr>
+      <tr id="diff0005"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     5.3.  SR Policy Candidate Path Identifiers TLV  . . . . . . . .  <span class="delete">10</span></td><td> </td><td class="rblock">     5.3.  SR Policy Candidate Path Identifiers TLV  . . . . . . . .  <span class="insert">11</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     5.4.  SR Policy Candidate Path Preference TLV . . . . . . . . .  <span class="delete">11</span></td><td> </td><td class="rblock">     5.4.  SR Policy Candidate Path Preference TLV . . . . . . . . .  <span class="insert">12</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .  12</td><td> </td><td class="right">   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .  12</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     6.1.  PCC Initiated SR Policy with single candidate-path  . . .  12</td><td> </td><td class="right">     6.1.  PCC Initiated SR Policy with single candidate-path  . . .  12</td><td class="lineno"></td></tr>
+      <tr id="diff0006"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     6.2.  PCC Initiated SR Policy with multiple candidate-paths . .  1<span class="delete">2</span></td><td> </td><td class="rblock">     6.2.  PCC Initiated SR Policy with multiple candidate-paths . .  1<span class="insert">3</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     6.3.  PCE Initiated SR Policy with single candidate-path  . . .  13</td><td> </td><td class="right">     6.3.  PCE Initiated SR Policy with single candidate-path  . . .  13</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     6.4.  PCE Initiated SR Policy with multiple candidate-paths . .  14</td><td> </td><td class="right">     6.4.  PCE Initiated SR Policy with multiple candidate-paths . .  14</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14</td><td> </td><td class="right">   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14</td><td class="lineno"></td></tr>
+      <tr id="diff0007"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">     7.1.  Association Type  . . . . . . . . . . . . . . . . . . . .  1<span class="delete">4</span></td><td> </td><td class="rblock">     7.1.  Association Type  . . . . . . . . . . . . . . . . . . . .  1<span class="insert">5</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     7.2.  PCEP Errors . . . . . . . . . . . . . . . . . . . . . . .  15</td><td> </td><td class="right">     7.2.  PCEP Errors . . . . . . . . . . . . . . . . . . . . . . .  15</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     7.3.  SRPAG TLVs  . . . . . . . . . . . . . . . . . . . . . . .  15</td><td> </td><td class="right">     7.3.  SRPAG TLVs  . . . . . . . . . . . . . . . . . . . . . . .  15</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   9.  Acknowledgement . . . . . . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">   9.  Acknowledgement . . . . . . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16</td><td> </td><td class="right">     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">     10.2.  Informative References . . . . . . . . . . . . . . . . .  17</td><td> </td><td class="right">     10.2.  Informative References . . . . . . . . . . . . . . . . .  17</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Appendix A.  Contributors . . . . . . . . . . . . . . . . . . . .  18</td><td> </td><td class="right">   Appendix A.  Contributors . . . . . . . . . . . . . . . . . . . .  18</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18</td><td> </td><td class="right">   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-4" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-4"><em> page 3, line 23<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-4"><em> page 3, line 23<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the PCE architecture [RFC4655].</td><td> </td><td class="right">   the PCE architecture [RFC4655].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP Extensions for the Stateful PCE Model [RFC8231] describes a set</td><td> </td><td class="right">   PCEP Extensions for the Stateful PCE Model [RFC8231] describes a set</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   of extensions to PCEP to enable active control of Multiprotocol Label</td><td> </td><td class="right">   of extensions to PCEP to enable active control of Multiprotocol Label</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Switching Traffic Engineering (MPLS-TE) and Generalized MPLS (GMPLS)</td><td> </td><td class="right">   Switching Traffic Engineering (MPLS-TE) and Generalized MPLS (GMPLS)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   tunnels.  [RFC8281] describes the setup and teardown of PCE-initiated</td><td> </td><td class="right">   tunnels.  [RFC8281] describes the setup and teardown of PCE-initiated</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   LSPs under the active stateful PCE model, without the need for local</td><td> </td><td class="right">   LSPs under the active stateful PCE model, without the need for local</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   configuration on the PCC, thus allowing for dynamic centralized</td><td> </td><td class="right">   configuration on the PCC, thus allowing for dynamic centralized</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   control of a network.</td><td> </td><td class="right">   control of a network.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0008"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   PCEP Extensions for Segment Routing <span class="delete">[I-D.ietf-pce-segment-routing]</span></td><td> </td><td class="rblock">   PCEP Extensions for Segment Routing <span class="insert">[RFC8664]</span> specifies extensions to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   specifies extensions to the Path Computation Element Protocol (PCEP)</td><td> </td><td class="rblock">   the Path Computation Element Protocol (PCEP) that allow a stateful</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   that allow a stateful PCE to compute and initiate Traffic Engineering</td><td> </td><td class="rblock">   PCE to compute and initiate Traffic Engineering (TE) paths, as well</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   (TE) paths, as well as a PCC to request a path subject to certain</td><td> </td><td class="rblock">   as a PCC to request a path subject to certain constraint(s) and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   constraint(s) and optimization criteria in SR networks.</td><td> </td><td class="rblock">   optimization criteria in SR networks.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP Extensions for Establishing Relationships Between Sets of LSPs</td><td> </td><td class="right">   PCEP Extensions for Establishing Relationships Between Sets of LSPs</td><td class="lineno"></td></tr>
+      <tr id="diff0009"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.ietf-pce-association-group]</span> introduces a generic mechanism to</td><td> </td><td class="rblock">   <span class="insert">[RFC8697]</span> introduces a generic mechanism to create a grouping of LSPs</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   create a grouping of LSPs which can then be used to define</td><td> </td><td class="rblock">   which can then be used to define associations between a set of LSPs</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   associations between a set of LSPs and a set of attributes (such as</td><td> </td><td class="rblock">   and a set of attributes (such as configuration parameters or</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   configuration parameters or behaviors) and is equally applicable to</td><td> </td><td class="rblock">   behaviors) and is equally applicable to stateful PCE (active and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   stateful PCE (active and passive modes) and stateless PCE.</td><td> </td><td class="rblock">   passive modes) and stateless PCE.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Segment Routing Policy for Traffic Engineering</td><td> </td><td class="right">   Segment Routing Policy for Traffic Engineering</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-spring-segment-routing-policy] details the concepts of SR</td><td> </td><td class="right">   [I-D.ietf-spring-segment-routing-policy] details the concepts of SR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Policy and approaches to steering traffic into an SR Policy.</td><td> </td><td class="right">   Policy and approaches to steering traffic into an SR Policy.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   An SR policy contains one or more candidate paths where one or more</td><td> </td><td class="right">   An SR policy contains one or more candidate paths where one or more</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   such paths can be computed via PCE.  This document specifies PCEP</td><td> </td><td class="right">   such paths can be computed via PCE.  This document specifies PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   extensions to signal additional information to map candidate paths to</td><td> </td><td class="right">   extensions to signal additional information to map candidate paths to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   their SR policies.  Each candidate path maps to a unique PLSP-ID in</td><td> </td><td class="right">   their SR policies.  Each candidate path maps to a unique PLSP-ID in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP.  By associating multiple candidate paths together, a PCE</td><td> </td><td class="right">   PCEP.  By associating multiple candidate paths together, a PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   becomes aware of the hierarchical structure of an SR policy.  Thus</td><td> </td><td class="right">   becomes aware of the hierarchical structure of an SR policy.  Thus</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the PCE can take computation and control decisions about the</td><td> </td><td class="right">   the PCE can take computation and control decisions about the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   candidate paths, with the additional knowledge that these candidate</td><td> </td><td class="right">   candidate paths, with the additional knowledge that these candidate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   paths belong to the same SR policy.  This is accomplished via the use</td><td> </td><td class="right">   paths belong to the same SR policy.  This is accomplished via the use</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   of the existing PCEP Association object, by defining a new</td><td> </td><td class="right">   of the existing PCEP Association object, by defining a new</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association type specifically for associating SR candidate paths into</td><td> </td><td class="right">   association type specifically for associating SR candidate paths into</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   a single SR policy.</td><td> </td><td class="right">   a single SR policy.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [Editor's Note- Currently it is assumed that each candidate path has</td><td> </td><td class="right">   [Editor's Note- Currently it is assumed that each candidate path has</td><td class="lineno"></td></tr>
+      <tr id="diff0010"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   only one ERO (SID-List) within the scope of this document.  <span class="delete">A future</span></td><td> </td><td class="rblock">   only one ERO (SID-List) within the scope of this document.  <span class="insert">Another</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   update or another</span> document will deal with a way to allow multiple</td><td> </td><td class="rblock">   document will deal with a way to allow multiple ERO/SID-Lists for a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   ERO/SID-Lists for a candidate path within PCEP.]</td><td> </td><td class="rblock">   candidate path within PCEP.]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">2.  Terminology</td><td> </td><td class="right">2.  Terminology</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The following terminologies are used in this document:</td><td> </td><td class="right">   The following terminologies are used in this document:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Endpoint:  The IPv4 or IPv6 endpoint address of the SR policy in</td><td> </td><td class="right">   Endpoint:  The IPv4 or IPv6 endpoint address of the SR policy in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      question, as described in</td><td> </td><td class="right">      question, as described in</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      [I-D.ietf-spring-segment-routing-policy].</td><td> </td><td class="right">      [I-D.ietf-spring-segment-routing-policy].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0011"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Association parameters:  As described in</td><td> </td><td class="rblock">   Association parameters:  As described in <span class="insert">[RFC8697],</span> the combination</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      <span class="delete">[I-D.ietf-pce-association-group],</span> the combination of the mandatory</td><td> </td><td class="rblock">      of the mandatory fields Association type, Association ID and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      fields Association type, Association ID and Association Source in</td><td> </td><td class="rblock">      Association Source in the ASSOCIATION object uniquely identify the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      the ASSOCIATION object uniquely identify the association group.</td><td> </td><td class="rblock">      association group.  If the optional TLVs - Global Association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      If the optional TLVs - Global Association Source or Extended</td><td> </td><td class="rblock">      Source or Extended Association ID are included, then they MUST be</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      Association ID are included, then they MUST be included in</td><td> </td><td class="rblock">      included in combination with mandatory fields to uniquely identify</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      combination with mandatory fields to uniquely identify the</td><td> </td><td class="rblock">      the association group.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      association group.</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0012"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Association information:  As described in</td><td> </td><td class="rblock">   Association information:  As described in <span class="insert">[RFC8697],</span> the ASSOCIATION</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      <span class="delete">[I-D.ietf-pce-association-group],</span> the ASSOCIATION object could</td><td> </td><td class="rblock">      object could also include other optional TLVs based on the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      also include other optional TLVs based on the association types,</td><td> </td><td class="rblock">      association types, that provides 'information' related to the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">      that provides 'information' related to the association type.</td><td> </td><td class="rblock">      association type.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCC:  Path Computation Client.  Any client application requesting a</td><td> </td><td class="right">   PCC:  Path Computation Client.  Any client application requesting a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      path computation to be performed by a Path Computation Element.</td><td> </td><td class="right">      path computation to be performed by a Path Computation Element.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCE:  Path Computation Element.  An entity (component, application,</td><td> </td><td class="right">   PCE:  Path Computation Element.  An entity (component, application,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      or network node) that is capable of computing a network path or</td><td> </td><td class="right">      or network node) that is capable of computing a network path or</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      route based on a network graph and applying computational</td><td> </td><td class="right">      route based on a network graph and applying computational</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      constraints.</td><td> </td><td class="right">      constraints.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP:  Path Computation Element Protocol.</td><td> </td><td class="right">   PCEP:  Path Computation Element Protocol.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP Tunnel:  The entity identified by the PLSP-ID, as per</td><td> </td><td class="right">   PCEP Tunnel:  The entity identified by the PLSP-ID, as per</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      [I-D.koldychev-pce-operational].</td><td> </td><td class="right">      [I-D.koldychev-pce-operational].</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">3.  Motivation</td><td> </td><td class="right">3.  Motivation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The new Association Type (SR Policy Association) and the new TLVs for</td><td> </td><td class="right">   The new Association Type (SR Policy Association) and the new TLVs for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the ASSOCIATION object, defined in this document, allow a PCEP peer</td><td> </td><td class="right">   the ASSOCIATION object, defined in this document, allow a PCEP peer</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   to exchange additional parameters of SR candidate paths and of their</td><td> </td><td class="right">   to exchange additional parameters of SR candidate paths and of their</td><td class="lineno"></td></tr>
+      <tr id="diff0013"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">parent</span> SR policy.  For the SR policy, the parameters are: color and</td><td> </td><td class="rblock">   <span class="insert">associated</span> SR policy.  For the SR policy, the parameters are: color</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   endpoint.  For the candidate path, the parameters are: protocol</td><td> </td><td class="rblock">   and endpoint.  For the candidate path, the parameters are: protocol</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   origin, originator, discriminator and preference.</td><td> </td><td class="right">   origin, originator, discriminator and preference.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-spring-segment-routing-policy] describes the concept of SR</td><td> </td><td class="right">   [I-D.ietf-spring-segment-routing-policy] describes the concept of SR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Policy and these parameters.</td><td> </td><td class="right">   Policy and these parameters.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The motivation for signaling these parameters is summarized in the</td><td> </td><td class="right">   The motivation for signaling these parameters is summarized in the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   following subsections.</td><td> </td><td class="right">   following subsections.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">3.1.  Group Candidate Paths belonging to the same SR policy</td><td> </td><td class="right">3.1.  Group Candidate Paths belonging to the same SR policy</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-5" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-5"><em> page 6, line 11<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-5"><em> page 6, line 11<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   independently of each other.  This is achieved by making each</td><td> </td><td class="right">   independently of each other.  This is achieved by making each</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   candidate path correspond to a unique LSP (identified via PLSP-ID).</td><td> </td><td class="right">   candidate path correspond to a unique LSP (identified via PLSP-ID).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   For example, if an SR policy has 4 candidate paths, then if the PCE</td><td> </td><td class="right">   For example, if an SR policy has 4 candidate paths, then if the PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   wants to update one of those candidate paths, only one set of PCUpd</td><td> </td><td class="right">   wants to update one of those candidate paths, only one set of PCUpd</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   and PCRpt messages needs to be exchanged.</td><td> </td><td class="right">   and PCRpt messages needs to be exchanged.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">4.  Procedure</td><td> </td><td class="right">4.  Procedure</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">4.1.  Overview</td><td> </td><td class="right">4.1.  Overview</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0014"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   As per <span class="delete">[I-D.ietf-pce-association-group],</span> LSPs are placed into an</td><td> </td><td class="rblock">   As per <span class="insert">[RFC8697],</span> LSPs are placed into an association group.  As per</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   association group.  As per [I-D.koldychev-pce-operational], LSPs are</td><td> </td><td class="rblock">   [I-D.koldychev-pce-operational], LSPs are contained in PCEP Tunnels</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   contained in PCEP Tunnels and a PCEP Tunnel is contained in an</td><td> </td><td class="rblock">   and a PCEP Tunnel is contained in an Association if all of its LSPs</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Association if all of its LSPs are in that Association.</td><td> </td><td class="rblock">   are in that Association.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP Tunnels naturally map to SR Candidate Paths and PCEP</td><td> </td><td class="right">   PCEP Tunnels naturally map to SR Candidate Paths and PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Associations naturally map to SR Policies.  Definition of these</td><td> </td><td class="right">   Associations naturally map to SR Policies.  Definition of these</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   mappings is the central purpose of this document.</td><td> </td><td class="right">   mappings is the central purpose of this document.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The mapping between PCEP Associations and SR Policies is always one-</td><td> </td><td class="right">   The mapping between PCEP Associations and SR Policies is always one-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   to-one.  However, the mapping between PCEP Tunnels and SR Candidate</td><td> </td><td class="right">   to-one.  However, the mapping between PCEP Tunnels and SR Candidate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Paths may be either one-to-one, or many-to-one.  The mapping is one-</td><td> </td><td class="right">   Paths may be either one-to-one, or many-to-one.  The mapping is one-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   to-one when the SR Candidate Path has only a single constraint and</td><td> </td><td class="right">   to-one when the SR Candidate Path has only a single constraint and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   optimization objective.  The mapping is many-to-one when the SR</td><td> </td><td class="right">   optimization objective.  The mapping is many-to-one when the SR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Candidate Path has multiple constraints and optimization objectives.</td><td> </td><td class="right">   Candidate Path has multiple constraints and optimization objectives.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   For more details on multiple optimization objectives and constraints,</td><td> </td><td class="right">   For more details on multiple optimization objectives and constraints,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   see Section 4.3.</td><td> </td><td class="right">   see Section 4.3.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [Editor's Note - Segment-lists within a candidate path are not</td><td> </td><td class="right">   [Editor's Note - Segment-lists within a candidate path are not</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   represented by different PCEP Tunnels.  The subject of encoding</td><td> </td><td class="right">   represented by different PCEP Tunnels.  The subject of encoding</td><td class="lineno"></td></tr>
+      <tr id="diff0015"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   multiple segment lists within a candidate path is left to a<span class="delete"> future</span></td><td> </td><td class="rblock">   multiple segment lists within a candidate path is left to a<span class="insert">nother</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document and is not specified in this document.  It is not a good</td><td> </td><td class="right">   document and is not specified in this document.  It is not a good</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   idea to have each segment-list correspond to a different Tunnel,</td><td> </td><td class="right">   idea to have each segment-list correspond to a different Tunnel,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   because when the PCC wants to get a path, it must know in advance how</td><td> </td><td class="right">   because when the PCC wants to get a path, it must know in advance how</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   many multipaths (i.e., segment-lists) there will be and create that</td><td> </td><td class="right">   many multipaths (i.e., segment-lists) there will be and create that</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   many Tunnels.  For example, if the PCC supports 32 multipaths, then</td><td> </td><td class="right">   many Tunnels.  For example, if the PCC supports 32 multipaths, then</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   it must delegate 32 Tunnels for every candidate path, which may not</td><td> </td><td class="right">   it must delegate 32 Tunnels for every candidate path, which may not</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   be scalable.]</td><td> </td><td class="right">   be scalable.]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A new Association Type is defined in this document, based on the</td><td> </td><td class="right">   A new Association Type is defined in this document, based on the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   generic ASSOCIATION object.  Association type = TBD1 "SR Policy</td><td> </td><td class="right">   generic ASSOCIATION object.  Association type = TBD1 "SR Policy</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-6" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-6"><em> page 7, line 41<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-6"><em> page 7, line 41<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Discriminator of candidate path.</td><td> </td><td class="right">   o  Discriminator of candidate path.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Candidate Path Attributes MUST NOT be used to identify the candidate</td><td> </td><td class="right">   Candidate Path Attributes MUST NOT be used to identify the candidate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   path.  Candidate path attributes carry additional information about</td><td> </td><td class="right">   path.  Candidate path attributes carry additional information about</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the candidate path and MAY change during the lifetime of the LSP.</td><td> </td><td class="right">   the candidate path and MAY change during the lifetime of the LSP.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Candidate path Attributes consist of:</td><td> </td><td class="right">   Candidate path Attributes consist of:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   o  Preference of candidate path.</td><td> </td><td class="right">   o  Preference of candidate path.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0016"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   As per the processing rules specified in section 5.4 of</td><td> </td><td class="rblock">   As per the processing rules specified in section 5.4 of <span class="insert">[RFC8697],</span> if</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.ietf-pce-association-group],</span> if a PCEP speaker does not support</td><td> </td><td class="rblock">   a PCEP speaker does not support the SRPAG association type, it MUST</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   the SRPAG association type, it MUST return a PCErr message with</td><td> </td><td class="rblock">   return a PCErr message with Error-Type 26 (Early allocation by IANA)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Error-Type 26 (Early allocation by IANA) "Association Error" and</td><td> </td><td class="rblock">   "Association Error" and Error-Value 1 "Association-type is not</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Error-Value 1 "Association-type is not supported".  Please note that</td><td> </td><td class="rblock">   supported".  Please note that the corresponding PCEP session is not</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   the corresponding PCEP session is not reset.</td><td> </td><td class="rblock">   reset.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">4.2.  Choice of Association Parameters</td><td> </td><td class="right">4.2.  Choice of Association Parameters</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The Association Parameters (see Section 2) uniquely identify the</td><td> </td><td class="right">   The Association Parameters (see Section 2) uniquely identify the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Association.  In this section, we describe how these are to be set.</td><td> </td><td class="right">   Association.  In this section, we describe how these are to be set.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The Association Source MUST be set to the PCC's address.  This</td><td> </td><td class="right">   The Association Source MUST be set to the PCC's address.  This</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   applies for both PCC-initiated and PCE-initiated candidate paths.</td><td> </td><td class="right">   applies for both PCC-initiated and PCE-initiated candidate paths.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The reasoning for this is that if different PCEs could set their own</td><td> </td><td class="right">   The reasoning for this is that if different PCEs could set their own</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Association Source, then the candidate paths instantiated by</td><td> </td><td class="right">   Association Source, then the candidate paths instantiated by</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-7" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-7"><em> page 8, line 44<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-7"><em> page 8, line 44<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Tunnels and SR Candidate Paths.  This means that multiple PCEP</td><td> </td><td class="right">   Tunnels and SR Candidate Paths.  This means that multiple PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Tunnels are allocated for each SR Candidate Path.  Each PCEP Tunnel</td><td> </td><td class="right">   Tunnels are allocated for each SR Candidate Path.  Each PCEP Tunnel</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   has its own optimization objective and constraints.  When a single SR</td><td> </td><td class="right">   has its own optimization objective and constraints.  When a single SR</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Candidate Path contains multiple PCEP Tunnels, each of these PCEP</td><td> </td><td class="right">   Candidate Path contains multiple PCEP Tunnels, each of these PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Tunnels MUST have identical values of Candidate Path Identifiers, as</td><td> </td><td class="right">   Tunnels MUST have identical values of Candidate Path Identifiers, as</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   encoded in SRPOLICY-CPATH-ID TLV, see Section 5.3.</td><td> </td><td class="right">   encoded in SRPOLICY-CPATH-ID TLV, see Section 5.3.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.  SR Policy Association Group</td><td> </td><td class="right">5.  SR Policy Association Group</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Two ASSOCIATION object types for IPv4 and IPv6 are defined in</td><td> </td><td class="right">   Two ASSOCIATION object types for IPv4 and IPv6 are defined in</td><td class="lineno"></td></tr>
+      <tr id="diff0017"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.ietf-pce-association-group].</span>  The ASSOCIATION object includes</td><td> </td><td class="rblock">   <span class="insert">[RFC8697].</span>  The ASSOCIATION object includes "Association type"</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   "Association type" indicating the type of the association group.</td><td> </td><td class="rblock">   indicating the type of the association group.  This document adds a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   This document adds a new Association type.</td><td> </td><td class="rblock">   new Association type.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Association type = TBD1 "SR Policy Association Type" for SR Policy</td><td> </td><td class="right">   Association type = TBD1 "SR Policy Association Type" for SR Policy</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Association Group (SRPAG).</td><td> </td><td class="right">   Association Group (SRPAG).</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0018"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">The</span> operator <span class="delete">configured</span> Association Range <span class="delete">SHOULD NOT</span> be set for this</td><td> </td><td class="rblock">   <span class="insert">This Association type is operator-configured association in nature</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">association type</span> and MUST be <span class="delete">ignored.</span></td><td> </td><td class="rblock"><span class="insert">   and created by the</span> operator <span class="insert">manually on the PCEP peers.  A SR path</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   belonging to this association is conveyed via PCEP messages to the</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   PCEP peer.  Operator-configured</span> Association Range <span class="insert">need not</span> be set for</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   this <span class="insert">association-type,</span> and MUST be <span class="insert">ignored, so that the full range of</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   association identifier can be utilized.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   SRPAG MUST carry additional TLVs to communicate Association</td><td> </td><td class="right">   SRPAG MUST carry additional TLVs to communicate Association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Information.  This document specifies four new TLVs to carry</td><td> </td><td class="right">   Information.  This document specifies four new TLVs to carry</td><td class="lineno"></td></tr>
+      <tr id="diff0019"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Association Information: SRPOLICY-POL-ID TLV, <span class="delete">SRPOLICY-POL-NAME</span> TLV,</td><td> </td><td class="rblock">   Association Information: SRPOLICY-POL-ID TLV, <span class="insert">SRPOLICY-CPATH-NAME</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   SRPOLICY-CPATH-ID TLV, SRPOLICY-CPATH-PREFERENCE TLV.  These four</td><td> </td><td class="rblock">   TLV, SRPOLICY-CPATH-ID TLV, SRPOLICY-CPATH-PREFERENCE TLV.  These</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   TLVs encode the Policy Identifiers, Policy name, Candidate path</td><td> </td><td class="rblock">   four TLVs encode the Policy Identifiers, <span class="insert">SR</span> Policy <span class="insert">candidate path</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">Identifiers</span> and Candidate path <span class="delete">Preference,</span> respectively.  When any of</td><td> </td><td class="rblock">   name, Candidate path <span class="insert">identifiers</span> and Candidate path <span class="insert">preference,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   the mandatory TLVs are missing from the SRPAG association object, the</td><td> </td><td class="rblock">   respectively.  When any of the mandatory TLVs are missing from the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   PCE MUST send a PCErr message with Error Code = 26 "Association</td><td> </td><td class="rblock">   SRPAG association object, the PCE MUST send a PCErr message with</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Error", Error Type = TBD7 "Missing mandatory SRPAG TLV".</td><td> </td><td class="rblock">   Error Code = 26 "Association Error", Error Type = TBD7 "Missing</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   mandatory SRPAG TLV".</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A given LSP MUST belong to at most one SRPAG, since a candidate path</td><td> </td><td class="right">   A given LSP MUST belong to at most one SRPAG, since a candidate path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   cannot belong to multiple SR policies.  If a PCEP speaker receives a</td><td> </td><td class="right">   cannot belong to multiple SR policies.  If a PCEP speaker receives a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP message with more than one SRPAG for an LSP, then the PCEP</td><td> </td><td class="right">   PCEP message with more than one SRPAG for an LSP, then the PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   speaker MUST send a PCErr message with Error-Type 26 "Association</td><td> </td><td class="right">   speaker MUST send a PCErr message with Error-Type 26 "Association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Error" and Error-Value TBD8 "Multiple SRPAG for one LSP".  If the</td><td> </td><td class="right">   Error" and Error-Value TBD8 "Multiple SRPAG for one LSP".  If the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   message is a PCRpt message, then the PCEP speaker MUST close the PCEP</td><td> </td><td class="right">   message is a PCRpt message, then the PCEP speaker MUST close the PCEP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   connection.  Closing the PCEP connection is necessary because</td><td> </td><td class="right">   connection.  Closing the PCEP connection is necessary because</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   ignoring PCRpt messages may lead to inconsistent LSP DB state between</td><td> </td><td class="right">   ignoring PCRpt messages may lead to inconsistent LSP DB state between</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the two PCEP peers.</td><td> </td><td class="right">   the two PCEP peers.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   If the PCEP speaker receives the SRPAG association when the SR</td><td> </td><td class="right">   If the PCEP speaker receives the SRPAG association when the SR</td><td class="lineno"></td></tr>
+      <tr id="diff0020"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   capability (as per <span class="delete">[I-D.ietf-pce-segment-routing]</span> or</td><td> </td><td class="rblock">   capability (as per <span class="insert">[RFC8664]</span> or <span class="insert">[I-D.ietf-pce-segment-routing-ipv6])</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.negi-pce-segment-routing-ipv6])</span> was not exchanged, the PCEP</td><td> </td><td class="rblock">   was not exchanged, the PCEP speaker MUST send a PCErr message with</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   speaker MUST send a PCErr message with Error-Type 26 "Association</td><td> </td><td class="rblock">   Error-Type 26 "Association Error" and Error-Value TBD9 "Use of SRPAG</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Error" and Error-Value TBD9 "Use of SRPAG without SR capability</td><td> </td><td class="rblock">   without SR capability exchange".  If the Path Setup Type (PST) of the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   exchange".  If the Path Setup Type (PST) of the LSP in SRPAG is not</td><td> </td><td class="rblock">   LSP in SRPAG is not set to SR or SRv6, then the PCEP speaker MUST</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   set to SR or SRv6, then the PCEP speaker MUST send a PCErr message</td><td> </td><td class="rblock">   send a PCErr message with Error-Type 26 "Association Error" and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   with Error-Type 26 "Association Error" and Error-Value TBD10 "non-SR</td><td> </td><td class="rblock">   Error-Value TBD10 "non-SR LSP in SRPAG".</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   LSP in SRPAG".</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">5.1.  SR Policy Identifiers TLV</td><td> </td><td class="right">5.1.  SR Policy Identifiers TLV</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The SRPOLICY-POL-ID TLV is a mandatory TLV for the SRPAG Association.</td><td> </td><td class="right">   The SRPOLICY-POL-ID TLV is a mandatory TLV for the SRPAG Association.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Only one SRPOLICY-POL-ID TLV can be carried and only the first</td><td> </td><td class="right">   Only one SRPOLICY-POL-ID TLV can be carried and only the first</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   occurrence is processed and any others MUST be ignored.</td><td> </td><td class="right">   occurrence is processed and any others MUST be ignored.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0                   1                   2                   3</td><td> </td><td class="right">       0                   1                   2                   3</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td> </td><td class="right">       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td> </td><td class="right">      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-8" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-8"><em> page 14, line 38<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-8"><em> page 15, line 4<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   A candidate path is deleted using the following steps:</td><td> </td><td class="right">   A candidate path is deleted using the following steps:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   1.  PCE sends PCInitiate message, setting the R-flag in the LSP</td><td> </td><td class="right">   1.  PCE sends PCInitiate message, setting the R-flag in the LSP</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       object.</td><td> </td><td class="right">       object.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   2.  PCC uses the PLSP-ID from the LSP object to find the candidate</td><td> </td><td class="right">   2.  PCC uses the PLSP-ID from the LSP object to find the candidate</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">       path and delete it.</td><td> </td><td class="right">       path and delete it.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">7.  IANA Considerations</td><td> </td><td class="right">7.  IANA Considerations</td><td class="lineno"></td></tr>
+      <tr id="diff0021"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">                                                                         </span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">7.1.  Association Type</td><td> </td><td class="right">7.1.  Association Type</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document defines a new association type: SR Policy Association</td><td> </td><td class="right">   This document defines a new association type: SR Policy Association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Group (SRPAG).  IANA is requested to make the assignment of a new</td><td> </td><td class="right">   Group (SRPAG).  IANA is requested to make the assignment of a new</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   value for the sub-registry "ASSOCIATION Type Field" (request to be</td><td> </td><td class="right">   value for the sub-registry "ASSOCIATION Type Field" (request to be</td><td class="lineno"></td></tr>
+      <tr id="diff0022"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   created in [<span class="delete">I-D.ietf-pce-association-group</span>]), as follows:</td><td> </td><td class="rblock">   created in [<span class="insert">RFC8697</span>]), as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +----------------------+-------------------------+------------------+</td><td> </td><td class="right">   +----------------------+-------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | Association Type     | Association Name        | Reference        |</td><td> </td><td class="right">   | Association Type     | Association Name        | Reference        |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | Value                |                         |                  |</td><td> </td><td class="right">   | Value                |                         |                  |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +----------------------+-------------------------+------------------+</td><td> </td><td class="right">   +----------------------+-------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | TBD1                 | SR Policy Association   | This document    |</td><td> </td><td class="right">   | TBD1                 | SR Policy Association   | This document    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +----------------------+-------------------------+------------------+</td><td> </td><td class="right">   +----------------------+-------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">7.2.  PCEP Errors</td><td> </td><td class="right">7.2.  PCEP Errors</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0023"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   This document defines <span class="delete">thre</span>e new Error-Values within the "Association</td><td> </td><td class="rblock">   This document defines <span class="insert">fiv</span>e new Error-Values within the "Association</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Error" Error-Type.  IANA is requested to allocate new error values</td><td> </td><td class="right">   Error" Error-Type.  IANA is requested to allocate new error values</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   within the "PCEP-ERROR Object Error Types and Values" sub-registry of</td><td> </td><td class="right">   within the "PCEP-ERROR Object Error Types and Values" sub-registry of</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the PCEP Numbers registry, as follows:</td><td> </td><td class="right">   the PCEP Numbers registry, as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-------+----------+-----------------------------+------------------+</td><td> </td><td class="right">   +-------+----------+-----------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | Error | Error    | Meaning                     | Reference        |</td><td> </td><td class="right">   | Error | Error    | Meaning                     | Reference        |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | Type  | Value    |                             |                  |</td><td> </td><td class="right">   | Type  | Value    |                             |                  |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-------+----------+-----------------------------+------------------+</td><td> </td><td class="right">   +-------+----------+-----------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | 29    | TBD6     | Conflicting SRPAG TLV       | This document    |</td><td> </td><td class="right">   | 29    | TBD6     | Conflicting SRPAG TLV       | This document    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-------+----------+-----------------------------+------------------+</td><td> </td><td class="right">   +-------+----------+-----------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-9" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-9"><em> page 15, line 30<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-9"><em> page 15, line 43<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | 29    | TBD8     | Multiple SRPAG for one LSP  | This document    |</td><td> </td><td class="right">   | 29    | TBD8     | Multiple SRPAG for one LSP  | This document    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-------+----------+-----------------------------+------------------+</td><td> </td><td class="right">   +-------+----------+-----------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | 29    | TBD9     | Use of SRPAG without SR     | This document    |</td><td> </td><td class="right">   | 29    | TBD9     | Use of SRPAG without SR     | This document    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   |       |          | capability exchange         |                  |</td><td> </td><td class="right">   |       |          | capability exchange         |                  |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-------+----------+-----------------------------+------------------+</td><td> </td><td class="right">   +-------+----------+-----------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | 29    | TBD10    | non-SR LSP in SRPAG         | This document    |</td><td> </td><td class="right">   | 29    | TBD10    | non-SR LSP in SRPAG         | This document    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +-------+----------+-----------------------------+------------------+</td><td> </td><td class="right">   +-------+----------+-----------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">7.3.  SRPAG TLVs</td><td> </td><td class="right">7.3.  SRPAG TLVs</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0024"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   This document defines <span class="delete">three</span> new TLVs for carrying additional</td><td> </td><td class="rblock">   This document defines <span class="insert">four</span> new TLVs for carrying additional</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   information about SR policy and SR candidate paths.  IANA is</td><td> </td><td class="right">   information about SR policy and SR candidate paths.  IANA is</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   requested to make the assignment of a new value for the existing</td><td> </td><td class="right">   requested to make the assignment of a new value for the existing</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   "PCEP TLV Type Indicators" registry as follows:</td><td> </td><td class="right">   "PCEP TLV Type Indicators" registry as follows:</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +------------+-----------------------------------+------------------+</td><td> </td><td class="right">   +------------+-----------------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | TLV Type   | TLV Name                          | Reference        |</td><td> </td><td class="right">   | TLV Type   | TLV Name                          | Reference        |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | Value      |                                   |                  |</td><td> </td><td class="right">   | Value      |                                   |                  |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +------------+-----------------------------------+------------------+</td><td> </td><td class="right">   +------------+-----------------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | TBD2       | SRPOLICY-POL-ID                   | This document    |</td><td> </td><td class="right">   | TBD2       | SRPOLICY-POL-ID                   | This document    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +------------+-----------------------------------+------------------+</td><td> </td><td class="right">   +------------+-----------------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-10" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-10"><em> page 16, line 9<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-10"><em> page 16, line 22<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +------------+-----------------------------------+------------------+</td><td> </td><td class="right">   +------------+-----------------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | TBD4       | SRPOLICY-CPATH-ID                 | This document    |</td><td> </td><td class="right">   | TBD4       | SRPOLICY-CPATH-ID                 | This document    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +------------+-----------------------------------+------------------+</td><td> </td><td class="right">   +------------+-----------------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   | TBD5       | SRPOLICY-CPATH-PREFERENCE         | This document    |</td><td> </td><td class="right">   | TBD5       | SRPOLICY-CPATH-PREFERENCE         | This document    |</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   +------------+-----------------------------------+------------------+</td><td> </td><td class="right">   +------------+-----------------------------------+------------------+</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">8.  Security Considerations</td><td> </td><td class="right">8.  Security Considerations</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   This document defines one new type for association, which do not add</td><td> </td><td class="right">   This document defines one new type for association, which do not add</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   any new security concerns beyond those discussed in [RFC5440],</td><td> </td><td class="right">   any new security concerns beyond those discussed in [RFC5440],</td><td class="lineno"></td></tr>
+      <tr id="diff0025"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   [RFC8231], <span class="delete">[I-D.ietf-pce-segment-routing],</span></td><td> </td><td class="rblock">   [RFC8231], <span class="insert">[RFC8664], [I-D.ietf-pce-segment-routing-ipv6]</span> and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">   [I-D.negi-pce-segment-routing-ipv6]</span> and</td><td> </td><td class="rblock">   <span class="insert">[RFC8697]</span> in itself.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.ietf-pce-association-group]</span> in itself.</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   The information carried in the SRPAG Association object, as per this</td><td> </td><td class="right">   The information carried in the SRPAG Association object, as per this</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   document is related to SR Policy.  It often reflects information that</td><td> </td><td class="right">   document is related to SR Policy.  It often reflects information that</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   can also be derived from the SR Database, but association provides a</td><td> </td><td class="right">   can also be derived from the SR Database, but association provides a</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   much easier grouping of related LSPs and messages.  The SRPAG</td><td> </td><td class="right">   much easier grouping of related LSPs and messages.  The SRPAG</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   association could provides an adversary with the opportunity to</td><td> </td><td class="right">   association could provides an adversary with the opportunity to</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   eavesdrop on the relationship between the LSPs.  Thus securing the</td><td> </td><td class="right">   eavesdrop on the relationship between the LSPs.  Thus securing the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   PCEP session using Transport Layer Security (TLS) [RFC8253], as per</td><td> </td><td class="right">   PCEP session using Transport Layer Security (TLS) [RFC8253], as per</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   the recommendations and best current practices in [RFC7525], is</td><td> </td><td class="right">   the recommendations and best current practices in [RFC7525], is</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   RECOMMENDED.</td><td> </td><td class="right">   RECOMMENDED.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-11" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-11"><em> page 17, line 14<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-11"><em> page 17, line 24<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path</td><td> </td><td class="right">   [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Computation Element Communication Protocol (PCEP)</td><td> </td><td class="right">              Computation Element Communication Protocol (PCEP)</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Extensions for PCE-Initiated LSP Setup in a Stateful PCE</td><td> </td><td class="right">              Extensions for PCE-Initiated LSP Setup in a Stateful PCE</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,</td><td> </td><td class="right">              Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;https://www.rfc-editor.org/info/rfc8281&gt;.</td><td> </td><td class="right">              &lt;https://www.rfc-editor.org/info/rfc8281&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.ietf-spring-segment-routing-policy]</td><td> </td><td class="right">   [I-D.ietf-spring-segment-routing-policy]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Filsfils, C., Sivabalan, S., Voyer, D., Bogdanov, A., and</td><td> </td><td class="right">              Filsfils, C., Sivabalan, S., Voyer, D., Bogdanov, A., and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              P. Mattes, "Segment Routing Policy Architecture", draft-</td><td> </td><td class="right">              P. Mattes, "Segment Routing Policy Architecture", draft-</td><td class="lineno"></td></tr>
+      <tr id="diff0026"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">ietf-spring-segment-routing-policy-06</span> (work in progress),</td><td> </td><td class="rblock">              <span class="insert">ietf-spring-segment-routing-policy-07</span> (work in progress),</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">December 2019.</span></td><td> </td><td class="rblock">              <span class="insert">May 2020.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0027"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.ietf-pce-association-group]</span></td><td> </td><td class="rblock">   <span class="insert">[RFC8697]</span>  Minei, I., Crabbe, E., Sivabalan, S., Ananthakrishnan, H.,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Minei, I., Crabbe, E., Sivabalan, S., Ananthakrishnan, H.,</td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Dhody, D., and Y. Tanaka, "Path Computation Element</td><td> </td><td class="right">              Dhody, D., and Y. Tanaka, "Path Computation Element</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Communication Protocol (PCEP) Extensions for Establishing</td><td> </td><td class="right">              Communication Protocol (PCEP) Extensions for Establishing</td><td class="lineno"></td></tr>
+      <tr id="diff0028"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Relationships <span class="delete">Between</span> Sets of Label Switched Paths</td><td> </td><td class="rblock">              Relationships <span class="insert">between</span> Sets of Label Switched Paths</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              (LSPs)", <span class="delete">draft-ietf-pce-association-group-10 (work in</span></td><td> </td><td class="rblock">              (LSPs)", <span class="insert">RFC 8697, DOI 10.17487/RFC8697, January 2020,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              progress), August 2019.</span></td><td> </td><td class="rblock"><span class="insert">              &lt;https://www.rfc-editor.org/info/rfc8697&gt;.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0029"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.ietf-pce-segment-routing]</span></td><td> </td><td class="rblock">   <span class="insert">[RFC8664]</span>  Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Sivabalan, S., Filsfils, C., Tantsura, J., Henderickx, W.,</td><td> </td><td class="rblock">              and J. Hardwick, <span class="insert">"Path Computation Element Communication</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              and J. Hardwick, <span class="delete">"PCEP</span> Extensions for Segment Routing",</td><td> </td><td class="rblock"><span class="insert">              Protocol (PCEP)</span> Extensions for Segment Routing", <span class="insert">RFC 8664,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              <span class="delete">draft-ietf-pce-segment-routing-16 (work in progress),</span></td><td> </td><td class="rblock"><span class="insert">              DOI 10.17487/RFC8664, December 2019,</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">              March 2019.</span></td><td> </td><td class="rblock"><span class="insert">              &lt;https://www.rfc-editor.org/info/rfc8664&gt;.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [I-D.koldychev-pce-operational]</td><td> </td><td class="right">   [I-D.koldychev-pce-operational]</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Koldychev, M., Sivabalan, S., Negi, M., Achaval, D., and</td><td> </td><td class="right">              Koldychev, M., Sivabalan, S., Negi, M., Achaval, D., and</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              H. Kotni, "PCEP Operational Clarification", draft-</td><td> </td><td class="right">              H. Kotni, "PCEP Operational Clarification", draft-</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              koldychev-pce-operational-01 (work in progress), February</td><td> </td><td class="right">              koldychev-pce-operational-01 (work in progress), February</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              2020.</td><td> </td><td class="right">              2020.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">10.2.  Informative References</td><td> </td><td class="right">10.2.  Informative References</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation</td><td> </td><td class="right">   [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-12" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-12"><em> page 18, line 11<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-12"><em> page 18, line 17<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Security (TLS) and Datagram Transport Layer Security</td><td> </td><td class="right">              Security (TLS) and Datagram Transport Layer Security</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May</td><td> </td><td class="right">              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              2015, &lt;https://www.rfc-editor.org/info/rfc7525&gt;.</td><td> </td><td class="right">              2015, &lt;https://www.rfc-editor.org/info/rfc7525&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,</td><td> </td><td class="right">   [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              "PCEPS: Usage of TLS to Provide a Secure Transport for the</td><td> </td><td class="right">              "PCEPS: Usage of TLS to Provide a Secure Transport for the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              Path Computation Element Communication Protocol (PCEP)",</td><td> </td><td class="right">              Path Computation Element Communication Protocol (PCEP)",</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              RFC 8253, DOI 10.17487/RFC8253, October 2017,</td><td> </td><td class="right">              RFC 8253, DOI 10.17487/RFC8253, October 2017,</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">              &lt;https://www.rfc-editor.org/info/rfc8253&gt;.</td><td> </td><td class="right">              &lt;https://www.rfc-editor.org/info/rfc8253&gt;.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0030"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">[I-D.negi-pce-segment-routing-ipv6]</span></td><td> </td><td class="rblock">   <span class="insert">[I-D.ietf-pce-segment-routing-ipv6]</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Negi, M., Li, C., Sivabalan, S., <span class="delete">and P.</span> Kaladharan, "PCEP</td><td> </td><td class="rblock">              Negi, M., Li, C., Sivabalan, S., Kaladharan, <span class="insert">P., and Y.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              Extensions for Segment Routing leveraging the IPv6 data</td><td> </td><td class="rblock"><span class="insert">              Zhu,</span> "PCEP Extensions for Segment Routing leveraging the</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              plane", <span class="delete">draft-negi-pce-segment-routing-ipv6-04</span> (work in</td><td> </td><td class="rblock">              IPv6 data plane", <span class="insert">draft-ietf-pce-segment-routing-ipv6-04</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">              progress), <span class="delete">February 2019.</span></td><td> </td><td class="rblock">              (work in progress), <span class="insert">March 2020.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Appendix A.  Contributors</td><td> </td><td class="right">Appendix A.  Contributors</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Dhruv Dhody</td><td> </td><td class="right">   Dhruv Dhody</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Technologies</td><td> </td><td class="right">   Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Divyashree Techno Park, Whitefield</td><td> </td><td class="right">   Divyashree Techno Park, Whitefield</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Bangalore, Karnataka  560066</td><td> </td><td class="right">   Bangalore, Karnataka  560066</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   India</td><td> </td><td class="right">   India</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Email: dhruv.ietf@gmail.com</td><td> </td><td class="right">   Email: dhruv.ietf@gmail.com</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0031"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">Cheng Li</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Huawei Technologies</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Huawei Campus, No. 156 Beiqing Rd.</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Beijing, 10095</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   China</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert"></span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock"><span class="insert">   Email: chengli13@huawei.com</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">Authors' Addresses</td><td> </td><td class="right">Authors' Addresses</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Mike Koldychev</td><td> </td><td class="right">   Mike Koldychev</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Cisco Systems, Inc.</td><td> </td><td class="right">   Cisco Systems, Inc.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   2000 Innovation Drive</td><td> </td><td class="right">   2000 Innovation Drive</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Kanata, Ontario  K2K 3E8</td><td> </td><td class="right">   Kanata, Ontario  K2K 3E8</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Canada</td><td> </td><td class="right">   Canada</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Email: mkoldych@cisco.com</td><td> </td><td class="right">   Email: mkoldych@cisco.com</td><td class="lineno"></td></tr>
+      <tr id="diff0032"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"><span class="delete">                                                                         </span></td><td> </td><td class="rblock"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Siva Sivabalan</td><td> </td><td class="right">   Siva Sivabalan</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Cisco Systems, Inc.</td><td> </td><td class="right">   Cisco Systems, Inc.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   2000 Innovation Drive</td><td> </td><td class="right">   2000 Innovation Drive</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Kanata, Ontario  K2K 3E8</td><td> </td><td class="right">   Kanata, Ontario  K2K 3E8</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Canada</td><td> </td><td class="right">   Canada</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Email: msiva@cisco.com</td><td> </td><td class="right">   Email: msiva@cisco.com</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Colby Barth</td><td> </td><td class="right">   Colby Barth</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Juniper Networks, Inc.</td><td> </td><td class="right">   Juniper Networks, Inc.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="part-13" class="change"><td></td><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-13"><em> page 19, line 4<span class="hide"> ¶</span></em></a></th><th> </th><th><small>skipping to change at</small><a href="https://tools.ietf.org/tools/rfcdiff/rfcdiff.pyht#part-13"><em> page 19, line 16<span class="hide"> ¶</span></em></a></th><td></td></tr>
+      <tr><td class="lineno"></td><td class="left">   2000 Innovation Drive</td><td> </td><td class="right">   2000 Innovation Drive</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Kanata, Ontario  K2K 3E8</td><td> </td><td class="right">   Kanata, Ontario  K2K 3E8</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Canada</td><td> </td><td class="right">   Canada</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Email: msiva@cisco.com</td><td> </td><td class="right">   Email: msiva@cisco.com</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Colby Barth</td><td> </td><td class="right">   Colby Barth</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Juniper Networks, Inc.</td><td> </td><td class="right">   Juniper Networks, Inc.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Email: cbarth@juniper.net</td><td> </td><td class="right">   Email: cbarth@juniper.net</td><td class="lineno"></td></tr>
+      <tr id="diff0033"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   <span class="delete">Cheng Li</span></td><td> </td><td class="rblock">                                                                         </td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="lblock"></td><td> </td><td class="rblock">   <span class="insert">Shuping Peng</span></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Technologies</td><td> </td><td class="right">   Huawei Technologies</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Huawei Campus, No. 156 Beiqing Rd.</td><td> </td><td class="right">   Huawei Campus, No. 156 Beiqing Rd.</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Beijing  100095</td><td> </td><td class="right">   Beijing  100095</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   China</td><td> </td><td class="right">   China</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr id="diff0034"><td></td></tr>
+      <tr><td class="lineno"></td><td class="lblock">   Email: <span class="delete">chengli13</span>@huawei.com</td><td> </td><td class="rblock">   Email: <span class="insert">pengshuping</span>@huawei.com</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Hooman Bidgoli</td><td> </td><td class="right">   Hooman Bidgoli</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Nokia</td><td> </td><td class="right">   Nokia</td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left"></td><td> </td><td class="right"></td><td class="lineno"></td></tr>
+      <tr><td class="lineno"></td><td class="left">   Email: hooman.bidgoli@nokia.com</td><td> </td><td class="right">   Email: hooman.bidgoli@nokia.com</td><td class="lineno"></td></tr>
+
+     <tr><td></td><td class="left"></td><td> </td><td class="right"></td><td></td></tr>
+     <tr id="end" bgcolor="gray"><th colspan="5" align="center">&nbsp;End of changes. 34 change blocks.&nbsp;</th></tr>
+     <tr class="stats"><td></td><th><i>93 lines changed or deleted</i></th><th><i> </i></th><th><i>101 lines changed or added</i></th><td></td></tr>
+     <tr><td colspan="5" align="center" class="small"><br>This html diff was produced by rfcdiff 1.47. The latest version is available from <a href="http://www.tools.ietf.org/tools/rfcdiff/">http://tools.ietf.org/tools/rfcdiff/</a> </td></tr>
+   </tbody></table>
+   
+   
+<gdiv class="ginger-extension-writer" style="display: none;"><gdiv class="ginger-extension-writer-frame"><iframe src="./Diff_ draft-barth-pce-segment-routing-policy-cp-05.txt - draft-barth-pce-segment-routing-policy-cp-06.txt_files/index.html"></iframe></gdiv></gdiv></body></html>
