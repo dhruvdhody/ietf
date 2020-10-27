@@ -166,7 +166,7 @@
    Thus, the LSP can be
    calculated/set up/initiated and the label forwarding entries can also be
    downloaded through a centralized PCE server to each network device
-   along the path while leveraging the existing PCE technologies as
+   along the path, while leveraging the existing PCE technologies as
    much as possible.</t>
 
    <t>This document specifies the procedures and PCEP extensions for
@@ -233,7 +233,7 @@
    determines the paths of the end-to-end LSPs, and the controller uses PCEP to
    communicate with each router along the path of the end-to-end LSP. </t>
    
-   <t>While this document is focused on the procedures for the static LSPs (referred to as basic PCECC mode in <xref target="SEC_M"/>), the mechanism and protocol encoding are specified in such a way that extensions for other use cases are easy to achieve. For example, the extensions for PCECC for Segment Routing (SR) are specified in <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> and <xref target='I-D.dhody-pce-pcep-extension-pce-controller-srv6'/>.</t>
+   <t>While this document is focused on the procedures for the static LSPs (referred to as basic PCECC mode in <xref target="SEC_M"/>), the mechanisms and protocol encodings are specified in such a way that extensions for other use cases are easy to achieve. For example, the extensions for PCECC for Segment Routing (SR) are specified in <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> and <xref target='I-D.dhody-pce-pcep-extension-pce-controller-srv6'/>.</t>
 
    <!--<t>[Important Note - Note that this document achieves this by defining a new PCEP message. 
     The authors and WG also debated on the use of existing PCEP messages. 
@@ -294,7 +294,7 @@
        PCECC related extensions with a error reason code that indicates that this feature is not
        supported.</t>-->
 
-   <t>A PCEP speaker needs means to identify PCECC-based LSP in the
+   <t>A PCEP speaker need means to identify PCECC-based LSP in the
        PCEP messages.</t>
 
    <t>PCEP procedures need to allow for PCC-based label allocations.</t>       
@@ -1201,13 +1201,13 @@ SHOULD be included in the LSP object.</t>
     More than one CCI object MAY be included in the PCInitiate message
     for a transit LSR.</t>
 
-    <t>To clean up enteries, the R (remove) bit MUST be set in the SRP object to be encoded along with the LSP and the CCI object.</t>
+    <t>To clean up entries, the R (remove) bit MUST be set in the SRP object to be encoded along with the LSP and the CCI object.</t>
 
 <t>The CCI object received at the ingress node MUST have the O bit (out-label) set. The CCI Object received at the egress MUST have the O bit unset. If this is not the case, PCC MUST send a PCErr message with Error-Type = TBD5 ("PCECC failure") and Error Value = TBD9 ("Invalid CCI"). Other instances of the CCI object if present, MUST be ignored.</t>
 
 <t>At most two instances of the CCI object can be included, in the case of transit LSR to encode both in-coming and out-going label forwarding instructions. Other instances MUST be ignored. If the transit LSR did not receive two CCI object with one of them having the O bit set and another with O bit unset, it MUST send a PCErr message with Error-Type = TBD5 ("PCECC failure") and Error Value = TBD9 ("Invalid CCI").</t>
 
-<t>Note that, on receipt of the PCInitiate message with CCI object, the ingress, egress or transit role of the PCC is identified via the ingress and egress IP address encoded in the LSP-IDENTIFIERS TLV.</t>
+<t>Note that, on receipt of the PCInitiate message with CCI object, the ingress, egress, or transit role of the PCC is identified via the ingress and egress IP address encoded in the LSP-IDENTIFIERS TLV.</t>
 
 </section>
      
