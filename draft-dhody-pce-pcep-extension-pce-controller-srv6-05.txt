@@ -195,7 +195,7 @@ Internet-Draft                 PCECC-SRv6                   October 2020
    architecture.  The corresponding IS-IS and OSPF extensions are
    specified in [RFC8667] and [RFC8665] , respectively.  It relies on a
    series of forwarding instructions being placed in the header of a
-   packet.  The list of segment forming the path is called the Segment
+   packet.  The list of segments forming the path is called the Segment
    List and is encoded in the packet header.  Segment Routing can be
    applied to the IPv6 architecture with the Segment Routing Header
    (SRH) [RFC8754].  A segment is encoded as an IPv6 address.  An
@@ -239,13 +239,13 @@ Internet-Draft                 PCECC-SRv6                   October 2020
 
 2.  Terminology
 
-   Terminologies used in this document is same as described in the draft
-   [RFC8283] and [I-D.ietf-teas-pcecc-use-cases].
+   Terminologies used in this document is the same as described in the
+   draft [RFC8283] and [I-D.ietf-teas-pcecc-use-cases].
 
 3.  PCECC SRv6
 
    [RFC8664] specifies extensions to PCEP that allow a stateful PCE to
-   compute, update or initiate SR-TE paths for MPLS dataplane.  An
+   compute, update, or initiate SR-TE paths for MPLS dataplane.  An
    ingress node of an SR-TE path appends all outgoing packets with a
    list of MPLS labels (SIDs).  This is encoded in SR-ERO subobject,
    capable of carrying a label (SID) as well as the identity of the
@@ -256,7 +256,7 @@ Internet-Draft                 PCECC-SRv6                   October 2020
    simply "SID" are often used as a shorter reference for "SRv6
    Segment".  Further details are in an illustration provided in
    [I-D.ietf-spring-srv6-network-programming].  The SR is applied to
-   IPV6 data plane using SRH.  A SR path can be derived from an IGP
+   IPV6 data plane using SRH.  An SR path can be derived from an IGP
    Shortest Path Tree (SPT), but SR-TE paths may not follow IGP SPT.
    Such paths may be chosen by a suitable network planning tool, or a
    PCE and provisioned on the ingress node.
@@ -268,8 +268,8 @@ Internet-Draft                 PCECC-SRv6                   October 2020
    adjacency label (SID) via PCEP.  As per
    [I-D.ietf-teas-pcecc-use-cases] this is also applicable to SRv6 SIDs.
 
-   Rest of the processing is similar to existing stateful PCE for SRv6
-   [I-D.ietf-pce-segment-routing-ipv6].
+   The rest of the processing is similar to existing stateful PCE for
+   SRv6 [I-D.ietf-pce-segment-routing-ipv6].
 
 
 
@@ -314,16 +314,16 @@ Internet-Draft                 PCECC-SRv6                   October 2020
    well.
 
    The PCEP messages PCRpt, PCInitiate, PCUpd are used to send LSP
-   Reports, LSP setup and LSP update respectively.  The extended
+   Reports, LSP setup, and LSP update respectively.  The extended
    PCInitiate message described in
    [I-D.ietf-pce-pcep-extension-for-pce-controller] is used to download
-   or clean up central controller's instructions (CCIs) (SRv6 SID in
+   or clean up central controller's instructions (CCIs) (SRv6 SID in the
    scope of this document).  The extended PCRpt message described in
    [I-D.ietf-pce-pcep-extension-for-pce-controller] is also used to
    report the CCIs (SRv6 SIDs) from PCC to PCE.
 
    [I-D.ietf-pce-pcep-extension-for-pce-controller] specify an object
-   called CCI for the encoding of central controller's instructions.
+   called CCI for the encoding of the central controller's instructions.
    [I-D.zhao-pce-pcep-extension-pce-controller-sr] defined a CCI object-
    type for segment routing.  This document further defines a new CCI
    object-type for SRv6.
@@ -345,17 +345,18 @@ Internet-Draft                 PCECC-SRv6                   October 2020
    the "PCECC Capability" sub-TLV, described in
    [I-D.ietf-pce-pcep-extension-for-pce-controller].
 
-   A S-bit is added in the PCECC-CAPABILITY sub-TLV to indicate support
-   for PCECC-SR in [I-D.zhao-pce-pcep-extension-pce-controller-sr].
-   This document adds another I-bit to indicate support for SR in IPv6.
-   A PCC MUST set the I-bit in the PCECC-CAPABILITY sub-TLV and include
-   the SRv6-PCE-CAPABILITY sub-TLV ([I-D.ietf-pce-segment-routing-ipv6])
-   in the OPEN Object (inside the the PATH-SETUP-TYPE-CAPABILITY TLV) to
-   support the PCECC SRv6 extensions defined in this document.  If I-bit
-   is set in PCECC-CAPABILITY sub-TLV and the SRv6-PCE-CAPABILITY sub-
-   TLV is not advertised in the OPEN Object, PCE SHOULD send a PCErr
-   message with Error-Type=19 (Invalid Operation) and Error-value=TBD4
-   (SRv6 capability was not advertised) and terminate the session.
+   A new S-bit is added in the PCECC-CAPABILITY sub-TLV to indicate
+   support for PCECC-SR in
+   [I-D.zhao-pce-pcep-extension-pce-controller-sr].  This document adds
+   another I-bit to indicate support for SR in IPv6.  A PCC MUST set the
+   I-bit in the PCECC-CAPABILITY sub-TLV and include the SRv6-PCE-
+   CAPABILITY sub-TLV ([I-D.ietf-pce-segment-routing-ipv6]) in the OPEN
+   Object (inside the PATH-SETUP-TYPE-CAPABILITY TLV) to support the
+   PCECC SRv6 extensions defined in this document.  If I-bit is set in
+   PCECC-CAPABILITY sub-TLV and the SRv6-PCE-CAPABILITY sub-TLV is not
+   advertised in the OPEN Object, PCE SHOULD send a PCErr message with
+   Error-Type=19 (Invalid Operation) and Error-value=TBD4 (SRv6
+   capability was not advertised) and terminate the session.
 
    The rest of the processing is as per
    [I-D.ietf-pce-pcep-extension-for-pce-controller].
@@ -381,11 +382,10 @@ Internet-Draft                 PCECC-SRv6                   October 2020
 
    Segment Routing (SR) as described in [RFC8402] depends on "segments"
    that are advertised by Interior Gateway Protocols (IGPs).  The SR-
-   node allocates and advertises the SID (node, adj etc) and flood them
-   via the IGP.  This document proposes a new mechanism where PCE
+   node allocates and advertises the SID (node, adj, etc) and floods
+   them via the IGP.  This document proposes a new mechanism where PCE
    allocates the SRv6 SID centrally and uses PCEP to advertise them.  In
-   some deployments PCE (and PCEP) are better suited than IGP because of
-
+   some deployments, PCE (and PCEP) are better suited than IGP because
 
 
 
@@ -394,14 +394,14 @@ Li, et al.                 Expires May 1, 2021                  [Page 7]
 Internet-Draft                 PCECC-SRv6                   October 2020
 
 
-   centralized nature of PCE and direct TCP based PCEP sessions to the
-   node.
+   of the centralized nature of PCE and direct TCP based PCEP sessions
+   to the node.
 
 5.5.1.1.  PCECC SRv6 Node/Prefix SID allocation
 
    Each node (PCC) is allocated a node SRv6 SID by the PCECC.  The PCECC
-   sends PCInitiate message to update the SRv6 SID table of each node.
-   The TE router ID is determined from the TED or from "IPv4/IPv6
+   sends the PCInitiate message to update the SRv6 SID table of each
+   node.  The TE router ID is determined from the TED or from "IPv4/IPv6
    Router-ID" Sub-TLV [I-D.dhodylee-pce-pcep-ls], in the OPEN Object.
 
    On receiving the SRv6 node SID allocation, each node (PCC) uses the
@@ -411,11 +411,11 @@ Internet-Draft                 PCECC-SRv6                   October 2020
 
    On receiving the SRv6 node SID allocation:
 
-      For the local SID, node (PCC) needs to update SID with associated
-      function (END function in this case) in "My Local SID Table"
-      ([I-D.ietf-spring-srv6-network-programming]).
+      For the local SID, the node (PCC) needs to update SID with
+      associated function (END function in this case) in "My Local SID
+      Table" ([I-D.ietf-spring-srv6-network-programming]).
 
-      For the non-local SID, node (PCC) uses the local routing
+      For the non-local SID, the node (PCC) uses the local routing
       information to determine the next-hop and download the forwarding
       instructions accordingly.
 
@@ -455,12 +455,13 @@ Internet-Draft                 PCECC-SRv6                   October 2020
 
 5.5.1.3.  Redundant PCEs
 
-   [I-D.litkowski-pce-state-sync] describes synchronization mechanism
-   between the stateful PCEs.  The SRv6 SIDs allocated by a PCE MUST
-   also be synchronized among PCEs for PCECC SRv6 state synchronization.
-   Note that the SRv6 SIDs are independent to the SRv6 paths, and
-   remains intact till any topology change.  The redundant PCEs MUST
-   have a common view of all SRv6 SIDs allocated in the domain.
+   [I-D.litkowski-pce-state-sync] describes the synchronization
+   mechanism between the stateful PCEs.  The SRv6 SIDs allocated by a
+   PCE MUST also be synchronized among PCEs for PCECC-SRv6 state
+   synchronization.  Note that the SRv6 SIDs are independent of the SRv6
+   paths, and remains intact till any topology change.  The redundant
+   PCEs MUST have a common view of all SRv6 SIDs allocated in the
+   domain.
 
 5.5.1.4.  Re-Delegation and Clean up
 
@@ -471,9 +472,9 @@ Internet-Draft                 PCECC-SRv6                   October 2020
 5.5.1.5.  Synchronization of SRv6 SID Allocations
 
    [I-D.ietf-pce-pcep-extension-for-pce-controller] describes the
-   synchronization of Central Controller's Instructions (CCI) via LSP
-   state synchronization as described in [RFC8231] and [RFC8232].  Same
-   procedures are applied for the CCI for SRv6 SIDs as well.
+   synchronization of Central Controller's Instructions (CCI) via the
+   LSP state synchronization as described in [RFC8231] and [RFC8232].
+   Same procedures are applied for the CCI for the SRv6 SIDs as well.
 
 6.  PCEP Messages
 
@@ -490,7 +491,6 @@ Internet-Draft                 PCECC-SRv6                   October 2020
    CAPABILITY sub-TLV.
 
    A new I-bit is defined in PCECC-CAPABILITY sub-TLV for PCECC-SRv6:
-
 
 
 
@@ -589,12 +589,12 @@ Internet-Draft                 PCECC-SRv6                   October 2020
 
    Reserved: MUST be set to 0 while sending and ignored on receipt.
 
-   SRv6 Endpoint Function: 16 bit field representing supported functions
+   SRv6 Endpoint Function: 16-bit field representing supported functions
    associated with SRv6 SIDs.
 
-   SRv6 Identifier: 128 bit IPv6 addresses representing SRv6 segment.
+   SRv6 Identifier: 128-bit IPv6 addresses representing SRv6 segment.
 
-   [Editor's Note - It might be useful to seperate the LOC:FUNC part in
+   [Editor's Note - It might be useful to separate the LOC:FUNC part in
    the SRv6 SID (future study)]
 
 7.4.  FEC Object
@@ -696,8 +696,8 @@ Internet-Draft                 PCECC-SRv6                   October 2020
 
 10.2.  PCEP Object
 
-   IANA is requested to allocate new code-point for the new CCI object-
-   type in "PCEP Objects" sub-registry as follows:
+   IANA is requested to allocate a new code-point for the new CCI
+   object-type in "PCEP Objects" sub-registry as follows:
 
    Object-Class Value Name    Object-Type                 Reference
    TBD                CCI

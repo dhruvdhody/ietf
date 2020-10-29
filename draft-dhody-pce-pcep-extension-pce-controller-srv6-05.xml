@@ -171,7 +171,7 @@
    <xref target='RFC8665'/> , respectively.
    It relies on a series of
    forwarding instructions being placed in the header of a packet. 
-   The list of segment forming the path is called the
+   The list of segments forming the path is called the
    Segment List and is encoded in the packet header.  Segment Routing
    can be applied to the IPv6 architecture with the Segment Routing
    Header (SRH) <xref target='RFC8754'/>.  A segment is
@@ -213,7 +213,7 @@
     
     <section title="Terminology"
              toc="default">
-      <t>Terminologies used in this document is same as described in the draft 
+      <t>Terminologies used in this document is the same as described in the draft 
        <xref target="RFC8283"/> and <xref target='I-D.ietf-teas-pcecc-use-cases'/>.</t>      
     </section>
     
@@ -223,7 +223,7 @@
 
     <t><xref target='RFC8664'/> specifies extensions to 
     PCEP that allow a stateful PCE to
-   compute, update or initiate SR-TE paths for MPLS dataplane. An ingress node of an SR-TE path appends
+   compute, update, or initiate SR-TE paths for MPLS dataplane. An ingress node of an SR-TE path appends
    all outgoing packets with a list of MPLS labels (SIDs). This is encoded in
    SR-ERO subobject, capable of carrying a label (SID) as well as the identity of the
    node/adjacency label (SID). <xref target='I-D.ietf-pce-segment-routing-ipv6'/> extends the procedure
@@ -235,7 +235,7 @@
    illustration provided in
    <xref target='I-D.ietf-spring-srv6-network-programming'/>.
 The SR is applied to IPV6 data
-   plane using SRH.  A SR path can be derived from an IGP Shortest Path
+   plane using SRH.  An SR path can be derived from an IGP Shortest Path
    Tree (SPT), but SR-TE paths may not follow IGP SPT.  Such paths may
    be chosen by a suitable network planning tool, or a PCE and
    provisioned on the ingress node. <xref target='I-D.ietf-pce-segment-routing-ipv6'/> specify 
@@ -245,7 +245,7 @@ The SR is applied to IPV6 data
    <t>As per <xref target='RFC8283'/>, 
    PCECC can allocate and provision the node/prefix/adjacency label (SID) via PCEP. 
   As per <xref target='I-D.ietf-teas-pcecc-use-cases'/> this is also applicable to SRv6 SIDs.</t> 
-   <t>Rest of the
+   <t>The rest of the
    processing is similar to existing stateful PCE for SRv6 <xref target='I-D.ietf-pce-segment-routing-ipv6'/>.</t>
 
    </section>
@@ -292,9 +292,9 @@ The SR is applied to IPV6 data
    PCECC-SRv6 as well.</t>
    
    <t>The PCEP messages PCRpt, PCInitiate, PCUpd are used to send
-   LSP Reports, LSP setup and LSP update respectively. The extended PCInitiate message described in
+   LSP Reports, LSP setup, and LSP update respectively. The extended PCInitiate message described in
    <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> is used to download
-   or clean up central controller's instructions (CCIs) (SRv6 SID in scope of this document). The extended PCRpt message described in
+   or clean up central controller's instructions (CCIs) (SRv6 SID in the scope of this document). The extended PCRpt message described in
    <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> is also used to report
    the CCIs (SRv6 SIDs) from PCC to PCE.</t>
 
@@ -306,7 +306,7 @@ The SR is applied to IPV6 data
       are needed or existing PCEP messages can be extended. See See <xref target="appendix"/> 
       to see the extension of existing message for PCECC-SR functionality.]</t>-->
         
-        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> specify an object called CCI for the encoding of central controller's instructions. <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> defined a CCI object-type for segment routing. This document further defines a new CCI object-type for SRv6.
+        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> specify an object called CCI for the encoding of the central controller's instructions. <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> defined a CCI object-type for segment routing. This document further defines a new CCI object-type for SRv6.
       </t>
     </section>
     
@@ -317,10 +317,10 @@ The SR is applied to IPV6 data
    the "PCECC Capability" sub-TLV, described in 
    <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>.</t>
 
-   <t>A S-bit is added in the PCECC-CAPABILITY sub-TLV to indicate support for 
+   <t>A new S-bit is added in the PCECC-CAPABILITY sub-TLV to indicate support for 
    PCECC-SR in <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>. This document adds another I-bit to indicate support for SR in IPv6. A PCC MUST set the I-bit in the PCECC-CAPABILITY sub-TLV and include 
    the SRv6-PCE-CAPABILITY sub-TLV (<xref target='I-D.ietf-pce-segment-routing-ipv6'/>) in the OPEN Object 
-   (inside the the PATH-SETUP-TYPE-CAPABILITY TLV)
+   (inside the PATH-SETUP-TYPE-CAPABILITY TLV)
    to support the PCECC SRv6 extensions defined in this document.  If
    I-bit is set in PCECC-CAPABILITY sub-TLV and the SRv6-PCE-CAPABILITY sub-TLV is not
    advertised in the OPEN Object, PCE SHOULD send a PCErr message with
@@ -357,18 +357,18 @@ The SR is applied to IPV6 data
    <t>Segment Routing (SR) as described in
    <xref target='RFC8402'/> depends on "segments" that are
    advertised by Interior Gateway Protocols (IGPs).  The SR-node
-   allocates and advertises the SID (node, adj etc) and flood them via the
+   allocates and advertises the SID (node, adj, etc) and floods them via the
    IGP.  This document proposes a new mechanism where PCE allocates the
    SRv6 SID centrally and uses PCEP to advertise them.  In some
-   deployments PCE (and PCEP) are better suited than IGP because of
-   centralized nature of PCE and direct TCP based PCEP sessions to the
+   deployments, PCE (and PCEP) are better suited than IGP because of
+   the centralized nature of PCE and direct TCP based PCEP sessions to the
    node.</t>
    
        <section title="PCECC SRv6 Node/Prefix SID allocation"
              toc="default"
              anchor="SEC_NODE_ALLOC">
         <t>Each node (PCC) is allocated a node SRv6 SID by the PCECC.  The
-         PCECC sends PCInitiate message to update the SRv6 SID table of each node.  
+         PCECC sends the PCInitiate message to update the SRv6 SID table of each node.  
          The TE router ID is determined from the
          TED or from "IPv4/IPv6 Router-ID" Sub-TLV
          <xref target='I-D.dhodylee-pce-pcep-ls'/>, in the OPEN Object.</t>
@@ -393,10 +393,10 @@ The SR is applied to IPV6 data
 
          <t>On receiving the SRv6 node SID allocation:<list>
 
-  <t>For the local SID, node (PCC) needs to update SID with associated 
+  <t>For the local SID, the node (PCC) needs to update SID with associated 
   function (END function in this case) in "My Local SID Table" (<xref target="I-D.ietf-spring-srv6-network-programming"/>).</t>
   
-  <t>For the non-local SID, node (PCC) uses the local routing information
+  <t>For the non-local SID, the node (PCC) uses the local routing information
   to determine the next-hop and download the forwarding instructions accordingly.  </t></list></t>
   
   <!--<t>The PCInitiate message in this
@@ -448,10 +448,10 @@ The SR is applied to IPV6 data
              toc="default"
              anchor="SEC_REDUND">
 
-       <t><xref target='I-D.litkowski-pce-state-sync'/> describes synchronization
+       <t><xref target='I-D.litkowski-pce-state-sync'/> describes the synchronization
        mechanism between the stateful PCEs. The SRv6 SIDs allocated by a PCE MUST also be 
-       synchronized among PCEs for PCECC SRv6 state synchronization. Note that the SRv6 SIDs
-       are independent to the SRv6 paths, and remains intact till any topology 
+       synchronized among PCEs for PCECC-SRv6 state synchronization. Note that the SRv6 SIDs
+       are independent of the SRv6 paths, and remains intact till any topology 
        change. The redundant PCEs MUST have a common view of all SRv6 SIDs allocated in the
        domain.
      </t>
@@ -469,10 +469,10 @@ The SR is applied to IPV6 data
        <section title="Synchronization of SRv6 SID Allocations"
              toc="default"
              anchor="SEC_DB_SYNC">
-        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> describes the synchronization of Central Controller's Instructions (CCI) via LSP state synchronization 
+        <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> describes the synchronization of Central Controller's Instructions (CCI) via the LSP state synchronization 
    as described in <xref target='RFC8231'/> and 
    <xref target='RFC8232'/>.  
-        Same procedures are applied for the CCI for SRv6 SIDs as well.</t>    
+        Same procedures are applied for the CCI for the SRv6 SIDs as well.</t>    
         <!--<t>See <xref target="I-D.palle-pce-controller-labeldb-sync"/> for the optimizations for LABEL-DB synchronization procedure.</t>          -->
        </section>       
        
@@ -594,11 +594,11 @@ The SR is applied to IPV6 data
        <t>The field CC-ID is as described in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>. The field MT-ID, Algorithm, Flags are defined in 
        <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>.</t>
       <t>Reserved: MUST be set to 0 while sending and ignored on receipt.</t>
-      <t>SRv6 Endpoint Function: 16 bit field representing supported
+      <t>SRv6 Endpoint Function: 16-bit field representing supported
       functions associated with SRv6 SIDs.</t>
-      <t>SRv6 Identifier: 128 bit IPv6 addresses representing SRv6
+      <t>SRv6 Identifier: 128-bit IPv6 addresses representing SRv6
       segment.</t>
-      <t>[Editor's Note - It might be useful to seperate the LOC:FUNC part in the SRv6 SID (future study)]</t>
+      <t>[Editor's Note - It might be useful to separate the LOC:FUNC part in the SRv6 SID (future study)]</t>
      </section>   
     <section title="FEC Object"
              toc="default"
@@ -700,7 +700,7 @@ The SR is applied to IPV6 data
      </texttable>      
       </section>-->
 <section title="PCEP Object" toc="default">
-        <t>IANA is requested to allocate new code-point for the new CCI object-type in "PCEP Objects" sub-registry as follows:</t>
+        <t>IANA is requested to allocate a new code-point for the new CCI object-type in "PCEP Objects" sub-registry as follows:</t>
      <texttable anchor="PCEP-OBJECT" style="none" suppress-title="true" title="" align="center">
       <ttcol align="left" width="10%">Object-Class Value</ttcol>
       <ttcol align="left" width="10%">Name</ttcol>
