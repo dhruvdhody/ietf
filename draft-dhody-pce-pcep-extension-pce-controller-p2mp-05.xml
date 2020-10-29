@@ -95,8 +95,7 @@
    changes in the network or traffic demands.</t>
 
    <t>The PCE has been identified as an
-   appropriate technology for the determination of the paths of point-
-   to-multipoint (P2MP) TE Label Switched Paths (LSPs).</t>
+   appropriate technology for the determination of the paths of point-to-multipoint (P2MP) TE Label Switched Paths (LSPs).</t>
 
    <t>PCE was developed to derive paths for MPLS P2MP LSPs, 
     which are supplied to the head end (root) of the LSP using PCEP. 
@@ -220,7 +219,7 @@
     </section>
     <section title="Terminology"
              toc="default">
-      <t>Terminologies used in this document is same as described in the draft 
+      <t>Terminologies used in this document is the same as described in the draft 
        <xref target="RFC8283"/> and <xref target='I-D.ietf-teas-pcecc-use-cases'/>.</t>      
     </section>
     <section title="Basic PCECC Mode"
@@ -245,7 +244,7 @@
 
   <t>This document extends the functionality to include support for central control instruction for replication at the branch nodes.</t>
 
-   <t>The rest of processing is similar
+   <t>The rest of the processing is similar
    to the existing stateful PCE mechanism for P2MP <xref target="RFC8623"/>.</t>
 
     </section>
@@ -283,7 +282,7 @@
     as a Central Controller (PCECC) reuses the existing active stateful PCE
     mechanism as much as possible to control the LSPs.</t>
 
-    <t><xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> extends PCEP messages - PCRpt, PCInitiate message for the Central Controller's Instructions (CCI) (label forwarding instructions in the context of this document). This documents specify the procedure for additional instruction for branch node needed for P2MP.</t>
+    <t><xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> extends PCEP messages - PCRpt, PCInitiate message for the Central Controller's Instructions (CCI) (label forwarding instructions in the context of this document). This document specify the procedure for additional instruction for branch node needed for P2MP.</t>
     </section>
     
     <section title="PCECC Capability Advertisement"
@@ -311,27 +310,27 @@
     <section title="PCE-Initiated PCECC LSP"
              toc="default"
              anchor="PCE-I">
-    <t>The LSP Instantiation operation is same as defined in <xref target='RFC8281'/> and <xref target='RFC8623'/>.</t>
-    <t>In order to setup a PCE-Initiated P2MP LSP based on the PCECC mechanism, a PCE
+    <t>The LSP Instantiation operation is the same as defined in <xref target='RFC8281'/> and <xref target='RFC8623'/>.</t>
+    <t>In order to set up a PCE-Initiated P2MP LSP based on the PCECC mechanism, a PCE
     sends PCInitiate message with Path Setup Type set to TBD for PCECC
     (<xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>) to the ingress PCC (root node).</t>
-    <t>P2MP-LSP-IDENTIFIER TLV <xref target='RFC8623'/> MUST be included for the PCECC P2MP LSPs, the tuple uniquely identifies the P2MP LSP in the network. As per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, the LSP object is included in central controller's instructions (label download) to identify the PCECC P2MP LSP for  this instruction. The handling of PLSP-ID is as per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. </t>
+    <t>P2MP-LSP-IDENTIFIER TLV <xref target='RFC8623'/> MUST be included for the PCECC P2MP LSPs, the tuple uniquely identifies the P2MP LSP in the network. As per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, the LSP object is included in the central controller's instructions (label download) to identify the PCECC P2MP LSP for  this instruction. The handling of PLSP-ID is as per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. </t>
     <t>The ingress PCC MUST also set D (Delegate) flag (see
     <xref target='RFC8231'/>) and C (Create) flag
     (see <xref target='RFC8281'/>) in the LSP object of
     the PCRpt message. The PCC responds with a PCRpt message with the status set to "GOING-UP" and carrying the assigned PLSP-ID. As per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> when the PCE receives this PCRpt message with the PLSP-ID, it assigns labels along the path; and sets up the path by sending a PCInitiate message to each node along the path of the P2MP Tree as per the PCECC technique. The CC-ID uniquely identifies the central controller instruction within a PCEP session. Each PCC further responds with the PCRpt messages including the central controller instruction (CCI) and the LSP objects.</t>
-    <t>As described in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, the label forwarding instructions from PCECC are send after the initial PCInitiate and PCRpt exchange. This is done so that the PLSP-ID and other LSP identifiers can be obtained from the ingress and can be included in the label forwarding instruction in the next PCInitiate message. </t>
+    <t>As described in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, the label forwarding instructions from PCECC are sent after the initial PCInitiate and PCRpt exchange. This is done so that the PLSP-ID and other LSP identifiers can be obtained from the ingress and can be included in the label forwarding instruction in the next PCInitiate message. </t>
     </section>
 
     <section title="PCC-Initiated PCECC LSP"
              toc="default"
              anchor="SEC_BASIC_SETUP">
-    <t>In order to setup a P2MP LSP based on the PCECC mechanism where the LSP is configured at the PCC, a PCC MUST delegate the P2MP LSP by
+    <t>In order to set up a P2MP LSP based on the PCECC mechanism where the LSP is configured at the PCC, a PCC MUST delegate the P2MP LSP by
     sending a PCRpt message with PST set for PCECC and D (Delegate)
     flag (see <xref target='RFC8623'/>) set in the LSP object.</t>
     
     <t>When a PCE receives the initial PCRpt message with the D flags and PST Type set to TBD, it SHOULD calculate the P2MP tree and assigns labels along the P2MP tree; and set up the P2MP LSP by sending PCInitiate message to each node
-   along the path of the P2MP LSP as per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. The new extension required is the instructions on the branch nodes for replications to more than one outgoing interfaces with the respective labels. The rest of the operations remains same  as <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> and <xref target="RFC8623"/>.</t>
+   along the path of the P2MP LSP as per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. The new extension required is the instructions on the branch nodes for replications to more than one outgoing interface with the respective label. The rest of the operations remains the same as <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> and <xref target="RFC8623"/>.</t>
 
     </section>
     
@@ -339,17 +338,17 @@
     <section title="Central Control Instructions"
              toc="default">
     <t>The new central controller's instructions (CCI) for the label operations in PCEP is done via the PCInitiate message as described in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, by
-   defining a new PCEP Objects for CCI operations. Local label range of
+   defining a new PCEP Objects for CCI operations. The local label range of
    each PCC is assumed to be known by both the PCC and the PCE. </t> 
                    
     <section title="Label Download CCI"
              toc="default">
-    <t>In order to setup an LSP based on PCECC, the PCE sends a PCInitiate message
+    <t>In order to set up an LSP based on PCECC, the PCE sends a PCInitiate message
     to each node along the path to download the Label instruction as described in <xref target="PCE-I"/> and <xref target="SEC_BASIC_SETUP"/>.
   </t>
     <t>The CCI object MUST be included, along with the LSP object in the PCInitiate message. As per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, there are at most 2 instances of CCI object in the PCInitiate message. For PCECC-P2MP operations, multiple instances of CCI object for out-labels is allowed. Similarly to acknowledge the central controller instructions, the PCRpt message allows multiple instances of CCI object for PCECC-P2MP operations.</t>  
 
-      <t>The LSP-IDENTIFIER TLV MUST be included in LSP object. The SPEAKER-ENTITY-ID TLV
+      <t>The LSP-IDENTIFIER TLV MUST be included in the LSP object. The SPEAKER-ENTITY-ID TLV
 SHOULD be included in LSP object.</t>
     <t>As described in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, if a node (PCC) receives a PCInitiate message which includes a Label to download, as part of CCI, that is out
     	of the range set aside for the PCE, it send a PCErr message with Error-type=TBD
@@ -393,7 +392,7 @@ SHOULD be included in LSP object.</t>
              toc="default"
              anchor="SEC_CLEANUP">
     <t>In order to delete a P2MP LSP based on PCECC, the PCE sends a central controller instructions via a PCInitiate
-    message to each node along the path of the P2MP tree to clean up the Label forwarding instruction as per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. In case of branch nodes all instances of CCIs needs to be present in the PCEP message.</t>
+    message to each node along the path of the P2MP tree to clean up the Label forwarding instruction as per <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. In case of branch nodes, all instances of CCIs needs to be present in the PCEP message.</t>
     </section>
     </section>
 
@@ -401,12 +400,12 @@ SHOULD be included in LSP object.</t>
     
     <section title="PCECC LSP Update"
              toc="default">
-    <t>In case of a modification of PCECC P2MP LSP with a new path, the procedure and instructions as described in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> apply. </t>
+    <t>In case of a modification of PCECC P2MP LSP with a new path, the procedure, and instructions as described in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> apply. </t>
     </section>
     
     <section title="Re-Delegation and Clean up"
              toc="default">
-   <t>In case of a re-delegation and clean up of PCECC P2MP LSP, the procedure and instructions as described in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> apply. </t>
+   <t>In case of a re-delegation and clean up of PCECC P2MP LSP, the procedure, and instructions as described in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> apply. </t>
     </section>    
     
     <section title="Synchronization of Central Controllers Instructions"
@@ -432,7 +431,10 @@ SHOULD be included in LSP object.</t>
     
     </section>
     
-
+ <section title="PCEP Messages"
+             toc="default">
+             <t><xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> specify the extension to PCInitiate and PCRpt message for PCECC. For P2P LSP, only two instances of CCI objects can be included. In the case of the P2MP LSP, multiple CCI objects are allowed. The message format and other procedures continue to apply.  </t>
+           </section>
     
     
     
@@ -445,11 +447,20 @@ SHOULD be included in LSP object.</t>
              anchor="SEC_PCECC_CAP_TLV">
     <t>The PCECC-CAPABILITY sub-TLV is an optional TLV for use in the OPEN Object
     for PCECC capability advertisement in PATH-SETUP-TYPE-CAPABILITY TLV as specified in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. </t>
-    <t>This document adds a new flag (M-bit) in PCECC-CAPABILITY sub-TLV to indicate the support for P2MP in PCECC. A PCC MUST set M-bit in PCECC-CAPABILITY sub-TLV and 
-    set the N (P2MP-CAPABILITY), M (P2MP-LSP-UPDATE-CAPABILITY), and P (P2MP-LSP-INSTANTIATION-CAPABILITY) (as per <xref target='RFC8623'/>) in STATEFUL-PCE-CAPABILITY TLV <xref target='RFC8231'></xref>
-   to support the PCECC P2MP extensions defined in this document.  If
-   M-bit is set in PCECC-CAPABILITY sub-TLV and the P2MP bits in STATEFUL-PCE-CAPABILITY TLV are not set
-   in OPEN Object, PCE SHOULD send a PCErr message with
+
+    <t>This document adds a new flag (M-bit) in the PCECC-CAPABILITY sub-TLV to indicate the support for P2MP in PCECC. </t>
+
+
+    <t>M (PCECC-P2MP-CAPABILITY - 1 bit - TBD1):  If set to 1 by a PCEP speaker, it
+      indicates that the PCEP speaker is capable of PCECC-P2MP capability.</t>
+    
+
+
+    <t>A PCC MUST set the M-bit in the PCECC-CAPABILITY sub-TLV and 
+    set the N (P2MP-CAPABILITY), the M (P2MP-LSP-UPDATE-CAPABILITY), and the P (P2MP-LSP-INSTANTIATION-CAPABILITY) bits (as per <xref target='RFC8623'/>) in the STATEFUL-PCE-CAPABILITY TLV <xref target='RFC8231'></xref>
+   to support the PCECC-P2MP extensions defined in this document.  If
+   the M-bit is set in PCECC-CAPABILITY sub-TLV and the P2MP bits (in the STATEFUL-PCE-CAPABILITY TLV) are not set
+   in the OPEN Object, a PCEP speaker SHOULD send a PCErr message with
    Error-Type=19 (Invalid Operation) and Error-value=TBD2 (P2MP capability
    was not advertised) and terminate the session.</t>
 
@@ -461,7 +472,7 @@ SHOULD be included in LSP object.</t>
              toc="default"
              anchor="SEC_PATH">
       <t>The PATH-SETUP-TYPE TLV is defined in <xref target='RFC8408'/>;
-      <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> defines a PST value for PCECC, which is also used for P2MP.
+      <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> defines a PST value for PCECC, which is applicable for P2MP LSP as well.
       </t>
 
     </section>
@@ -470,9 +481,10 @@ SHOULD be included in LSP object.</t>
              toc="default"
              anchor="SEC_CCI">
     <t>The Central Control Instructions (CCI) Object <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> is used by the PCE to specify the forwarding instructions (Label information in the context of this document) to the PCC, and
-    optionally carried within PCInitiate or PCRpt message for label download which defined Object Type 1 for MPLS Label, which is also used for P2MP. The address TLVs <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> associates the next-hop information in case of an outgoing label. </t>
-    <t>If a node (PCC) receives a PCInitiate/PCUpd message with more than one CCI with O-bit set for outgoing label and the node does not support the P2MP branch/replication capability, it MUST
+    optionally carried within PCInitiate or PCRpt message for label download/report. The CCI Object Type 1 for MPLS Label is defined in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, which is used for the P2MP LSPs as well. The address TLVs are defined in <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>, they associate the next-hop information in case of an outgoing label. </t>
+    <t>If a node (PCC) receives a PCInitiate message with more than one CCI with O-bit set for the outgoing label and the node does not support the P2MP branch/replication capability, it MUST
     respond with PCErr message with Error-Type=2 (Capability not supported) (defined in <xref target="RFC5440"/>).</t>
+    <t>The rest of the processing is same as <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>.</t>
     </section>
     </section>
 
@@ -485,6 +497,7 @@ SHOULD be included in LSP object.</t>
       <t>The security considerations described in <xref target="RFC8231"/>, 
        <xref target="RFC8281"/>, <xref target='RFC8623'/>, and <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> apply to the extensions described in
        this document. </t>
+       <t>As per <xref target="RFC8231"/>, it is RECOMMENDED that these PCEP extensions only be activated on authenticated and encrypted sessions across PCEs and PCCs belonging to the same administrative authority, using Transport Layer Security (TLS) <xref target="RFC8253"/> as per the recommendations and best current practices in <xref target="RFC7525"/> (unless explicitly set aside in <xref target="RFC8253"/>).</t>
     </section>
     
     <section title="Manageability Considerations"
@@ -492,7 +505,7 @@ SHOULD be included in LSP object.</t>
       <section title="Control of Function and Policy"
                toc="default">
         <t> A PCE or PCC implementation SHOULD allow to configure to
-   enable/disable PCECC P2MP capability as a global configuration.</t>
+   enable/disable PCECC-P2MP capability as a global configuration.</t>
       </section>
       <section title="Information and Data Models"
                toc="default">
@@ -500,7 +513,7 @@ SHOULD be included in LSP object.</t>
            PCECC capability status.</t>
    
         <t>The PCEP YANG module <xref target="I-D.ietf-pce-pcep-yang"/> could be extended
-           to enable/disable PCECC P2MP capability.</t>
+           to enable/disable PCECC-P2MP capability.</t>
       </section>
       <section title="Liveness Detection and Monitoring"
                toc="default">
@@ -530,23 +543,23 @@ SHOULD be included in LSP object.</t>
     <section title="IANA Considerations"
              toc="default">
              
-<section title="PCECC-CAPABILITY TLV" toc="default">
+<section title="PCECC-CAPABILITY sub-TLV" toc="default">
       <t><xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> defines the
-      PCECC-CAPABILITY TLV and requests that IANA creates a registry to
-      manage the value of the PCECC-CAPABILITY TLV's Flag field.  IANA
-      is requested to allocate a new bit in the PCECC-CAPABILITY TLV Flag
+      PCECC-CAPABILITY sub-TLV and requests that IANA creates a registry to
+      manage the value of the PCECC-CAPABILITY sub-TLV's Flag field.  IANA
+      is requested to allocate a new bit in the PCECC-CAPABILITY sub-TLV Flag
       Field registry, as follows:</t>
      <texttable anchor="CAP-TLV" style="none" suppress-title="true" title="" align="center">
       <ttcol align="left" width="20%">Bit</ttcol>
       <ttcol align="left" width="30%">Description</ttcol>
       <ttcol align="left" width="20%">Reference</ttcol>
        <c>TBD1</c>
-       <c>M((PCECC-P2MP-CAPABILITY))</c>
+       <c>P2MP</c>
        <c>This document</c>
      </texttable>         
       </section>      
       <section title="PCEP-Error Object" toc="default">
-      <t>IANA is requested to allocate new error types and error values within
+      <t>IANA is requested to allocate a new error value within
          the "PCEP-ERROR Object Error Types and Values" sub-registry of the
          PCEP Numbers registry for the following errors:
 
@@ -580,11 +593,11 @@ SHOULD be included in LSP object.</t>
     <references title="Normative References">
       <?rfc include="reference.RFC.2119.xml" ?>
       <?rfc include="reference.RFC.5440.xml" ?>
-      <?rfc include="reference.RFC.7420.xml" ?>
+      
       
       <?rfc include="reference.RFC.8174.xml"?>
       <?rfc include="reference.RFC.8231.xml"?>
-      
+      <?rfc include="reference.RFC.8253.xml"?>
       <?rfc include="reference.RFC.8281.xml"?>
       <?rfc include="reference.RFC.8623.xml"?>
       <?rfc include="reference.I-D.ietf-pce-pcep-extension-for-pce-controller"?>
@@ -601,8 +614,9 @@ SHOULD be included in LSP object.</t>
 
       <?rfc include="reference.RFC.7025.xml"?>
       <?rfc include="reference.RFC.7399.xml"?>
+      <?rfc include="reference.RFC.7420.xml" ?>
       <?rfc include="reference.RFC.7491.xml"?>
-      
+      <?rfc include="reference.RFC.7525.xml" ?>
     <?rfc include="reference.RFC.8283.xml"?>
     <?rfc include="reference.RFC.8306.xml"?>
     <?rfc include="reference.RFC.8408.xml"?>
@@ -610,7 +624,7 @@ SHOULD be included in LSP object.</t>
     <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>
     
     <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
-    
+    <?rfc include="reference.I-D.li-pce-controlled-id-space"?>
     
 
 
