@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes" ?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc subcompact="no"?>
+<?rfc compact="yes" ?>
+<?rfc iprnotified="Yes" ?>
+<?rfc strict="no" ?>
+<rfc category="exp" docName="draft-li-pce-controlled-id-space-07"
+     ipr="trust200902">
+  <front>
+    <title abbrev="PCE Controlled ID Space">PCE Controlled ID Space</title>
+
+    <author fullname="Cheng Li" initials="C." surname="Li">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>c.l@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Mach(Guoyi) Chen" initials="M." surname="Chen">
+      <organization>Huawei Technologies</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <region/>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>Mach.chen@huawei.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Aijun Wang" initials="A." surname="Wang">
+      <organization>China Telecom</organization>
+
+      <address>
+        <postal>
+          <street>Beiqijia Town,</street>
+
+          <city>Beijing</city>
+
+          <region>Changping District</region>
+
+          <code>102209</code>
+
+          <country>China</country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>wangaj3@chinatelecom.cn</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Weiqiang Cheng" initials="W." surname="Cheng">
+      <organization>China Mobile</organization>
+
+      <address>
+        <postal>
+          <street/>
+
+          <city/>
+
+          <region/>
+
+          <code/>
+
+          <country/>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>chengweiqiang@chinamobile.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <author fullname="Chao Zhou" initials="C." surname="Zhou">
+      <organization>HPE</organization>
+
+      <address>
+        <postal>
+          <street/>
+
+          <city></city>
+
+          <region/>
+
+          <code/>
+
+          <country></country>
+        </postal>
+
+        <phone/>
+
+        <facsimile/>
+
+        <email>chaozhou_us@yahoo.com</email>
+
+        <uri/>
+      </address>
+    </author>
+
+    <date day="30" month="October" year="2020"/>
+
+    <abstract>
+      <t>The Path Computation Element Communication Protocol (PCEP) provides
+      a mechanisms for the Path Computation Elements (PCEs) to perform path
+      computation in response to a Path Computation Clients (PCCs) requests.
+      The Stateful PCE extensions allow stateful control of Multiprotocol
+      Label Switching (MPLS) Traffic Engineering (TE) Label Switched Paths
+      (LSPs) using PCEP. Furthermore, PCE can be used for computing paths in
+      the SR networks.</t>
+
+      <t>Stateful PCE provide active control of MPLS-TE LSPs via PCEP, for a
+      model where the PCC delegates control over one or more locally
+      configured LSPs to the PCE. Further, stateful PCE could also create and
+      remove PCE-initiated LSPs by itself. A PCE-based Central Controller (PCECC)
+      simplify the processing of a distributed control plane by integrating
+      with elements of Software-Defined Networking (SDN).</t>
+
+      <t>In some use cases, such as PCECC or Binding Segment Identifier (SID)
+      for Segment Routing (SR), there are requirements for a stateful PCE to
+      make allocation of labels, SIDs, etc. These use cases require PCE aware
+      of various identifier spaces from where to make allocations on behalf of a PCC.
+      This document describes a mechanism for a PCC to inform the PCE of the
+      identifier space set aside for the PCE control via PCEP. The identifier could be
+      an MPLS label, a SID or any other to-be-defined identifier that can be allocated by
+      a PCE.</t>
+
+      <!--may need to dynamically allocate new labels or Segment IDs
+      that come from a PCC's label space. However, in the existing documents,
+      the label range to be used by a PCE is assumed to to be known and set on
+      both PCEP peers, so the mechanism of label range delegation is required.
+      This document describes a mechanism to advertise specific PCE controlled
+      ID spaces to PCEs via PCEP channel. The type of ID can be MPLS label,
+      SRv6 Path Segment or other ID.</t>-->
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t><xref target="RFC5440"/> defines the stateless Path Computation
+      Element Communication Protocol (PCEP) for thePath Computation Elements
+      (PCEs) to perform path computation in response to a Path Computation
+      Clients (PCCs) requests. For supporting stateful operations, <xref
+      target="RFC8231"/> specifies a set of extensions to PCEP to enable
+      stateful control of LSPs within and across PCEP sessions in compliance
+      with <xref target="RFC4657"/>. Furthermore, <xref target="RFC8281"/>
+      describes the setup, maintenance, and teardown of PCE-initiated LSPs
+      under the stateful PCE model, without the need for local configuration
+      on the PCC, thus allowing for a dynamic network that is centrally
+      controlled and deployed.</t>
+
+      <t><xref target="RFC8283"/> introduces the architecture for PCE as a
+      central controller, it examines the motivations and applicability for
+      PCEP as a control protocol in this environment, and introduces the
+      implications for the protocol. Also, <xref
+      target="I-D.ietf-pce-pcep-extension-for-pce-controller"/> specifies the
+      procedures and PCEP extensions for using the PCE as a Central
+      Controller (PCECC), where LSPs are calculated/set up/initiated and label
+      forwarding entries are downloaded through extending PCEP. However, the
+      document assumes that label range to be used by a PCE is known and set
+      on both PCEP peers. This extension adds the capability to advertise the
+      label range via a PCEP extension.</t>
+
+      <!--these documents do not describe the mechanisms for PCEs to
+      manage the space of MPLS label and allocate MPLS label for each of the
+      routers that it controls. The label range to be used by a PCE is assumed
+      to be known and set on both PCEP peers <xref
+      target="I-D.zhao-pce-pcep-extension-for-pce-controller"/>.</t>-->
+
+      <t>Similarly, <xref
+      target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> specifies the
+      procedures and PCEP extensions when a PCE-based controller is
+      also responsible for configuring the forwarding actions on the routers
+      (SR SID distribution in this case), in addition to computing the paths
+      for packet flows in a segment routing network and telling the edge
+      routers what instructions to attach to packets as they enter the
+      network. However, the document assumes that label range to be used by a
+      PCE is known and set on both PCEP peers. This extension adds the
+      capability to advertise the range (from SRGB or SRLB of the node) via a
+      PCEP extension.</t>
+
+      <t>In addition, <xref
+      target="I-D.dhody-pce-pcep-extension-pce-controller-srv6"/> specifies
+      the procedures and PCEP extensions of PCECC for SRv6. An SRv6
+      SID is represented as LOC:FUNCT (<xref
+          target="I-D.ietf-spring-srv6-network-programming"/>) where LOC is the L most significant bits
+      and FUNCT is the 128-L least significant bits. The FUNCT part of the SID
+      is an opaque identification of a local function bound to the SID. This
+      extension adds the capability to advertise the range of Function ID
+      (FUNCT part) via a PCEP extension.</t>
+
+      <!--<t>PCE can influence/edit the SR path/MPLS LSP by allocating ID from PCE
+      controlled ID space. The PCE controlled ID space MAY NOT be used for the
+      VPN inner prefix(which can be done via traditional BGP protocol). Also,
+      these controlled ID spaces SHOULD NOT be overlapped with other ID spaces
+      that allocated by distributed protocols, such as label space that used
+      for VPN allocated by BGP.</t>-->
+
+      <t>Once the PCC/node has given control over an ID space (for example
+      labels), the PCC/node MUST NOT allocate the ID from this ID space. For
+      example, a PCC/node MUST NOT use this labels from the PCE controlled
+      label space to make allocation for VPN Prefix distributed via BGP or
+      labels used for LDP/RSVP-TE signalling. This is done to make sure that
+      the PCE control over ID space does not conflict with the existing node
+      allocation.</t>
+
+      <t>The use case are described in <xref target="use"/>. The ID space
+      range information can be advertised via the TLVs in the Open message.
+      The detailed procedures are described in <xref target="pro"/>, and the
+      objects' format is specified in <xref target="obj"/>.</t>
+    </section>
+
+    <section title="Terminology">
+      <t>This memo makes use of the terms defined in <xref target="RFC5440"/>,
+      <xref target="RFC8231"/>, <xref target="RFC8283"/> and <xref
+      target="RFC8402"/>.</t>
+
+      <section title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described in BCP
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only
+        when, they appear in all capitals, as shown here.</t>
+      </section>
+    </section>
+
+    <section anchor="use" title="Use cases">
+      <section title="PCE-based Central Control">
+        <t>A PCE-based Central Controller (PCECC) can simplify the processing
+        of a distributed control plane by integrating with elements of SDN.
+        Thus, the LSP/SR path can be calculated/set up/initiated and the
+        label/SID forwarding entries can also be downloaded through a
+        centralized PCE server to each network devices along the path while
+        leveraging the existing PCE technologies as much as possible.</t>
+
+        <section title="PCECC for MPLS/SR-MPLS">
+          <t><xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>
+          describes a mode where LSPs are provisioned as explicit label
+          instructions at each hop on the end-to-end path. Each router along
+          the path must be told what label forwarding instructions to program
+          and what resources to reserve. The controller uses PCEP to
+          communicate with each router along the path of the end-to-end LSP.
+          For this to work, the PCE-based controller will take responsibility
+          for managing some part of the MPLS label space for each router that
+          it controls as described in section 3.1.2. of <xref
+          target="RFC8283"/>. A mechanism for a PCC to inform the PCE of such
+          a label space to control is needed within PCEP.</t>
+
+          <t><xref target="RFC8664"/> specifies
+          extensions to PCEP that allow a stateful PCE to compute, update or
+          initiate SR-TE paths. <xref
+          target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/> describes
+          the mechanism for PCECC to allocate and provision the
+          node/prefix/adjacency label (SID) via PCEP. To make such allocation,
+          PCE needs to be aware of the label space from Segment Routing Global
+          Block (SRGB) or Segment Routing Local Block (SRLB) <xref
+          target="RFC8402"/> of the node that it can control. A mechanism for a
+          PCC to inform the PCE of such label space to control is needed
+          within PCEP. The full SRGB/SRLB of a node could be learned via
+          existing IGP or BGP-LS mechanism.</t>
+
+          <t/>
+        </section>
+
+        <section title="PCECC for SRv6">
+          <t><xref target="I-D.dhody-pce-pcep-extension-pce-controller-srv6"/>
+          describes the mechanism for PCECC to allocate and provision the SRv6
+          SID via PCEP. An SRv6 SID is represented as LOC:FUNCT (<xref
+          target="I-D.ietf-spring-srv6-network-programming"/>) where LOC is
+          the L most significant bits and FUNCT is the 128-L least significant
+          bits. The FUNCT part of the SID is an opaque identification of a
+          local function bound to the SID. To make such allocation, PCE needs
+          to be aware of the Function ID space (FUNCT part) of the node that
+          it controls. A mechanism for a PCC to inform the PCE of such a
+          Function ID space to control is needed within PCEP.</t>
+
+          <t/>
+        </section>
+      </section>
+
+      <section title="Binding SID Allocation">
+        <t>The headend of an SR Policy binds a Binding SID to its policy <xref
+        target="I-D.ietf-spring-segment-routing-policy"/>. The instantiation
+        of which may involve a list of SIDs. Currently Binding SID are
+        allocated by the node <xref
+        target="I-D.ietf-pce-binding-label-sid"/>, but there is an inherent advantage in the
+        Binding SID to be allocated by a PCE to allow SR policies to be
+        dynamically created, updated according to the network status and
+        operations. This is described in <xref
+        target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. Therefore,
+        a PCE needs to obtain the authority and control to allocate Binding
+        SID actively from the PCC's label space as described in above use
+        case.</t>
+      </section>
+    </section>
+
+    <section anchor="pro" title="Overview">
+      <t>During PCEP Initialization Phase, Open messages are exchanged between
+      the PCCs and the PCEs. The OPEN object may also contain a set of TLVs used to
+      convey the capabilities in the Open message. The term 'ID' in this document,
+      could be a MPLS label, SRv6 Function ID or any other future ID space for
+      PCE to control and allocate from. A PCC can include a corresponding
+      ID-CONTROL-SPACE TLVs in the OPEN Object to inform the corresponding ID
+      space information that it wants the PCE to control. This TLV MUST NOT be
+      included by the PCE and MUST be ignored on receipt by a PCC. This is an
+      optional TLV, the PCE could be aware of the ID space from some other
+      means outside of PCEP.</t>
+
+      <t>For delegating multiple types of ID space, multiple TLVs
+      corresponding to each ID type MUST be included in an Open message. The
+      ID type can be MPLS label or other type of ID. The following
+      ID-CONTROL-SPACE TLV is defined in this document - <list style="symbols">
+          <t>LABEL-CONTROL-SPACE TLV - for MPLS Labels (including for
+          SR-MPLS)</t>
+
+          <t>FUNCTION-ID-CONTROL-SPACE TLV - for SRv6 SID Function ID</t>
+        </list></t>
+
+      <t>The procedure of ID space control to PCE is shown below:</t>
+
+      <t><figure anchor="fig1" title="ID space control to PCE">
+          <artwork align="center"><![CDATA[
+ +-+-+                                     +-+-+
+ |PCC|                                     |PCE|
+ +-+-+                                     +-+-+
+   |                                         |
+   |   Open msg (LABEL-CONTROL-SPACE,etc)    |
+   |                                         | 
+   |--------                                 |
+   |        \                     Open msg   |
+   |         \  -----------------------------|
+   |          \/                             |
+   |          /\                             |
+   |         /  ---------------------------->|
+   |        /                                |
+   |<------                       Keepalive  |
+   |             ----------------------------|
+   |Keepalive   /                            |
+   |--------   /                             |
+   |        \/                               |
+   |        /\                               |
+   |<------   ------------------------------>|
+   |                                         |
+
+]]></artwork>
+        </figure></t>
+
+      <t>If the ID space control procedure is successful, the PCE will return
+      a KeepAlive message to the PCC. If there is any error in processing the
+      corresponding TLV, an Error (PCErr) message will be sent to the PCC with
+      Error-Type=1 (PCEP session establishment failure) and Error-value=TBD
+      (ID space control failure).</t>
+
+      <t>After this process, a stateful PCE can learn the PCE-controlled ID
+      spaces of a node (PCC) under its control. A PCE can then allocate IDs
+      within the controlled-ID space. For example, a PCE can actively allocate
+      labels and download forwarding instructions for the PCECC LSP as
+      described in <xref
+      target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. A PCE can
+      also allocate labels from the PCE controlled portion of the SRGB/SRLB
+      for PCECC-SR <xref
+      target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>. The full
+      SRGB/SRLB of a node could be learned via existing IGP or BGP-LS
+      mechanism.</t>
+      <t>The procedure for handling the FUNCTION-ID-CONTROL-SPACE TLV is same as above.</t>
+    </section>
+
+    <section anchor="obj" title="Objects">
+      <t/>
+
+      <section title="Open Object">
+        <t>For advertising the PCE-controlled ID space to a PCE, this document
+        defines several TLVs within the OPEN object.</t>
+
+        <section title="LABEL-CONTROL-SPACE TLV">
+          <t>For a PCC to inform the label space under the PCE control, this
+          document defines a new LABEL-CONTROL-SPACE TLV.</t>
+
+          <t>The LABEL-CONTROL-SPACE TLV is an optional TLV in the OPEN
+          object, and its format is shown in the following figure:</t>
+
+          <t><figure anchor="fig2" title="LABEL-CONTROL-SPACE TLV">
+              <artwork align="center"><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Type=TBD1          |            Length             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Block        |                   Flags                       |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Start (1)                  |   Reserved    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Range (1)                  |   Reserved    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              ...                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              ...                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Start (n)                  |   Reserved    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Range (n)                  |   Reserved    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+            </figure></t>
+
+          <t>The type (16 bits) of the TLV is TBD1. The length field (16 bits)
+          and has a variable value.</t>
+
+          <t>Block(8 bits): the number of ID blocks. The range of a block is
+          described by a start field and a range field.</t>
+
+          <t>Flags (24 bits): No flag is currently defined. The unassigned
+          bits of Flags field MUST be set to 0 on transmission and MUST be
+          ignored on receipt.</t>
+
+          <t>Start(i) (24 bits): indicates the beginning of the label block
+          i.</t>
+
+          <t>Range(i) (24 bits): indicates the range of the label block i.</t>
+
+          <t>Reserved: MUST be set to 0 on transmission and MUST be ignored
+          on reception.</t>
+
+          <t>LABEL-CONTROL-SPACE TLV SHOULD be included only once in a Open
+          Message. On receipt, only the first instance is processed and others
+          MUST be ignored.</t>
+
+          <t>A stateful PCE can actively allocate labels and download
+          forwarding instructions for the PCECC LSP as described in <xref
+          target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>. A PCE can
+          also allocate labels from SRGB/SRLB for PCECC-SR <xref
+          target="I-D.zhao-pce-pcep-extension-pce-controller-sr"/>. The
+          Binding Segments can also be selected for the PCE controlled space
+          <xref target="I-D.ietf-pce-pcep-extension-for-pce-controller"/>.</t>
+        </section>
+
+        <section title="FUNCT-ID-CONTROL-SPACE TLV">
+          <t>For a PCC to inform the SRv6 SID Function ID space under the PCE
+          control, this document defines a new FUNCT-ID-CONTROL-SPACE TLV.</t>
+
+          <t>The FUNCT-ID-CONTROL-SPACE TLV is an optional TLV for use in the
+          OPEN object, and its format is shown in the following figure:</t>
+
+          <t><figure anchor="fig3" title="FUNCT-ID-CONTROL-SPACE TLV">
+              <artwork align="center"><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Type=TBD2          |            Length             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|    Block      |             Flags                           |L|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                            Start (1)                          |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                            Range (1)                          |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             ......                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                            Start (n)                          |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                            Range (n)                          |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Loc Size     | Locator (variable)...                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+            </figure>The type (16 bits) of the TLV is TBD2. The length field
+          (16 bits) and has a variable value.</t>
+
+          <t>Block(8 bits): the number of ID blocks. The range of a block is
+          described by a start field and a range field.</t>
+
+          <t>Flags (24 bits): Following flags are currently defined</t>
+
+          <t><list style="symbols">
+              <t>L-flag: Locator flag, set when the locator information is
+              included in this TLV. If L-flag is unset, Loc Size and variable
+              Locator field MUST NOT be included in this TLV, and the ID
+              spaces are applicable to all Locators.</t>
+            </list>The unassigned bits of Flags field MUST be set to 0 on
+          transmission and MUST be ignored on receipt.</t>
+
+          <t>Start(i) (128 bits): indicates the beginning of the Function ID
+          block i.</t>
+
+          <t>Range(i) (128 bits): indicates the range of the Function ID block
+          i.</t>
+
+          <t>Loc size(8 bits): indicates the bit length of a Locator. Appears
+          only when the L-flag is set.</t>
+
+          <t>Locator (variable length): the value of a Locator. The Function
+          ID spaces specified in this TLV are associated with this
+          locator.</t>
+
+          <t>As per <xref target="RFC5440"/>, the value portion of the PCEP
+          TLV needs to be 4-bytes aligned, so a FUNCT-ID-CONTROL-SPACE TLV is
+          padded with trailing zeros to a 4-byte boundary.</t>
+
+          <t>Multiple FUNCT-ID-CONTROL-SPACE TLVs MAY be included in a OPEN
+          object to specify Function ID space specefic to each locator.</t>
+
+          <t>A stateful PCE can actively allocate SRv6 SID and download
+          SIDs for the PCECC-SRv6 as described in
+          <xref
+          target="I-D.dhody-pce-pcep-extension-pce-controller-srv6"/>.</t>
+
+          <t>Note that SRv6 SID allocation involves LOC:FUNCT; the LOC is
+          assumed to be known at PCE and FUNCT is allocated from the PCE
+          controlled Function ID block.</t>
+        </section>
+      </section>
+    </section>
+
+    <section anchor="other" title="Other Considerations">
+      <t>In case of multiple PCEs, a PCC MAY decide to give control over
+      different ID space to each instance of the PCE. In case a PCC includes
+      the same ID space to multiple PCEs, the PCE MUST use synchronization
+      mechanism (such as <xref target="I-D.litkowski-pce-state-sync"/>) to
+      avoid allocating the same ID.</t>
+
+      <t>The PCE would allocate ID from the PCE controlled ID space. The PCC
+      would not allocate ID by itself from this space as long as it has an
+      active PCEP session to a PCE to which it has given control over the ID
+      space.</t>
+
+      <t>Note that if there is any change in the ID space, the PCC MUST bring
+      the session down and re-establish the session with new TLVs. During
+      state synchronization the PCE would need to consider the new ID space
+      into consideration and SHOULD re-establish the LSP/SR-paths if
+      needed.</t>
+
+      <t>The PCC can regain control of the ID space by closing the PCEP
+      session and require new session without ID space TLVs specified in this
+      document.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>IANA maintains the "Path Computation Element Protocol (PCEP) Numbers" registry.
+    This document requests IANA actions to allocate code points for the protocol elements
+    defined in this document.</t>
+    <section title="PCEP TLV Type Indicators">
+
+   <t>IANA maintains a subregistry called "PCEP TLV Type Indicators".  IANA is requested to
+      make an assignment from this subregistry as follows:</t>
+
+   <figure>
+     <artwork>
+       <![CDATA[
+Value   | Meaning                      | Reference
+--------+------------------------------+-------------
+ TBD1   | LABEL-CONTROL-SPACE TLV      | [This.I-D]
+ TBD2   | FUNCT-ID-CONTROL-SPACE TLV   | [This.I-D]
+       ]]>
+     </artwork>
+   </figure>
+ </section>
+
+<section title="LABEL-CONTROL-SPACE TLV's Flag field" toc="default">
+        <t>This document defines the
+      LABEL-CONTROL-SPACE TLV and requests that IANA to create a new sub-registry to
+      manage the value of the LABEL-CONTROL-SPACE TLV's 24-bits Flag field.   New
+   values are to be assigned by Standards Action <xref target="RFC8126"/>.  Each bit
+   should be tracked with the following qualities:<list style="symbols">
+
+   <t>Bit number (counting from bit 0 as the most significant bit)</t>
+
+   <t>Capability description</t>
+
+   <t>Defining RFC</t></list></t>
+   <t>Currently, there is no allocation in this registry.</t>
+   
+   <figure>
+     <artwork>
+       <![CDATA[
+ Bit    | Name                         | Reference
+--------+------------------------------+-------------
+ 0-23   | Unassigned                   | [This.I-D]
+       ]]>
+     </artwork>
+   </figure>
+      </section>
+<section title="FUNCT-ID-CONTROL-SPACE TLV's Flag field" toc="default">
+        <t>This document defines the
+      FUNCT-ID-CONTROL-SPACE TLV and requests that IANA to create a new sub-registry to
+      manage the value of the FUNCT-ID-CONTROL-SPACE TLV's 24-bits Flag field.   New
+   values are to be assigned by Standards Action <xref target="RFC8126"/>.  Each bit
+   should be tracked with the following qualities:<list style="symbols">
+
+   <t>Bit number (counting from bit 0 as the most significant bit)</t>
+
+   <t>Capability description</t>
+
+   <t>Defining RFC</t></list></t>
+   <t>Currently, there is no allocation in this registry.</t>
+   
+   <figure>
+     <artwork>
+       <![CDATA[
+ Bit    | Name                         | Reference
+--------+------------------------------+-------------
+ 23     | L-Bit                        | [This.I-D] 
+ 0-22   | Unassigned                   | [This.I-D]
+       ]]>
+     </artwork>
+   </figure>
+      </section>
+    </section>
+
+        <section title="Security Considerations"
+             toc="default">
+    <t>The security considerations described in 
+     <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>, <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/>, and <xref target='I-D.dhody-pce-pcep-extension-pce-controller-srv6'/> and apply to the
+     extensions described in this document.</t>
+
+      <t>As per <xref target="RFC8231"/>, it is RECOMMENDED that these PCEP extensions only be activated on authenticated and encrypted sessions across PCEs and PCCs belonging to the same administrative authority, using Transport Layer Security (TLS) <xref target="RFC8253"/> as per the recommendations and best current practices in <xref target="RFC7525"/> (unless explicitly set aside in <xref target="RFC8253"/>).</t>
+    </section>
+
+    <section anchor="Acknowledgements" title="Acknowledgements">
+      <t>TBD.</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119"?>
+
+      <?rfc include='reference.RFC.5440'?>
+      <?rfc include='reference.RFC.8126'?>
+
+      <?rfc include='reference.RFC.8174'?>
+
+      <?rfc include='reference.RFC.8231'?>
+
+      <?rfc include="reference.RFC.8281"?>
+
+      <?rfc include='reference.RFC.8253'?>
+
+      <?rfc include='reference.RFC.8283'?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.RFC.4657'?>
+
+      <!--<?rfc include='reference.I-D.li-pce-sr-path-segment'?>-->
+      
+      <?rfc include='reference.RFC.7525'?>
+      
+      <?rfc include='reference.RFC.8402'?>
+
+      <?rfc include='reference.RFC.8664'?>
+
+      <?rfc include='reference.I-D.ietf-pce-pcep-extension-for-pce-controller'?>
+
+      <?rfc include='reference.I-D.zhao-pce-pcep-extension-pce-controller-sr'?>
+
+      <?rfc include='reference.I-D.litkowski-pce-state-sync'?>
+
+      <?rfc include='reference.I-D.ietf-spring-segment-routing-policy'?>
+
+      <?rfc include='reference.I-D.dhody-pce-pcep-extension-pce-controller-srv6'?>
+
+      <?rfc include='reference.I-D.ietf-spring-srv6-network-programming'?>
+
+      <?rfc include='reference.I-D.ietf-pce-binding-label-sid'?>
+    </references>
+
+    <section title="Contributors">
+      <figure>
+        <artwork><![CDATA[   Dhruv Dhody
+   Huawei Technologies
+   Divyashree Techno Park, Whitefield
+   Bangalore, Karnataka 560066
+   India
+
+   EMail: dhruv.ietf@gmail.com
+
+
+   Zhenbin Li
+   Huawei Technologies
+   Huawei Campus, No. 156 Beiqing Rd.
+   Beijing 100095
+   China
+
+   EMail: lizhenbin@huawei.com
+
+
+   Jie Dong
+   Huawei Technologies
+   Huawei Campus, No. 156 Beiqing Rd.
+   Beijing 100095
+   China
+
+   EMail: jie.dong@huawei.com
+
+]]></artwork>
+      </figure>
+
+      <t/>
+    </section>
+  </back>
+</rfc>
