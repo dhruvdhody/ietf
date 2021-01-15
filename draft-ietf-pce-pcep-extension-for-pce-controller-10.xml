@@ -394,13 +394,13 @@
 <t>During the PCEP Initialization Phase, PCEP Speakers (PCE or PCC) advertise their support of and willingness to use PCEP extensions for PCECC using these elements in the OPEN message:<list style="symbols">
 
    <t>A new Path Setup Type (PST) in the PATH-SETUP-TYPE-CAPABILITY TLV to indicate support for PCEP extensions for PCECC - TBD1 (Path is set up via PCECC mode)</t>
-   <t>A new PCECC-CAPABILITY sub-TLV with L bit set to 1 inside the PATH-SETUP-TYPE-CAPABILITY TLV to indicate willingness to use PCEP extensions for PCECC based central controller instructions for label download</t>
+   <t>A new PCECC-CAPABILITY sub-TLV with the L bit set to 1 inside the PATH-SETUP-TYPE-CAPABILITY TLV to indicate a willingness to use PCEP extensions for PCECC based central controller instructions for label download</t>
    <t>The STATEFUL-PCE-CAPABILITY TLV (<xref target="RFC8231"/>) (with the I flag set <xref target="RFC8281"/>)</t>
    </list></t>
 
 <t>The new Path Setup Type is to be listed in the PATH-SETUP-TYPE-CAPABILITY TLV by all PCEP speakers which support the PCEP extensions for PCECC in this document.</t>
 
-<t>The new PCECC-CAPABILITY sub-TLV is included in PATH-SETUP-TYPE-CAPABILITY TLV in the OPEN object to indicate willingness to use the PCEP extensions for PCECC during the established PCEP session. Using the L bit in this TLV, the PCE shows the intention to function as a PCECC server, and the PCC shows willingness to act as a PCECC client for label download instructions (see <xref target="SEC_PCECC_CAP_TLV"/>).</t>
+<t>The new PCECC-CAPABILITY sub-TLV is included in PATH-SETUP-TYPE-CAPABILITY TLV in the OPEN object to indicate a willingness to use the PCEP extensions for PCECC during the established PCEP session. Using the L bit in this TLV, the PCE shows the intention to function as a PCECC server, and the PCC shows a willingness to act as a PCECC client for label download instructions (see <xref target="SEC_PCECC_CAP_TLV"/>).</t>
 
 <t>If the PCECC-CAPABILITY sub-TLV is advertised and the STATEFUL-PCE-CAPABILITY TLV is not advertised, or is advertised without the I flag set, in the OPEN Object, the receiver MUST:<list style="symbols">
    <t>Send a PCErr message with Error-Type=19 (Invalid Operation) and Error-value=TBD4 (stateful PCE capability was not advertised)</t>
