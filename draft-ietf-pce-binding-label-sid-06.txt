@@ -541,19 +541,19 @@ Internet-Draft              Binding Label/SID               January 2021
    the procedures and PCEP extensions for using the PCE as the central
    controller.
 
-   In the case of the PCECC, the binding label may be allocated by the
-   PCE itself.  Both peers need to exchange the PCECC capability as
+   In the case of the PCECC, the binding label/SID may be allocated by
+   the PCE itself.  Both peers need to exchange the PCECC capability as
    described in [I-D.ietf-pce-pcep-extension-for-pce-controller] before
-   PCE could allocate the binding segment on its own.
+   PCE could allocate the binding label/SID on its own.
 
    A new P flag in the LSP object [RFC8231] is introduced to indicate
    the allocation needs to be made by the PCE:
 
-   o  P (PCE-allocated binding label - TBD6): If the bit is set to 1, it
-      indicates that the PCC requests PCE to make allocations for this
-      LSP.  The TLV in LSP object identifies what should be allocated,
-      such as Binding label/SID.  A PCC would set this bit to 1 and
-      include a TE-PATH-BINDING TLV in the LSP object to request for
+   o  P (PCE-allocated binding label/SID - TBD6): If the bit is set to
+      1, it indicates that the PCC requests PCE to make allocations for
+      this LSP.  The TLV in LSP object identifies what should be
+      allocated, such as Binding label/SID.  A PCC would set this bit to
+      1 and include a TE-PATH-BINDING TLV in the LSP object to request
 
 
 
@@ -562,13 +562,13 @@ Sivabalan, et al.         Expires July 24, 2021                [Page 10]
 Internet-Draft              Binding Label/SID               January 2021
 
 
-      allocation of Binding label/SID by the PCE in the PCEP message.  A
-      PCE would also set this bit to 1 and include a TE-PATH-BINDING TLV
-      to indicate that the Binding label/SID is allocated by PCE and
-      encoded in the PCEP message towards PCC.  Further, a PCE would set
-      this bit to 0 and include a TE-PATH-BINDING TLV in the LSP object
-      to indicate that the Path Segment should be allocated by the PCC
-      as described in Section 4.
+      for allocation of Binding label/SID by the PCE in the PCEP
+      message.  A PCE would also set this bit to 1 and include a TE-
+      PATH-BINDING TLV to indicate that the Binding label/SID is
+      allocated by PCE and encoded in the PCEP message towards PCC.
+      Further, a PCE would set this bit to 0 and include a TE-PATH-
+      BINDING TLV in the LSP object to indicate that the Path Segment
+      should be allocated by the PCC as described in Section 4.
 
    Note that,
 
@@ -801,7 +801,7 @@ Internet-Draft              Binding Label/SID               January 2021
                  Bit     Description           Reference
 
                  TBD6    PCE-allocated binding This document
-                         label
+                         label/SID
 
 11.3.  PCEP Error Type and Value
 
