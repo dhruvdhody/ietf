@@ -575,13 +575,13 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 <section title="PCE Allocation of Binding SID"
              toc="default"
              anchor="PCECC">
-  <t><xref target="Operation"/> includes a case where a specified value for the binding label/SID is requested to be allocated by the PCC. Further, in this section, the focus is on the case where the PCE controls the label space and make the allocation on its own.</t>
+  <t><xref target="Operation"/> already includes the scenario where a PCE requires a PCC to allocate a specified binding value by sending a PCUpd or PCInitiate message containing a TE-PATH-BINDING TLV. This section specify an OPTIONAL feature for the PCE to allocate the binding label on its own accord in the case where the PCE also controls the label space of the PCC and can make the label allocation on its own as described in <xref target='RFC8283'/>.</t>
   <t><xref target='RFC8283'/> introduces the architecture for PCE as a central
    controller as an extension of the architecture described in <xref target='RFC4655'/>
    and assumes the continued use of PCEP as the protocol used between
-   PCE and PCC. <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> specifies the procedures and PCEP extensions for using the PCE as the central controller.</t>          
+   PCE and PCC. <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> specifies the procedures and PCEP extensions for using the PCE as the central controller.  </t>          
              
-   <t>In the case of the PCECC, the binding label/SID may be allocated by the PCE itself. Both peers need to exchange the PCECC capability as described in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> before PCE could allocate the binding label/SID on its own.</t> 
+   <t>For an implementation that supports PCECC operations as per <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>, the binding label/SID MAY also be allocated by the PCE itself. Both peers need to exchange the PCECC capability as described in <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> before PCE could allocate the binding label/SID on its own.</t> 
    
   <t>A new P flag in the LSP object <xref target='RFC8231'/> is introduced to indicate the allocation needs to be made by the PCE: <list style="symbols">
   <t> P (PCE-allocated binding label/SID - TBD6): If the bit is set to 1, it indicates that
@@ -600,7 +600,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
   <t>Note that, <list style="symbols">
     <t>a PCE could allocate the binding label/SID on its own accord for a PCE-initiated or delegated LSP, and inform the PCC in the PCInitiate message or PCUpd message by setting P=1 and including TE-PATH-BINDING TLV in the LSP object.</t>
-    <t>to let the PCC allocates the binding label/SID, a PCE could set P=0 and empty TE-PATH-BINDING TLV in the LSP object in PCInitiate/PCUpd message.</t>
+    <t>to let the PCC allocates the binding label/SID, a PCE could set P=0 and empty TE-PATH-BINDING TLV ( i.e., no binding value is specified) in the LSP object in PCInitiate/PCUpd message.</t>
     <t>a PCC could request that the PCE allocate the binding label/SID by setting P=1, D=1, and empty TE-PATH-BINDING TLV in PCRpt message. The PCE would allocate it and respond to the PCC with PCUpd message including the allocated binding label/SID in the TE-PATH-BINDING TLV and P=1, D=1 in the LSP object.</t>
 
     <t>if both peers have not exchanged the PCECC capabilities as per <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> and it receives P=1 in the LSP object, it needs to act as per <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/>:
@@ -609,6 +609,8 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
    <t>Terminate the PCEP session</t>  
  </list></t>
   </list></t>
+
+  <t>It is assumed that the label range to be used by a PCE is known and set on both PCEP peers. The exact mechanism is out of scope of <xref target='I-D.ietf-pce-pcep-extension-for-pce-controller'/> or this document.</t>
 
     <!--<t>A PCC would set this bit to 1 (and carry the TE-PATH-BINDING TLV <xref target="I-D.ietf-pce-binding-label-sid"/> in the LSP object) to request for
       allocation of the binding label by the PCE in the PCReq or PCRpt

@@ -90,21 +90,21 @@ Table of Contents
    5.  Binding SID in SR-ERO . . . . . . . . . . . . . . . . . . . .  10
    6.  Binding SID in SRv6-ERO . . . . . . . . . . . . . . . . . . .  10
    7.  PCE Allocation of Binding SID . . . . . . . . . . . . . . . .  10
-   8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  11
+   8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  12
      8.1.  Huawei  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     8.2.  Cisco . . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     8.2.  Cisco . . . . . . . . . . . . . . . . . . . . . . . . . .  13
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
    10. Manageability Considerations  . . . . . . . . . . . . . . . .  13
      10.1.  Control of Function and Policy . . . . . . . . . . . . .  13
-     10.2.  Information and Data Models  . . . . . . . . . . . . . .  13
-     10.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  13
-     10.4.  Verify Correct Operations  . . . . . . . . . . . . . . .  13
+     10.2.  Information and Data Models  . . . . . . . . . . . . . .  14
+     10.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  14
+     10.4.  Verify Correct Operations  . . . . . . . . . . . . . . .  14
      10.5.  Requirements On Other Protocols  . . . . . . . . . . . .  14
      10.6.  Impact On Network Operations . . . . . . . . . . . . . .  14
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
      11.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  14
        11.1.1.  TE-PATH-BINDING TLV  . . . . . . . . . . . . . . . .  14
-       11.1.2.  Binding SID Flags  . . . . . . . . . . . . . . . . .  14
+       11.1.2.  Binding SID Flags  . . . . . . . . . . . . . . . . .  15
      11.2.  LSP Object . . . . . . . . . . . . . . . . . . . . . . .  15
 
 
@@ -115,10 +115,10 @@ Internet-Draft              Binding Label/SID               January 2021
 
 
      11.3.  PCEP Error Type and Value  . . . . . . . . . . . . . . .  15
-   12. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  15
+   12. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16
    13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
      13.1.  Normative References . . . . . . . . . . . . . . . . . .  16
-     13.2.  Informative References . . . . . . . . . . . . . . . . .  17
+     13.2.  Informative References . . . . . . . . . . . . . . . . .  18
    Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  19
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
@@ -534,10 +534,13 @@ Internet-Draft              Binding Label/SID               January 2021
 
 7.  PCE Allocation of Binding SID
 
-   Section 4 includes a case where a specified value for the binding
-   label/SID is requested to be allocated by the PCC.  Further, in this
-   section, the focus is on the case where the PCE controls the label
-   space and make the allocation on its own.
+   Section 4 already includes the scenario where a PCE requires a PCC to
+   allocate a specified binding value by sending a PCUpd or PCInitiate
+   message containing a TE-PATH-BINDING TLV.  This section specify an
+   OPTIONAL feature for the PCE to allocate the binding label on its own
+   accord in the case where the PCE also controls the label space of the
+   PCC and can make the label allocation on its own as described in
+   [RFC8283].
 
    [RFC8283] introduces the architecture for PCE as a central controller
    as an extension of the architecture described in [RFC4655] and
@@ -546,13 +549,10 @@ Internet-Draft              Binding Label/SID               January 2021
    the procedures and PCEP extensions for using the PCE as the central
    controller.
 
-   In the case of the PCECC, the binding label/SID may be allocated by
-   the PCE itself.  Both peers need to exchange the PCECC capability as
-   described in [I-D.ietf-pce-pcep-extension-for-pce-controller] before
-   PCE could allocate the binding label/SID on its own.
-
-   A new P flag in the LSP object [RFC8231] is introduced to indicate
-   the allocation needs to be made by the PCE:
+   For an implementation that supports PCECC operations as per
+   [I-D.ietf-pce-pcep-extension-for-pce-controller], the binding label/
+   SID MAY also be allocated by the PCE itself.  Both peers need to
+   exchange the PCECC capability as described in
 
 
 
@@ -561,6 +561,12 @@ Sivabalan, et al.         Expires July 25, 2021                [Page 10]
 
 Internet-Draft              Binding Label/SID               January 2021
 
+
+   [I-D.ietf-pce-pcep-extension-for-pce-controller] before PCE could
+   allocate the binding label/SID on its own.
+
+   A new P flag in the LSP object [RFC8231] is introduced to indicate
+   the allocation needs to be made by the PCE:
 
    o  P (PCE-allocated binding label/SID - TBD6): If the bit is set to
       1, it indicates that the PCC requests PCE to make allocations for
@@ -583,8 +589,8 @@ Internet-Draft              Binding Label/SID               January 2021
       TE-PATH-BINDING TLV in the LSP object.
 
    o  to let the PCC allocates the binding label/SID, a PCE could set
-      P=0 and empty TE-PATH-BINDING TLV in the LSP object in PCInitiate/
-      PCUpd message.
+      P=0 and empty TE-PATH-BINDING TLV ( i.e., no binding value is
+      specified) in the LSP object in PCInitiate/PCUpd message.
 
    o  a PCC could request that the PCE allocate the binding label/SID by
       setting P=1, D=1, and empty TE-PATH-BINDING TLV in PCRpt message.
@@ -603,13 +609,7 @@ Internet-Draft              Binding Label/SID               January 2021
 
       *  Terminate the PCEP session
 
-8.  Implementation Status
 
-   [Note to the RFC Editor - remove this section before publication, as
-   well as remove the reference to RFC 7942.]
-
-   This section records the status of known implementations of the
-   protocol defined by this specification at the time of posting of this
 
 
 
@@ -618,6 +618,17 @@ Sivabalan, et al.         Expires July 25, 2021                [Page 11]
 Internet-Draft              Binding Label/SID               January 2021
 
 
+   It is assumed that the label range to be used by a PCE is known and
+   set on both PCEP peers.  The exact mechanism is out of scope of
+   [I-D.ietf-pce-pcep-extension-for-pce-controller] or this document.
+
+8.  Implementation Status
+
+   [Note to the RFC Editor - remove this section before publication, as
+   well as remove the reference to RFC 7942.]
+
+   This section records the status of known implementations of the
+   protocol defined by this specification at the time of posting of this
    Internet-Draft, and is based on a proposal described in [RFC7942].
    The description of implementations in this section is intended to
    assist the IETF in its decision processes in progressing drafts to
@@ -651,6 +662,18 @@ Internet-Draft              Binding Label/SID               January 2021
 
    o  Contact: chengli13@huawei.com
 
+
+
+
+
+
+
+
+Sivabalan, et al.         Expires July 25, 2021                [Page 12]
+
+Internet-Draft              Binding Label/SID               January 2021
+
+
 8.2.  Cisco
 
    o  Organization: Cisco Systems
@@ -664,15 +687,6 @@ Internet-Draft              Binding Label/SID               January 2021
    o  Coverage: Full
 
    o  Contact: mkoldych@cisco.com
-
-
-
-
-
-Sivabalan, et al.         Expires July 25, 2021                [Page 12]
-
-Internet-Draft              Binding Label/SID               January 2021
-
 
 9.  Security Considerations
 
@@ -704,6 +718,18 @@ Internet-Draft              Binding Label/SID               January 2021
    A PCC implementation SHOULD allow the operator to configure the
    policy based on which PCC needs to allocates the binding label/SID.
 
+
+
+
+
+
+
+
+Sivabalan, et al.         Expires July 25, 2021                [Page 13]
+
+Internet-Draft              Binding Label/SID               January 2021
+
+
 10.2.  Information and Data Models
 
    The PCEP YANG module [I-D.ietf-pce-pcep-yang] could be extended to
@@ -720,15 +746,6 @@ Internet-Draft              Binding Label/SID               January 2021
    Mechanisms defined in this document do not imply any new operation
    verification requirements in addition to those already listed in
    [RFC5440], [RFC8231], and [RFC8664].
-
-
-
-
-
-Sivabalan, et al.         Expires July 25, 2021                [Page 13]
-
-Internet-Draft              Binding Label/SID               January 2021
-
 
 10.5.  Requirements On Other Protocols
 
@@ -759,6 +776,16 @@ Internet-Draft              Binding Label/SID               January 2021
    IANA is requested to create a sub-registry to manage the value of the
    Binding Type field in the TE-PATH-BINDING TLV.
 
+
+
+
+
+
+Sivabalan, et al.         Expires July 25, 2021                [Page 14]
+
+Internet-Draft              Binding Label/SID               January 2021
+
+
                 Value    Description           Reference
 
                   0      MPLS Label            This document
@@ -777,14 +804,6 @@ Internet-Draft              Binding Label/SID               January 2021
    tracked with the following qualities:
 
    o  Bit number (count from 0 as the most significant bit)
-
-
-
-
-Sivabalan, et al.         Expires July 25, 2021                [Page 14]
-
-Internet-Draft              Binding Label/SID               January 2021
-
 
    o  Flag Name
 
@@ -815,6 +834,14 @@ Internet-Draft              Binding Label/SID               January 2021
    subregistry of the PCEP Numbers registry, as follows:
 
 
+
+
+
+Sivabalan, et al.         Expires July 25, 2021                [Page 15]
+
+Internet-Draft              Binding Label/SID               January 2021
+
+
    Error-Type   Meaning
    ----------   -------
    TBD2         Binding label/SID failure:
@@ -830,17 +857,6 @@ Internet-Draft              Binding Label/SID               January 2021
 
    We like to thank Milos Fabian, Mrinmoy Das, and Andrew Stone for
    their valuable comments.
-
-
-
-
-
-
-
-Sivabalan, et al.         Expires July 25, 2021                [Page 15]
-
-Internet-Draft              Binding Label/SID               January 2021
-
 
 13.  References
 
@@ -872,6 +888,16 @@ Internet-Draft              Binding Label/SID               January 2021
               RFC 7942, DOI 10.17487/RFC7942, July 2016,
               <https://www.rfc-editor.org/info/rfc7942>.
 
+
+
+
+
+
+Sivabalan, et al.         Expires July 25, 2021                [Page 16]
+
+Internet-Draft              Binding Label/SID               January 2021
+
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -887,16 +913,6 @@ Internet-Draft              Binding Label/SID               January 2021
               Path Computation Element Communication Protocol (PCEP)",
               RFC 8253, DOI 10.17487/RFC8253, October 2017,
               <https://www.rfc-editor.org/info/rfc8253>.
-
-
-
-
-
-
-Sivabalan, et al.         Expires July 25, 2021                [Page 16]
-
-Internet-Draft              Binding Label/SID               January 2021
-
 
    [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
               Computation Element Communication Protocol (PCEP)
@@ -926,12 +942,24 @@ Internet-Draft              Binding Label/SID               January 2021
               draft-ietf-spring-srv6-network-programming-28 (work in
               progress), December 2020.
 
+
+
+
+
+
+
+
+Sivabalan, et al.         Expires July 25, 2021                [Page 17]
+
+Internet-Draft              Binding Label/SID               January 2021
+
+
    [I-D.ietf-pce-pcep-extension-for-pce-controller]
               Li, Z., Peng, S., Negi, M., Zhao, Q., and C. Zhou, "PCEP
               Procedures and Protocol Extensions for Using PCE as a
               Central Controller (PCECC) of LSPs", draft-ietf-pce-pcep-
-              extension-for-pce-controller-09 (work in progress),
-              November 2020.
+              extension-for-pce-controller-10 (work in progress),
+              January 2021.
 
 13.2.  Informative References
 
@@ -945,14 +973,6 @@ Internet-Draft              Binding Label/SID               January 2021
               Protocol (PCEP) in a Network with Central Control",
               RFC 8283, DOI 10.17487/RFC8283, December 2017,
               <https://www.rfc-editor.org/info/rfc8283>.
-
-
-
-
-Sivabalan, et al.         Expires July 25, 2021                [Page 17]
-
-Internet-Draft              Binding Label/SID               January 2021
-
 
    [RFC8669]  Previdi, S., Filsfils, C., Lindem, A., Ed., Sreekantiah,
               A., and H. Gredler, "Segment Routing Prefix Segment
@@ -971,26 +991,6 @@ Internet-Draft              Binding Label/SID               January 2021
               YANG Data Model for Path Computation Element
               Communications Protocol (PCEP)", draft-ietf-pce-pcep-
               yang-15 (work in progress), October 2020.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
