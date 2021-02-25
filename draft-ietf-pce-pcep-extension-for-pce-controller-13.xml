@@ -155,18 +155,7 @@
     <workgroup>PCE Working Group</workgroup>
     <abstract>
    <t>The Path Computation Element (PCE) is a core component of Software-
-   Defined Networking (SDN) systems.  It can compute optimal paths for
-   traffic across a network and can also update the paths to reflect
-   changes in the network or traffic demands.</t>
-
-   <t>PCE was developed to derive paths for MPLS Label Switched Paths
-   (LSPs), which are supplied to the head end of the LSP using the Path
-   Computation Element Communication Protocol (PCEP). But SDN has a broader 
-   applicability than signaled MPLS and GMPLS traffic-engineered
-   (TE) networks, and the PCE may be used to determine paths in a range
-   of use cases. PCEP has been proposed as a control protocol for
-   use in these environments to allow the PCE to be fully enabled as a
-   central controller.</t>
+   Defined Networking (SDN) systems.</t>
 
    <t>A PCE-based Central Controller (PCECC) can
    simplify the processing of a distributed control plane by blending it
@@ -188,7 +177,9 @@
              toc="default">
    <t>The Path Computation Element (PCE) <xref target='RFC4655'/> was developed to offload the
    path computation function from routers in an MPLS traffic-engineered
-   network.  Since then, the role and function of the PCE has grown to
+   network.  It can compute optimal paths for
+   traffic across a network and can also update the paths to reflect
+   changes in the network or traffic demands. Since then, the role and function of the PCE has grown to
    cover a number of other uses (such as GMPLS <xref target='RFC7025'/>) and to allow
    delegated control <xref target='RFC8231'/> and PCE-initiated use of network
    resources <xref target='RFC8281'/>.</t>
@@ -207,13 +198,23 @@
    PCE, and the way that a PCE integrates into a wider network control
    system (including an SDN system) is presented in <xref target='RFC7491'/>.</t>
 
-   <t>In early PCE implementations, where the PCE was used to derive paths
+      <t>In early PCE implementations, where the PCE was used to derive paths
    for MPLS Label Switched Paths (LSPs), paths were requested by network
    elements (known as Path Computation Clients (PCCs)), and the results
    of the path computations were supplied to network elements using the
    Path Computation Element Communication Protocol (PCEP) <xref target='RFC5440'/>.
    This protocol was later extended to allow a PCE to send unsolicited
    requests to the network for LSP establishment <xref target='RFC8281'/>.</t>
+
+
+    <t>PCE was developed to derive paths for MPLS Label Switched Paths
+   (LSPs), which are supplied to the head end of the LSP using the Path
+   Computation Element Communication Protocol (PCEP). But SDN has a broader 
+   applicability than signaled MPLS and GMPLS traffic-engineered
+   (TE) networks, and the PCE may be used to determine paths in a range
+   of use cases. PCEP has been proposed as a control protocol for
+   use in these environments to allow the PCE to be fully enabled as a
+   central controller.</t>
 
    <t><xref target='RFC8283'/> introduces the architecture for PCE as a central
    controller as an extension of the architecture described in <xref target='RFC4655'/>
@@ -228,7 +229,7 @@
    with elements of SDN and without necessarily completely replacing it. 
    Thus, the LSP can be
    calculated/setup/initiated and the label forwarding entries can also be
-   downloaded through a centralized PCE server to each network devices
+   downloaded through a centralized PCE server to each network device
    along the path while leveraging the existing PCE technologies as
    much as possible.</t>
 
@@ -261,7 +262,7 @@
     </section>
     <section title="Terminology"
              toc="default">
-      <t>The terminology used in this document is the same as that described in the draft 
+      <t>The terminology used in this document is the same as that described in the 
        <xref target="RFC8283"/>.</t>      
     </section>
     <section title="Basic PCECC Mode"
@@ -291,8 +292,8 @@
    advertise this range via a possible PCEP extension as well (see <xref target="I-D.li-pce-controlled-id-space"/>). 
    The rest of the processing is similar
    to the existing stateful PCE mechanism.</t>
-   <t>This document also allows a case where the label space is maintained by the PCC itself, and the labels are  
-     allocated by the PCC, in this case, the PCE should request the allocation from  
+   <t>This document also allows a case where the label space is maintained by the PCC and the labels are  
+     allocated by it. In this case, the PCE should request the allocation from  
      PCC as described in <xref target="PCC"/>.</t>
 
     </section>
@@ -303,7 +304,7 @@
    designing the PCECC-based solution:</t>
       <t>
         <list style="numbers">
-   <t>A PCEP speaker supporting this draft needs to have the capability to
+   <t>A PCEP speaker supporting this document needs to have the capability to
        advertise its PCECC capability to its peers.</t>
 
    <!--<t>PCEP speaker not supporting this draft  be able to reject
@@ -315,7 +316,7 @@
 
    <t>PCEP procedures need to allow for PCC-based label allocations.</t>       
 
-   <t>PCEP procedures need to provide a means to update (or clean up) the label-download entry to the PCC.</t>
+   <t>PCEP procedures need to provide a means to update (or clean up) label entries downloaded to the PCC.</t>
 
    <t>PCEP procedures need to provide a means to synchronize the labels between
        the PCE and the PCC via PCEP messages.</t>       
@@ -435,7 +436,7 @@
    <t>Terminate the PCEP session</t>  
  </list></t>
 
-<t>A legacy PCEP speaker (that does not recognize the PCECC Capability sub-TLV) will ignore the sub-TLV in accordance with <xref target="RFC8408"/> and <xref target="RFC5440"/>. As per <xref target="RFC8408"/>, the legacy PCEP speaker (that does not support PST), it will:<list style="symbols">  
+<t>A legacy PCEP speaker (that does not recognize the PCECC Capability sub-TLV) will ignore the sub-TLV in accordance with <xref target="RFC8408"/> and <xref target="RFC5440"/>. As per <xref target="RFC8408"/>, the legacy PCEP speaker on receipt of an unsupported PST in RP (Request Parameter) /SRP (Stateful PCE Request Parameters) Object will:<list style="symbols">  
    <t>Send a PCErr message with Error-Type = 21 (Invalid traffic engineering path setup type) and Error-value = 1 (Unsupported path setup type) </t> 
    <t>Terminate the PCEP session</t> 
  </list></t>
@@ -475,21 +476,21 @@
     <section title="LSP Operations"
              toc="default">
     <t> The PCEP messages pertaining to a PCECC MUST include PATH-SETUP-TYPE
-   TLV <xref target='RFC8408'/> in the SRP (Stateful PCE Request Parameters) object <xref target='RFC8231'/> with PST set to TBD1
+   TLV <xref target='RFC8408'/> in the SRP object <xref target='RFC8231'/> with PST set to TBD1
    to clearly identify that PCECC LSP is intended.</t>
    <section title="PCE-Initiated PCECC LSP"
              toc="default" anchor="PCE-I">
     <t>The LSP Instantiation operation is defined in <xref target='RFC8281'/>. In order to set up a PCE-Initiated LSP based on the PCECC mechanism, a PCE
     sends PCInitiate message with PST set to TBD1 for PCECC
-    (see <xref target="SEC_PATH"/>) to the ingress PCC.</t>
+    (see <xref target="SEC_PATH"/>) to the ingress PCC. The ingress PCC and PCE MUST also set D (Delegate) flag (see <xref target='RFC8231'/>) and C (Create) flag (see <xref target='RFC8281'/>) in the LSP object in the initial exchange. </t>
 
 <t>The label forwarding instructions (see <xref target='CCI'/>) from PCECC are sent after the initial PCInitiate and PCRpt message exchange with the ingress PCC as per <xref target='RFC8281'/> (see <xref target="SEC_FIG4"/>). This is done so that the PLSP-ID and other LSP identifiers can be obtained from the ingress and can be included in the label forwarding instruction in the next set of PCInitiate messages along the path as described below.</t>
 
-    <t>An LSP-IDENTIFIER TLV MUST be included for PCECC LSPs, the tuple uniquely identifies the LSP in the network. The LSP object is included in the central controller instructions (label download <xref target="SEC_CCI"/>) to identify the PCECC LSP for  this instruction. The PLSP-ID is the original identifier used by the ingress PCC, so a transit/egress LSR could have multiple central controller instructions that have the same PLSP-ID. The PLSP-ID in combination with the source (in LSP-IDENTIFIER TLV) MUST be unique. The PLSP-ID is included for maintainability reasons to ease debugging. As per <xref target='RFC8281'/>, the LSP object could also include the SPEAKER-ENTITY-ID TLV to identify the PCE that initiated these instructions. Also, the CC-ID is unique in each PCEP session as described in <xref target="SEC_CCI"/>.</t>
+    <t>An LSP-IDENTIFIERS TLV <xref target='RFC8231'/> MUST be included for PCECC LSPs, it uniquely identifies the LSP in the network. Note that the fields in the LSP-IDENTIFIERS TLV are described for the RSVP-signaled LSPs but are applicable to the PCECC LSP as well. The LSP object is included in the central controller instructions (label download <xref target="SEC_CCI"/>) to identify the PCECC LSP for  this instruction. The PLSP-ID is the original identifier used by the ingress PCC, so a transit/egress LSR could have multiple central controller instructions that have the same PLSP-ID. The PLSP-ID in combination with the source (in LSP-IDENTIFIERS TLV) MUST be unique. The PLSP-ID is included for maintainability reasons to ease debugging. As per <xref target='RFC8281'/>, the LSP object could also include the SPEAKER-ENTITY-ID TLV to identify the PCE that initiated these instructions. Also, the CC-ID is unique in each PCEP session as described in <xref target="SEC_CCI"/>.</t>
     
-    <t>The ingress PCC MUST also set D (Delegate) flag (see <xref target='RFC8231'/>) and C (Create) flag (see <xref target='RFC8281'/>) in the LSP object of the PCRpt message to the PCE in the initial exchange. The PCC responds with a PCRpt message with the status set to "GOING-UP" and carrying the assigned PLSP-ID (see <xref target="SEC_FIG4"/>). When the PCE receives this PCRpt message with the PLSP-ID, it assigns labels along the path; and sets up the path by sending a PCInitiate message to each node along the path of the LSP as per the PCECC technique. The CC-ID uniquely identifies the central controller instruction within a PCEP session. Each PCC further responds with the PCRpt messages including the central controller instruction (CCI) and the LSP objects. The PCC responds with a PCRpt message to acknowledge the central controller instruction.</t>
+    <t>On receipt of PCInitiate message for the PCECC LSP, the PCC responds with a PCRpt message with the status set to "GOING-UP" and carrying the assigned PLSP-ID (see <xref target="SEC_FIG4"/>). When the PCE receives this PCRpt message with the PLSP-ID, it assigns labels along the path; and sets up the path by sending a PCInitiate message to each node along the path of the LSP as per the PCECC technique. The CC-ID uniquely identifies the central controller instruction within a PCEP session. Each node along the path (PCC) responds with a PCRpt message to acknowledge the central controller instruction with the PCRpt messages including the central controller instruction (CCI) and the LSP objects. </t>
 
-   <t>The ingress node would receive one CCI object with O bit (out-label) set. The transit node(s) would receive two CCI objects with the in-label CCI without an O bit set and the out-label CCI with O bit set. The egress node would receive one CCI object without O bit set (see <xref target="SEC_FIG4"/>). A node can determine its role based on the setting of the O bit in the CCI object(s) and the LSP-IDENTIFIER TLV in the LSP object.</t>
+   <t>The ingress node would receive one CCI object with O bit (out-label) set. The transit node(s) would receive two CCI objects with the in-label CCI without an O bit set and the out-label CCI with O bit set. The egress node would receive one CCI object without O bit set (see <xref target="SEC_FIG4"/>). A node can determine its role based on the setting of the O bit in the CCI object(s) and the LSP-IDENTIFIERS TLV in the LSP object.</t>
 
 
     <t>The LSP deletion operation for PCE-Initiated PCECC LSP is the same as defined
@@ -579,24 +580,23 @@
 +--------+  |     |       (GOING-UP)                     |
     |       |     |                                      |
     |<-------PCInitiate,CC-ID=X,PLSP-ID=2----------------| Label
-    |       |     |     C=1                              | download
+    |       |     |     C=1,O=0                          | download
     |--------PCRpt,CC-ID=X,PLSP-ID=2-------------------->| CCI
     |       |     |     Label=L1                         |
     |       |<------PCInitiate,PLSP-ID=2,----------------| Labels
-    |       |     |            CC-ID=Y1,C=1              | download
-    |       |     |            CC-ID=Y2,C=0,L1           | CCI
+    |       |     |            CC-ID=Y1,C=1,O=0          | download
+    |       |     |            CC-ID=Y2,C=0,O=1,L1       | CCI
     |       |-------PCRpt,PLSP-ID=2--------------------->|
-    |       |     |       CC-ID=Y1,Label=L2              |
-    |       |     |       CC-ID=Y2                       |
+    |       |     |       CC-ID=Y1,O=0,Label=L2          |
+    |       |     |       CC-ID=Y2,O=1                   |
     |       |     |<----PCInitiate,CC-ID=Z,PLSP-ID=2-----| Label
-    |       |     |                C=0,L2                | download
+    |       |     |                C=0,O=1,L2            | download
     |       |     |-----PCRpt,CC-ID=Z,PLSP-ID=2--------->| CCI
     |       |     |                                      |
     |       |     |<---PCUpd,PLSP-ID=2,PST=TBD1,D=1------| PCECC LSP
     |       |     |      (UP)                            | Update
 
 
-    - The O bit is set as before (and thus not included)
 ]]>
         </artwork>
         </figure> 
@@ -758,12 +758,12 @@
    each PCC is assumed to be known by both the PCC and the PCE. </t> 
                    
     <section title="Label Download CCI"
-             toc="default">
+             toc="default" anchor="LabelDownloadCCI">
     <t>In order to set up an LSP based on PCECC, the PCE sends a PCInitiate message
     to each node along the path to download the Label instruction as described in <xref target="PCE-I"/> and 
     <xref target="SEC_BASIC_SETUP"/>.
   </t>
-    <t>The CCI object MUST be included, along with the LSP object in the PCInitiate message. The LSP-IDENTIFIER TLV MUST be included in the LSP object. The SPEAKER-ENTITY-ID TLV
+    <t>The CCI object MUST be included, along with the LSP object in the PCInitiate message. The LSP-IDENTIFIERS TLV MUST be included in the LSP object. The SPEAKER-ENTITY-ID TLV
 SHOULD be included in the LSP object.</t>
     <t>If a node (PCC) receives a PCInitiate message which includes a Label to download, as part of CCI, that is out
     	of the range set aside for the PCE, it MUST send a PCErr message with Error-type=TBD5
@@ -820,15 +820,15 @@ SHOULD be included in the LSP object.</t>
      |<-------PCInitiate,CC-ID=X,PLSP-ID=2----------------| Label
      |       |     |                   R=1                | clean up
      |--------PCRpt,CC-ID=X,PLSP-ID=2-------------------->| CCI
-     |       |     |                                      |
+     |       |     |              R=1                     |
      |       |<------PCInitiate,CC-ID=Y1,Y2,PLSP-ID=2-----| Label
      |       |     |                          R=1         | clean up
      |       |-------PCRpt,CC-ID=Y1,Y2,PLSP-ID=2--------->| CCI
-     |       |     |                                      |
+     |       |     |                         R=1          |
      |       |     |<----PCInitiate,CC-ID=Z,PLSP-ID=2-----| Label
      |       |     |                              R=1     | clean up
      |       |     |-----PCRpt,CC-ID=Z,PLSP-ID=2--------->| CCI
-     |       |     |                                      |
+     |       |     |                         R=1          |
      |       |     |<--PCInitiate,PLSP-ID=2,PST=TBD1,R=1--| PCECC LSP
      |       |     |                                      | remove
 ]]>
@@ -846,7 +846,7 @@ SHOULD be included in the LSP object.</t>
     
     <section title="PCECC LSP Update"
              toc="default">
-    <t>The update is done as per the make-before-break procedures, i.e. the PCECC first updates new label instructions based on the updated path and then informs the ingress to switch traffic, before cleaning up the former instructions. New CC-IDs are used to identify the updated instructions, the identifiers in the LSP object identify the existing LSP. Once new instructions are downloaded, the PCE further updates the new path at the ingress which triggers the traffic switch on the updated path. The ingress PCC acknowledges with a PCRpt message, on receipt of the PCRpt message, the PCE does clean up operation for the former LSP as described in <xref target="SEC_CLEANUP"/>.</t>
+    <t>The update is done as per the make-before-break procedures, i.e. the PCECC first updates new label instructions based on the updated path and then informs the ingress to switch traffic, before cleaning up the former instructions. New CC-IDs are used to identify the updated instructions; the identifiers in the LSP object uniquely identify the existing LSP. Once new instructions are downloaded, the PCE further updates the new path at the ingress which triggers the traffic switch on the updated path. The ingress PCC acknowledges with a PCRpt message, on receipt of the PCRpt message, the PCE does clean up operation for the former LSP as described in <xref target="SEC_CLEANUP"/>.</t>
     <t>The PCECC LSP Update sequence is shown in <xref target="SEC_FIG5"/>.
     </t>
     <figure align="left"
@@ -897,15 +897,15 @@ SHOULD be included in the LSP object.</t>
     |<-------PCInitiate,CC-ID=X,PLSP-ID=1---------------| Label
     |       |     |                   R=1               | clean up
     |--------PCRpt,CC-ID=X,PLSP-ID=1------------------->| CCI
-    |       |     |                                     |
+    |       |     |              R=1                     |
     |       |<------PCInitiate,CC-ID=Y1,Y2,PLSP-ID=1----| Label
     |       |     |                              R=1    | clean up
     |       |-------PCRpt,CC-ID=Y1,Y2,PLSP-ID=1-------->| CCI
-    |       |     |                                     |
+    |       |     |                         R=1         |
     |       |     |<----PCInitiate,CC-ID=Z,PLSP-ID=1----| Label
     |       |     |                              R=1    | clean up
     |       |     |-----PCRpt,CC-ID=Z,PLSP-ID=1-------->| CCI
-    |       |     |                                     |     
+    |       |     |                         R=1         |     
 ]]>
         </artwork>
         </figure>
@@ -982,17 +982,16 @@ SHOULD be included in the LSP object.</t>
      indicates that the PCE requests a specific value 'n' for the Label. 
      If  
      the allocation is successful, the PCC MUST report  
-     via the PCRpt message with the CCI object.  Else, it MUST send a PCErr message with Error-Type = 
+     via the PCRpt message with the CCI object.  If the value of the Label in the CCI object is invalid, it MUST send a PCErr message with Error-Type = 
      TBD5 ("PCECC failure") and Error Value = TBD9 ("Invalid CCI").  If  
-     the value of the Label in the CCI object is valid, but the PCC is unable to  
+     it is valid but the PCC is unable to  
      allocate it, it MUST send a PCErr message with Error-Type = 
      TBD5 ("PCECC failure") and Error Value = TBD10 ("Unable to 
      allocate the specified CCI").
    </t>
     <t>If the PCC wishes to withdraw or modify the previously assigned label, it MUST send a PCRpt message without any Label
      or with the Label containing the new value respectively in 
-     the CCI object.  The PCE would further trigger the removal of the  
-     central controller instruction as per this document.</t>
+     the CCI object.  The PCE would further trigger the Label cleanup of older label as per <xref target="SEC_CLEANUP"/>.</t>
            </section>
 <!-- move this section to draft-ietf-pce-binding-label-sid
 <section title="Binding Label"
@@ -1247,7 +1246,7 @@ SHOULD be included in the LSP object.</t>
 
 <t>The CCI object received at the ingress node MUST have the O bit (out-label) set. The CCI Object received at the egress MUST have the O bit unset. If this is not the case, PCC MUST send a PCErr message with Error-Type = TBD5 ("PCECC failure") and Error Value = TBD9 ("Invalid CCI"). Other instances of the CCI object if present, MUST be ignored.</t>
 
-<t>At most two instances of the CCI object can be included, in the case of transit LSR to encode both in-coming and out-going label forwarding instructions. Other instances MUST be ignored for P2P LSP. If the transit LSR did not receive two CCI object with one of them having the O bit set and another with O bit unset, it MUST send a PCErr message with Error-Type = TBD5 ("PCECC failure") and Error Value = TBD9 ("Invalid CCI").</t>
+<t>For the P2P LSP setup via PCECC technique, at the transit LSR two CCI objects are expected for in-coming and outgoing label associated with the LSP object. If any other CCI object is included in the PCInitiate message, it MUST be ignored. If the transit LSR did not receive two CCI object with one of them having the O bit set and another with O bit unset, it MUST send a PCErr message with Error-Type = TBD5 ("PCECC failure") and Error Value = TBD9 ("Invalid CCI").</t>
 
 <t>Note that, on receipt of the PCInitiate message with CCI object, the ingress, egress, or transit role of the PCC is identified via the ingress and egress IP address encoded in the LSP-IDENTIFIERS TLV.</t>
 
@@ -1349,7 +1348,7 @@ SHOULD be included in the LSP object.</t>
       Currently, the following flag bit is
     defined: <list style="symbols">
     <t>L bit (Label): if set to 1 by a PCEP speaker, the L flag
-      indicates that the PCEP speaker support and willing to handle the PCECC based central controller instructions for label download. The bit MUST be set to 1 by both a PCC and a PCE for the PCECC label download/report on a PCEP session.</t>
+      indicates that the PCEP speaker support and is willing to handle the PCECC based central controller instructions for label download. The bit MUST be set to 1 by both a PCC and a PCE for the PCECC label download/report on a PCEP session.</t>
     <t>Unassigned bits MUST be set to 0 on
     transmission and MUST be ignored on receipt.</t>
      </list></t>
@@ -1415,7 +1414,10 @@ SHOULD be included in the LSP object.</t>
    information.  A PCE creates a CC-ID for each instruction, the value is
    unique within the scope of the PCE and is constant for the lifetime
    of a PCEP session.  The values 0 and 0xFFFFFFFF are reserved
-   and MUST NOT be used.</t>
+   and MUST NOT be used. Note
+   that <xref target='I-D.gont-numeric-ids-sec-considerations'/> gives advice on
+   assigning transient numeric identifiers such as the CC-ID so as to
+   minimize security risks.</t>
    <t hangText="Reserved1 (16 bit):">Set to zero while sending, ignored on receive.</t>
     <t hangText="Flags (16 bit):"> A field used to carry any additional information
     pertaining to the CCI. Currently, the following flag bits are
@@ -1443,10 +1445,12 @@ SHOULD be included in the LSP object.</t>
     
     <section title="Address TLVs"
              toc="default">
-    <t>This document defines the following TLVs for the CCI object to
+    <t><xref target="RFC8779"/> defines IPV4-ADDRESS, IPV6-ADDRESS, and UNNUMBERED-ENDPOINT TLV for the use of Generalized Endpoint. The same TLVs can also be used in the CCI object to
     associate the next-hop information in the case of an outgoing label and
-    local interface information in the case of an incoming label. The next-hop information encoded in the Address TLVs needs to be a directly connected IP address/interface information. If the PCC is not able to resolve the next-hop information, it MUST reject the CCI and respond with a PCErr message with Error-Type = TBD5 ("PCECC failure") and Error
-   Value = TBD18 ("Invalid next-hop information").</t>
+    local interface information in the case of an incoming label. The next-hop information encoded in these TLVs needs to be a directly connected IP address/interface information. If the PCC is not able to resolve the next-hop information, it MUST reject the CCI and respond with a PCErr message with Error-Type = TBD5 ("PCECC failure") and Error
+   Value = TBD15 ("Invalid next-hop information").</t>
+   <t>Further, this document specify a new TLV called LINKLOCAL-IPV6-ID-ADDRESS to describe an IPv6
+      adjacency for a link that uses only link-local IPv6 addresses.</t>
       <figure align="left"
                 alt=""
                 height=""
@@ -1462,46 +1466,12 @@ SHOULD be included in the LSP object.</t>
          width=""
          xml:space="preserve">
 <![CDATA[
-IPV4-ADDRESS TLV:
-
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|             Type=TBD14        |  Length = 4                   |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        IPv4 address                           |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-IPV6-ADDRESS TLV:
-
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|             Type=TBD15        |   Length = 16                 |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                               |
-//                IPv6 address (16 bytes)                      //
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-UNNUMBERED-IPV4-ID-ADDRESS TLV:
-
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|             Type=TBD16        |   Length = 8                  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                            Node-ID                            |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                          Interface ID                         |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 LINKLOCAL-IPV6-ID-ADDRESS TLV:
 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|             Type=TBD17        |   Length = 40                 |
+|             Type=TBD14        |   Length = 40                 |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //               Local IPv6 address (16 octets)                //
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1514,7 +1484,7 @@ LINKLOCAL-IPV6-ID-ADDRESS TLV:
 ]]>
         </artwork>
         </figure>
-    <t>The address TLVs are as follows:
+    <!--<t>The address TLVs are as follows:
     <list style="hanging">
     <t hangText="IPV4-ADDRESS TLV:">an IPv4 address.</t>
     <t hangText="IPV6-ADDRESS TLV:">an IPv6 address.</t>
@@ -1522,7 +1492,9 @@ LINKLOCAL-IPV6-ID-ADDRESS TLV:
     <t hangText="LINKLOCAL-IPV6-ID-ADDRESS TLV:">a pair of (global IPv6
       address, interface ID) tuples as described in Section  4.3.2 of <xref target="RFC8664"/> for the IPv6 Link-Local Adjacency NAI (Node or Adjacency Identifier).</t>    
     </list>
-    </t>
+    </t>-->
+    <t>The value portion of the LINKLOCAL-IPV6-ID-ADDRESS TLV includes a pair of (global IPv6
+      address, interface ID) tuples as described in Section  4.3.2 of <xref target="RFC8664"/> for the IPv6 Link-Local Adjacency NAI (Node or Adjacency Identifier).</t>
     </section>
     </section>
 
@@ -1607,7 +1579,7 @@ and extended in <xref target="RFC8281"/>.
    provides support for peer authentication, message encryption, and
    integrity. It further provide mechanisms for
    associating peer identities with different levels of access and/or
-   authoritativeness, that can be used for the PCECC operations. 
+   authoritativeness via an attribute in X.509 certificates or a local policy with a specific accept-list of X.509 certificate. This can be used to check the authority for the PCECC operations. 
        Additional considerations are discussed in following sections.</t>
            <section title="Malicious PCE"
              toc="default">
@@ -1617,11 +1589,13 @@ and extended in <xref target="RFC8281"/>.
    this PCEP extension be activated on mutually-authenticated and encrypted
    sessions across PCEs and PCCs belonging to the same administrative
    authority, using TLS <xref target="RFC8253"/>,
-   as per the recommendations and best current practices in <xref target="RFC7525"/>. </t>
+   as per the recommendations and best current practices in [BCP195]<xref target="RFC7525"/>. </t>
    <t>Further, an attacker may flood the PCC
    with PCECC related messages at a rate that exceeds either the PCC's ability
    to process them or the network's ability to send them, by
-   either spoofing messages or compromising the PCE itself. <xref target="RFC8281"/> provides a mechanism to protect PCC by imposing a limit. The same can be used for the PCECC operations as well.</t>
+   either spoofing messages or compromising the PCE itself. <xref target="RFC8281"/> provides a mechanism to protect the PCC by imposing a limit. The same can be used for the PCECC operations as well.</t>
+   <t>As specified in <xref target="LabelDownloadCCI"/>, a PCC needs to check if the label in the CCI object is in the range set aside for the PCE, otherwise it MUST send a PCErr message with Error-type=TBD5
+   (PCECC failure) and Error-value=TBD6 (Label out of range).</t>
            </section>
            <section title="Malicious PCC"
              toc="default">
@@ -1639,8 +1613,10 @@ and extended in <xref target="RFC8281"/>.
              toc="default">
       <section title="Control of Function and Policy"
                toc="default">
-        <t> A PCE or PCC implementation SHOULD allow to configure to
-   enable/disable PCECC capability as a global configuration. Section 6.1 of <xref target="RFC8664"/> list various controlling factors regarding path setup type. They are also applicable to the PCECC path setup types. Further, Section 6.2 of <xref target="RFC8664"/> describe the migration steps when path setup type of an existing LSP is changed.</t>
+        <t>A PCE or PCC implementation SHOULD allow the PCECC capability to be enabled/disabled as part of the global configuration.
+
+
+   Section 6.1 of <xref target="RFC8664"/> list various controlling factors regarding path setup type. They are also applicable to the PCECC path setup types. Further, Section 6.2 of <xref target="RFC8664"/> describe the migration steps when path setup type of an existing LSP is changed.</t>
       </section>
       <section title="Information and Data Models"
                toc="default">
@@ -1673,7 +1649,7 @@ and extended in <xref target="RFC8281"/>.
       peer sent the PCECC PST capability. </t>
 
    <t>An implementation SHOULD allow the operator to view whether the
-      PCECC PST is enabled on the PCEP session.</t>
+      PCECC PST is enabled on a PCEP session.</t>
 
    <t>If one PCEP speaker advertises the PCECC PST capability,
       but the other does not, then the implementation SHOULD create a
@@ -1719,21 +1695,12 @@ and extended in <xref target="RFC8281"/>.
       
       <section title="PCEP TLV Type Indicators" toc="default">
         <t>IANA is requested to allocate the following
-       TLV Type Indicator values within the "PCEP TLV Type Indicators" sub-registry of the PCEP Numbers registry:</t>
+       TLV Type Indicator value within the "PCEP TLV Type Indicators" sub-registry of the PCEP Numbers registry:</t>
      <texttable anchor="PCEP-TYPE-IND" style="none" suppress-title="true" title="" align="center">
       <ttcol align="left" width="20%">Value</ttcol>
       <ttcol align="left" width="30%">Meaning</ttcol>
       <ttcol align="left" width="20%">Reference</ttcol>
        <c>TBD14</c>
-       <c>IPV4-ADDRESS TLV</c>
-       <c>This document</c>     
-       <c>TBD15</c>
-       <c>IPV6-ADDRESS TLV</c>
-       <c>This document</c>
-       <c>TBD16</c>
-       <c>UNNUMBERED-IPV4-ID-ADDRESS TLV</c>
-       <c>This document</c>
-       <c>TBD17</c>
        <c>LINKLOCAL-IPV6-ID-ADDRESS TLV</c>      
        <c>This document</c>     
      </texttable>      
@@ -1815,7 +1782,7 @@ and extended in <xref target="RFC8281"/>.
       
       <section title="CCI Object Flag Field" toc="default">
         <t>IANA is requested to create a new sub-registry to manage the Flag field
-           of the CCI object called "CCI Object 16-bits Flag Field". New
+           of the CCI object called "CCI Object Flag Field for MPLS Label". New
    values are to be assigned by Standards Action <xref target="RFC8126"/>.  Each bit
    should be tracked with the following qualities:<list style="symbols">
 
@@ -1898,7 +1865,7 @@ and extended in <xref target="RFC8281"/>.
             <t hangText=" Error-value = TBD7 :">Instruction failed.</t>
             <t hangText=" Error-value = TBD9 :">Invalid CCI.</t>
             <t hangText=" Error-value = TBD10 :">Unable to allocate the specified CCI.</t>
-            <t hangText=" Error-value = TBD18 :">Invalid next-hop information.</t>
+            <t hangText=" Error-value = TBD15 :">Invalid next-hop information.</t>
           </list>
           </t>
 
@@ -1923,7 +1890,7 @@ and extended in <xref target="RFC8281"/>.
    <t>Thanks to Julien Meuric for shepherding this I-D and providing valuable comments. Thanks to Deborah Brungard for being the responsible AD.</t>
    <t>Thanks to Victoria Pritchard for a very detailed RTGDIR review. Thanks to Yaron Sheffer for the   
 SECDIR review. Thanks to Gyan Mishra for the GENART review.</t>
-<t>Thanks to Alvaro Retana and Erik Kline for the IESG review.</t>
+<t>Thanks to Alvaro Retana, Murray Kucherawy, Benjamin Kaduk, Robert Wilton, and Erik Kline for the IESG review.</t>
 
     </section>
   </middle>
@@ -1933,14 +1900,15 @@ SECDIR review. Thanks to Gyan Mishra for the GENART review.</t>
       <?rfc include="reference.RFC.5440.xml" ?>
       <?rfc include="reference.RFC.5511.xml" ?>
       
-      
-      
+      <?rfc include="reference.RFC.7525.xml" ?>
+      <?rfc include="reference.RFC.8126.xml"?>
       <?rfc include="reference.RFC.8174.xml"?>
       <?rfc include="reference.RFC.8231.xml"?>
-      
+      <?rfc include="reference.RFC.8253.xml"?>
       <?rfc include="reference.RFC.8281.xml"?>
       <?rfc include="reference.RFC.8408.xml"?>
       <?rfc include="reference.RFC.8664.xml"?>
+      <?rfc include="reference.RFC.8779.xml"?>
       </references>
 
     <references title="Informative References">
@@ -1949,11 +1917,11 @@ SECDIR review. Thanks to Gyan Mishra for the GENART review.</t>
       <?rfc include="reference.RFC.7399.xml"?>
       <?rfc include="reference.RFC.7420.xml" ?>
       <?rfc include="reference.RFC.7491.xml"?>
-      <?rfc include="reference.RFC.7525.xml" ?>
+      
       <?rfc include="reference.RFC.7942.xml" ?>
-      <?rfc include="reference.RFC.8126.xml"?>
+      
       <?rfc include="reference.RFC.8232.xml"?>
-      <?rfc include="reference.RFC.8253.xml"?>
+      
     <?rfc include="reference.RFC.8283.xml"?>
     <?rfc include="reference.RFC.8741.xml"?>
     <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>
@@ -1962,6 +1930,7 @@ SECDIR review. Thanks to Gyan Mishra for the GENART review.</t>
     <?rfc include="reference.I-D.zhao-pce-pcep-extension-pce-controller-sr"?>
     <?rfc include="reference.I-D.dhody-pce-pcep-extension-pce-controller-srv6"?>
     <?rfc include="reference.I-D.li-pce-controlled-id-space"?>
+    <?rfc include="reference.I-D.gont-numeric-ids-sec-considerations"?>
 
     <!--<?rfc include="reference.I-D.ietf-pce-binding-label-sid"?>
     <?rfc include="reference.I-D.ietf-pce-sr-path-segment"?>-->
