@@ -1449,7 +1449,7 @@ Internet-Draft                    PCECC                    February 2021
 
       *  O bit(Out-label) : If the bit is set to 1, it specifies the
          label is the OUT label and it is mandatory to encode the next-
-         hop information (via IPV4-ADDRESS TLV or IPV6-ADDRESS TLV or
+         hop information (via Address TLVs Section 7.3.1 in the CCI
 
 
 
@@ -1458,11 +1458,9 @@ Li, et al.               Expires August 29, 2021               [Page 26]
 Internet-Draft                    PCECC                    February 2021
 
 
-         UNNUMBERED-IPV4-ID-ADDRESS TLV in the CCI object).  If the bit
-         is not set, it specifies the label is the IN label and it is
-         optional to encode the local interface information (via
-         IPV4-ADDRESS TLV or IPV6-ADDRESS TLV or UNNUMBERED-IPV4-ID-
-         ADDRESS TLV in the CCI object).
+         object).  If the bit is not set, it specifies the label is the
+         IN label and it is optional to encode the local interface
+         information (via Address TLVs in the CCI object).
 
       *  C Bit (PCC Allocation): If the bit is set to 1, it indicates
          that the label allocation needs to be done by the PCC for this
@@ -1481,7 +1479,7 @@ Internet-Draft                    PCECC                    February 2021
 7.3.1.  Address TLVs
 
    [RFC8779] defines IPV4-ADDRESS, IPV6-ADDRESS, and UNNUMBERED-ENDPOINT
-   TLV for the use of Generalized Endpoint.  The same TLVs can also be
+   TLVs for the use of Generalized Endpoint.  The same TLVs can also be
    used in the CCI object to associate the next-hop information in the
    case of an outgoing label and local interface information in the case
    of an incoming label.  The next-hop information encoded in these TLVs
@@ -1494,6 +1492,8 @@ Internet-Draft                    PCECC                    February 2021
    Further, this document specify a new TLV called LINKLOCAL-IPV6-ID-
    ADDRESS to describe an IPv6 adjacency for a link that uses only link-
    local IPv6 addresses.
+
+
 
 
 
@@ -1531,7 +1531,7 @@ Internet-Draft                    PCECC                    February 2021
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-                          Figure 9: Address TLVs
+                  Figure 9: LINKLOCAL-IPV6-ID-ADDRESS TLV
 
    The value portion of the LINKLOCAL-IPV6-ID-ADDRESS TLV includes a
    pair of (global IPv6 address, interface ID) tuples as described in
@@ -1889,7 +1889,7 @@ Internet-Draft                    PCECC                    February 2021
    for the GENART review.
 
    Thanks to Alvaro Retana, Murray Kucherawy, Benjamin Kaduk, Robert
-   Wilton, and Erik Kline for the IESG review.
+   Wilton, Eric Vyncke, and Erik Kline for the IESG review.
 
 13.  References
 

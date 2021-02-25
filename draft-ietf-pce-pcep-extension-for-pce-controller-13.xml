@@ -1424,12 +1424,10 @@ SHOULD be included in the LSP object.</t>
     defined: <list style="symbols">
     <t>O bit(Out-label) : If the bit is set to 1, it specifies the label is
     the OUT label and it is mandatory to encode the next-hop
-    information (via IPV4-ADDRESS TLV or
-    IPV6-ADDRESS TLV or UNNUMBERED-IPV4-ID-ADDRESS TLV in
+    information (via Address TLVs <xref target="AddressTLVs"/> in
     the CCI object). If the bit is not set, it specifies the label is
     the IN label and it is optional to encode the local interface
-    information (via IPV4-ADDRESS TLV or
-    IPV6-ADDRESS TLV or UNNUMBERED-IPV4-ID-ADDRESS TLV in
+    information (via Address TLVs in
     the CCI object).</t> 
     <t>C Bit (PCC Allocation): If the bit is set to 1, it indicates that 
         the label allocation needs to be done by the PCC for this central 
@@ -1444,8 +1442,9 @@ SHOULD be included in the LSP object.</t>
     </list></t>
     
     <section title="Address TLVs"
-             toc="default">
-    <t><xref target="RFC8779"/> defines IPV4-ADDRESS, IPV6-ADDRESS, and UNNUMBERED-ENDPOINT TLV for the use of Generalized Endpoint. The same TLVs can also be used in the CCI object to
+             toc="default"
+             anchor="AddressTLVs">
+    <t><xref target="RFC8779"/> defines IPV4-ADDRESS, IPV6-ADDRESS, and UNNUMBERED-ENDPOINT TLVs for the use of Generalized Endpoint. The same TLVs can also be used in the CCI object to
     associate the next-hop information in the case of an outgoing label and
     local interface information in the case of an incoming label. The next-hop information encoded in these TLVs needs to be a directly connected IP address/interface information. If the PCC is not able to resolve the next-hop information, it MUST reject the CCI and respond with a PCErr message with Error-Type = TBD5 ("PCECC failure") and Error
    Value = TBD15 ("Invalid next-hop information").</t>
@@ -1455,7 +1454,7 @@ SHOULD be included in the LSP object.</t>
                 alt=""
                 height=""
                 suppress-title="false"
-                title="Address TLVs"
+                title="LINKLOCAL-IPV6-ID-ADDRESS TLV"
                 width=""
                 anchor="SEC_FIGC">
           <artwork align="left"
@@ -1890,7 +1889,7 @@ and extended in <xref target="RFC8281"/>.
    <t>Thanks to Julien Meuric for shepherding this I-D and providing valuable comments. Thanks to Deborah Brungard for being the responsible AD.</t>
    <t>Thanks to Victoria Pritchard for a very detailed RTGDIR review. Thanks to Yaron Sheffer for the   
 SECDIR review. Thanks to Gyan Mishra for the GENART review.</t>
-<t>Thanks to Alvaro Retana, Murray Kucherawy, Benjamin Kaduk, Robert Wilton, and Erik Kline for the IESG review.</t>
+<t>Thanks to Alvaro Retana, Murray Kucherawy, Benjamin Kaduk, Robert Wilton, Eric Vyncke, and Erik Kline for the IESG review.</t>
 
     </section>
   </middle>
