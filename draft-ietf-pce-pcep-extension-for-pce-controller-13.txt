@@ -1489,9 +1489,9 @@ Internet-Draft                    PCECC                    February 2021
    TBD5 ("PCECC failure") and Error Value = TBD15 ("Invalid next-hop
    information").
 
-   Further, this document specify a new TLV called LINKLOCAL-IPV6-ID-
-   ADDRESS to describe an IPv6 adjacency for a link that uses only link-
-   local IPv6 addresses.
+   Further, this document specify a new TLV called ONLINK-IPV6-ADDRESS
+   to describe an IPv6 unnumbered adjacency for a link that does not
+   have an IPv6 address assigned.
 
 
 
@@ -1514,29 +1514,30 @@ Li, et al.               Expires August 29, 2021               [Page 27]
 Internet-Draft                    PCECC                    February 2021
 
 
-   LINKLOCAL-IPV6-ID-ADDRESS TLV:
-
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |             Type=TBD14        |   Length = 40                 |
+   |             Type=TBD14        |   Length = 20                 |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   //               Local IPv6 address (16 octets)                //
+   |                                                               |
+   |                          IPv6 address                         |
+   |                                                               |
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Local Interface ID                         |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   //               Remote IPv6 address (16 octets)               //
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                   Remote Interface ID                         |
+   |                          Interface ID                         |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-                  Figure 9: LINKLOCAL-IPV6-ID-ADDRESS TLV
 
-   The value portion of the LINKLOCAL-IPV6-ID-ADDRESS TLV includes a
-   pair of (global IPv6 address, interface ID) tuples as described in
-   Section 4.3.2 of [RFC8664] for the IPv6 Link-Local Adjacency NAI
-   (Node or Adjacency Identifier).
+                     Figure 9: ONLINK-IPV6-ADDRESS TLV
+
+   The type of the ONLINK-IPV6-ADDRESS TLV is TBD14 and it has a fixed
+   length of 20 octets.  The value portion of the ONLINK-IPV6-ADDRESS
+   TLV includes:
+
+   o  IPv6 address: A 128-bit IPv6 address of the node.
+
+   o  Interface ID: A 32-bit identifier assigned to the link.
 
 8.  Implementation Status
 
@@ -1560,8 +1561,7 @@ Internet-Draft                    PCECC                    February 2021
    to assign due consideration to documents that have the benefit of
    running code, which may serve as evidence of valuable experimentation
    and feedback that have made the implemented protocols more mature.
-   It is up to the individual working groups to use this information as
-   they see fit".
+
 
 
 
@@ -1569,6 +1569,9 @@ Li, et al.               Expires August 29, 2021               [Page 28]
 
 Internet-Draft                    PCECC                    February 2021
 
+
+   It is up to the individual working groups to use this information as
+   they see fit".
 
 8.1.  Huawei's Proof of Concept based on ONOS
 
@@ -1615,9 +1618,6 @@ Internet-Draft                    PCECC                    February 2021
    levels of access and/or authoritativeness via an attribute in X.509
    certificates or a local policy with a specific accept-list of X.509
    certificate.  This can be used to check the authority for the PCECC
-   operations.  Additional considerations are discussed in following
-   sections.
-
 
 
 
@@ -1625,6 +1625,9 @@ Li, et al.               Expires August 29, 2021               [Page 29]
 
 Internet-Draft                    PCECC                    February 2021
 
+
+   operations.  Additional considerations are discussed in following
+   sections.
 
 9.1.  Malicious PCE
 
@@ -1670,9 +1673,6 @@ Internet-Draft                    PCECC                    February 2021
    They are also applicable to the PCECC path setup types.  Further,
    Section 6.2 of [RFC8664] describe the migration steps when path setup
    type of an existing LSP is changed.
-
-
-
 
 
 
@@ -1746,8 +1746,8 @@ Internet-Draft                    PCECC                    February 2021
    within the "PCEP TLV Type Indicators" sub-registry of the PCEP
    Numbers registry:
 
-        Value          Meaning                       Reference
-        TBD14          LINKLOCAL-IPV6-ID-ADDRESS TLV This document
+           Value          Meaning                 Reference
+           TBD14          ONLINK-IPV6-ADDRESS TLV This document
 
 11.2.  PATH-SETUP-TYPE-CAPABILITY Sub-TLV Type Indicators
 
