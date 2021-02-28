@@ -242,7 +242,7 @@
    determines the paths of the end-to-end LSPs, and the controller uses PCEP to
    communicate with each router along the path of the end-to-end LSP. </t>
    
-   <t>While this document is focused on the procedures for the static LSPs (referred to as basic PCECC mode in <xref target="SEC_M"/>), the mechanisms and protocol encodings are specified in such a way that extensions for other use cases are easy to achieve. For example, the extensions for PCECC for Segment Routing (SR) are specified in <xref target='I-D.zhao-pce-pcep-extension-pce-controller-sr'/> and <xref target='I-D.dhody-pce-pcep-extension-pce-controller-srv6'/>.</t>
+   <t>While this document is focused on the procedures for the static LSPs (referred to as basic PCECC mode in <xref target="SEC_M"/>), the mechanisms and protocol encodings are specified in such a way that extensions for other use cases are easy to achieve. For example, the extensions for PCECC for Segment Routing (SR) are specified in <xref target='I-D.ietf-pce-pcep-extension-pce-controller-sr'/> and <xref target='I-D.dhody-pce-pcep-extension-pce-controller-srv6'/>.</t>
 
    <!--<t>[Important Note - Note that this document achieves this by defining a new PCEP message. 
     The authors and WG also debated on the use of existing PCEP messages. 
@@ -482,13 +482,13 @@
              toc="default" anchor="PCE-I">
     <t>The LSP Instantiation operation is defined in <xref target='RFC8281'/>. In order to set up a PCE-Initiated LSP based on the PCECC mechanism, a PCE
     sends PCInitiate message with PST set to TBD1 for PCECC
-    (see <xref target="SEC_PATH"/>) to the ingress PCC. The ingress PCC and PCE MUST also set D (Delegate) flag (see <xref target='RFC8231'/>) and C (Create) flag (see <xref target='RFC8281'/>) in the LSP object in the initial exchange. </t>
+    (see <xref target="SEC_PATH"/>) to the ingress PCC.</t>
 
 <t>The label forwarding instructions (see <xref target='CCI'/>) from PCECC are sent after the initial PCInitiate and PCRpt message exchange with the ingress PCC as per <xref target='RFC8281'/> (see <xref target="SEC_FIG4"/>). This is done so that the PLSP-ID and other LSP identifiers can be obtained from the ingress and can be included in the label forwarding instruction in the next set of PCInitiate messages along the path as described below.</t>
 
     <t>An LSP-IDENTIFIERS TLV <xref target='RFC8231'/> MUST be included for PCECC LSPs, it uniquely identifies the LSP in the network. Note that the fields in the LSP-IDENTIFIERS TLV are described for the RSVP-signaled LSPs but are applicable to the PCECC LSP as well. The LSP object is included in the central controller instructions (label download <xref target="SEC_CCI"/>) to identify the PCECC LSP for  this instruction. The PLSP-ID is the original identifier used by the ingress PCC, so a transit/egress LSR could have multiple central controller instructions that have the same PLSP-ID. The PLSP-ID in combination with the source (in LSP-IDENTIFIERS TLV) MUST be unique. The PLSP-ID is included for maintainability reasons to ease debugging. As per <xref target='RFC8281'/>, the LSP object could also include the SPEAKER-ENTITY-ID TLV to identify the PCE that initiated these instructions. Also, the CC-ID is unique in each PCEP session as described in <xref target="SEC_CCI"/>.</t>
     
-    <t>On receipt of PCInitiate message for the PCECC LSP, the PCC responds with a PCRpt message with the status set to "GOING-UP" and carrying the assigned PLSP-ID (see <xref target="SEC_FIG4"/>). When the PCE receives this PCRpt message with the PLSP-ID, it assigns labels along the path; and sets up the path by sending a PCInitiate message to each node along the path of the LSP as per the PCECC technique. The CC-ID uniquely identifies the central controller instruction within a PCEP session. Each node along the path (PCC) responds with a PCRpt message to acknowledge the central controller instruction with the PCRpt messages including the central controller instruction (CCI) and the LSP objects. </t>
+    <t>On receipt of PCInitiate message for the PCECC LSP, the PCC responds with a PCRpt message with the status set to "GOING-UP" and carrying the assigned PLSP-ID (see <xref target="SEC_FIG4"/>). The ingress PCC also sets the D (Delegate) flag (see <xref target='RFC8231'/>) and C (Create) flag (see <xref target='RFC8281'/>) in the LSP object. When the PCE receives this PCRpt message with the PLSP-ID, it assigns labels along the path; and sets up the path by sending a PCInitiate message to each node along the path of the LSP as per the PCECC technique. The CC-ID uniquely identifies the central controller instruction within a PCEP session. Each node along the path (PCC) responds with a PCRpt message to acknowledge the central controller instruction with the PCRpt messages including the central controller instruction (CCI) and the LSP objects. </t>
 
    <t>The ingress node would receive one CCI object with O bit (out-label) set. The transit node(s) would receive two CCI objects with the in-label CCI without an O bit set and the out-label CCI with O bit set. The egress node would receive one CCI object without O bit set (see <xref target="SEC_FIG4"/>). A node can determine its role based on the setting of the O bit in the CCI object(s) and the LSP-IDENTIFIERS TLV in the LSP object.</t>
 
@@ -519,7 +519,7 @@
        +------|       |                                  |
        | PCC  +-------+                                  |
        | transit| |                                      |
-+------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD1,D=1--| PCECC LSP
++------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD1------| PCECC LSP
 |PCC   +--------+ |                                      | Initiate
 |egress  |  |     |----PCRpt,PLSP-ID=2,D=1,C=1---------->| PCECC LSP
 +--------+  |     |       (GOING-UP)                     |
@@ -544,7 +544,7 @@
         </artwork>
         </figure>
         <t>Once the label operations are completed, the PCE MUST send a PCUpd message to the
-    ingress PCC. The PCUpd message is as per <xref target='RFC8231'/>.</t>
+    ingress PCC. The PCUpd message is as per <xref target='RFC8231'/> with D flag set.</t>
         <t>The PCECC LSPs are considered to be 'up' by default (on receipt of PCUpd message from PCE).
         The ingress could further choose to deploy a data plane check
         mechanism and report the status back to the PCE via a PCRpt message to make sure that the correct label instructions are made along the path of the PCECC LSP (and it is ready to carry traffic). The exact mechanism is out of scope of this document.</t>
@@ -574,7 +574,7 @@
        +------|       |                                  |
        | PCC  +-------+                                  |
        | transit| |                                      |
-+------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD1,D=1--| PCECC LSP
++------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD1,-----| PCECC LSP
 |PCC   +--------+ |                                      | Initiate
 |egress  |  |     |----PCRpt,PLSP-ID=2,D=1,C=1---------->| PCECC LSP
 +--------+  |     |       (GOING-UP)                     |
@@ -1255,7 +1255,7 @@ SHOULD be included in the LSP object.</t>
     <section title="The PCRpt Message"
              toc="default"
              anchor="SEC_PCRpt">    
- <t>The PCRpt message can be used to report the labels that were allocated by the PCE, to be used during the state synchronization phase or as acknowledgemnt to PCInitiate message.
+ <t>The PCRpt message can be used to report the labels that were allocated by the PCE, to be used during the state synchronization phase or as an acknowledgment to PCInitiate message.
     <figure title="" suppress-title="false" align="left" alt="" width="" height="">
        <artwork xml:space="preserve" name="" type="" align="left" alt="" width="" height=""><![CDATA[
 
@@ -1931,7 +1931,7 @@ SECDIR review. Thanks to Gyan Mishra for the GENART review.</t>
     <?rfc include="reference.I-D.ietf-teas-pcecc-use-cases"?>
     
     <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
-    <?rfc include="reference.I-D.zhao-pce-pcep-extension-pce-controller-sr"?>
+    <?rfc include="reference.I-D.ietf-pce-pcep-extension-pce-controller-sr"?>
     <?rfc include="reference.I-D.dhody-pce-pcep-extension-pce-controller-srv6"?>
     <?rfc include="reference.I-D.li-pce-controlled-id-space"?>
     <?rfc include="reference.I-D.gont-numeric-ids-sec-considerations"?>

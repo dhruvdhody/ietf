@@ -5,13 +5,13 @@
 PCE Working Group                                                  Z. Li
 Internet-Draft                                                   S. Peng
 Intended status: Standards Track                     Huawei Technologies
-Expires: August 30, 2021                                         M. Negi
+Expires: August 31, 2021                                         M. Negi
                                                              RtBrick Inc
                                                                  Q. Zhao
                                                         Etheric Networks
                                                                  C. Zhou
                                                                      HPE
-                                                       February 26, 2021
+                                                       February 27, 2021
 
 
    PCEP Procedures and Protocol Extensions for Using PCE as a Central
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Li, et al.               Expires August 30, 2021                [Page 1]
+Li, et al.               Expires August 31, 2021                [Page 1]
 
 Internet-Draft                    PCECC                    February 2021
 
 
-   This Internet-Draft will expire on August 30, 2021.
+   This Internet-Draft will expire on August 31, 2021.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Li, et al.               Expires August 30, 2021                [Page 2]
+Li, et al.               Expires August 31, 2021                [Page 2]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -165,7 +165,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021                [Page 3]
+Li, et al.               Expires August 31, 2021                [Page 3]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -221,7 +221,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021                [Page 4]
+Li, et al.               Expires August 31, 2021                [Page 4]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -231,7 +231,7 @@ Internet-Draft                    PCECC                    February 2021
    protocol encodings are specified in such a way that extensions for
    other use cases are easy to achieve.  For example, the extensions for
    PCECC for Segment Routing (SR) are specified in
-   [I-D.zhao-pce-pcep-extension-pce-controller-sr] and
+   [I-D.ietf-pce-pcep-extension-pce-controller-sr] and
    [I-D.dhody-pce-pcep-extension-pce-controller-srv6].
 
 1.1.  Requirements Language
@@ -277,7 +277,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021                [Page 5]
+Li, et al.               Expires August 31, 2021                [Page 5]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -333,7 +333,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021                [Page 6]
+Li, et al.               Expires August 31, 2021                [Page 6]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -389,7 +389,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021                [Page 7]
+Li, et al.               Expires August 31, 2021                [Page 7]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -445,7 +445,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021                [Page 8]
+Li, et al.               Expires August 31, 2021                [Page 8]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -485,9 +485,7 @@ Internet-Draft                    PCECC                    February 2021
    The LSP Instantiation operation is defined in [RFC8281].  In order to
    set up a PCE-Initiated LSP based on the PCECC mechanism, a PCE sends
    PCInitiate message with PST set to TBD1 for PCECC (see Section 7.2)
-   to the ingress PCC.  The ingress PCC and PCE MUST also set D
-   (Delegate) flag (see [RFC8231]) and C (Create) flag (see [RFC8281])
-   in the LSP object in the initial exchange.
+   to the ingress PCC.
 
    The label forwarding instructions (see Section 5.5.3) from PCECC are
    sent after the initial PCInitiate and PCRpt message exchange with the
@@ -497,18 +495,17 @@ Internet-Draft                    PCECC                    February 2021
    the next set of PCInitiate messages along the path as described
    below.
 
+   An LSP-IDENTIFIERS TLV [RFC8231] MUST be included for PCECC LSPs, it
+   uniquely identifies the LSP in the network.  Note that the fields in
+   the LSP-IDENTIFIERS TLV are described for the RSVP-signaled LSPs but
 
 
 
-
-Li, et al.               Expires August 30, 2021                [Page 9]
+Li, et al.               Expires August 31, 2021                [Page 9]
 
 Internet-Draft                    PCECC                    February 2021
 
 
-   An LSP-IDENTIFIERS TLV [RFC8231] MUST be included for PCECC LSPs, it
-   uniquely identifies the LSP in the network.  Note that the fields in
-   the LSP-IDENTIFIERS TLV are described for the RSVP-signaled LSPs but
    are applicable to the PCECC LSP as well.  The LSP object is included
    in the central controller instructions (label download Section 7.3)
    to identify the PCECC LSP for this instruction.  The PLSP-ID is the
@@ -523,15 +520,16 @@ Internet-Draft                    PCECC                    February 2021
 
    On receipt of PCInitiate message for the PCECC LSP, the PCC responds
    with a PCRpt message with the status set to "GOING-UP" and carrying
-   the assigned PLSP-ID (see Figure 1).  When the PCE receives this
-   PCRpt message with the PLSP-ID, it assigns labels along the path; and
-   sets up the path by sending a PCInitiate message to each node along
-   the path of the LSP as per the PCECC technique.  The CC-ID uniquely
-   identifies the central controller instruction within a PCEP session.
-   Each node along the path (PCC) responds with a PCRpt message to
-   acknowledge the central controller instruction with the PCRpt
-   messages including the central controller instruction (CCI) and the
-   LSP objects.
+   the assigned PLSP-ID (see Figure 1).  The ingress PCC also sets the D
+   (Delegate) flag (see [RFC8231]) and C (Create) flag (see [RFC8281])
+   in the LSP object.  When the PCE receives this PCRpt message with the
+   PLSP-ID, it assigns labels along the path; and sets up the path by
+   sending a PCInitiate message to each node along the path of the LSP
+   as per the PCECC technique.  The CC-ID uniquely identifies the
+   central controller instruction within a PCEP session.  Each node
+   along the path (PCC) responds with a PCRpt message to acknowledge the
+   central controller instruction with the PCRpt messages including the
+   central controller instruction (CCI) and the LSP objects.
 
    The ingress node would receive one CCI object with O bit (out-label)
    set.  The transit node(s) would receive two CCI objects with the in-
@@ -557,7 +555,9 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 10]
+
+
+Li, et al.               Expires August 31, 2021               [Page 10]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -568,7 +568,7 @@ Internet-Draft                    PCECC                    February 2021
           +------|       |                                  |
           | PCC  +-------+                                  |
           | transit| |                                      |
-   +------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD1,D=1--| PCECC LSP
+   +------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD1------| PCECC LSP
    |PCC   +--------+ |                                      | Initiate
    |egress  |  |     |----PCRpt,PLSP-ID=2,D=1,C=1---------->| PCECC LSP
    +--------+  |     |       (GOING-UP)                     |
@@ -594,7 +594,8 @@ Internet-Draft                    PCECC                    February 2021
                      Figure 1: PCE-Initiated PCECC LSP
 
    Once the label operations are completed, the PCE MUST send a PCUpd
-   message to the ingress PCC.  The PCUpd message is as per [RFC8231].
+   message to the ingress PCC.  The PCUpd message is as per [RFC8231]
+   with D flag set.
 
    The PCECC LSPs are considered to be 'up' by default (on receipt of
    PCUpd message from PCE).  The ingress could further choose to deploy
@@ -612,8 +613,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-
-Li, et al.               Expires August 30, 2021               [Page 11]
+Li, et al.               Expires August 31, 2021               [Page 11]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -624,7 +624,7 @@ Internet-Draft                    PCECC                    February 2021
           +------|       |                                  |
           | PCC  +-------+                                  |
           | transit| |                                      |
-   +------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD1,D=1--| PCECC LSP
+   +------|        | |<--PCInitiate,PLSP-ID=0,PST=TBD1,-----| PCECC LSP
    |PCC   +--------+ |                                      | Initiate
    |egress  |  |     |----PCRpt,PLSP-ID=2,D=1,C=1---------->| PCECC LSP
    +--------+  |     |       (GOING-UP)                     |
@@ -669,7 +669,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 12]
+Li, et al.               Expires August 31, 2021               [Page 12]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -725,7 +725,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 13]
+Li, et al.               Expires August 31, 2021               [Page 13]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -781,7 +781,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 14]
+Li, et al.               Expires August 31, 2021               [Page 14]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -837,7 +837,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 15]
+Li, et al.               Expires August 31, 2021               [Page 15]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -893,7 +893,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 16]
+Li, et al.               Expires August 31, 2021               [Page 16]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -949,7 +949,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 17]
+Li, et al.               Expires August 31, 2021               [Page 17]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1005,7 +1005,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 18]
+Li, et al.               Expires August 31, 2021               [Page 18]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1061,7 +1061,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 19]
+Li, et al.               Expires August 31, 2021               [Page 19]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1117,7 +1117,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 20]
+Li, et al.               Expires August 31, 2021               [Page 20]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1173,7 +1173,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 21]
+Li, et al.               Expires August 31, 2021               [Page 21]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1229,7 +1229,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 22]
+Li, et al.               Expires August 31, 2021               [Page 22]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1260,7 +1260,7 @@ Internet-Draft                    PCECC                    February 2021
 
    The PCRpt message can be used to report the labels that were
    allocated by the PCE, to be used during the state synchronization
-   phase or as acknowledgemnt to PCInitiate message.
+   phase or as an acknowledgment to PCInitiate message.
 
 
 
@@ -1285,7 +1285,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 23]
+Li, et al.               Expires August 31, 2021               [Page 23]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1341,7 +1341,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 24]
+Li, et al.               Expires August 31, 2021               [Page 24]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1397,7 +1397,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 25]
+Li, et al.               Expires August 31, 2021               [Page 25]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1453,7 +1453,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 26]
+Li, et al.               Expires August 31, 2021               [Page 26]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1509,7 +1509,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 27]
+Li, et al.               Expires August 31, 2021               [Page 27]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1565,7 +1565,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 28]
+Li, et al.               Expires August 31, 2021               [Page 28]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1621,7 +1621,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 29]
+Li, et al.               Expires August 31, 2021               [Page 29]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1677,7 +1677,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 30]
+Li, et al.               Expires August 31, 2021               [Page 30]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1733,7 +1733,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 31]
+Li, et al.               Expires August 31, 2021               [Page 31]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1789,7 +1789,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 32]
+Li, et al.               Expires August 31, 2021               [Page 32]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1845,7 +1845,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 33]
+Li, et al.               Expires August 31, 2021               [Page 33]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1901,7 +1901,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 34]
+Li, et al.               Expires August 31, 2021               [Page 34]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -1957,7 +1957,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 35]
+Li, et al.               Expires August 31, 2021               [Page 35]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -2013,7 +2013,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 36]
+Li, et al.               Expires August 31, 2021               [Page 36]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -2059,17 +2059,17 @@ Internet-Draft                    PCECC                    February 2021
               Communications Protocol (PCEP)", draft-ietf-pce-pcep-
               yang-15 (work in progress), October 2020.
 
-   [I-D.zhao-pce-pcep-extension-pce-controller-sr]
+   [I-D.ietf-pce-pcep-extension-pce-controller-sr]
               Li, Z., Peng, S., Negi, M., Zhao, Q., and C. Zhou, "PCEP
               Procedures and Protocol Extensions for Using PCE as a
               Central Controller (PCECC) for Segment Routing (SR) MPLS
               Segment Identifier (SID) Allocation and Distribution.",
-              draft-zhao-pce-pcep-extension-pce-controller-sr-09 (work
-              in progress), November 2020.
+              draft-ietf-pce-pcep-extension-pce-controller-sr-00 (work
+              in progress), December 2020.
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 37]
+Li, et al.               Expires August 31, 2021               [Page 37]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -2125,7 +2125,7 @@ Internet-Draft                    PCECC                    February 2021
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 38]
+Li, et al.               Expires August 31, 2021               [Page 38]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -2181,7 +2181,7 @@ Appendix A.  Contributor Addresses
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 39]
+Li, et al.               Expires August 31, 2021               [Page 39]
 
 Internet-Draft                    PCECC                    February 2021
 
@@ -2237,4 +2237,4 @@ Authors' Addresses
 
 
 
-Li, et al.               Expires August 30, 2021               [Page 40]
+Li, et al.               Expires August 31, 2021               [Page 40]
