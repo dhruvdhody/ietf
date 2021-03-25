@@ -78,7 +78,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Requirements Language . . . . . . . . . . . . . . . . . . . .   5
    3.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   5
-   4.  Path Binding TLV  . . . . . . . . . . . . . . . . . . . . . .   5
+   4.  Path Binding TLV  . . . . . . . . . . . . . . . . . . . . . .   6
      4.1.  SRv6 Endpoint Behavior and SID Structure  . . . . . . . .   7
    5.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   8
    6.  Binding SID in SR-ERO . . . . . . . . . . . . . . . . . . . .  10
@@ -138,7 +138,9 @@ Internet-Draft              Binding Label/SID                 March 2021
    (SRGB)) SID.  As per Section 6.4 of
    [I-D.ietf-spring-segment-routing-policy] a BSID can also be
    associated with any type of interfaces or tunnel to enable the use of
-   a non-SR interface or tunnel as a segment in a SID-list.
+   a non-SR interface or tunnel as a segment in a SID-list.  In this
+   document, binding label/SID is used to generalize the allocation of
+   binding value for both SR and non-SR paths.
 
    [RFC5440] describes the Path Computation Element Protocol (PCEP) for
    communication between a Path Computation Client (PCC) and a PCE or
@@ -157,11 +159,9 @@ Internet-Draft              Binding Label/SID                 March 2021
 
    A binding label/SID has local significance to the ingress node of the
    corresponding TE path.  When a stateful PCE is deployed for setting
-   up TE paths, it may be desirable for PCC to report the binding label
-   or SID to the stateful PCE for the purpose of enforcing end-to-end
-   TE/SR policy.  A sample Data Center (DC) use-case is illustrated in
-   the Figure 1.  In the MPLS DC network, an SR LSP (without traffic
-   engineering) is established using a prefix SID advertised by BGP (see
+   up TE paths, it may be desirable for PCC to report the binding label/
+   SID to the stateful PCE for the purpose of enforcing end-to-end TE/SR
+   policy.  A sample Data Center (DC) use-case is illustrated in the
 
 
 
@@ -170,6 +170,8 @@ Sivabalan, et al.      Expires September 25, 2021               [Page 3]
 Internet-Draft              Binding Label/SID                 March 2021
 
 
+   Figure 1.  In the MPLS DC network, an SR LSP (without traffic
+   engineering) is established using a prefix SID advertised by BGP (see
    [RFC8669]).  In the IP/MPLS WAN, an SR-TE LSP is set up using the
    PCE.  The list of SIDs of the SR-TE LSP is {A, B, C, D}. The gateway
    node 1 (which is the PCC) allocates a binding SID X and reports it to
@@ -215,9 +217,7 @@ Internet-Draft              Binding Label/SID                 March 2021
    cause of the failure.  A local policy or configuration at the PCC
    SHOULD dictate if the binding label/SID needs to be assigned.
 
-   In this document, we introduce a new OPTIONAL TLV that a PCC can use
-   in order to report the binding label/SID associated with a TE LSP, or
-   a PCE to request a PCC to allocate a specific binding label/SID
+
 
 
 
@@ -226,11 +226,14 @@ Sivabalan, et al.      Expires September 25, 2021               [Page 4]
 Internet-Draft              Binding Label/SID                 March 2021
 
 
+   In this document, we introduce a new OPTIONAL TLV that a PCC can use
+   in order to report the binding label/SID associated with a TE LSP, or
+   a PCE to request a PCC to allocate a specific binding label/SID
    value.  This TLV is intended for TE LSPs established using RSVP-TE,
    SR, or any other future method.  Also, in the case of SR-TE LSPs, the
-   TLV can carry a binding MPLS label (for SR-TE path with MPLS data-
-   plane) or a binding IPv6 SID (e.g., IPv6 address for SR-TE paths with
-   IPv6 data-plane).  Throughout this document, the term "binding value"
+   TLV can carry a binding label (for SR-TE path with MPLS data-plane)
+   or a binding IPv6 SID (e.g., IPv6 address for SR-TE paths with IPv6
+   data-plane).  Throughout this document, the term "binding value"
    means either an MPLS label or SID.
 
    Additionally, to support the PCE based central controller [RFC8283]
@@ -269,10 +272,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
    TLV:  Type, Length, and Value.
 
-4.  Path Binding TLV
 
-   The new optional TLV is called "TE-PATH-BINDING TLV" (whose format is
-   shown in the Figure 2) is defined to carry the binding label or SID
 
 
 
@@ -282,8 +282,12 @@ Sivabalan, et al.      Expires September 25, 2021               [Page 5]
 Internet-Draft              Binding Label/SID                 March 2021
 
 
-   for a TE path.  This TLV is associated with the LSP object specified
-   in [RFC8231].  The type of this TLV is TBD1.  The length is variable.
+4.  Path Binding TLV
+
+   The new optional TLV is called "TE-PATH-BINDING TLV" (whose format is
+   shown in the Figure 2) is defined to carry the binding label/SID for
+   a TE path.  This TLV is associated with the LSP object specified in
+   [RFC8231].  The type of this TLV is TBD1.  The length is variable.
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -299,7 +303,7 @@ Internet-Draft              Binding Label/SID                 March 2021
                        Figure 2: TE-PATH-BINDING TLV
 
    TE-PATH-BINDING TLV is a generic TLV such that it is able to carry
-   MPLS label binding as well as SRv6 Binding SID.  It is formatted
+   binding label/SID (i.e.  MPLS label or SRv6 SID).  It is formatted
    according to the rules specified in [RFC5440].  The value portion of
    the TLV comprise of:
 
@@ -325,10 +329,6 @@ Internet-Draft              Binding Label/SID                 March 2021
       Section 4.1, that contains the SRv6 SID as well as its Behavior
       and Structure.  The Length MUST be set to 28.
 
-   Section 12.1.1 defines the IANA registry used to maintain all these
-   binding types as well as any future ones.
-
-
 
 
 
@@ -337,6 +337,9 @@ Sivabalan, et al.      Expires September 25, 2021               [Page 6]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
+
+   Section 12.1.1 defines the IANA registry used to maintain all these
+   binding types as well as any future ones.
 
    Flags: 1 octet of flags.  Following flags are defined in the new
    registry "TE-PATH-BINDING TLV Flag field" as described in
@@ -368,9 +371,9 @@ Internet-Draft              Binding Label/SID                 March 2021
 
    Binding Value: A variable-length field, padded with trailing zeros to
    a 4-octet boundary.  For the BT as 0, the 20 bits represent the MPLS
-   label.  For the BT as 1, the 32-bits represent the label stack entry
-   as per [RFC3032].  For the BT as 2, the 128-bits represent the SRv6
-   SID.  For the BT as 3, the Binding Value contains SRv6 Endpoint
+   label.  For the BT as 1, the 32-bits represent the MPLS label stack
+   entry as per [RFC3032].  For the BT as 2, the 128-bits represent the
+   SRv6 SID.  For the BT as 3, the Binding Value contains SRv6 Endpoint
    Behavior and SID Structure, defined in Section 4.1.
 
 4.1.  SRv6 Endpoint Behavior and SID Structure
@@ -378,9 +381,6 @@ Internet-Draft              Binding Label/SID                 March 2021
    This section specify the format of the Binding Value in the TE-PATH-
    BINDING TLV when the BT is set to 3 for the SRv6 Binding SIDs
    [RFC8986], as shown in Figure 4.
-
-
-
 
 
 
@@ -458,9 +458,9 @@ Internet-Draft              Binding Label/SID                 March 2021
    If a TE-PATH-BINDING TLV is absent in the PCRpt message, the PCE MUST
    assume that the corresponding LSP does not have any binding.  If a
    PCE recognizes an invalid binding value (e.g., label value from the
-   reserved label space when MPLS label binding is used), it MUST send a
-   PCErr message with Error-Type = 10 ("Reception of an invalid object")
-   and Error Value = 2 ("Bad label value") as specified in [RFC8664].
+   reserved MPLS label space), it MUST send a PCErr message with Error-
+   Type = 10 ("Reception of an invalid object") and Error Value = 2
+   ("Bad label value") as specified in [RFC8664].
 
    For SRv6 BSIDs, it is RECOMMENDED to always explicitly specify the
    SRv6 Endpoint Behavior and SID Structure in the TE-PATH-BINDING TLV
@@ -478,7 +478,7 @@ Internet-Draft              Binding Label/SID                 March 2021
    value is valid, but the PCC is unable to allocate the binding value,
    it MUST send a PCErr message with Error-Type = TBD2 ("Binding label/
    SID failure") and Error Value = TBD4 ("Unable to allocate the
-   specified label/SID").  Note that in case of an error, the PCC
+   specified binding value").  Note that in case of an error, the PCC
    rejects the PCUpd or PCInitiate message in its entirety and can carry
    the offending TE-PATH-BINDING TLV in the PCEP-ERROR object.
 
@@ -521,10 +521,10 @@ Internet-Draft              Binding Label/SID                 March 2021
    If the new binding value is successfully allocated, the PCC MUST
    report the new value to the PCE.  Otherwise, it MUST send a PCErr
    message with Error-Type = TBD2 ("Binding label/SID failure") and
-   Error Value = TBD4 ("Unable to allocate the specified label/SID").
-   Note that, all instances of TE-PATH-BINDING TLV that remains
-   unchanged are always included in the LSP object and the offending TE-
-   PATH-BINDING TLV is included in the PCEP-ERROR object.
+   Error Value = TBD4 ("Unable to allocate the specified binding
+   value").  Note that, all instances of TE-PATH-BINDING TLV that
+   remains unchanged are always included in the LSP object and the
+   offending TE-PATH-BINDING TLV is included in the PCEP-ERROR object.
 
    In some cases, a stateful PCE can request the PCC to allocate a
    binding value.  It instructs the PCC by sending a PCUpd message
@@ -534,9 +534,10 @@ Internet-Draft              Binding Label/SID                 March 2021
    sending a PCInitiate message with an empty TE-PATH-BINDING TLV.  Only
    one such instance of empty TE-PATH-BINDING TLV SHOULD be included in
    the LSP object and other ignored on receipt.  If the PCC is unable to
-   allocate a binding value, it MUST send a PCErr message with Error-
-   Type = TBD2 ("Binding label/SID failure") and Error-Value = TBD5
-   ("Unable to allocate label/SID").
+   allocate a new binding value as per the specified BT, it MUST send a
+   PCErr message with Error-Type = TBD2 ("Binding label/SID failure")
+   and Error-Value = TBD5 ("Unable to allocate a new binding label/
+   SID").
 
    In the absence of any instruction from the PCE, the PCC's local
    policy dictates how the binding allocations are made for a given LSP.
@@ -553,7 +554,6 @@ Internet-Draft              Binding Label/SID                 March 2021
    per Section 5.2.1 of [RFC8664], for NT=0, the F bit is set to 1, the
    S bit needs to be zero and the Length is 8.  Further, the M bit is
    set.  If these conditions are not met, the entire ERO MUST be
-   considered invalid and a PCErr message is sent by the PCC with Error-
 
 
 
@@ -562,6 +562,7 @@ Sivabalan, et al.      Expires September 25, 2021              [Page 10]
 Internet-Draft              Binding Label/SID                 March 2021
 
 
+   considered invalid and a PCErr message is sent by the PCC with Error-
    Type = 10 ("Reception of an invalid object") and Error-Value = 11
    ("Malformed object").
 
@@ -609,7 +610,6 @@ Internet-Draft              Binding Label/SID                 March 2021
    o  P (PCE-allocated binding label/SID - TBD6): If the bit is set to
       1, it indicates that the PCC requests PCE to make allocations for
       this LSP.The TE-PATH-BINDING TLV in the LSP object identifies that
-      the allocation is for binding label/SID.  A PCC would set this bit
 
 
 
@@ -618,6 +618,7 @@ Sivabalan, et al.      Expires September 25, 2021              [Page 11]
 Internet-Draft              Binding Label/SID                 March 2021
 
 
+      the allocation is for binding label/SID.  A PCC would set this bit
       to 1 and include a TE-PATH-BINDING TLV in the LSP object to
       request for allocation of binding label/SID by the PCE in the PCEP
       message.  A PCE would also set this bit to 1 and include a TE-
@@ -664,7 +665,6 @@ Internet-Draft              Binding Label/SID                 March 2021
    whereas the PCE can request for the allocation of a specific BSID
    from the PCC-controlled label space with P=0 as described in
    Section 5.
-
 
 
 
@@ -905,9 +905,9 @@ Internet-Draft              Binding Label/SID                 March 2021
                                  TBD3: Invalid SID             This
                                                                document
                                  TBD4: Unable to allocate the  This
-                                 specified label/SID           document
-                                 TBD5: Unable to allocate      This
-                                 label/SID                     document
+                                 specified binding value       document
+                                 TBD5: Unable to allocate a    This
+                                 new binding label/SID         document
 
 13.  Acknowledgements
 

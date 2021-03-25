@@ -199,7 +199,7 @@
       SID. As per Section 6.4 of <xref
       target="I-D.ietf-spring-segment-routing-policy"/> a BSID can also be
       associated with any type of interfaces or tunnel to enable the use of a
-      non-SR interface or tunnel as a segment in a SID-list.</t>
+      non-SR interface or tunnel as a segment in a SID-list. In this document, binding label/SID is used to generalize the allocation of binding value for both SR and non-SR paths.</t>
 
       <!--<t>Similar to assigning label to a Forwarding Equivalence Class (FEC) via Label Distribution Protocol (LDP), a binding label can be assigned to a RSVP-TE LSP. If the topmost label of an incoming packet is the binding label, the packet is steered onto the RSVP-TE LSP.
   As such, any upstream node can use binding labels to steer the packets that it originates to appropriate TE LSPs to enforce TE/SR policy. Similarly, a binding SID, see <xref target="I-D.ietf-isis-segment-routing-extensions"/>, <xref target="I-D.ietf-idr-segment-routing-te-policy"/>
@@ -220,9 +220,10 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       information on the SR Policy Architecture, see <xref
       target="I-D.ietf-spring-segment-routing-policy"/>.</t>
 
-      <t>A binding label/SID has local significance to the ingress node of the
+      <t>  
+        A binding label/SID has local significance to the ingress node of the
       corresponding TE path. When a stateful PCE is deployed for setting up TE
-      paths, it may be desirable for PCC to report the binding label or SID to the
+      paths, it may be desirable for PCC to report the binding label/SID to the
       stateful PCE for the purpose of enforcing end-to-end TE/SR policy. A
       sample Data Center (DC) use-case is illustrated in the <xref target="figure1"/>. In the MPLS DC network, an SR LSP (without traffic engineering)
       is established using a prefix SID advertised by BGP (see <xref
@@ -279,7 +280,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       PCE to request a PCC to allocate a specific binding label/SID value.
       This TLV is intended for TE LSPs established using RSVP-TE, SR, or any
       other future method. Also, in the case of SR-TE LSPs, the TLV can carry
-      a binding MPLS label (for SR-TE path with MPLS data-plane) or a binding
+      a binding label (for SR-TE path with MPLS data-plane) or a binding
       IPv6 SID (e.g., IPv6 address for SR-TE paths with IPv6 data-plane).
       Throughout this document, the term "binding value" means either an MPLS label or SID.</t>
 
@@ -335,7 +336,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
     <section anchor="TE-PATH-BINDING-TLV" title="Path Binding TLV">
       <t>The new optional TLV is called "TE-PATH-BINDING TLV" (whose format is
-      shown in the <xref target="BINDING-LABEL-TLV-FORMAT"/>) is defined to carry the binding label or SID
+      shown in the <xref target="BINDING-LABEL-TLV-FORMAT"/>) is defined to carry the binding label/SID
       for a TE path. This TLV is associated with the LSP object specified in
       <xref target="RFC8231"/>. The type of this TLV is TBD1. The length is variable.</t>
 
@@ -354,8 +355,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
         ]]></artwork>
       </figure>
 
-      <t>TE-PATH-BINDING TLV is a generic TLV such that it is able to carry
-      MPLS label binding as well as SRv6 Binding SID. It is formatted
+      <t>TE-PATH-BINDING TLV is a generic TLV such that it is able to carry binding label/SID (i.e. MPLS label or SRv6 SID). It is formatted
       according to the rules specified in <xref target="RFC5440"/>. The value portion of the TLV comprise of:</t>
 
       <t>Binding Type (BT): A one-octet field identifies the type of binding
@@ -411,7 +411,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
       <t>Binding Value: A variable-length field, padded with trailing zeros to
       a 4-octet boundary. For the BT as 0, the 20 bits represent the MPLS
-      label. For the BT as 1, the 32-bits represent the label stack entry as
+      label. For the BT as 1, the 32-bits represent the MPLS label stack entry as
       per <xref target="RFC3032"/>. For the BT as 2, the 128-bits represent
       the SRv6 SID. For the BT as 3, the Binding Value contains SRv6 Endpoint
       Behavior and SID Structure, defined in <xref
@@ -479,7 +479,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       <t>If a TE-PATH-BINDING TLV is absent in the PCRpt message, the PCE MUST
       assume that the corresponding LSP does not have any binding. If a PCE
       recognizes an invalid binding value (e.g., label value from the reserved
-      label space when MPLS label binding is used), it MUST send a PCErr
+      MPLS label space), it MUST send a PCErr
       message with Error-Type = 10 ("Reception of an invalid object") and
       Error Value = 2 ("Bad label value") as specified in <xref
       target="RFC8664"/>.</t>
@@ -500,8 +500,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       Error-Type = TBD2 ("Binding label/SID failure") and Error Value = TBD3
       ("Invalid SID"). If the binding value is valid, but the PCC is unable to
       allocate the binding value, it MUST send a PCErr message with Error-Type
-      = TBD2 ("Binding label/SID failure") and Error Value = TBD4 ("Unable to
-      allocate the specified label/SID"). Note that in case of an error, the PCC rejects the PCUpd or PCInitiate message in its entirety and can carry the offending TE-PATH-BINDING TLV in the PCEP-ERROR object.</t>
+      = TBD2 ("Binding label/SID failure") and Error Value = TBD4 ("Unable to allocate the specified binding value"). Note that in case of an error, the PCC rejects the PCUpd or PCInitiate message in its entirety and can carry the offending TE-PATH-BINDING TLV in the PCEP-ERROR object.</t>
 
       <t>If a PCC receives a TE-PATH-BINDING TLV in any message other than PCUpd
       or PCInitiate, it MUST close the corresponding PCEP session with the
@@ -528,7 +527,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       If the new binding value is successfully allocated, the PCC MUST report
       the new value to the PCE. Otherwise, it MUST send a PCErr message with
       Error-Type = TBD2 ("Binding label/SID failure") and Error Value = TBD4
-      ("Unable to allocate the specified label/SID"). Note that, all instances of TE-PATH-BINDING TLV that remains unchanged are always included in the LSP object and the offending TE-PATH-BINDING TLV is included in the PCEP-ERROR object.</t>
+      ("Unable to allocate the specified binding value"). Note that, all instances of TE-PATH-BINDING TLV that remains unchanged are always included in the LSP object and the offending TE-PATH-BINDING TLV is included in the PCEP-ERROR object.</t>
 
       <t>In some cases, a stateful PCE can request the PCC to allocate a
       binding value. It instructs the PCC by sending a PCUpd message containing an
@@ -536,9 +535,9 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       the length field of the TLV as 4). A PCE can also request PCC to
       allocate a binding value at the time of initiation by sending a
       PCInitiate message with an empty TE-PATH-BINDING TLV. Only one such instance of empty TE-PATH-BINDING TLV SHOULD be included in the LSP object and other ignored on receipt. If the PCC is
-      unable to allocate a binding value, it MUST send a PCErr message with
+      unable to allocate a new binding value as per the specified BT, it MUST send a PCErr message with
       Error-Type = TBD2 ("Binding label/SID failure") and Error-Value = TBD5
-      ("Unable to allocate label/SID"). </t>
+      ("Unable to allocate a new binding label/SID"). </t>
 
       <t>In the absence of any instruction from the PCE, the PCC's local policy dictates how the  binding allocations are made for a given LSP.</t>
     </section>
@@ -995,7 +994,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
           <c>&nbsp;</c>
 
-          <c>TBD4: Unable to allocate the specified label/SID</c>
+          <c>TBD4: Unable to allocate the specified binding value</c>
 
           <c>This document</c>
 
@@ -1003,7 +1002,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
           <c>&nbsp;</c>
 
-          <c>TBD5: Unable to allocate label/SID</c>
+          <c>TBD5: Unable to allocate a new binding label/SID</c>
 
           <c>This document</c>
         </texttable>
