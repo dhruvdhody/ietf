@@ -538,6 +538,9 @@ Internet-Draft              Binding Label/SID                 March 2021
    Type = TBD2 ("Binding label/SID failure") and Error-Value = TBD5
    ("Unable to allocate label/SID").
 
+   In the absence of any instruction from the PCE, the PCC's local
+   policy dictates how the binding allocations are made for a given LSP.
+
 6.  Binding SID in SR-ERO
 
    In PCEP messages, LSP route information is carried in the Explicit
@@ -551,9 +554,6 @@ Internet-Draft              Binding Label/SID                 March 2021
    S bit needs to be zero and the Length is 8.  Further, the M bit is
    set.  If these conditions are not met, the entire ERO MUST be
    considered invalid and a PCErr message is sent by the PCC with Error-
-   Type = 10 ("Reception of an invalid object") and Error-Value = 11
-   ("Malformed object").
-
 
 
 
@@ -561,6 +561,9 @@ Sivabalan, et al.      Expires September 25, 2021              [Page 10]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
+
+   Type = 10 ("Reception of an invalid object") and Error-Value = 11
+   ("Malformed object").
 
 7.  Binding SID in SRv6-ERO
 
@@ -607,9 +610,6 @@ Internet-Draft              Binding Label/SID                 March 2021
       1, it indicates that the PCC requests PCE to make allocations for
       this LSP.The TE-PATH-BINDING TLV in the LSP object identifies that
       the allocation is for binding label/SID.  A PCC would set this bit
-      to 1 and include a TE-PATH-BINDING TLV in the LSP object to
-      request for allocation of binding label/SID by the PCE in the PCEP
-      message.  A PCE would also set this bit to 1 and include a TE-
 
 
 
@@ -618,6 +618,9 @@ Sivabalan, et al.      Expires September 25, 2021              [Page 11]
 Internet-Draft              Binding Label/SID                 March 2021
 
 
+      to 1 and include a TE-PATH-BINDING TLV in the LSP object to
+      request for allocation of binding label/SID by the PCE in the PCEP
+      message.  A PCE would also set this bit to 1 and include a TE-
       PATH-BINDING TLV to indicate that the binding label/SID is
       allocated by PCE and encoded in the PCEP message towards PCC.
       Further, a PCE would set this bit to 0 and include a TE-PATH-
@@ -661,9 +664,6 @@ Internet-Draft              Binding Label/SID                 March 2021
    whereas the PCE can request for the allocation of a specific BSID
    from the PCC-controlled label space with P=0 as described in
    Section 5.
-
-
-
 
 
 
