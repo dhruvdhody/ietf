@@ -5,13 +5,13 @@
 PCE Working Group                                           S. Sivabalan
 Internet-Draft                                         Ciena Corporation
 Intended status: Standards Track                             C. Filsfils
-Expires: September 25, 2021                          Cisco Systems, Inc.
+Expires: September 28, 2021                          Cisco Systems, Inc.
                                                              J. Tantsura
                                                         Juniper Networks
                                                               S. Previdi
                                                                    C. Li
                                                      Huawei Technologies
-                                                          March 24, 2021
+                                                          March 27, 2021
 
 
     Carrying Binding Label/Segment Identifier in PCE-based Networks.
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 25, 2021.
+   This Internet-Draft will expire on September 28, 2021.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Sivabalan, et al.      Expires September 25, 2021               [Page 1]
+Sivabalan, et al.      Expires September 28, 2021               [Page 1]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Sivabalan, et al.      Expires September 25, 2021               [Page 2]
+Sivabalan, et al.      Expires September 28, 2021               [Page 2]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -165,7 +165,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021               [Page 3]
+Sivabalan, et al.      Expires September 28, 2021               [Page 3]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -221,7 +221,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021               [Page 4]
+Sivabalan, et al.      Expires September 28, 2021               [Page 4]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -277,7 +277,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021               [Page 5]
+Sivabalan, et al.      Expires September 28, 2021               [Page 5]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -287,7 +287,10 @@ Internet-Draft              Binding Label/SID                 March 2021
    The new optional TLV is called "TE-PATH-BINDING TLV" (whose format is
    shown in the Figure 2) is defined to carry the binding label/SID for
    a TE path.  This TLV is associated with the LSP object specified in
-   [RFC8231].  The type of this TLV is TBD1.  The length is variable.
+   [RFC8231].  This TLV can also be carried in the PCEP-ERROR object
+   [RFC5440] in case of error.  Multiple instance of TE-PATH-BINDING
+   TLVs MAY be present in the LSP and PCEP-ERROR object.  The type of
+   this TLV is TBD1.  The length is variable.
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -325,21 +328,23 @@ Internet-Draft              Binding Label/SID                 March 2021
       octet IPv6 address, representing the binding SID for SRv6.  The
       Length MUST be set to 20.
 
-   o  BT = 3: The binding value is a 24 octet field, defined in
-      Section 4.1, that contains the SRv6 SID as well as its Behavior
-      and Structure.  The Length MUST be set to 28.
 
 
 
 
 
-Sivabalan, et al.      Expires September 25, 2021               [Page 6]
+Sivabalan, et al.      Expires September 28, 2021               [Page 6]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
 
+   o  BT = 3: The binding value is a 24 octet field, defined in
+      Section 4.1, that contains the SRv6 SID as well as its Behavior
+      and Structure.  The Length MUST be set to 28.
+
    Section 12.1.1 defines the IANA registry used to maintain all these
-   binding types as well as any future ones.
+   binding types as well as any future ones.  Multiple TE-PATH-BINDING
+   TLVs with different Binding Types MAY be present for the same LSP.
 
    Flags: 1 octet of flags.  Following flags are defined in the new
    registry "TE-PATH-BINDING TLV Flag field" as described in
@@ -373,8 +378,8 @@ Internet-Draft              Binding Label/SID                 March 2021
    a 4-octet boundary.  For the BT as 0, the 20 bits represent the MPLS
    label.  For the BT as 1, the 32-bits represent the MPLS label stack
    entry as per [RFC3032].  For the BT as 2, the 128-bits represent the
-   SRv6 SID.  For the BT as 3, the Binding Value contains SRv6 Endpoint
-   Behavior and SID Structure, defined in Section 4.1.
+   SRv6 SID.  For the BT as 3, the Binding Value also contains the SRv6
+   Endpoint Behavior and SID Structure, defined in Section 4.1.
 
 4.1.  SRv6 Endpoint Behavior and SID Structure
 
@@ -384,12 +389,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-
-
-
-
-
-Sivabalan, et al.      Expires September 25, 2021               [Page 7]
+Sivabalan, et al.      Expires September 28, 2021               [Page 7]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -445,7 +445,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021               [Page 8]
+Sivabalan, et al.      Expires September 28, 2021               [Page 8]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -464,9 +464,11 @@ Internet-Draft              Binding Label/SID                 March 2021
 
    For SRv6 BSIDs, it is RECOMMENDED to always explicitly specify the
    SRv6 Endpoint Behavior and SID Structure in the TE-PATH-BINDING TLV
-   by setting the BT (Binding Type) to 3, instead of 2.  The choice of
-   interpreting SRv6 Endpoint Behavior and SID Structure when none is
-   explicitly specified is left up to the implementation.
+   by setting the BT (Binding Type) to 3.  This enables the sender to
+   have control of the SRv6 Endpoint Behavior and SID Structure.  A
+   sender MAY choose to set the BT to 2, in which case the receiving
+   implementation chooses how to interpret the SRv6 Endpoint Behavior
+   and SID Structure according to local policy.
 
    If a PCE requires a PCC to allocate a specific binding value(s), it
    may do so by sending a PCUpd or PCInitiate message containing a TE-
@@ -491,29 +493,25 @@ Internet-Draft              Binding Label/SID                 March 2021
    the PCE MUST close the corresponding PCEP session with the reason
    "Reception of a malformed PCEP message" (according to [RFC5440]).
 
-   If a PCC wishes to withdraw a previously reported binding value, it
-   MUST send a PCRpt message without the specific TE-PATH-BINDING TLV.
-   If a PCC wishes to modify a previously reported binding, it MUST
-   withdraw the old binding value and include a new TE-PATH-BINDING TLV
-   containing the new binding value.  Note that, other instances of TE-
-   PATH-BINDING TLV that are unchanged are always included.
+   If a PCC wishes to withdraw all previously reported binding values,
+   it MUST send a PCRpt message without any TE-PATH-BINDING TLV.  If a
+   PCC wishes to modify any or all previously reported binding values,
+   it MUST send a PCRpt message containing TE-PATH-BINDING TLVs
+   containing all the binding values that apply from that point on.
 
 
 
-
-Sivabalan, et al.      Expires September 25, 2021               [Page 9]
+Sivabalan, et al.      Expires September 28, 2021               [Page 9]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
 
-   Similarly, if a PCE wishes to modify a previously requested binding
-   value, it MUST send a PCUpd message with TE-PATH-BINDING TLV
-   containing the new binding value.  Note that, other instances of TE-
-   PATH-BINDING TLV that are unchanged are always included.
-
-   The absence of TE-PATH-BINDING TLV in PCUpd message means that the
-   PCE does not specify a binding value in which case any previous
-   allocated binding values are withdraw.
+   If a PCE wishes to modify a previously requested binding value, it
+   MUST send a PCUpd message with TE-PATH-BINDING TLVs containing all
+   the binding values that apply from that point on.  The absence of TE-
+   PATH-BINDING TLV in PCUpd message means that the PCE does not specify
+   a binding value.  Any previously allocated binding values are
+   considered to be requested to be withdrawn by the PCE.
 
    If a PCC receives a new valid binding value from the PCE, it MUST try
    to allocate the new binding value.  If a PCC does not receive an old
@@ -542,6 +540,12 @@ Internet-Draft              Binding Label/SID                 March 2021
    In the absence of any instruction from the PCE, the PCC's local
    policy dictates how the binding allocations are made for a given LSP.
 
+   As previously noted, if a message contains an invalid TE-PATH-BINDING
+   TLV that leads to an error condition, the whole message is rejected
+   including any other valid instances of TE-PATH-BINDING TLVs, if any.
+   The resulting error message, MAY include the offending TE-PATH-
+   BINDING TLV in the PCEP-ERROR object.
+
 6.  Binding SID in SR-ERO
 
    In PCEP messages, LSP route information is carried in the Explicit
@@ -550,18 +554,18 @@ Internet-Draft              Binding Label/SID                 March 2021
    carrying a SID as well as the identity of the node/adjacency (NAI)
    represented by the SID.  The NAI Type (NT) field indicates the type
    and format of the NAI contained in the SR-ERO.  In case of binding
-   SID, the NAI MUST NOT be included and NT MUST be set to zero.  So as
-   per Section 5.2.1 of [RFC8664], for NT=0, the F bit is set to 1, the
-   S bit needs to be zero and the Length is 8.  Further, the M bit is
-   set.  If these conditions are not met, the entire ERO MUST be
 
 
 
-Sivabalan, et al.      Expires September 25, 2021              [Page 10]
+Sivabalan, et al.      Expires September 28, 2021              [Page 10]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
 
+   SID, the NAI MUST NOT be included and NT MUST be set to zero.  So as
+   per Section 5.2.1 of [RFC8664], for NT=0, the F bit is set to 1, the
+   S bit needs to be zero and the Length is 8.  Further, the M bit is
+   set.  If these conditions are not met, the entire ERO MUST be
    considered invalid and a PCErr message is sent by the PCC with Error-
    Type = 10 ("Reception of an invalid object") and Error-Value = 11
    ("Malformed object").
@@ -607,17 +611,16 @@ Internet-Draft              Binding Label/SID                 March 2021
    A new P flag in the LSP object [RFC8231] is introduced to indicate
    the allocation needs to be made by the PCE:
 
-   o  P (PCE-allocated binding label/SID - TBD6): If the bit is set to
-      1, it indicates that the PCC requests PCE to make allocations for
-      this LSP.The TE-PATH-BINDING TLV in the LSP object identifies that
 
 
-
-Sivabalan, et al.      Expires September 25, 2021              [Page 11]
+Sivabalan, et al.      Expires September 28, 2021              [Page 11]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
 
+   o  P (PCE-allocated binding label/SID - TBD6): If the bit is set to
+      1, it indicates that the PCC requests PCE to make allocations for
+      this LSP.The TE-PATH-BINDING TLV in the LSP object identifies that
       the allocation is for binding label/SID.  A PCC would set this bit
       to 1 and include a TE-PATH-BINDING TLV in the LSP object to
       request for allocation of binding label/SID by the PCE in the PCEP
@@ -663,16 +666,16 @@ Internet-Draft              Binding Label/SID                 March 2021
    PCC-controlled label space.  The PCE can directly allocate the label
    from the PCE-controlled label space using P=1 as described above,
    whereas the PCE can request for the allocation of a specific BSID
-   from the PCC-controlled label space with P=0 as described in
-   Section 5.
 
 
 
-
-Sivabalan, et al.      Expires September 25, 2021              [Page 12]
+Sivabalan, et al.      Expires September 28, 2021              [Page 12]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
+
+   from the PCC-controlled label space with P=0 as described in
+   Section 5.
 
 9.  Implementation Status
 
@@ -720,15 +723,14 @@ Internet-Draft              Binding Label/SID                 March 2021
 
    o  Implementation: Head-end and controller.
 
-   o  Description: An experimental code-point is currently used.
 
 
-
-
-Sivabalan, et al.      Expires September 25, 2021              [Page 13]
+Sivabalan, et al.      Expires September 28, 2021              [Page 13]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
+
+   o  Description: An experimental code-point is currently used.
 
    o  Maturity Level: Production
 
@@ -779,9 +781,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-
-
-Sivabalan, et al.      Expires September 25, 2021              [Page 14]
+Sivabalan, et al.      Expires September 28, 2021              [Page 14]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -837,7 +837,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021              [Page 15]
+Sivabalan, et al.      Expires September 28, 2021              [Page 15]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -893,7 +893,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021              [Page 16]
+Sivabalan, et al.      Expires September 28, 2021              [Page 16]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -949,7 +949,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021              [Page 17]
+Sivabalan, et al.      Expires September 28, 2021              [Page 17]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -1005,7 +1005,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021              [Page 18]
+Sivabalan, et al.      Expires September 28, 2021              [Page 18]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -1061,7 +1061,7 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021              [Page 19]
+Sivabalan, et al.      Expires September 28, 2021              [Page 19]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -1117,7 +1117,7 @@ Authors' Addresses
 
 
 
-Sivabalan, et al.      Expires September 25, 2021              [Page 20]
+Sivabalan, et al.      Expires September 28, 2021              [Page 20]
 
 Internet-Draft              Binding Label/SID                 March 2021
 
@@ -1173,4 +1173,4 @@ Internet-Draft              Binding Label/SID                 March 2021
 
 
 
-Sivabalan, et al.      Expires September 25, 2021              [Page 21]
+Sivabalan, et al.      Expires September 28, 2021              [Page 21]

@@ -154,7 +154,7 @@
       </address>
     </author>
 
-    <date day="24" month="March" year="2021"/>
+    <date day="27" month="March" year="2021"/>
 
     <area>Routing Area</area>
 
@@ -338,7 +338,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       <t>The new optional TLV is called "TE-PATH-BINDING TLV" (whose format is
       shown in the <xref target="BINDING-LABEL-TLV-FORMAT"/>) is defined to carry the binding label/SID
       for a TE path. This TLV is associated with the LSP object specified in
-      <xref target="RFC8231"/>. The type of this TLV is TBD1. The length is variable.</t>
+      <xref target="RFC8231"/>. This TLV can also be carried in the PCEP-ERROR object <xref target="RFC5440"/> in case of error. Multiple instance of TE-PATH-BINDING TLVs MAY be present in the LSP and PCEP-ERROR object. The type of this TLV is TBD1. The length is variable.</t>
 
       <figure anchor="BINDING-LABEL-TLV-FORMAT" title="TE-PATH-BINDING TLV">
         <artwork align="center"><![CDATA[
@@ -377,7 +377,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
         </list></t>
 
       <t><xref target="IANA-TLV"/> defines the IANA registry used to
-   maintain all these binding types as well as any future ones.</t>  
+   maintain all these binding types as well as any future ones. Multiple TE-PATH-BINDING TLVs with different Binding Types MAY be present for the same LSP.</t>  
 
       <t>Flags: 1 octet of flags. Following flags are defined in the new
       registry "TE-PATH-BINDING TLV Flag field" as described in <xref
@@ -413,7 +413,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       a 4-octet boundary. For the BT as 0, the 20 bits represent the MPLS
       label. For the BT as 1, the 32-bits represent the MPLS label stack entry as
       per <xref target="RFC3032"/>. For the BT as 2, the 128-bits represent
-      the SRv6 SID. For the BT as 3, the Binding Value contains SRv6 Endpoint
+      the SRv6 SID. For the BT as 3, the Binding Value also contains the SRv6 Endpoint
       Behavior and SID Structure, defined in <xref
       target="Behavior-Structure"/>.</t>
 
@@ -484,13 +484,13 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       Error Value = 2 ("Bad label value") as specified in <xref
       target="RFC8664"/>.</t>
 
-
-
-      <t>For SRv6 BSIDs, it is RECOMMENDED to always explicitly specify the
-      SRv6 Endpoint Behavior and SID Structure in the TE-PATH-BINDING TLV by
-      setting the BT (Binding Type) to 3, instead of 2. The choice of
-      interpreting SRv6 Endpoint Behavior and SID Structure when none is
-      explicitly specified is left up to the implementation.</t>
+       <t>For SRv6 BSIDs, it is RECOMMENDED to always explicitly specify the
+   SRv6 Endpoint Behavior and SID Structure in the TE-PATH-BINDING TLV
+   by setting the BT (Binding Type) to 3.  This enables the sender to have
+   control of the SRv6 Endpoint Behavior and SID Structure.  A sender MAY
+   choose to set the BT to 2, in which case the receiving implementation
+   chooses how to interpret the SRv6 Endpoint Behavior and SID Structure
+   according to local policy.</t>
 
       <t>If a PCE requires a PCC to allocate a specific binding value(s), it may
       do so by sending a PCUpd or PCInitiate message containing a
@@ -511,17 +511,33 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       corresponding PCEP session with the reason "Reception of a malformed
       PCEP message" (according to <xref target="RFC5440"/>).</t>
 
-      <t>If a PCC wishes to withdraw a previously reported binding value, 
+      <!--<t>If a PCC wishes to withdraw a previously reported binding value, 
         it MUST send a PCRpt message without the specific TE-PATH-BINDING TLV. If a PCC wishes to modify 
         a previously reported binding, it MUST withdraw the old binding value and include a new 
-        TE-PATH-BINDING TLV containing the new binding value. Note that, other instances of TE-PATH-BINDING TLV that are unchanged are always included.</t>
+        TE-PATH-BINDING TLV containing the new binding value. Note that, other instances of TE-PATH-BINDING TLV that are unchanged are always included.</t>-->
 
-      <t>Similarly, if a PCE wishes to modify a previously requested binding value, it
+
+      <!--<t>Similarly, if a PCE wishes to modify a previously requested binding value, it
       MUST send a PCUpd message with TE-PATH-BINDING TLV containing the new
-      binding value. Note that, other instances of TE-PATH-BINDING TLV that are unchanged are always included.</t>
+      binding value. Note that, other instances of TE-PATH-BINDING TLV that are unchanged are always included.</t>-->
 
-      <t>The absence of TE-PATH-BINDING TLV in PCUpd message means
-      that the PCE does not specify a binding value in which case any previous allocated binding values are withdraw.</t>
+
+  <t>If a PCC wishes to withdraw all previously reported binding values, it
+   MUST send a PCRpt message without any TE-PATH-BINDING TLV.  If a
+   PCC wishes to modify any or all previously reported binding values, it
+   MUST send a PCRpt message containing TE-PATH-BINDING TLVs
+   containing all the binding values that apply from that point on.</t>
+
+   <t>If a PCE wishes to modify a previously requested binding value, it
+   MUST send a PCUpd message with TE-PATH-BINDING TLVs containing
+   all the binding values that apply from that point on.  The absence of
+   TE-PATH-BINDING TLV in PCUpd message means that the PCE does
+   not specify a binding value. Any previously allocated binding values are considered to be requested to be withdrawn by the PCE.</t>
+
+
+
+      <!--<t>The absence of TE-PATH-BINDING TLV in PCUpd message means
+      that the PCE does not specify a binding value in which case any previous allocated binding values are withdraw.</t>-->
 
       <t>If a PCC receives a new valid binding value from the PCE, it MUST try to allocate the new binding value. If a PCC does not receive an old binding value for the PCE, it MUST withdraw the old binding value. 
       If the new binding value is successfully allocated, the PCC MUST report
@@ -540,6 +556,8 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       ("Unable to allocate a new binding label/SID"). </t>
 
       <t>In the absence of any instruction from the PCE, the PCC's local policy dictates how the  binding allocations are made for a given LSP.</t>
+
+      <t>As previously noted, if a message contains an invalid TE-PATH-BINDING TLV that leads to an error condition, the whole message is rejected including any other valid instances of TE-PATH-BINDING TLVs, if any. The resulting error message, MAY include the offending TE-PATH-BINDING TLV in the PCEP-ERROR object.</t> 
     </section>
 
     <section anchor="SR-ERO" title="Binding SID in SR-ERO">
