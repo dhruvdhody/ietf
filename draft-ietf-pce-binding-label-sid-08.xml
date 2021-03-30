@@ -154,7 +154,7 @@
       </address>
     </author>
 
-    <date day="27" month="March" year="2021"/>
+    <date day="30" month="March" year="2021"/>
 
     <area>Routing Area</area>
 
@@ -338,7 +338,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       <t>The new optional TLV is called "TE-PATH-BINDING TLV" (whose format is
       shown in the <xref target="BINDING-LABEL-TLV-FORMAT"/>) is defined to carry the binding label/SID
       for a TE path. This TLV is associated with the LSP object specified in
-      <xref target="RFC8231"/>. This TLV can also be carried in the PCEP-ERROR object <xref target="RFC5440"/> in case of error. Multiple instance of TE-PATH-BINDING TLVs MAY be present in the LSP and PCEP-ERROR object. The type of this TLV is TBD1. The length is variable.</t>
+      <xref target="RFC8231"/>. This TLV can also be carried in the PCEP-ERROR object <xref target="RFC5440"/> in case of error. Multiple instance of TE-PATH-BINDING TLVs MAY be present in the LSP and PCEP-ERROR object. The type of this TLV is 55 (early allocated by IANA). The length is variable.</t>
 
       <figure anchor="BINDING-LABEL-TLV-FORMAT" title="TE-PATH-BINDING TLV">
         <artwork align="center"><![CDATA[
@@ -614,9 +614,9 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       <t>A new P flag in the LSP object <xref target="RFC8231"/> is introduced
       to indicate the allocation needs to be made by the PCE: <list
           style="symbols">
-          <t>P (PCE-allocated binding label/SID - TBD6): If the bit is set to
+          <t>P (PCE-allocated binding label/SID): If the bit is set to
           1, it indicates that the PCC requests PCE to make allocations for
-          this LSP.The TE-PATH-BINDING TLV in the LSP object identifies that the allocation is for binding label/SID. A PCC would set this bit to 1 and include
+          this LSP. The TE-PATH-BINDING TLV in the LSP object identifies that the allocation is for binding label/SID. A PCC would set this bit to 1 and include
           a TE-PATH-BINDING TLV in the LSP object to request for allocation of
           binding label/SID by the PCE in the PCEP message. A PCE would also
           set this bit to 1 and include a TE-PATH-BINDING TLV to indicate that
@@ -825,8 +825,8 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       for the protocol elements defined in this document.</t>
 
       <section anchor="TLV" title="PCEP TLV Type Indicators">
-        <t>This document defines a new PCEP TLV; IANA is requested to make the
-        following allocations from the "PCEP TLV Type Indicators" subregistry
+        <t>This document defines a new PCEP TLV; IANA is requested to confirm the
+        following early allocations from the "PCEP TLV Type Indicators" subregistry
         of the PCEP Numbers registry, as follows:</t>
 
         <texttable anchor="TLV-Type" style="none" suppress-title="true">
@@ -842,7 +842,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
           <c/>
 
-          <c>TBD1</c>
+          <c>55</c>
 
           <c>TE-PATH-BINDING</c>
 
@@ -945,7 +945,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       </section>
 
       <section anchor="LSP" title="LSP Object">
-        <t>IANA is requested to allocate new code-point in the "LSP Object
+        <t>IANA is requested to confirm the early allocation for a new code-point in the "LSP Object
         Flag Field" sub-registry for the new P flag as follows:</t>
 
         <texttable anchor="LSP-Flag" style="none" suppress-title="true">
@@ -961,7 +961,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
           <c/>
 
-          <c>TBD6</c>
+          <c>0</c>
 
           <c>PCE-allocated binding label/SID</c>
 
