@@ -5,12 +5,12 @@
 NTP Working Group                                                  N. Wu
 Internet-Draft                                             D. Dhody, Ed.
 Intended status: Standards Track                                  Huawei
-Expires: 9 June 2022                                       A. Sinha, Ed.
+Expires: 12 June 2022                                      A. Sinha, Ed.
                                                             A. Kumar S N
                                                             RtBrick Inc.
                                                                  Y. Zhao
                                                                 Ericsson
-                                                         6 December 2021
+                                                         9 December 2021
 
 
                        A YANG Data Model for NTP
@@ -19,8 +19,9 @@ Expires: 9 June 2022                                       A. Sinha, Ed.
 Abstract
 
    This document defines a YANG data model for Network Time Protocol
-   (NTP) implementations.  The data model includes configuration data
-   and state data.
+   (NTP) version 4 implementations.  It can also be used to configure
+   version 3.  The data model includes configuration data and state
+   data.
 
 Requirements Language
 
@@ -45,15 +46,14 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 June 2022.
+   This Internet-Draft will expire on 12 June 2022.
 
 
 
 
 
 
-
-Wu, et al.                 Expires 9 June 2022                  [Page 1]
+Wu, et al.                Expires 12 June 2022                  [Page 1]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -82,37 +82,39 @@ Table of Contents
      1.5.  References in the Model . . . . . . . . . . . . . . . . .   4
    2.  NTP data model  . . . . . . . . . . . . . . . . . . . . . . .   5
    3.  Relationship with NTPv4-MIB . . . . . . . . . . . . . . . . .   7
-   4.  Relationship with RFC 7317  . . . . . . . . . . . . . . . . .   8
+   4.  Relationship with RFC 7317  . . . . . . . . . . . . . . . . .   9
    5.  Access Rules  . . . . . . . . . . . . . . . . . . . . . . . .   9
    6.  Key Management  . . . . . . . . . . . . . . . . . . . . . . .  10
    7.  NTP Version . . . . . . . . . . . . . . . . . . . . . . . . .  10
-   8.  NTP YANG Module . . . . . . . . . . . . . . . . . . . . . . .  10
-   9.  Usage Example . . . . . . . . . . . . . . . . . . . . . . . .  40
-     9.1.  Unicast association . . . . . . . . . . . . . . . . . . .  40
-     9.2.  Refclock master . . . . . . . . . . . . . . . . . . . . .  42
-     9.3.  Authentication configuration  . . . . . . . . . . . . . .  43
-     9.4.  Access configuration  . . . . . . . . . . . . . . . . . .  44
-     9.5.  Multicast configuration . . . . . . . . . . . . . . . . .  45
-     9.6.  Manycast configuration  . . . . . . . . . . . . . . . . .  49
-     9.7.  Clock state . . . . . . . . . . . . . . . . . . . . . . .  52
-     9.8.  Get all association . . . . . . . . . . . . . . . . . . .  52
-     9.9.  Global statistic  . . . . . . . . . . . . . . . . . . . .  54
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  54
-   11. Security Considerations . . . . . . . . . . . . . . . . . . .  55
-   12. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  56
-   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  56
-     13.1.  Normative References . . . . . . . . . . . . . . . . . .  56
-     13.2.  Informative References . . . . . . . . . . . . . . . . .  58
-   Appendix A.  Full YANG Tree . . . . . . . . . . . . . . . . . . .  59
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  62
+   8.  NTP YANG Module . . . . . . . . . . . . . . . . . . . . . . .  11
+   9.  Usage Example . . . . . . . . . . . . . . . . . . . . . . . .  41
+     9.1.  Unicast association . . . . . . . . . . . . . . . . . . .  41
+     9.2.  Refclock master . . . . . . . . . . . . . . . . . . . . .  44
+     9.3.  Authentication configuration  . . . . . . . . . . . . . .  44
+     9.4.  Access configuration  . . . . . . . . . . . . . . . . . .  45
+     9.5.  Multicast configuration . . . . . . . . . . . . . . . . .  46
+     9.6.  Manycast configuration  . . . . . . . . . . . . . . . . .  50
+     9.7.  Clock state . . . . . . . . . . . . . . . . . . . . . . .  53
+     9.8.  Get all association . . . . . . . . . . . . . . . . . . .  53
+     9.9.  Global statistic  . . . . . . . . . . . . . . . . . . . .  55
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  55
+     10.1.  IETF XML Registry  . . . . . . . . . . . . . . . . . . .  55
+     10.2.  YANG Module Names  . . . . . . . . . . . . . . . . . . .  55
+   11. Security Considerations . . . . . . . . . . . . . . . . . . .  56
+   12. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  57
+   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  58
+     13.1.  Normative References . . . . . . . . . . . . . . . . . .  58
+     13.2.  Informative References . . . . . . . . . . . . . . . . .  60
+   Appendix A.  Full YANG Tree . . . . . . . . . . . . . . . . . . .  61
 
 
 
-
-Wu, et al.                 Expires 9 June 2022                  [Page 2]
+Wu, et al.                Expires 12 June 2022                  [Page 2]
 
 Internet-Draft                YANG for NTP                 December 2021
 
+
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  64
 
 1.  Introduction
 
@@ -122,9 +124,9 @@ Internet-Draft                YANG for NTP                 December 2021
 
    The data model covers configuration of system parameters of NTP, such
    as access rules, authentication and VPN Routing and Forwarding (VRF)
-   binding, and also associations of NTP in different modes and per-
-   interface parameters.  It also provides information about running
-   state of NTP implementations.
+   binding, and also various modes of NTP and per-interface parameters.
+   It also provides access to information about running state of NTP
+   implementations.
 
 1.1.  Operational State
 
@@ -163,9 +165,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-
-
-Wu, et al.                 Expires 9 June 2022                  [Page 3]
+Wu, et al.                Expires 12 June 2022                  [Page 3]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -221,7 +221,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                  [Page 4]
+Wu, et al.                Expires 12 June 2022                  [Page 4]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -260,6 +260,9 @@ Internet-Draft                YANG for NTP                 December 2021
            +---------------------------------------+-----------+
            | US Secure Hash Algorithm 1 (SHA1)     | [RFC3174] |
            +---------------------------------------+-----------+
+           | FIPS 180-4: Secure Hash Standard      | [SHS]     |
+           | (SHS)                                 |           |
+           +---------------------------------------+-----------+
 
                   Table 2: References in the YANG modules
 
@@ -268,24 +271,27 @@ Internet-Draft                YANG for NTP                 December 2021
    This document defines the YANG module "ietf-ntp", which has the
    following condensed structure:
 
+
+
+
+
+
+
+Wu, et al.                Expires 12 June 2022                  [Page 5]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
    module: ietf-ntp
      +--rw ntp!
         +--rw port?                    inet:port-number {ntp-port}?
         +--rw refclock-master!
         |  +--rw master-stratum?   ntp-stratum
         +--rw authentication {authentication}?
-
-
-
-Wu, et al.                 Expires 9 June 2022                  [Page 5]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
         |  +--rw auth-enabled?          boolean
         |  +--rw authentication-keys* [key-id]
         |     +--rw key-id       uint32
-        |     |  ...
+        |     +--...
         +--rw access-rules {access-rules}?
         |  +--rw access-rule* [access-mode]
         |     +--rw access-mode    identityref
@@ -295,48 +301,64 @@ Internet-Draft                YANG for NTP                 December 2021
         |     +--ro clock-state                  identityref
         |     +--ro clock-stratum                ntp-stratum
         |     +--ro clock-refid                  refid
-        |     |  ...
+        |     +--...
         +--rw unicast-configuration* [address type]
         |       {unicast-configuration}?
         |  +--rw address           inet:ip-address
         |  +--rw type              identityref
-        |  |  ...
-        +--ro associations* [address local-mode isconfigured]
-        |  +--ro address           inet:ip-address
-        |  +--ro local-mode        identityref
-        |  +--ro isconfigured      boolean
-        |  |  ...
-        |  +--ro ntp-statistics
-        |        ...
+        |  +--...
+        +--rw associations
+        |  +--ro association* [address local-mode isconfigured]
+        |     +--ro address           inet:ip-address
+        |     +--ro local-mode        identityref
+        |     +--ro isconfigured      boolean
+        |     +--...
+        |     +--ro ntp-statistics
+        |        +--...
+        +--rw interfaces
         |  +--rw interface* [name]
         |     +--rw name                if:interface-ref
         |     +--rw broadcast-server! {broadcast-server}?
-        |     |  ...
+        |     |  +--...
         |     +--rw broadcast-client! {broadcast-client}?
         |     +--rw multicast-server* [address] {multicast-server}?
         |     |  +--rw address
         |     |  |       rt-types:ip-multicast-group-address
-        |     |  |  ...
+        |     |  +--...
         |     +--rw multicast-client* [address] {multicast-client}?
         |     |  +--rw address    rt-types:ip-multicast-group-address
         |     +--rw manycast-server* [address] {manycast-server}?
         |     |  +--rw address    rt-types:ip-multicast-group-address
         |     +--rw manycast-client* [address] {manycast-client}?
-        |        +--rw address
-        |        |       rt-types:ip-multicast-group-address
-        |        |  ...
-        +--ro ntp-statistics
-           +--...
-
-   The full data model tree for the YANG module "ietf-ntp" is in
-   Appendix A.
 
 
 
-Wu, et al.                 Expires 9 June 2022                  [Page 6]
+Wu, et al.                Expires 12 June 2022                  [Page 6]
 
 Internet-Draft                YANG for NTP                 December 2021
 
+
+        |        +--rw address
+        |        |       rt-types:ip-multicast-group-address
+        |        +--...
+        +--ro ntp-statistics
+           +--...
+
+     rpcs:
+       +---x statistics-reset
+          +---w input
+             +---w (association-or-all)?
+                +--:(association)
+                |  +---w associations-address?
+                |  |       -> /ntp/associations/association/address
+                |  +---w associations-local-mode?
+                |  |       -> /ntp/associations/association/local-mode
+                |  +---w associations-isconfigured?
+                |          -> /ntp/associations/association/isconfigured
+                +--:(all)
+
+   The full data model tree for the YANG module "ietf-ntp" is in
+   Appendix A.
 
    This data model defines one top-level container which includes both
    the NTP configuration and the NTP running state including access
@@ -364,6 +386,14 @@ Internet-Draft                YANG for NTP                 December 2021
       |        clock-refid        |  ntpEntStatusActiveRefSourceId  |
       +---------------------------+---------------------------------+
       |                           | ntpEntStatusActiveRefSourceName |
+
+
+
+Wu, et al.                Expires 12 June 2022                  [Page 7]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
       +---------------------------+---------------------------------+
       |      clock-precision      |       ntpEntTimePrecision       |
       +---------------------------+---------------------------------+
@@ -386,14 +416,6 @@ Internet-Draft                YANG for NTP                 December 2021
    |                stratum                |      ntpAssocStratum      |
    +---------------------------------------+---------------------------+
    |                 refid                 |       ntpAssocRefId       |
-
-
-
-Wu, et al.                 Expires 9 June 2022                  [Page 7]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
    +---------------------------------------+---------------------------+
    |                 offset                |       ntpAssocOffset      |
    +---------------------------------------+---------------------------+
@@ -416,6 +438,18 @@ Internet-Draft                YANG for NTP                 December 2021
 
    YANG NTP State Data Nodes and Related NTPv4-MIB Objects
 
+
+
+
+
+
+
+
+Wu, et al.                Expires 12 June 2022                  [Page 8]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
 4.  Relationship with RFC 7317
 
    This section describes the relationship with NTP definition in
@@ -423,32 +457,6 @@ Internet-Draft                YANG for NTP                 December 2021
    /ntp/ also support per-interface configuration which is not supported
    in /system/ntp.  If the yang model defined in this document is
    implemented, then /system/ntp SHOULD NOT be used and MUST be ignored.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wu, et al.                 Expires 9 June 2022                  [Page 8]
-
-Internet-Draft                YANG for NTP                 December 2021
-
 
     +===============================+================================+
     |    YANG data nodes in /ntp/   | YANG data nodes in /system/ntp |
@@ -477,6 +485,11 @@ Internet-Draft                YANG for NTP                 December 2021
 
 5.  Access Rules
 
+   The access rules in this section refers to the on-the-wire access
+   control to the NTP service and completely independent of any
+   management API access control, e.g., NETCONF Access Control Model
+   (NACM) ([RFC8341]).
+
    An Access Control List (ACL) is one of the basic elements used to
    configure device-forwarding behavior.  An ACL is a user-ordered set
    of rules that is used to filter traffic on a networking device.
@@ -485,6 +498,14 @@ Internet-Draft                YANG for NTP                 December 2021
    include an access-control feature that prevents unauthorized access
    and controls which peers are allowed to update the local clock.
    Further it is useful to differentiate between the various kinds of
+
+
+
+Wu, et al.                Expires 12 June 2022                  [Page 9]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
    access and attach a different acl-rule to each.  For this, the YANG
    module allows such configuration via /ntp/access-rules.  The access-
    rule itself is configured via [RFC8519].
@@ -498,13 +519,6 @@ Internet-Draft                YANG for NTP                 December 2021
    *  Server: Permit others to synchronize their time with the NTP
       entity, but vice versa is not supported.  NTP control queries are
       accepted.
-
-
-
-Wu, et al.                 Expires 9 June 2022                  [Page 9]
-
-Internet-Draft                YANG for NTP                 December 2021
-
 
    *  Server-only: Permit others to synchronize their time with NTP
       entity, but vice versa is not supported.  NTP control queries are
@@ -529,16 +543,28 @@ Internet-Draft                YANG for NTP                 December 2021
    keys/. Further at the time of configuration of NTP association (for
    example unicast-server), the key-id is specified.
 
+   The 'nacm:default-deny-all' is used to prevent retrieval of the
+   actual key information after it is set.
+
 7.  NTP Version
 
    This YANG model allow a version to be configured for the NTP
    association i.e. an operator can control the use of NTPv3 [RFC1305]
    or NTPv4 [RFC5905] for each association it forms.  This allows
-   backward compatibility with a legacy system.
+   backward compatibility with a legacy system.  Note that the version 3
+   of NTP [RFC1305] is obsoleted by NTPv4 [RFC5905].
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 10]
+
+Internet-Draft                YANG for NTP                 December 2021
+
 
 8.  NTP YANG Module
 
-   <CODE BEGINS> file "ietf-ntp@2021-03-09.yang"
+   <CODE BEGINS> file "ietf-ntp@2021-12-09.yang"
    module ietf-ntp {
      yang-version 1.1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-ntp";
@@ -554,14 +580,6 @@ Internet-Draft                YANG for NTP                 December 2021
        reference
          "RFC 6991: Common YANG Data Types";
      }
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 10]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
      import ietf-interfaces {
        prefix if;
        reference
@@ -592,6 +610,14 @@ Internet-Draft                YANG for NTP                 December 2021
 
      organization
        "IETF NTP (Network Time Protocol) Working Group";
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 11]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
      contact
        "WG Web:  <http://tools.ietf.org/wg/ntp/>
         WG List:  <mailto: ntp@ietf.org
@@ -610,14 +636,6 @@ Internet-Draft                YANG for NTP                 December 2021
         with or without modification, is permitted pursuant to,
         and subject to the license terms contained in, the
         Simplified BSD License set forth in Section 4.c of the
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 11]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
         IETF Trust's Legal Provisions Relating to IETF Documents
         (https://trustee.ietf.org/license-info).
 
@@ -630,7 +648,7 @@ Internet-Draft                YANG for NTP                 December 2021
         described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
         they appear in all capitals, as shown here.";
 
-     revision 2021-03-09 {
+     revision 2021-12-09 {
        description
          "Initial revision.";
        reference
@@ -648,6 +666,14 @@ Internet-Draft                YANG for NTP                 December 2021
        description
          "The level of each server in the hierarchy is defined by
           a stratum. Primary servers are assigned with stratum
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 12]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
           one; secondary servers at each lower level are assigned with
           one stratum greater than the preceding level";
        reference
@@ -656,7 +682,9 @@ Internet-Draft                YANG for NTP                 December 2021
      }
 
      typedef ntp-version {
-       type uint8;
+       type uint8 {
+         range "3..max";
+       }
        default "4";
        description
          "The current NTP version supported by corresponding
@@ -665,14 +693,6 @@ Internet-Draft                YANG for NTP                 December 2021
          "RFC 5905: Network Time Protocol Version 4: Protocol and
           Algorithms Specification, Section 1";
      }
-
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 12]
-
-Internet-Draft                YANG for NTP                 December 2021
-
 
      typedef refid {
        type union {
@@ -702,14 +722,31 @@ Internet-Draft                YANG for NTP                 December 2021
      }
 
      typedef ntp-date-and-time {
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 13]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
        type union {
          type yang:date-and-time;
          type uint8;
        }
        description
-         "Follows the normal date-and-time format when valid value
-          exist, otherwise allows for setting special value such as
+         "Follows the date-and-time format when valid value exist,
+          otherwise allows for setting special value such as
           zero.";
+       reference
+         "RFC 6991: Common YANG Data Types";
+     }
+
+     typedef log2seconds {
+       type int8;
+       description
+         "An 8-bit signed integer that represents signed log2
+          seconds.";
      }
 
      /* features */
@@ -722,14 +759,6 @@ Internet-Draft                YANG for NTP                 December 2021
           Algorithms Specification, Section 7.2";
      }
 
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 13]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
      feature authentication {
        description
          "Support for NTP symmetric key authentication";
@@ -741,12 +770,22 @@ Internet-Draft                YANG for NTP                 December 2021
      feature deprecated {
        description
          "Support deprecated MD5-based authentication (RFC 8573) or
-          SHA-1 or any other deprecated authentication.
+          SHA-1 or any other deprecated authentication mechanism.
           It is enabled to support legacy compatibility when secure
-          cryptographic algorithm is not availaible to use.";
+          cryptographic algorithms are not available to use.
+          It is also used to configure keystrings in ASCII format.";
        reference
          "RFC 1321: The MD5 Message-Digest Algorithm
-          RFC 3174: US Secure Hash Algorithm 1 (SHA1)";
+          RFC 3174: US Secure Hash Algorithm 1 (SHA1)
+          FIPS 180-4: Secure Hash Standard (SHS)";
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 14]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
      }
 
      feature hex-key-string {
@@ -779,13 +818,6 @@ Internet-Draft                YANG for NTP                 December 2021
           Algorithms Specification, Section 3";
      }
 
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 14]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
      feature broadcast-client {
        description
          "Support for broadcast client";
@@ -801,6 +833,14 @@ Internet-Draft                YANG for NTP                 December 2021
          "RFC 5905: Network Time Protocol Version 4: Protocol and
           Algorithms Specification, Section 3.1";
      }
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 15]
+
+Internet-Draft                YANG for NTP                 December 2021
+
 
      feature multicast-client {
        description
@@ -834,32 +874,30 @@ Internet-Draft                YANG for NTP                 December 2021
        description
          "This defines NTP unicast mode of operation as used
           for unicast-configurations.";
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 15]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
      }
 
      identity uc-server {
        if-feature "unicast-configuration";
        base unicast-configuration-type;
        description
-         "Use client association mode. This device
-          will not provide synchronization to the
-          configured NTP server.";
+         "Use client association mode where the unicast server
+          address is configured.";
      }
 
      identity uc-peer {
        if-feature "unicast-configuration";
        base unicast-configuration-type;
        description
-         "Use symmetric active association mode.
-          This device may provide synchronization
-          to the configured NTP server.";
+         "Use symmetric active association mode where the peer
+          address is configured.";
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 16]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
      }
 
      /* association-modes */
@@ -890,14 +928,6 @@ Internet-Draft                YANG for NTP                 December 2021
 
      identity client {
        base association-mode;
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 16]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
        description
          "Use client association mode (mode 3).
           This device will not provide synchronization
@@ -916,6 +946,14 @@ Internet-Draft                YANG for NTP                 December 2021
        base association-mode;
        description
          "Use broadcast server mode (mode 5).
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 17]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
           This mode defines that its either working
           as broadcast-server or multicast-server.";
      }
@@ -932,7 +970,7 @@ Internet-Draft                YANG for NTP                 December 2021
      identity access-mode {
        if-feature "access-rules";
        description
-         "This defines NTP access modes. These identifies
+         "This defines NTP access modes. These identify
           how the ACL is applied with NTP.";
        reference
          "RFC 5905: Network Time Protocol Version 4: Protocol and
@@ -946,14 +984,6 @@ Internet-Draft                YANG for NTP                 December 2021
          "Permit others to synchronize their time with this NTP
           entity or it can synchronize its time with others.
           NTP control queries are also accepted. This enables
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 17]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
           full access authority.";
      }
 
@@ -972,6 +1002,14 @@ Internet-Draft                YANG for NTP                 December 2021
        description
          "Permit others to synchronize their time with this NTP
           entity, but vice versa is not supported. NTP control
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 18]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
           queries are not accepted.";
      }
 
@@ -1003,13 +1041,6 @@ Internet-Draft                YANG for NTP                 December 2021
           with any NTP server.";
      }
 
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 18]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
      /* ntp-sync-state */
 
      identity ntp-sync-state {
@@ -1021,11 +1052,19 @@ Internet-Draft                YANG for NTP                 December 2021
           Algorithms Specification, Appendix A.1.1";
      }
 
-     identity clock-not-set {
+     identity clock-never-set {
        base ntp-sync-state;
        description
-         "Indicates the clock is not updated.";
+         "Indicates the clock was never set.";
      }
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 19]
+
+Internet-Draft                YANG for NTP                 December 2021
+
 
      identity freq-set-by-cfg {
        base ntp-sync-state;
@@ -1059,25 +1098,14 @@ Internet-Draft                YANG for NTP                 December 2021
          "Base identity of cryptographic algorithm options.";
      }
 
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 19]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
-     identity hmac-sha-1-12 {
-       base crypto-algorithm;
-       description
-         "The HMAC-SHA1-12 algorithm.";
-     }
-
      identity md5 {
        if-feature "deprecated";
        base crypto-algorithm;
        description
          "The MD5 algorithm. Note that RFC 8573
           deprecates the use of MD5-based authentication.";
+       reference
+         "RFC 1321: The MD5 Message-Digest Algorithm";
      }
 
      identity sha-1 {
@@ -1085,43 +1113,74 @@ Internet-Draft                YANG for NTP                 December 2021
        base crypto-algorithm;
        description
          "The SHA-1 algorithm.";
+       reference
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 20]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
+         "RFC 3174: US Secure Hash Algorithm 1 (SHA1)";
      }
 
      identity hmac-sha-1 {
+       if-feature "deprecated";
        base crypto-algorithm;
        description
          "HMAC-SHA-1 authentication algorithm.";
+       reference
+         "FIPS 180-4: Secure Hash Standard (SHS)";
+     }
+
+     identity hmac-sha1-12 {
+       if-feature "deprecated";
+       base crypto-algorithm;
+       description
+         "The HMAC-SHA1-12 algorithm.";
+       reference
+         "FIPS 180-4: Secure Hash Standard (SHS)";
      }
 
      identity hmac-sha-256 {
        description
          "HMAC-SHA-256 authentication algorithm.";
+       reference
+         "FIPS 180-4: Secure Hash Standard (SHS)";
      }
 
      identity hmac-sha-384 {
        description
          "HMAC-SHA-384 authentication algorithm.";
+       reference
+         "FIPS 180-4: Secure Hash Standard (SHS)";
      }
 
      identity hmac-sha-512 {
        description
          "HMAC-SHA-512 authentication algorithm.";
+       reference
+         "FIPS 180-4: Secure Hash Standard (SHS)";
      }
+
      identity aes-cmac {
        base crypto-algorithm;
        description
          "The AES-CMAC algorithm - required by
           RFC 8573 for MAC for the NTP";
        reference
-         "RFC 4493: The AES-CMAC Algorithm";
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 20]
+Wu, et al.                Expires 12 June 2022                 [Page 21]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
+         "RFC 4493: The AES-CMAC Algorithm
+          RFC 8573: Message Authentication Code for the Network
+          Time Protocol";
      }
 
      /* Groupings */
@@ -1135,6 +1194,7 @@ Internet-Draft                YANG for NTP                 December 2021
            "Key string styles";
          case keystring {
            leaf keystring {
+             if-feature "deprecated";
              type string;
              description
                "Key string in ASCII format.";
@@ -1160,24 +1220,23 @@ Internet-Draft                YANG for NTP                 December 2021
        description
          "To define an authentication key for a Network Time
           Protocol (NTP) time source.";
-       nacm:default-deny-all;
        leaf key-id {
          type uint32 {
            range "1..max";
          }
          description
            "Authentication key identifier.";
-       }
-       leaf algorithm {
-         type identityref {
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 21]
+Wu, et al.                Expires 12 June 2022                 [Page 22]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
+       }
+       leaf algorithm {
+         type identityref {
            base crypto-algorithm;
          }
          description
@@ -1198,7 +1257,7 @@ Internet-Draft                YANG for NTP                 December 2021
        }
        reference
          "RFC 5905: Network Time Protocol Version 4: Protocol and
-          Algorithms Specification, Section 7.3";
+          Algorithms Specification, Section 7.3 and 7.4";
      }
 
      grouping authentication {
@@ -1223,17 +1282,17 @@ Internet-Draft                YANG for NTP                 December 2021
 
      grouping statistics {
        description
-         "NTP packet statistic.";
-       leaf discontinuity-time {
-         type ntp-date-and-time;
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 22]
+Wu, et al.                Expires 12 June 2022                 [Page 23]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
+         "NTP packet statistic.";
+       leaf discontinuity-time {
+         type ntp-date-and-time;
          description
            "The time on the most recent occasion at which any one or
             more of this NTP counters suffered a discontinuity. If
@@ -1279,17 +1338,17 @@ Internet-Draft                YANG for NTP                 December 2021
 
      grouping common-attributes {
        description
-         "NTP common attributes for configuration.";
-       leaf minpoll {
-         type int8;
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 23]
+Wu, et al.                Expires 12 June 2022                 [Page 24]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
+         "NTP common attributes for configuration.";
+       leaf minpoll {
+         type log2seconds;
          default "6";
          description
            "The minimum poll interval used in this association.";
@@ -1298,7 +1357,7 @@ Internet-Draft                YANG for NTP                 December 2021
             Algorithms Specification, Section 7.2";
        }
        leaf maxpoll {
-         type int8;
+         type log2seconds;
          default "10";
          description
            "The maximum poll interval used in this association.";
@@ -1333,23 +1392,25 @@ Internet-Draft                YANG for NTP                 December 2021
          "Reference to NTP association mode";
        leaf associations-address {
          type leafref {
-           path "/ntp:ntp/ntp:associations/ntp:address";
-         }
-         description
-           "Indicates the association's address
-            which result in clock synchronization.";
+           path "/ntp:ntp/ntp:associations/ntp:association"
+              + "/ntp:address";
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 24]
+Wu, et al.                Expires 12 June 2022                 [Page 25]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
+         }
+         description
+           "Indicates the association's address
+            which result in clock synchronization.";
        }
        leaf associations-local-mode {
          type leafref {
-           path "/ntp:ntp/ntp:associations/ntp:local-mode";
+           path "/ntp:ntp/ntp:associations/ntp:association"
+              + "/ntp:local-mode";
          }
          description
            "Indicates the association's local-mode
@@ -1357,16 +1418,14 @@ Internet-Draft                YANG for NTP                 December 2021
        }
        leaf associations-isconfigured {
          type leafref {
-           path "/ntp:ntp/ntp:associations/"
+           path "/ntp:ntp/ntp:associations/ntp:association/"
               + "ntp:isconfigured";
          }
          description
-           "The association was configured or dynamic
-            which result in clock synchronization.";
+           "Indicates if the association (that resulted in the
+            clock synchronization) is explicitly configured.";
        }
      }
-
-     /* Configuration data nodes */
 
      container ntp {
        when 'false() = boolean(/sys:system/sys:ntp)' {
@@ -1391,17 +1450,17 @@ Internet-Draft                YANG for NTP                 December 2021
             Algorithms Specification, Section 7.2";
        }
        container refclock-master {
-         presence "NTP master clock is enabled.";
-         description
-           "Configures the local clock of this device as NTP server.";
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 25]
+Wu, et al.                Expires 12 June 2022                 [Page 26]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
+         presence "NTP master clock is enabled.";
+         description
+           "Configures the local clock of this device as NTP server.";
          leaf master-stratum {
            type ntp-stratum;
            default "16";
@@ -1433,7 +1492,7 @@ Internet-Draft                YANG for NTP                 December 2021
          description
            "Configuration to control access to NTP service
             by using NTP access-group feature.
-            The access-mode identifies how the acl is
+            The access-mode identifies how the ACL is
             applied with NTP.";
          list access-rule {
            key "access-mode";
@@ -1444,16 +1503,13 @@ Internet-Draft                YANG for NTP                 December 2021
                base access-mode;
              }
              description
-               "NTP access mode. The definition of each possible value:
-                peer: Both time request and control query can be
-                performed.
-                server: Enables the server access and query.
-                synchronization: Enables the server access only.
-                query: Enables control query only.";
+               "The NTP access mode. Some of the possible value
+                includes peer, server, synchronization, query
+                etc.";
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 26]
+Wu, et al.                Expires 12 June 2022                 [Page 27]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -1484,11 +1540,8 @@ Internet-Draft                YANG for NTP                 December 2021
              }
              mandatory true;
              description
-               "The state of system clock. The definition of each
-                possible value is:
-                synchronized: Indicates local clock is synchronized.
-                unsynchronized: Indicates local clock is not
-                synchronized.";
+               "The state of system clock. Some of the possible value
+                includes synchronized and unsynchronized";
            }
            leaf clock-stratum {
              type ntp-stratum;
@@ -1506,17 +1559,17 @@ Internet-Draft                YANG for NTP                 December 2021
              description
                "A code identifying the particular server or reference
                 clock.  The interpretation depends upon stratum. It
+                could be an IPv4 address or first 32 bits of the MD5 hash
+                of the IPv6 address or a string for the Reference
+                Identifier and KISS codes. Some examples:
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 27]
+Wu, et al.                Expires 12 June 2022                 [Page 28]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
-                could be an IPv4 address or first 32 bits of the MD5 hash
-                of the IPv6 address or a string for the Reference
-                Identifier and KISS codes. Some examples:
                 -- a refclock ID like '127.127.1.0' for local clock sync
                 -- uni/multi/broadcast associations for IPv4 will look like
                 '203.0.113.1' and '0x4321FEDC' for IPv6
@@ -1553,32 +1606,34 @@ Internet-Draft                YANG for NTP                 December 2021
                "The actual frequency of the local clock.";
            }
            leaf clock-precision {
-             type int8;
-             units "Hz";
+             type log2seconds;
              mandatory true;
              description
-               "Clock precision of this system in integer format
-                (prec=2^(-n)). A value of 5 would mean 2^-5 = 31.25 ms.";
+               "Clock precision of this system in signed integer format,
+                in log 2 seconds -  (prec=2^(-n)). A value of 5 would
+                mean 2^-5 = 0.03125 seconds = 31.25 ms.";
              reference
                "RFC 5905: Network Time Protocol Version 4: Protocol and
                 Algorithms Specification, Section 7.3";
+           }
+           leaf clock-offset {
+             type decimal64 {
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 28]
+Wu, et al.                Expires 12 June 2022                 [Page 29]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
-           }
-           leaf clock-offset {
-             type decimal64 {
                fraction-digits 3;
              }
              units "milliseconds";
              description
-               "The time offset to the current selected reference time
-                source e.g., '0.032ms' or '1.232ms'.";
+               "The signed time offset to the current selected reference
+                time source e.g., '0.032ms' or '1.232ms'. The negative
+                value Indicates that the local clock is behind the
+                current selected reference time source.";
              reference
                "RFC 5905: Network Time Protocol Version 4: Protocol and
                 Algorithms Specification, Section 9.1";
@@ -1604,7 +1659,7 @@ Internet-Draft                YANG for NTP                 December 2021
                 and the root clock, e.g., '6.927ms'.";
              reference
                "RFC 5905: Network Time Protocol Version 4: Protocol and
-                Algorithms Specification, Section 4 and 7.3";
+                Algorithms Specification, Section 4, 7.3 and 10.";
            }
            leaf reference-time {
              type ntp-date-and-time;
@@ -1618,15 +1673,15 @@ Internet-Draft                YANG for NTP                 December 2021
            leaf sync-state {
              type identityref {
                base ntp-sync-state;
+             }
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 29]
+Wu, et al.                Expires 12 June 2022                 [Page 30]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
-             }
              mandatory true;
              description
                "The synchronization status of the local clock. Referred to
@@ -1652,9 +1707,8 @@ Internet-Draft                YANG for NTP                 December 2021
              base unicast-configuration-type;
            }
            description
-             "Use client association mode.  This device
-              will not provide synchronization to the
-              configured NTP server.";
+             "The unicast configuration type, for example
+              unicast-server";
          }
          container authentication {
            if-feature "authentication";
@@ -1674,16 +1728,16 @@ Internet-Draft                YANG for NTP                 December 2021
            description
              "If set, a series of packets are sent instead of a single
               packet within each synchronization interval to achieve
+              faster synchronization.";
+           reference
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 30]
+Wu, et al.                Expires 12 June 2022                 [Page 31]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
-              faster synchronization.";
-           reference
              "RFC 5905: Network Time Protocol Version 4: Protocol and
               Algorithms Specification, Section 13.1";
          }
@@ -1710,258 +1764,267 @@ Internet-Draft                YANG for NTP                 December 2021
               poll.";
          }
        }
-       list associations {
-         key "address local-mode isconfigured";
-         config false;
+       container associations {
          description
-           "List of NTP associations. Here address, local-mode
-            and isconfigured are required to uniquely identify
-            a particular association. Lets take following examples -
+           "Association parameters";
+         list association {
+           key "address local-mode isconfigured";
+           config false;
+           description
+             "List of NTP associations. Here address, local-mode
+              and isconfigured are required to uniquely identify
+              a particular association. Lets take following examples -
 
-            1) If RT1 acting as broadcast server,
-            and RT2 acting as broadcast client, then RT2
-            will form dynamic association with address as RT1,
-            local-mode as client and isconfigured as false.
+              1) If RT1 acting as broadcast server,
+              and RT2 acting as broadcast client, then RT2
+              will form dynamic association with address as RT1,
+              local-mode as client and isconfigured as false.
 
-            2) When RT2 is configured
-            with unicast-server RT1, then RT2 will form
-            association with address as RT1, local-mode as client
-            and isconfigured as true.
+              2) When RT2 is configured
+              with unicast-server RT1, then RT2 will form
+              association with address as RT1, local-mode as client
+              and isconfigured as true.
 
-            Thus all 3 leaves are needed as key to unique identify
-            the association.";
-
+              Thus all 3 leaves are needed as key to unique identify
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 31]
+
+Wu, et al.                Expires 12 June 2022                 [Page 32]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
-         leaf address {
-           type inet:ip-address;
-           description
-             "The address of this association. Represents the IP
-              address of a unicast/multicast/broadcast address.";
-         }
-         leaf local-mode {
-           type identityref {
-             base association-mode;
-           }
-           description
-             "Local mode of this NTP association.";
-         }
-         leaf isconfigured {
-           type boolean;
-           description
-             "Indicates if this association is configured or
-              dynamically learned.";
-         }
-         leaf stratum {
-           type ntp-stratum;
-           description
-             "The association stratum value.";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 3";
-         }
-         leaf refid {
-           type refid;
-           description
-             "A code identifying the particular server or reference
-              clock.  The interpretation depends upon stratum. It
-              could be an IPv4 address or first 32 bits of the MD5 hash of
-              the IPv6 address or a string for the Reference Identifier
-              and KISS codes. Some examples:
-              -- a refclock ID like '127.127.1.0' for local clock sync
-              -- uni/multi/broadcast associations for IPv4 will look like
-              '203.0.113.1' and '0x4321FEDC' for IPv6
-              -- sync with primary source will look like 'DCN', 'NIST',
-              'ATOM'
-              -- KISS codes will look like 'AUTH', 'DROP', 'RATE'
-              Note that the use of MD5 hash for IPv6 address is not for
-              cryptographic purposes";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 7.3";
-         }
-         leaf authentication {
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 32]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
-           if-feature "authentication";
-           type leafref {
-             path "/ntp:ntp/ntp:authentication/"
-                + "ntp:authentication-keys/ntp:key-id";
-           }
-           description
-             "Authentication Key used for this association.";
-         }
-         leaf prefer {
-           type boolean;
-           default "false";
-           description
-             "Indicates if this association is preferred.";
-         }
-         leaf peer-interface {
-           type if:interface-ref;
-           description
-             "The interface which is used for communication.";
-         }
-         uses common-attributes {
-           description
-             "Common attributes like port, version, min and
-              max poll.";
-         }
-         leaf reach {
-           type uint8;
-           description
-             "The reachability of the configured
-              server or peer.";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 9.2 and 13";
-         }
-         leaf unreach {
-           type uint8;
-           description
-             "The unreachability of the configured
-              server or peer.";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 9.2 and 13";
-         }
-         leaf poll {
-           type int8;
-           units "seconds";
-           description
-             "The polling interval for current association";
-           reference
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 33]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 7.3";
-         }
-         leaf now {
-           type uint32;
-           units "seconds";
-           description
-             "The time since the last NTP packet was
-              received or last synchronized.";
-         }
-         leaf offset {
-           type decimal64 {
-             fraction-digits 3;
-           }
-           units "milliseconds";
-           description
-             "The offset between the local clock
-              and the peer clock, e.g., '0.032ms' or '1.232ms'";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 8";
-         }
-         leaf delay {
-           type decimal64 {
-             fraction-digits 3;
-           }
-           units "milliseconds";
-           description
-             "The network delay between the local clock
-              and the peer clock.";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 8";
-         }
-         leaf dispersion {
-           type decimal64 {
-             fraction-digits 3;
-           }
-           units "milliseconds";
-           description
-             "The root dispersion between the local clock
-              and the peer clock.";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 10";
-         }
-         leaf originate-time {
-           type ntp-date-and-time;
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 34]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
-           description
-             "This is the local time, in timestamp format,
-              when latest NTP packet was sent to peer (called T1).";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 8";
-         }
-         leaf receive-time {
-           type ntp-date-and-time;
-           description
-             "This is the local time, in timestamp format,
-              when latest NTP packet arrived at peer (called T2).
-              If the peer becomes unreachable the value is set to zero.";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 8";
-         }
-         leaf transmit-time {
-           type ntp-date-and-time;
-           description
-             "This is the local time, in timestamp format,
-              at which the NTP packet departed the peer (called T3).
-              If the peer becomes unreachable the value is set to zero.";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 8";
-         }
-         leaf input-time {
-           type ntp-date-and-time;
-           description
-             "This is the local time, in timestamp format,
-              when the latest NTP message from the peer arrived (called
-              T4). If the peer becomes unreachable the value is set to
-              zero.";
-           reference
-             "RFC 5905: Network Time Protocol Version 4: Protocol and
-              Algorithms Specification, Section 8";
-         }
-         container ntp-statistics {
-           description
-             "Per Peer packet send and receive statistics.";
-           uses statistics {
+              the association.";
+           leaf address {
+             type inet:ip-address;
              description
-               "NTP send and receive packet statistics.";
+               "The remote address of this association. Represents the
+                IP address of a unicast/multicast/broadcast address.";
+           }
+           leaf local-mode {
+             type identityref {
+               base association-mode;
+             }
+             description
+               "Local mode of this NTP association.";
+           }
+           leaf isconfigured {
+             type boolean;
+             description
+               "Indicates if this association is configured (true) or
+                dynamically learned (false).";
+           }
+           leaf stratum {
+             type ntp-stratum;
+             description
+               "The association stratum value.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 3";
+           }
+           leaf refid {
+             type refid;
+             description
+               "A code identifying the particular server or reference
+                clock.  The interpretation depends upon stratum. It
+                could be an IPv4 address or first 32 bits of the MD5 hash of
+                the IPv6 address or a string for the Reference Identifier
+                and KISS codes. Some examples:
+                -- a refclock ID like '127.127.1.0' for local clock sync
+                -- uni/multi/broadcast associations for IPv4 will look like
+                '203.0.113.1' and '0x4321FEDC' for IPv6
+                -- sync with primary source will look like 'DCN', 'NIST',
+                'ATOM'
+                -- KISS codes will look like 'AUTH', 'DROP', 'RATE'
+                Note that the use of MD5 hash for IPv6 address is not for
+                cryptographic purposes";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 7.3";
+           }
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 33]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
+           leaf authentication {
+             if-feature "authentication";
+             type leafref {
+               path "/ntp:ntp/ntp:authentication/"
+                  + "ntp:authentication-keys/ntp:key-id";
+             }
+             description
+               "Authentication Key used for this association.";
+           }
+           leaf prefer {
+             type boolean;
+             default "false";
+             description
+               "Indicates if this association is preferred.";
+           }
+           leaf peer-interface {
+             type if:interface-ref;
+             description
+               "The interface which is used for communication.";
+           }
+           uses common-attributes {
+             description
+               "Common attributes like port, version, min and
+                max poll.";
+           }
+           leaf reach {
+             type uint8;
+             description
+               "It is an 8-bit shift register that tracks packet
+                generation and receipt. It is used to determine
+                whether the server is reachable and the data are
+                fresh.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 9.2 and 13";
+           }
+           leaf unreach {
+             type uint8;
+             units "seconds";
+             description
+               "It is a count of how long in second the server has been
+                unreachable i.e. the reach value has been zero.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 9.2 and 13";
+           }
+           leaf poll {
+             type log2seconds;
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 34]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
+             description
+               "The polling interval for current association in signed
+                log2 seconds.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 7.3";
+           }
+           leaf now {
+             type uint32;
+             units "seconds";
+             description
+               "The time since the last NTP packet was
+                received or last synchronized.";
+           }
+           leaf offset {
+             type decimal64 {
+               fraction-digits 3;
+             }
+             units "milliseconds";
+             description
+               "The signed offset between the local clock
+                and the peer clock, e.g., '0.032ms' or '1.232ms'. The
+                negative value Indicates that the local clock is behind
+                the peer.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 8";
+           }
+           leaf delay {
+             type decimal64 {
+               fraction-digits 3;
+             }
+             units "milliseconds";
+             description
+               "The network delay between the local clock
+                and the peer clock.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 8";
+           }
+           leaf dispersion {
+             type decimal64 {
+               fraction-digits 3;
+             }
+             units "milliseconds";
+             description
+               "The root dispersion between the local clock
+                and the peer clock.";
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 35]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 10";
+           }
+           leaf originate-time {
+             type ntp-date-and-time;
+             description
+               "This is the local time, in timestamp format,
+                when latest NTP packet was sent to peer (called T1).";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 8";
+           }
+           leaf receive-time {
+             type ntp-date-and-time;
+             description
+               "This is the local time, in timestamp format,
+                when latest NTP packet arrived at peer (called T2).
+                If the peer becomes unreachable the value is set to zero.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 8";
+           }
+           leaf transmit-time {
+             type ntp-date-and-time;
+             description
+               "This is the local time, in timestamp format,
+                at which the NTP packet departed the peer (called T3).
+                If the peer becomes unreachable the value is set to zero.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 8";
+           }
+           leaf input-time {
+             type ntp-date-and-time;
+             description
+               "This is the local time, in timestamp format,
+                when the latest NTP message from the peer arrived (called
+                T4). If the peer becomes unreachable the value is set to
+                zero.";
+             reference
+               "RFC 5905: Network Time Protocol Version 4: Protocol and
+                Algorithms Specification, Section 8";
+           }
+           container ntp-statistics {
+             description
+               "Per Peer packet send and receive statistics.";
+             uses statistics {
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 36]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
+               description
+                 "NTP send and receive packet statistics.";
+             }
            }
          }
        }
        container interfaces {
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 35]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
          description
            "Configuration parameters for NTP interfaces.";
          list interface {
@@ -1975,7 +2038,8 @@ Internet-Draft                YANG for NTP                 December 2021
            }
            container broadcast-server {
              if-feature "broadcast-server";
-             presence "NTP broadcast-server is configured";
+             presence "NTP broadcast-server is configured on this
+                       interface";
              description
                "Configuration of broadcast server.";
              leaf ttl {
@@ -1990,7 +2054,7 @@ Internet-Draft                YANG for NTP                 December 2021
              container authentication {
                if-feature "authentication";
                description
-                 "Authentication used for this association.";
+                 "Authentication used on this interface.";
                uses authentication;
              }
              uses common-attributes {
@@ -2002,22 +2066,23 @@ Internet-Draft                YANG for NTP                 December 2021
                "RFC 5905: Network Time Protocol Version 4: Protocol and
                 Algorithms Specification, Section 3.1";
            }
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 37]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
            container broadcast-client {
              if-feature "broadcast-client";
-             presence "NTP broadcast-client is configured.";
+             presence "NTP broadcast-client is configured on this
+                       interface.";
              description
                "Configuration of broadcast-client.";
              reference
                "RFC 5905: Network Time Protocol Version 4: Protocol and
                 Algorithms Specification, Section 3.1";
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 36]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
            }
            list multicast-server {
              if-feature "multicast-server";
@@ -2041,7 +2106,7 @@ Internet-Draft                YANG for NTP                 December 2021
              container authentication {
                if-feature "authentication";
                description
-                 "Authentication used for this association.";
+                 "Authentication used on this interface.";
                uses authentication;
              }
              uses common-attributes {
@@ -2057,6 +2122,14 @@ Internet-Draft                YANG for NTP                 December 2021
              if-feature "multicast-client";
              key "address";
              description
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 38]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
                "Configuration of multicast-client.";
              leaf address {
                type rt-types:ip-multicast-group-address;
@@ -2066,14 +2139,6 @@ Internet-Draft                YANG for NTP                 December 2021
              }
              reference
                "RFC 5905: Network Time Protocol Version 4: Protocol and
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 37]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
                 Algorithms Specification, Section 3.1";
            }
            list manycast-server {
@@ -2105,7 +2170,7 @@ Internet-Draft                YANG for NTP                 December 2021
              container authentication {
                if-feature "authentication";
                description
-                 "Authentication used for this association.";
+                 "Authentication used on this interface.";
                uses authentication;
              }
              leaf ttl {
@@ -2113,6 +2178,14 @@ Internet-Draft                YANG for NTP                 December 2021
                description
                  "Specifies the maximum time to live (TTL) for
                   the expanding ring search.";
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 39]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
                reference
                  "RFC 5905: Network Time Protocol Version 4: Protocol and
                   Algorithms Specification, Section 3.1";
@@ -2122,14 +2195,6 @@ Internet-Draft                YANG for NTP                 December 2021
                description
                  "The minimum manycast survivors in this
                   association.";
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 38]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
                reference
                  "RFC 5905: Network Time Protocol Version 4: Protocol and
                   Algorithms Specification, Section 13.2";
@@ -2144,8 +2209,7 @@ Internet-Draft                YANG for NTP                 December 2021
                   Algorithms Specification, Section 13.2";
              }
              leaf beacon {
-               type int8;
-               units "seconds";
+               type log2seconds;
                description
                  "The beacon is the upper limit of poll interval. When the
                   ttl reaches its limit without finding the minimum number
@@ -2170,6 +2234,14 @@ Internet-Draft                YANG for NTP                 December 2021
        container ntp-statistics {
          config false;
          description
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 40]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
            "Total NTP packet statistics.";
          uses statistics {
            description
@@ -2177,15 +2249,29 @@ Internet-Draft                YANG for NTP                 December 2021
          }
        }
      }
+
+     rpc statistics-reset {
+       description
+         "Reset statistics collected.";
+       input {
+         choice association-or-all {
+           description
+             "Resets statistics for a particular association or
+              all";
+           case association {
+             uses association-ref;
+             description
+               "This resets all the statistics collected for
+                the association.";
+           }
+           case all {
+             description
+               "This resets all the statistics collected.";
+           }
+         }
+       }
+     }
    }
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 39]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
    <CODE ENDS>
 
 9.  Usage Example
@@ -2199,6 +2285,18 @@ Internet-Draft                YANG for NTP                 December 2021
    This example describes how to configure a preferred unicast server
    present at 192.0.2.1 running at port 1025 with authentication-key 10
    and version 4 (default).
+
+
+
+
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 41]
+
+Internet-Draft                YANG for NTP                 December 2021
+
 
      <edit-config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
        <target>
@@ -2221,26 +2319,8 @@ Internet-Draft                YANG for NTP                 December 2021
        </config>
      </edit-config>
 
-   An example with IPv6 would used the an IPv6 address (say 2001:db8::1)
-   in the "address" leaf with no change in any other data tree.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 40]
-
-Internet-Draft                YANG for NTP                 December 2021
-
+   An example with IPv6 would use an IPv6 address (say 2001:db8::1) in
+   the "address" leaf with no change in any other data tree.
 
      <edit-config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
        <target>
@@ -2264,6 +2344,15 @@ Internet-Draft                YANG for NTP                 December 2021
      </edit-config>
 
    This example is for retrieving unicast configurations -
+
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 42]
+
+Internet-Draft                YANG for NTP                 December 2021
+
 
    <get>
      <filter type="subtree">
@@ -2290,14 +2379,6 @@ Internet-Draft                YANG for NTP                 December 2021
          <source/>
          <minpoll>6</minpoll>
          <maxpoll>10</maxpoll>
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 41]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
          <port>1025</port>
          <stratum>9</stratum>
          <refid>203.0.113.1</refid>
@@ -2321,6 +2402,14 @@ Internet-Draft                YANG for NTP                 December 2021
            <packet-sent-fail>0</packet-sent-fail>
            <packet-received>20</packet-received>
            <packet-dropped>0</packet-dropped>
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 43]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
          </ntp-statistics>
        </unicast-configuration>
      </ntp>
@@ -2346,14 +2435,6 @@ Internet-Draft                YANG for NTP                 December 2021
 
    This example describes how to get reference clock configuration -
 
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 42]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
    <get>
      <filter type="subtree">
        <ntp xmlns="urn:ietf:params:xml:ns:yang:ietf-ntp">
@@ -2376,6 +2457,14 @@ Internet-Draft                YANG for NTP                 December 2021
    This example describes how to enable authentication and configure
    trusted authentication key 10 with mode as AES-CMAC and an
    hexadecimal string key -
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 44]
+
+Internet-Draft                YANG for NTP                 December 2021
+
 
    <edit-config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
      <target>
@@ -2400,48 +2489,10 @@ Internet-Draft                YANG for NTP                 December 2021
      </config>
    </edit-config>
 
-   This example describes how to get authentication related
-   configuration -
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 43]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
-   <get>
-     <filter type="subtree">
-       <ntp xmlns="urn:ietf:params:xml:ns:yang:ietf-ntp">
-         <authentication>
-         </authentication>
-       </ntp>
-     </filter>
-   </get>
-
-   <data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-     <ntp xmlns="urn:ietf:params:xml:ns:yang:ietf-ntp">
-       <authentication>
-         <auth-enabled>false</auth-enabled>
-         <trusted-keys/>
-         <authentication-keys>
-           <key-id>10</key-id>
-           <algorithm>aes-cmac</algorithm>
-             <key>
-               <hexadecimal-string>
-                 bb1d6929e95937287fa37d129b756746
-               </hexadecimal-string>
-             </key>
-           <istrusted>true</istrusted>
-         </authentication-keys>
-       </authentication>
-     </ntp>
-   </data>
-
 9.4.  Access configuration
 
    This example describes how to configure access mode "peer" associated
-   with acl 2000 -
+   with ACL 2000 -
 
    <edit-config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
      <target>
@@ -2459,14 +2510,17 @@ Internet-Draft                YANG for NTP                 December 2021
      </config>
    </edit-config>
 
+   This example describes how to get access related configuration -
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 44]
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 45]
 
 Internet-Draft                YANG for NTP                 December 2021
 
-
-   This example describes how to get access related configuration -
 
    <get>
      <filter type="subtree">
@@ -2517,7 +2571,9 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 45]
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 46]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -2573,7 +2629,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 46]
+Wu, et al.                Expires 12 June 2022                 [Page 47]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -2629,7 +2685,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 47]
+Wu, et al.                Expires 12 June 2022                 [Page 48]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -2685,7 +2741,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 48]
+Wu, et al.                Expires 12 June 2022                 [Page 49]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -2741,7 +2797,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 49]
+Wu, et al.                Expires 12 June 2022                 [Page 50]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -2797,7 +2853,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 50]
+Wu, et al.                Expires 12 June 2022                 [Page 51]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -2853,7 +2909,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 51]
+Wu, et al.                Expires 12 June 2022                 [Page 52]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -2909,7 +2965,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 52]
+Wu, et al.                Expires 12 June 2022                 [Page 53]
 
 Internet-Draft                YANG for NTP                 December 2021
 
@@ -2926,49 +2982,52 @@ Internet-Draft                YANG for NTP                 December 2021
    <data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
      <ntp xmlns="urn:ietf:params:xml:ns:yang:ietf-ntp">
        <associations>
-         <address>192.0.2.1</address>
-         <stratum>9</stratum>
-         <refid>203.0.113.1</refid>
-         <local-mode>client</local-mode>
-         <isconfigured>true</isconfigured>
-         <authentication-key>10</authentication-key>
-         <prefer>true</prefer>
-         <peer-interface>Ethernet3/0/0</peer-interface>
-         <minpoll>6</minpoll>
-         <maxpoll>10</maxpoll>
-         <port>1025</port>
-         <version>4</version>
-         <reach>255</reach>
-         <unreach>0</unreach>
-         <poll>128</poll>
-         <now>10</now>
-         <offset>0.025</offset>
-         <delay>0.5</delay>
-         <dispersion>0.6</dispersion>
-         <originate-time>10-10-2017 07:33:55.253 Z+05:30\
-         </originate-time>
-         <receive-time>10-10-2017 07:33:55.258 Z+05:30\
-         </receive-time>
-         <transmit-time>10-10-2017 07:33:55.300 Z+05:30\
-         </transmit-time>
-         <input-time>10-10-2017 07:33:55.305 Z+05:30\
-         </input-time>
-         <ntp-statistics>
-           <packet-sent>20</packet-sent>
-           <packet-sent-fail>0</packet-sent-fail>
-           <packet-received>20</packet-received>
-           <packet-dropped>0</packet-dropped>
-         </ntp-statistics>
+         <association>
+           <address>192.0.2.1</address>
+           <stratum>9</stratum>
+           <refid>203.0.113.1</refid>
+           <local-mode>client</local-mode>
+           <isconfigured>true</isconfigured>
+           <authentication-key>10</authentication-key>
+           <prefer>true</prefer>
+           <peer-interface>Ethernet3/0/0</peer-interface>
+           <minpoll>6</minpoll>
+           <maxpoll>10</maxpoll>
+           <port>1025</port>
+           <version>4</version>
+           <reach>255</reach>
+           <unreach>0</unreach>
+           <poll>128</poll>
+           <now>10</now>
+           <offset>0.025</offset>
+           <delay>0.5</delay>
+           <dispersion>0.6</dispersion>
+           <originate-time>10-10-2017 07:33:55.253 Z+05:30\
+           </originate-time>
+           <receive-time>10-10-2017 07:33:55.258 Z+05:30\
+           </receive-time>
+           <transmit-time>10-10-2017 07:33:55.300 Z+05:30\
+           </transmit-time>
+           <input-time>10-10-2017 07:33:55.305 Z+05:30\
+           </input-time>
+           <ntp-statistics>
+             <packet-sent>20</packet-sent>
+             <packet-sent-fail>0</packet-sent-fail>
+             <packet-received>20</packet-received>
+             <packet-dropped>0</packet-dropped>
+           </ntp-statistics>
+         </association>
        </associations>
-     </ntp>
-   </data>
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 53]
+Wu, et al.                Expires 12 June 2022                 [Page 54]
 
 Internet-Draft                YANG for NTP                 December 2021
 
+
+     </ntp>
+   </data>
 
 9.9.  Global statistic
 
@@ -2996,6 +3055,8 @@ Internet-Draft                YANG for NTP                 December 2021
 
 10.  IANA Considerations
 
+10.1.  IETF XML Registry
+
    This document registers a URI in the "IETF XML Registry" [RFC3688].
    Following the format in RFC 3688, the following registration has been
    made.
@@ -3006,25 +3067,26 @@ Internet-Draft                YANG for NTP                 December 2021
 
    XML: N/A; the requested URI is an XML namespace.
 
+10.2.  YANG Module Names
+
    This document registers a YANG module in the "YANG Module Names"
    registry [RFC6020].
 
    Name: ietf-ntp
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 55]
+
+Internet-Draft                YANG for NTP                 December 2021
+
 
    Namespace: urn:ietf:params:xml:ns:yang:ietf-ntp
 
    Prefix: ntp
 
    Reference: RFC XXXX
-
-
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 54]
-
-Internet-Draft                YANG for NTP                 December 2021
-
 
    Note: The RFC Editor will replace XXXX with the number assigned to
    this document once it becomes an RFC.
@@ -3042,7 +3104,8 @@ Internet-Draft                YANG for NTP                 December 2021
    The NETCONF Access Control Model (NACM) [RFC8341] provides the means
    to restrict access for particular NETCONF or RESTCONF users to a
    preconfigured subset of all available NETCONF or RESTCONF protocol
-   operations and content.
+   operations and content.  The 'nacm:default-deny-all' is used to
+   prevent retrieval of the key information.
 
    There are a number of data nodes defined in this YANG module that are
    writable/creatable/deletable (i.e., config true, which is the
@@ -3065,22 +3128,22 @@ Internet-Draft                YANG for NTP                 December 2021
       creates or modify the NTP associations.  Unexpected changes could
       lead to disruption and/or network misbehavior.
 
+
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 56]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
       /ntp/interfaces/interface - The entries in the list include all
       per-interface configurations related to broadcast, multicast and
       manycast mode, and indirectly creates or modify the NTP
       associations.  Unexpected changes could lead to disruption and/or
-      network misbehavior.
-
-
-
-
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 55]
-
-Internet-Draft                YANG for NTP                 December 2021
-
+      network misbehavior.  It could also lead to syncronization over
+      untrusted source over trusted ones.
 
    Some of the readable data nodes in this YANG module may be considered
    sensitive or vulnerable in some network environments.  It is thus
@@ -3089,13 +3152,28 @@ Internet-Draft                YANG for NTP                 December 2021
    nodes and their sensitivity/vulnerability:
 
       /ntp/authentication/authentication-keys - The entries in the list
-      includes all the NTP authentication keys.  This information is
-      sensitive and can be exploited and thus unauthorized access to
-      this needs to be curtailed.
+      includes all the NTP authentication keys. aEUR<Unauthorized access
+      to the keys can be easily exploited to permit unauthorized access
+      to the NTP service.  This information is sensitive and thus
+      unauthorized access to this needs to be curtailed.
 
-      /ntp/associations - The entries in the list includes all active
-      NTP associations of all modes.  Unauthorized access to this also
-      needs to be curtailed.
+      /ntp/associations/association/ - The entries in the list includes
+      all active NTP associations of all modes.  Exposure of these nodes
+      could reveal network topology or trust relationship.  Unauthorized
+      access to this also needs to be curtailed.
+
+      /ntp/authentication and /ntp/access-rules - The entries in the
+      list include the authentication and access control configurations.
+      Exposure of these nodes could reveal network topology or trust
+      relationship.
+
+   Some of the RPC operations in this YANG module may be considered
+   sensitive or vulnerable in some network environments.  It is thus
+   important to control access to these operations.  These are the
+   operations and their sensitivity/vulnerability:
+
+      statistics-reset - The RPC is used to reset statistics.
+      Unauthorized reset could impact monitoring.
 
    The leaf /ntp/authentication/authentication-keys/algorithm can be set
    to cryptographic algorithms that are no longer considered to be
@@ -3108,6 +3186,14 @@ Internet-Draft                YANG for NTP                 December 2021
    Angermann, Watson Ladd, and Rich Salz for their review and
    suggestions.
 
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 57]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
    Thanks to Andy Bierman for the YANG doctor review.
 
    Thanks to Dieter Sibold for being the document shepherd and Erik
@@ -3119,6 +3205,10 @@ Internet-Draft                YANG for NTP                 December 2021
    A special thanks to Tom Petch for a very detailed YANG review and
    providing great suggestions for improvements.
 
+   Thanks for the IESG review from Benjamin Kaduk, Francesca Palombini,
+   A[/1000]ric Vyncke, Murray Kucherawy, Robert Wilton, Roman Danyliw,
+   and Zaheduzzaman Sarker.
+
 13.  References
 
 13.1.  Normative References
@@ -3127,16 +3217,6 @@ Internet-Draft                YANG for NTP                 December 2021
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 56]
-
-Internet-Draft                YANG for NTP                 December 2021
-
 
    [RFC3688]  Mealling, M., "The IETF XML Registry", BCP 81, RFC 3688,
               DOI 10.17487/RFC3688, January 2004,
@@ -3147,36 +3227,32 @@ Internet-Draft                YANG for NTP                 December 2021
               Specification", RFC 5905, DOI 10.17487/RFC5905, June 2010,
               <https://www.rfc-editor.org/info/rfc5905>.
 
-   [RFC5907]  Gerstung, H., Elliott, C., and B. Haberman, Ed.,
-              "Definitions of Managed Objects for Network Time Protocol
-              Version 4 (NTPv4)", RFC 5907, DOI 10.17487/RFC5907, June
-              2010, <https://www.rfc-editor.org/info/rfc5907>.
-
    [RFC6020]  Bjorklund, M., Ed., "YANG - A Data Modeling Language for
               the Network Configuration Protocol (NETCONF)", RFC 6020,
               DOI 10.17487/RFC6020, October 2010,
               <https://www.rfc-editor.org/info/rfc6020>.
 
-   [RFC6241]  Enns, R., Ed., Bjorklund, M., Ed., Schoenwaelder, J., Ed.,
-              and A. Bierman, Ed., "Network Configuration Protocol
-              (NETCONF)", RFC 6241, DOI 10.17487/RFC6241, June 2011,
-              <https://www.rfc-editor.org/info/rfc6241>.
-
-   [RFC6242]  Wasserman, M., "Using the NETCONF Protocol over Secure
-              Shell (SSH)", RFC 6242, DOI 10.17487/RFC6242, June 2011,
-              <https://www.rfc-editor.org/info/rfc6242>.
-
    [RFC6991]  Schoenwaelder, J., Ed., "Common YANG Data Types",
               RFC 6991, DOI 10.17487/RFC6991, July 2013,
               <https://www.rfc-editor.org/info/rfc6991>.
 
+   [RFC7317]  Bierman, A. and M. Bjorklund, "A YANG Data Model for
+              System Management", RFC 7317, DOI 10.17487/RFC7317, August
+              2014, <https://www.rfc-editor.org/info/rfc7317>.
+
+
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 58]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
    [RFC7950]  Bjorklund, M., Ed., "The YANG 1.1 Data Modeling Language",
               RFC 7950, DOI 10.17487/RFC7950, August 2016,
               <https://www.rfc-editor.org/info/rfc7950>.
-
-   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
-              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
-              <https://www.rfc-editor.org/info/rfc8040>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -3186,13 +3262,6 @@ Internet-Draft                YANG for NTP                 December 2021
               Zhang, "YANG Data Model for Key Chains", RFC 8177,
               DOI 10.17487/RFC8177, June 2017,
               <https://www.rfc-editor.org/info/rfc8177>.
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 57]
-
-Internet-Draft                YANG for NTP                 December 2021
-
 
    [RFC8294]  Liu, X., Qu, Y., Lindem, A., Hopps, C., and L. Berger,
               "Common YANG Data Types for the Routing Area", RFC 8294,
@@ -3226,6 +3295,17 @@ Internet-Draft                YANG for NTP                 December 2021
               DOI 10.17487/RFC8573, June 2019,
               <https://www.rfc-editor.org/info/rfc8573>.
 
+   [SHS]      NIST, "Secure Hash Standard (SHS)", FIPS PUB 180-4, March
+              2012, <https://nvlpubs.nist.gov/nistpubs/fips/
+              nist.fips.180-4.pdf>.
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 59]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
 13.2.  Informative References
 
    [RFC1305]  Mills, D., "Network Time Protocol (Version 3)
@@ -3241,22 +3321,27 @@ Internet-Draft                YANG for NTP                 December 2021
               (SHA1)", RFC 3174, DOI 10.17487/RFC3174, September 2001,
               <https://www.rfc-editor.org/info/rfc3174>.
 
-
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 58]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
    [RFC4493]  Song, JH., Poovendran, R., Lee, J., and T. Iwata, "The
               AES-CMAC Algorithm", RFC 4493, DOI 10.17487/RFC4493, June
               2006, <https://www.rfc-editor.org/info/rfc4493>.
 
-   [RFC7317]  Bierman, A. and M. Bjorklund, "A YANG Data Model for
-              System Management", RFC 7317, DOI 10.17487/RFC7317, August
-              2014, <https://www.rfc-editor.org/info/rfc7317>.
+   [RFC5907]  Gerstung, H., Elliott, C., and B. Haberman, Ed.,
+              "Definitions of Managed Objects for Network Time Protocol
+              Version 4 (NTPv4)", RFC 5907, DOI 10.17487/RFC5907, June
+              2010, <https://www.rfc-editor.org/info/rfc5907>.
+
+   [RFC6241]  Enns, R., Ed., Bjorklund, M., Ed., Schoenwaelder, J., Ed.,
+              and A. Bierman, Ed., "Network Configuration Protocol
+              (NETCONF)", RFC 6241, DOI 10.17487/RFC6241, June 2011,
+              <https://www.rfc-editor.org/info/rfc6241>.
+
+   [RFC6242]  Wasserman, M., "Using the NETCONF Protocol over Secure
+              Shell (SSH)", RFC 6242, DOI 10.17487/RFC6242, June 2011,
+              <https://www.rfc-editor.org/info/rfc6242>.
+
+   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
+              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
+              <https://www.rfc-editor.org/info/rfc8040>.
 
    [RFC8342]  Bjorklund, M., Schoenwaelder, J., Shafer, P., Watsen, K.,
               and R. Wilton, "Network Management Datastore Architecture
@@ -3267,6 +3352,15 @@ Internet-Draft                YANG for NTP                 December 2021
               "Handling Long Lines in Content of Internet-Drafts and
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
               <https://www.rfc-editor.org/info/rfc8792>.
+
+
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 60]
+
+Internet-Draft                YANG for NTP                 December 2021
+
 
 Appendix A.  Full YANG Tree
 
@@ -3285,7 +3379,7 @@ Appendix A.  Full YANG Tree
         |     +--rw key
         |     |  +--rw (key-string-style)?
         |     |     +--:(keystring)
-        |     |     |  +--rw keystring?            string
+        |     |     |  +--rw keystring?            string {deprecated}?
         |     |     +--:(hexadecimal) {hex-key-string}?
         |     |        +--rw hexadecimal-string?   yang:hex-string
         |     +--rw istrusted?   boolean
@@ -3298,23 +3392,15 @@ Appendix A.  Full YANG Tree
         |     +--ro clock-state                  identityref
         |     +--ro clock-stratum                ntp-stratum
         |     +--ro clock-refid                  refid
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 59]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
         |     +--ro associations-address?
-        |     |       -> /ntp/associations/address
+        |     |       -> /ntp/associations/association/address
         |     +--ro associations-local-mode?
-        |     |       -> /ntp/associations/local-mode
+        |     |       -> /ntp/associations/association/local-mode
         |     +--ro associations-isconfigured?
-        |     |       -> /ntp/associations/isconfigured
+        |     |       -> /ntp/associations/association/isconfigured
         |     +--ro nominal-freq                 decimal64
         |     +--ro actual-freq                  decimal64
-        |     +--ro clock-precision              int8
+        |     +--ro clock-precision              log2seconds
         |     +--ro clock-offset?                decimal64
         |     +--ro root-delay?                  decimal64
         |     +--ro root-dispersion?             decimal64
@@ -3324,6 +3410,14 @@ Internet-Draft                YANG for NTP                 December 2021
         |       {unicast-configuration}?
         |  +--rw address           inet:ip-address
         |  +--rw type              identityref
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 61]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
         |  +--rw authentication {authentication}?
         |  |  +--rw (authentication-type)?
         |  |     +--:(symmetric-key)
@@ -3332,61 +3426,62 @@ Internet-Draft                YANG for NTP                 December 2021
         |  +--rw burst?            boolean
         |  +--rw iburst?           boolean
         |  +--rw source?           if:interface-ref
-        |  +--rw minpoll?          int8
-        |  +--rw maxpoll?          int8
+        |  +--rw minpoll?          log2seconds
+        |  +--rw maxpoll?          log2seconds
         |  +--rw port?             inet:port-number {ntp-port}?
         |  +--rw version?          ntp-version
-        +--ro associations* [address local-mode isconfigured]
-        |  +--ro address           inet:ip-address
-        |  +--ro local-mode        identityref
-        |  +--ro isconfigured      boolean
-        |  +--ro stratum?          ntp-stratum
-        |  +--ro refid?            refid
-        |  +--ro authentication?
-        |  |       -> /ntp/authentication/authentication-keys/key-id
-        |  |       {authentication}?
-        |  +--ro prefer?           boolean
-        |  +--ro peer-interface?   if:interface-ref
-        |  +--ro minpoll?          int8
-        |  +--ro maxpoll?          int8
-        |  +--ro port?             inet:port-number {ntp-port}?
-        |  +--ro version?          ntp-version
-        |  +--ro reach?            uint8
-        |  +--ro unreach?          uint8
-        |  +--ro poll?             int8
+        +--rw associations
+        |  +--ro association* [address local-mode isconfigured]
+        |     +--ro address           inet:ip-address
+        |     +--ro local-mode        identityref
+        |     +--ro isconfigured      boolean
+        |     +--ro stratum?          ntp-stratum
+        |     +--ro refid?            refid
+        |     +--ro authentication?
+        |     |       -> /ntp/authentication/authentication-keys/key-id
+        |     |       {authentication}?
+        |     +--ro prefer?           boolean
+        |     +--ro peer-interface?   if:interface-ref
+        |     +--ro minpoll?          log2seconds
+        |     +--ro maxpoll?          log2seconds
+        |     +--ro port?             inet:port-number {ntp-port}?
+        |     +--ro version?          ntp-version
+        |     +--ro reach?            uint8
+        |     +--ro unreach?          uint8
+        |     +--ro poll?             log2seconds
+        |     +--ro now?              uint32
+        |     +--ro offset?           decimal64
+        |     +--ro delay?            decimal64
+        |     +--ro dispersion?       decimal64
+        |     +--ro originate-time?   ntp-date-and-time
+        |     +--ro receive-time?     ntp-date-and-time
+        |     +--ro transmit-time?    ntp-date-and-time
+        |     +--ro input-time?       ntp-date-and-time
+        |     +--ro ntp-statistics
+        |        +--ro discontinuity-time?   ntp-date-and-time
+        |        +--ro packet-sent?          yang:counter32
+        |        +--ro packet-sent-fail?     yang:counter32
+        |        +--ro packet-received?      yang:counter32
+        |        +--ro packet-dropped?       yang:counter32
+        +--rw interfaces
+        |  +--rw interface* [name]
+        |     +--rw name                if:interface-ref
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 60]
+Wu, et al.                Expires 12 June 2022                 [Page 62]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
-        |  +--ro now?              uint32
-        |  +--ro offset?           decimal64
-        |  +--ro delay?            decimal64
-        |  +--ro dispersion?       decimal64
-        |  +--ro originate-time?   ntp-date-and-time
-        |  +--ro receive-time?     ntp-date-and-time
-        |  +--ro transmit-time?    ntp-date-and-time
-        |  +--ro input-time?       ntp-date-and-time
-        |  +--ro ntp-statistics
-        |     +--ro discontinuity-time?   ntp-date-and-time
-        |     +--ro packet-sent?          yang:counter32
-        |     +--ro packet-sent-fail?     yang:counter32
-        |     +--ro packet-received?      yang:counter32
-        |     +--ro packet-dropped?       yang:counter32
-        +--rw interfaces
-        |  +--rw interface* [name]
-        |     +--rw name                if:interface-ref
         |     +--rw broadcast-server! {broadcast-server}?
         |     |  +--rw ttl?              uint8
         |     |  +--rw authentication {authentication}?
         |     |  |  +--rw (authentication-type)?
         |     |  |     +--:(symmetric-key)
         |     |  |        +--rw key-id?   leafref
-        |     |  +--rw minpoll?          int8
-        |     |  +--rw maxpoll?          int8
+        |     |  +--rw minpoll?          log2seconds
+        |     |  +--rw maxpoll?          log2seconds
         |     |  +--rw port?             inet:port-number {ntp-port}?
         |     |  +--rw version?          ntp-version
         |     +--rw broadcast-client! {broadcast-client}?
@@ -3398,8 +3493,8 @@ Internet-Draft                YANG for NTP                 December 2021
         |     |  |  +--rw (authentication-type)?
         |     |  |     +--:(symmetric-key)
         |     |  |        +--rw key-id?   leafref
-        |     |  +--rw minpoll?          int8
-        |     |  +--rw maxpoll?          int8
+        |     |  +--rw minpoll?          log2seconds
+        |     |  +--rw maxpoll?          log2seconds
         |     |  +--rw port?             inet:port-number {ntp-port}?
         |     |  +--rw version?          ntp-version
         |     +--rw multicast-client* [address] {multicast-client}?
@@ -3410,23 +3505,15 @@ Internet-Draft                YANG for NTP                 December 2021
         |        +--rw address
         |        |       rt-types:ip-multicast-group-address
         |        +--rw authentication {authentication}?
-
-
-
-Wu, et al.                 Expires 9 June 2022                 [Page 61]
-
-Internet-Draft                YANG for NTP                 December 2021
-
-
         |        |  +--rw (authentication-type)?
         |        |     +--:(symmetric-key)
         |        |        +--rw key-id?   leafref
         |        +--rw ttl?              uint8
         |        +--rw minclock?         uint8
         |        +--rw maxclock?         uint8
-        |        +--rw beacon?           int8
-        |        +--rw minpoll?          int8
-        |        +--rw maxpoll?          int8
+        |        +--rw beacon?           log2seconds
+        |        +--rw minpoll?          log2seconds
+        |        +--rw maxpoll?          log2seconds
         |        +--rw port?             inet:port-number {ntp-port}?
         |        +--rw version?          ntp-version
         +--ro ntp-statistics
@@ -3435,6 +3522,26 @@ Internet-Draft                YANG for NTP                 December 2021
            +--ro packet-sent-fail?     yang:counter32
            +--ro packet-received?      yang:counter32
            +--ro packet-dropped?       yang:counter32
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 63]
+
+Internet-Draft                YANG for NTP                 December 2021
+
+
+     rpcs:
+       +---x statistics-reset
+          +---w input
+             +---w (association-or-all)?
+                +--:(association)
+                |  +---w associations-address?
+                |  |       -> /ntp/associations/association/address
+                |  +---w associations-local-mode?
+                |  |       -> /ntp/associations/association/local-mode
+                |  +---w associations-isconfigured?
+                |          -> /ntp/associations/association/isconfigured
+                +--:(all)
 
 
 Authors' Addresses
@@ -3468,15 +3575,17 @@ Authors' Addresses
    Email: ankit.ietf@gmail.com
 
 
+   Anil Kumar S N
+   RtBrick Inc.
+   Bangalore
 
-Wu, et al.                 Expires 9 June 2022                 [Page 62]
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 64]
 
 Internet-Draft                YANG for NTP                 December 2021
 
 
-   Anil Kumar S N
-   RtBrick Inc.
-   Bangalore
    Kanataka
    India
 
@@ -3525,4 +3634,7 @@ Internet-Draft                YANG for NTP                 December 2021
 
 
 
-Wu, et al.                 Expires 9 June 2022                 [Page 63]
+
+
+
+Wu, et al.                Expires 12 June 2022                 [Page 65]
