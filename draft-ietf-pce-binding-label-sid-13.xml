@@ -154,7 +154,7 @@
       </address>
     </author>
 
-    <date day="24" month="January" year="2022"/>
+    <date day="2" month="February" year="2022"/>
 
     <area>Routing Area</area>
 
@@ -163,7 +163,7 @@
     <abstract>
       <t>In order to provide greater scalability, network confidentiality, and
       service independence, Segment Routing (SR) utilizes a Binding Segment
-      Identifier (SID) (called BSID). It is possible to associate a BSID to an
+      Identifier (SID) (called BSID) as described in RFC 8402. It is possible to associate a BSID to an
       RSVP-TE-signaled Traffic Engineering Label Switched Path or an SR
       Traffic Engineering path. The BSID can be used by an upstream node for
       steering traffic into the appropriate TE path to enforce SR policies.
@@ -213,7 +213,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       stateful PCE can then update the state of LSPs delegated to it. <xref
       target="RFC8281"/> specifies a mechanism allowing a PCE to dynamically
       instantiate an LSP on a PCC by sending the path and characteristics. 
-      This document specifies an extension to PCEP to manage of binding label/SID for both SR and non-SR paths.</t>
+      This document specifies an extension to PCEP to manage the binding of label/SID for both SR and non-SR paths.</t>
 
       <t><xref target="RFC8664"/> provides a mechanism for a PCE (acting as a
       network controller) to instantiate SR-TE paths (candidate paths) for an
@@ -227,16 +227,14 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       corresponding TE path. When a stateful PCE is deployed for setting up TE
       paths, a binding label/SID reported from the PCC to
       the stateful PCE is useful for the purpose of enforcing end-to-end TE/SR policy. A
-      sample Data Center (DC) use-case is illustrated in <xref
-      target="figure1"/>. In the MPLS DC network, an SR LSP (without traffic
-      engineering) is established using a prefix SID advertised by BGP (see
-      <xref target="RFC8669"/>). In the IP/MPLS WAN, an SR-TE LSP is set up
+      sample Data Center (DC) and IP/MPLS WAN use-case is illustrated in <xref
+      target="figure1"/> with a multi-domain PCE. In the IP/MPLS WAN, an SR-TE LSP is set up
       using the PCE. The list of SIDs of the SR-TE LSP is {A, B, C, D}. The
       gateway node 1 (which is the PCC) allocates a binding SID X and reports
-      it to the PCE. In order for the access node to steer the traffic over
-      the SR-TE LSP, the PCE passes the SID stack {Y, X} where Y is the prefix
-      SID of the gateway node-1 to the access node. In the absence of the
-      binding SID X, the PCE would pass the SID stack {Y, A, B, C, D} to the
+      it to the PCE. In the MPLS DC network, an end-to-end SR-TE LSP is established. In order for the access node to steer the traffic towards Node-1 and over
+      the SR-TE path in WAN, the PCE passes the SID stack {Y, X} where Y is the node
+      SID of the gateway node-1 to the access node and X is the BSID. In the absence of the
+      BSID X, the PCE would need to pass the SID stack {Y, A, B, C, D} to the
       access node. This example also illustrates the additional benefit of
       using the binding label/SID to reduce the number of SIDs imposed by the
       access nodes with a limited forwarding capacity.</t>
@@ -245,9 +243,10 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
         <artwork align="center"><![CDATA[
 
            SID stack
-           {Y, X}              +-----+
-    _ _ _ _ _ _ _ _ _ _ _ _ _ _| PCE |
-   |                           +-----+
+           {Y, X}              +--------------+
+                               | Multi-domain |
+    _ _ _ _ _ _ _ _ _ _ _ _ _ _|     PCE      |
+   |                           +--------------+
    |                              ^
    |                              | Binding
    |           .-----.            | SID (X)     .-----.
@@ -256,8 +255,8 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 +------+  (                 )  +-------+  (                 )  +-------+
 |Access|_(  MPLS DC Network  )_|Gateway|_(    IP/MPLS WAN    )_|Gateway|
 | Node | (  ==============>  ) |Node-1 | ( ================> ) |Node-2 |
-+------+  (     SR path     )  +-------+  (    SR-TE path   )  +-------+
-           '--(         )--'    Prefix     '--(         )--'
++------+  (    SR-TE path   )  +-------+  (    SR-TE path   )  +-------+
+           '--(         )--'    Node       '--(         )--'
                (       )        SID of         (       )
                 '-----'         Node-1          '-----'
                                 is Y            SIDs for SR-TE LSP:
@@ -281,8 +280,8 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       <t>To implement the needed changes to PCEP, in this document, we introduce a new OPTIONAL TLV that a PCC can use
       in order to report the binding label/SID associated with a TE LSP, or a
       PCE to request a PCC to allocate any or a specific binding label/SID value.
-      This TLV is intended for TE LSPs established using RSVP-TE, SR, or any
-      other future method. Also, in the case of SR-TE LSPs, the TLV can carry
+      This TLV is intended for TE LSPs established using RSVP-TE, SR-TE, or any
+      other future method. In the case of SR-TE LSPs, the TLV can carry
       a binding label (for SR-TE path with MPLS data-plane) or a binding IPv6
       SID (e.g., IPv6 address for SR-TE paths with IPv6 data-plane).
       Throughout this document, the term "binding value" means either an MPLS
@@ -401,8 +400,9 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
       <t><xref target="IANA-TLV"/> defines the IANA registry used to maintain
       all these binding types as well as any future ones. Note that multiple
-      TE-PATH-BINDING TLVs with different Binding Types MAY be present for the
-      same LSP.</t>
+      TE-PATH-BINDING TLVs with same or different Binding Types MAY be present for the
+      same LSP. A PCEP speaker could allocate multiple TE-PATH-BINDING TLVs (of the same BT), 
+      and use different binding values in different domains or use-cases based on a local policy.</t>
 
       <t>Flags: 1 octet of flags. The following flag is defined in the new
       registry "TE-PATH-BINDING TLV Flag field" as described in <xref
@@ -469,7 +469,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       entry as per <xref target="RFC3032"/>. When the BT is 2, the 128 bits
       represent the SRv6 SID. When the BT is 3, the Binding Value also
       contains the SRv6 Endpoint Behavior and SID Structure, defined in <xref
-      target="Behavior-Structure"/>.</t>
+      target="Behavior-Structure"/>. In this document, the TE-PATH-BINDING TLV is considered to be empty if no Binding Value is present. Note that the length of the TLV would be 4 in such a case.</t>
 
       <section anchor="Behavior-Structure"
                title="SRv6 Endpoint Behavior and SID Structure">
@@ -484,7 +484,10 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                                                               |
   |                 SRv6 Binding SID (16 octets)                  |
+  |                                                               |
+  |                                                               | 
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   |         Reserved              |      Endpoint Behavior        |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -523,14 +526,21 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
                 bits.</t>
               </list></t>
           </list></t>
+          <t>The total of the locator block, locator node, function, and argument
+lengths MUST be lower or equal to 128 bits.  If this condition is not
+met, the corresponding TE-PATH-BINDING TLV MUST be considered 
+as an error. Also, if the Endpoint Behavior is found to be unknown or
+inconsistent, it is considered an error.  A PCErr message with 
+Error-Type = 10 ("Reception of an invalid object") and Error-Value = 
+37 ("Invalid SRv6 SID Structure") MUST be sent.</t>
       </section>
     </section>
 
     <!-- Path-setup-type-tlv -->
 
     <section anchor="Operation" title="Operation">
-      <t>The binding value is allocated by the PCC and reported to a PCE via a
-      PCRpt message. If a PCE does not recognize the TE-PATH-BINDING TLV, it
+      <t>The binding value is usually allocated by the PCC and reported to a PCE via a
+      PCRpt message (see <xref target="PCECC"/> where PCE does the allocation). If a PCE does not recognize the TE-PATH-BINDING TLV, it
       would ignore the TLV in accordance with <xref target="RFC5440"/>. If a
       PCE recognizes the TLV but does not support the TLV, it MUST send a
       PCErr with Error-Type = 2 (Capability not supported).</t>
@@ -562,7 +572,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       it MUST withdraw the former binding value (with R flag set in the former
       TE-PATH-BINDING TLV) and include a new TE-PATH-BINDING TLV containing
       the new binding value. Note that other instances of TE-PATH-BINDING TLVs
-      that are unchanged MAY also be included.</t>
+      that are unchanged MAY also be included. If the unchanged instances are not included, they will remain associated with the LSP.</t>
 
       <t>If a PCE requires a PCC to allocate a (or several) specific binding
       value(s), it may do so by sending a PCUpd or PCInitiate message
@@ -616,8 +626,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       i.e., no binding value is specified (bringing the Length field of the
       TLV to 4). A PCE can also request a PCC to allocate a binding value at
       the time of initiation by sending a PCInitiate message with an empty
-      TE-PATH-BINDING TLV. Only one such instance of empty TE-PATH-BINDING TLV
-      SHOULD be included in the LSP object and others ignored on receipt. If
+      TE-PATH-BINDING TLV. Only one such instance of empty TE-PATH-BINDING TLV, per BT, SHOULD be included in the LSP object and others ignored on receipt. If
       the PCC is unable to allocate a new binding value as per the specified
       BT, it MUST send a PCErr message with Error-Type = TBD2 ("Binding
       label/SID failure") and Error-Value = TBD5 ("Unable to allocate a new
@@ -645,6 +654,9 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       TE-PATH-BINDING TLV is absent in the PCUpd message and no binding values
       were reported before, the PCC's local policy dictates how the binding
       allocations are made for a given LSP.</t>
+
+      <t>Note that some binding types have similar information but different binding value formats. For example, BT=(2 or 3) is used for the SRv6 SID and BT=(0 or 1) is used for the MPLS Label. In case a PCEP speaker receives multiple TE-PATH-BINDING TLVs with the same SRv6 SID or MPLS Label but different BT values, it MUST send a PCErr message with Error-Type = TBD2 ("Binding
+      label/SID failure") and Error-Value = TBD7 ("Inconsistent binding types").</t> 
     </section>
 
     <section anchor="SR-ERO" title="Binding SID in SR-ERO">
@@ -712,7 +724,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       its own.</t>
 
       <t>A new P flag in the LSP object <xref target="RFC8231"/> is introduced
-      to indicate that the allocation needs to be made by the PCE: <list
+      to indicate that the allocation needs to be made by the PCE. Note that the P flag could be used for other types of allocations (such as path segments <xref target="I-D.ietf-pce-sr-path-segment"/>) in future. <list
           style="symbols">
           <t>P (PCE-allocated binding label/SID): If the bit is set to 1, it
           indicates that the PCC requests PCE to make allocations for this
@@ -723,9 +735,8 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
           message. A PCE MUST also set this bit to 1 and include a
           TE-PATH-BINDING TLV to indicate that the binding label/SID is
           allocated by PCE and encoded in the PCEP message towards the PCC.
-          Further, a PCE MUST set this bit to 0 and include a TE-PATH-BINDING
-          TLV in the LSP object if it wishes to indicate that the binding
-          label/SID should be allocated by the PCC as described in <xref
+          Further, if the binding label/SID is allocated by the PCC, 
+          the PCE MUST set this bit to 0 and follow the procedure described in <xref
           target="Operation"/>.</t>
         </list></t>
 
@@ -858,19 +869,39 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
     <section anchor="Security" title="Security Considerations">
       <t>The security considerations described in <xref target="RFC5440"/>,
-      <xref target="RFC8231"/>, <xref target="RFC8281"/> and <xref
-      target="RFC8664"/> are applicable to this specification. No additional
+      <xref target="RFC8231"/>, <xref target="RFC8281"/>, <xref
+      target="RFC8664"/>, and  <xref target="RFC9050"/> are applicable to this specification. No additional
       security measure is required.</t>
 
-      <t>As described in <xref target="RFC8664"/>, SR allows a network
+<t>As described in <xref target="RFC8402"/> and <xref target="RFC8664"/>, SR intrinsically involves an entity (whether head-end or a central network controller) controlling and instantiating paths in the network without the involvement of (other) nodes along those paths.  Binding SIDs are in effect shorthand aliases for longer path representations, and the alias expansion is in principle known only by the node that acts on it.  In this document,
+the expansion of the alias is shared between PCC and PCE, and rogue
+actions by either PCC or PCE could result in shifting or misdirecting
+traffic in ways that are hard for other nodes to detect.  In
+particular, when a PCE propagates paths of the form {A, B, BSID} to
+other entities, the BSID values are opaque, and a rogue PCE can
+substitute a BSID from a different LSP in such paths to move traffic
+without the recipient of the path knowing the ultimate destination.</t>
+
+
+
+      <!--<t>As described in <xref target="RFC8664"/>, SR allows a network
       controller to instantiate and control paths in the network. A rogue PCE
       can manipulate binding SID allocations to move traffic around for some
       other LSP that uses BSID in its SR-ERO. Note that path {A, B, BSID} can
       be misdirected just by assigning the BSID value to a different LSP
-      making it a lot easier to misdirect traffic (and harder to detect).</t>
+      making it a lot easier to misdirect traffic (and harder to detect).</t>-->
 
-      <t>Note that in case of BT as 3, the manipulation of SID structure could
-      be exploited by falsifying the various length values.</t>
+<t>The case of BT=3 provides additional opportunities for malfeasance, as
+it purports to convey information about internal SRv6 SID structure.
+There is no mechanism defined to validate this internal structure
+information, and mischaracterizing the division of bits into locator
+block, locator node, function, and argument can result in different
+interpretation of the bits by PCC and PCE.  Most notably, shifting bits
+into or out of the "argument" is a direct vector for affecting
+processing, but other attacks are also possible.</t>
+
+      <!--<t>Note that in case of BT as 3, the manipulation of SID structure could
+      be exploited by falsifying the various length values.</t>-->
 
       <t>Thus, as per <xref target="RFC8231"/>, it is RECOMMENDED that these
       PCEP extensions only be activated on authenticated and encrypted
@@ -1153,7 +1184,14 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
           <c>TBD6: Unable to remove the binding value</c>
 
-          <c>This document</c>          
+          <c>This document</c>    
+          <c>&nbsp;</c>
+
+          <c>&nbsp;</c>
+
+          <c>TBD7: Inconsistent binding types</c>
+
+          <c>This document</c>                      
         </texttable>
       </section>
     </section>
@@ -1168,7 +1206,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
 
       <t>Thanks to Theresa Enghardt for the GENART review.</t>
 
-      <t>Thanks to Martin Vigoureux and Eric Vyncke for the IESG reviews.</t>
+      <t>Thanks to Martin Vigoureux, Benjamin Kaduk, and Eric Vyncke for the IESG reviews.</t>
     </section>
   </middle>
 
@@ -1227,6 +1265,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-pcep-yang"?>
 
       <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.li-pce-controlled-id-space"?>
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-pce-sr-path-segment"?>
     </references>
 
     <!--<section anchor="sec_pcecc" title="PCE based Central Controller">

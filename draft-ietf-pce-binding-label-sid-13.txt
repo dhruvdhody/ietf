@@ -5,13 +5,13 @@
 PCE Working Group                                           S. Sivabalan
 Internet-Draft                                         Ciena Corporation
 Intended status: Standards Track                             C. Filsfils
-Expires: 28 July 2022                                Cisco Systems, Inc.
+Expires: 6 August 2022                               Cisco Systems, Inc.
                                                              J. Tantsura
                                                    Microsoft Corporation
                                                               S. Previdi
                                                               C. Li, Ed.
                                                      Huawei Technologies
-                                                         24 January 2022
+                                                         2 February 2022
 
 
  Carrying Binding Label/Segment Identifier (SID) in PCE-based Networks.
@@ -21,16 +21,16 @@ Abstract
 
    In order to provide greater scalability, network confidentiality, and
    service independence, Segment Routing (SR) utilizes a Binding Segment
-   Identifier (SID) (called BSID).  It is possible to associate a BSID
-   to an RSVP-TE-signaled Traffic Engineering Label Switched Path or an
-   SR Traffic Engineering path.  The BSID can be used by an upstream
-   node for steering traffic into the appropriate TE path to enforce SR
-   policies.  This document specifies the concept of binding value,
-   which can be either an MPLS label or Segment Identifier.  It further
-   specifies an extension to Path Computation Element (PCE)
-   communication Protocol(PCEP) for reporting the binding value by a
-   Path Computation Client (PCC) to the PCE to support PCE-based Traffic
-   Engineering policies.
+   Identifier (SID) (called BSID) as described in RFC 8402.  It is
+   possible to associate a BSID to an RSVP-TE-signaled Traffic
+   Engineering Label Switched Path or an SR Traffic Engineering path.
+   The BSID can be used by an upstream node for steering traffic into
+   the appropriate TE path to enforce SR policies.  This document
+   specifies the concept of binding value, which can be either an MPLS
+   label or Segment Identifier.  It further specifies an extension to
+   Path Computation Element (PCE) communication Protocol(PCEP) for
+   reporting the binding value by a Path Computation Client (PCC) to the
+   PCE to support PCE-based Traffic Engineering policies.
 
 Status of This Memo
 
@@ -47,15 +47,15 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 July 2022.
+   This Internet-Draft will expire on 6 August 2022.
 
 
 
 
 
-Sivabalan, et al.         Expires 28 July 2022                  [Page 1]
+Sivabalan, et al.         Expires 6 August 2022                 [Page 1]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
 
 Copyright Notice
@@ -82,39 +82,39 @@ Table of Contents
    4.  Path Binding TLV  . . . . . . . . . . . . . . . . . . . . . .   6
      4.1.  SRv6 Endpoint Behavior and SID Structure  . . . . . . . .   8
    5.  Operation . . . . . . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Binding SID in SR-ERO . . . . . . . . . . . . . . . . . . . .  11
-   7.  Binding SID in SRv6-ERO . . . . . . . . . . . . . . . . . . .  11
-   8.  PCE Allocation of Binding label/SID . . . . . . . . . . . . .  11
-   9.  Implementation Status . . . . . . . . . . . . . . . . . . . .  13
-     9.1.  Huawei  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     9.2.  Cisco . . . . . . . . . . . . . . . . . . . . . . . . . .  14
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .  14
-   11. Manageability Considerations  . . . . . . . . . . . . . . . .  15
-     11.1.  Control of Function and Policy . . . . . . . . . . . . .  15
-     11.2.  Information and Data Models  . . . . . . . . . . . . . .  15
-     11.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  15
-     11.4.  Verify Correct Operations  . . . . . . . . . . . . . . .  15
-     11.5.  Requirements On Other Protocols  . . . . . . . . . . . .  15
-     11.6.  Impact On Network Operations . . . . . . . . . . . . . .  15
-   12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
-     12.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  16
-       12.1.1.  TE-PATH-BINDING TLV  . . . . . . . . . . . . . . . .  16
-     12.2.  LSP Object . . . . . . . . . . . . . . . . . . . . . . .  17
-     12.3.  PCEP Error Type and Value  . . . . . . . . . . . . . . .  17
-   13. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  18
-   14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  18
-     14.1.  Normative References . . . . . . . . . . . . . . . . . .  18
-     14.2.  Informative References . . . . . . . . . . . . . . . . .  20
-   Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  21
+   6.  Binding SID in SR-ERO . . . . . . . . . . . . . . . . . . . .  12
+   7.  Binding SID in SRv6-ERO . . . . . . . . . . . . . . . . . . .  12
+   8.  PCE Allocation of Binding label/SID . . . . . . . . . . . . .  12
+   9.  Implementation Status . . . . . . . . . . . . . . . . . . . .  14
+     9.1.  Huawei  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     9.2.  Cisco . . . . . . . . . . . . . . . . . . . . . . . . . .  15
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  15
+   11. Manageability Considerations  . . . . . . . . . . . . . . . .  16
+     11.1.  Control of Function and Policy . . . . . . . . . . . . .  16
+     11.2.  Information and Data Models  . . . . . . . . . . . . . .  16
+     11.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  16
+     11.4.  Verify Correct Operations  . . . . . . . . . . . . . . .  16
+     11.5.  Requirements On Other Protocols  . . . . . . . . . . . .  16
+     11.6.  Impact On Network Operations . . . . . . . . . . . . . .  16
+   12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
+     12.1.  PCEP TLV Type Indicators . . . . . . . . . . . . . . . .  17
+       12.1.1.  TE-PATH-BINDING TLV  . . . . . . . . . . . . . . . .  17
+     12.2.  LSP Object . . . . . . . . . . . . . . . . . . . . . . .  18
+     12.3.  PCEP Error Type and Value  . . . . . . . . . . . . . . .  18
+   13. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
+   14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
+     14.1.  Normative References . . . . . . . . . . . . . . . . . .  19
+     14.2.  Informative References . . . . . . . . . . . . . . . . .  21
+   Appendix A.  Contributor Addresses  . . . . . . . . . . . . . . .  23
 
 
 
-Sivabalan, et al.         Expires 28 July 2022                  [Page 2]
+Sivabalan, et al.         Expires 6 August 2022                 [Page 2]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
 
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  23
 
 1.  Introduction
 
@@ -150,7 +150,7 @@ Internet-Draft              Binding Label/SID               January 2022
    stateful PCE can then update the state of LSPs delegated to it.
    [RFC8281] specifies a mechanism allowing a PCE to dynamically
    instantiate an LSP on a PCC by sending the path and characteristics.
-   This document specifies an extension to PCEP to manage of binding
+   This document specifies an extension to PCEP to manage the binding of
    label/SID for both SR and non-SR paths.
 
    [RFC8664] provides a mechanism for a PCE (acting as a network
@@ -165,9 +165,9 @@ Internet-Draft              Binding Label/SID               January 2022
 
 
 
-Sivabalan, et al.         Expires 28 July 2022                  [Page 3]
+Sivabalan, et al.         Expires 6 August 2022                 [Page 3]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
 
 1.1.  Motivation and Example
@@ -176,24 +176,25 @@ Internet-Draft              Binding Label/SID               January 2022
    corresponding TE path.  When a stateful PCE is deployed for setting
    up TE paths, a binding label/SID reported from the PCC to the
    stateful PCE is useful for the purpose of enforcing end-to-end TE/SR
-   policy.  A sample Data Center (DC) use-case is illustrated in
-   Figure 1.  In the MPLS DC network, an SR LSP (without traffic
-   engineering) is established using a prefix SID advertised by BGP (see
-   [RFC8669]).  In the IP/MPLS WAN, an SR-TE LSP is set up using the
-   PCE.  The list of SIDs of the SR-TE LSP is {A, B, C, D}. The gateway
-   node 1 (which is the PCC) allocates a binding SID X and reports it to
-   the PCE.  In order for the access node to steer the traffic over the
-   SR-TE LSP, the PCE passes the SID stack {Y, X} where Y is the prefix
-   SID of the gateway node-1 to the access node.  In the absence of the
-   binding SID X, the PCE would pass the SID stack {Y, A, B, C, D} to
-   the access node.  This example also illustrates the additional
+   policy.  A sample Data Center (DC) and IP/MPLS WAN use-case is
+   illustrated in Figure 1 with a multi-domain PCE.  In the IP/MPLS WAN,
+   an SR-TE LSP is set up using the PCE.  The list of SIDs of the SR-TE
+   LSP is {A, B, C, D}. The gateway node 1 (which is the PCC) allocates
+   a binding SID X and reports it to the PCE.  In the MPLS DC network,
+   an end-to-end SR-TE LSP is established.  In order for the access node
+   to steer the traffic towards Node-1 and over the SR-TE path in WAN,
+   the PCE passes the SID stack {Y, X} where Y is the node SID of the
+   gateway node-1 to the access node and X is the BSID.  In the absence
+   of the BSID X, the PCE would need to pass the SID stack {Y, A, B, C,
+   D} to the access node.  This example also illustrates the additional
    benefit of using the binding label/SID to reduce the number of SIDs
    imposed by the access nodes with a limited forwarding capacity.
 
            SID stack
-           {Y, X}              +-----+
-    _ _ _ _ _ _ _ _ _ _ _ _ _ _| PCE |
-   |                           +-----+
+           {Y, X}              +--------------+
+                               | Multi-domain |
+    _ _ _ _ _ _ _ _ _ _ _ _ _ _|     PCE      |
+   |                           +--------------+
    |                              ^
    |                              | Binding
    |           .-----.            | SID (X)     .-----.
@@ -202,8 +203,8 @@ Internet-Draft              Binding Label/SID               January 2022
 +------+  (                 )  +-------+  (                 )  +-------+
 |Access|_(  MPLS DC Network  )_|Gateway|_(    IP/MPLS WAN    )_|Gateway|
 | Node | (  ==============>  ) |Node-1 | ( ================> ) |Node-2 |
-+------+  (     SR path     )  +-------+  (    SR-TE path   )  +-------+
-           '--(         )--'    Prefix     '--(         )--'
++------+  (    SR-TE path   )  +-------+  (    SR-TE path   )  +-------+
+           '--(         )--'    Node       '--(         )--'
                (       )        SID of         (       )
                 '-----'         Node-1          '-----'
                                 is Y            SIDs for SR-TE LSP:
@@ -217,15 +218,15 @@ Internet-Draft              Binding Label/SID               January 2022
    for a stateful PCE to request a PCC to allocate a specific binding
    label/SID by sending a Path Computation LSP Update Request (PCUpd)
    message.  If the PCC can successfully allocate the specified binding
-   value, it reports the binding value to the PCE.  Otherwise, the PCC
 
 
 
-Sivabalan, et al.         Expires 28 July 2022                  [Page 4]
+Sivabalan, et al.         Expires 6 August 2022                 [Page 4]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
 
+   value, it reports the binding value to the PCE.  Otherwise, the PCC
    sends an error message to the PCE indicating the cause of the
    failure.  A local policy or configuration at the PCC SHOULD dictate
    if the binding label/SID needs to be assigned.
@@ -236,8 +237,8 @@ Internet-Draft              Binding Label/SID               January 2022
    introduce a new OPTIONAL TLV that a PCC can use in order to report
    the binding label/SID associated with a TE LSP, or a PCE to request a
    PCC to allocate any or a specific binding label/SID value.  This TLV
-   is intended for TE LSPs established using RSVP-TE, SR, or any other
-   future method.  Also, in the case of SR-TE LSPs, the TLV can carry a
+   is intended for TE LSPs established using RSVP-TE, SR-TE, or any
+   other future method.  In the case of SR-TE LSPs, the TLV can carry a
    binding label (for SR-TE path with MPLS data-plane) or a binding IPv6
    SID (e.g., IPv6 address for SR-TE paths with IPv6 data-plane).
    Throughout this document, the term "binding value" means either an
@@ -276,10 +277,9 @@ Internet-Draft              Binding Label/SID               January 2022
 
 
 
-
-Sivabalan, et al.         Expires 28 July 2022                  [Page 5]
+Sivabalan, et al.         Expires 6 August 2022                 [Page 5]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
 
    LSP:  Label Switched Path.
@@ -333,9 +333,9 @@ Internet-Draft              Binding Label/SID               January 2022
 
 
 
-Sivabalan, et al.         Expires 28 July 2022                  [Page 6]
+Sivabalan, et al.         Expires 6 August 2022                 [Page 6]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
 
    *  BT = 0: The binding value is a 20-bit MPLS label value.  The TLV
@@ -360,8 +360,10 @@ Internet-Draft              Binding Label/SID               January 2022
 
    Section 12.1.1 defines the IANA registry used to maintain all these
    binding types as well as any future ones.  Note that multiple TE-
-   PATH-BINDING TLVs with different Binding Types MAY be present for the
-   same LSP.
+   PATH-BINDING TLVs with same or different Binding Types MAY be present
+   for the same LSP.  A PCEP speaker could allocate multiple TE-PATH-
+   BINDING TLVs (of the same BT), and use different binding values in
+   different domains or use-cases based on a local policy.
 
    Flags: 1 octet of flags.  The following flag is defined in the new
    registry "TE-PATH-BINDING TLV Flag field" as described in
@@ -383,16 +385,17 @@ Internet-Draft              Binding Label/SID               January 2022
       for the LSP.  This flag is used in the PCRpt and PCUpd messages.
       It is ignored in other PCEP messages.
 
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                 [Page 7]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    *  The unassigned flags MUST be set to 0 while sending and ignored on
       receipt.
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                  [Page 7]
-
-Internet-Draft              Binding Label/SID               January 2022
-
 
    Reserved: MUST be set to 0 while sending and ignored on receipt.
 
@@ -401,7 +404,10 @@ Internet-Draft              Binding Label/SID               January 2022
    label.  When the BT is 1, the 32 bits represent the MPLS label stack
    entry as per [RFC3032].  When the BT is 2, the 128 bits represent the
    SRv6 SID.  When the BT is 3, the Binding Value also contains the SRv6
-   Endpoint Behavior and SID Structure, defined in Section 4.1.
+   Endpoint Behavior and SID Structure, defined in Section 4.1.  In this
+   document, the TE-PATH-BINDING TLV is considered to be empty if no
+   Binding Value is present.  Note that the length of the TLV would be 4
+   in such a case.
 
 4.1.  SRv6 Endpoint Behavior and SID Structure
 
@@ -412,7 +418,10 @@ Internet-Draft              Binding Label/SID               January 2022
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                                                               |
       |                 SRv6 Binding SID (16 octets)                  |
+      |                                                               |
+      |                                                               |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       |         Reserved              |      Endpoint Behavior        |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -430,6 +439,17 @@ Internet-Draft              Binding Label/SID               January 2022
    *  Reserved: 2 octets.  It MUST be set to 0 on transmit and ignored
       on receipt.
 
+
+
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                 [Page 8]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    *  Endpoint Behavior: 2 octets.  The Endpoint Behavior code point for
       this SRv6 SID as per the IANA subregistry called "SRv6 Endpoint
       Behaviors", created by [RFC8986].  When the field is set with the
@@ -442,23 +462,24 @@ Internet-Draft              Binding Label/SID               January 2022
 
       -  LN Length: 1 octet.  SRv6 SID Locator Node length in bits.
 
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                  [Page 8]
-
-Internet-Draft              Binding Label/SID               January 2022
-
-
       -  Function Length: 1 octet.  SRv6 SID Function length in bits.
 
       -  Argument Length: 1 octet.  SRv6 SID Arguments length in bits.
 
+   The total of the locator block, locator node, function, and argument
+   lengths MUST be lower or equal to 128 bits.  If this condition is not
+   met, the corresponding TE-PATH-BINDING TLV MUST be considered as an
+   error.  Also, if the Endpoint Behavior is found to be unknown or
+   inconsistent, it is considered an error.  A PCErr message with Error-
+   Type = 10 ("Reception of an invalid object") and Error-Value = 37
+   ("Invalid SRv6 SID Structure") MUST be sent.
+
 5.  Operation
 
-   The binding value is allocated by the PCC and reported to a PCE via a
-   PCRpt message.  If a PCE does not recognize the TE-PATH-BINDING TLV,
-   it would ignore the TLV in accordance with [RFC5440].  If a PCE
+   The binding value is usually allocated by the PCC and reported to a
+   PCE via a PCRpt message (see Section 8 where PCE does the
+   allocation).  If a PCE does not recognize the TE-PATH-BINDING TLV, it
+   would ignore the TLV in accordance with [RFC5440].  If a PCE
    recognizes the TLV but does not support the TLV, it MUST send a PCErr
    with Error-Type = 2 (Capability not supported).
 
@@ -475,6 +496,16 @@ Internet-Draft              Binding Label/SID               January 2022
    Error-Type = 10 ("Reception of an invalid object") and Error Value =
    2 ("Bad label value") as specified in [RFC8664].
 
+
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                 [Page 9]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    For SRv6 BSIDs, it is RECOMMENDED to always explicitly specify the
    SRv6 Endpoint Behavior and SID Structure in the TE-PATH-BINDING TLV
    by setting the BT (Binding Type) to 3.  This enables the sender to
@@ -489,7 +520,9 @@ Internet-Draft              Binding Label/SID               January 2022
    binding, it MUST withdraw the former binding value (with R flag set
    in the former TE-PATH-BINDING TLV) and include a new TE-PATH-BINDING
    TLV containing the new binding value.  Note that other instances of
-   TE-PATH-BINDING TLVs that are unchanged MAY also be included.
+   TE-PATH-BINDING TLVs that are unchanged MAY also be included.  If the
+   unchanged instances are not included, they will remain associated
+   with the LSP.
 
    If a PCE requires a PCC to allocate a (or several) specific binding
    value(s), it may do so by sending a PCUpd or PCInitiate message
@@ -498,14 +531,6 @@ Internet-Draft              Binding Label/SID               January 2022
    PCE.  If the PCC considers the binding value specified by the PCE
    invalid, it MUST send a PCErr message with Error-Type = TBD2
    ("Binding label/SID failure") and Error Value = TBD3 ("Invalid SID").
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                  [Page 9]
-
-Internet-Draft              Binding Label/SID               January 2022
-
-
    If the binding value is valid, but the PCC is unable to allocate the
    binding value, it MUST send a PCErr message with Error-Type = TBD2
    ("Binding label/SID failure") and Error Value = TBD4 ("Unable to
@@ -527,6 +552,16 @@ Internet-Draft              Binding Label/SID               January 2022
    ("Binding label/SID failure") and Error Value = TBD6 ("Unable to
    remove the binding value").
 
+
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 10]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    In some cases, a stateful PCE may want to request that the PCC
    allocate a binding value of the PCC's own choosing.  It instructs the
    PCC by sending a PCUpd message containing an empty TE-PATH-BINDING
@@ -534,11 +569,11 @@ Internet-Draft              Binding Label/SID               January 2022
    of the TLV to 4).  A PCE can also request a PCC to allocate a binding
    value at the time of initiation by sending a PCInitiate message with
    an empty TE-PATH-BINDING TLV.  Only one such instance of empty TE-
-   PATH-BINDING TLV SHOULD be included in the LSP object and others
-   ignored on receipt.  If the PCC is unable to allocate a new binding
-   value as per the specified BT, it MUST send a PCErr message with
-   Error-Type = TBD2 ("Binding label/SID failure") and Error-Value =
-   TBD5 ("Unable to allocate a new binding label/SID").
+   PATH-BINDING TLV, per BT, SHOULD be included in the LSP object and
+   others ignored on receipt.  If the PCC is unable to allocate a new
+   binding value as per the specified BT, it MUST send a PCErr message
+   with Error-Type = TBD2 ("Binding label/SID failure") and Error-Value
+   = TBD5 ("Unable to allocate a new binding label/SID").
 
    As previously noted, if a message contains an invalid TE-PATH-BINDING
    TLV that leads to an error condition, the whole message is rejected
@@ -555,19 +590,33 @@ Internet-Draft              Binding Label/SID               January 2022
    the PCE MUST close the corresponding PCEP session with the reason
    "Reception of a malformed PCEP message" (according to [RFC5440]).
 
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 10]
-
-Internet-Draft              Binding Label/SID               January 2022
-
-
    If a TE-PATH-BINDING TLV is absent in the PCRpt message and no
    binding values were reported before, the PCE MUST assume that the
    corresponding LSP does not have any binding.  Similarly, if TE-PATH-
    BINDING TLV is absent in the PCUpd message and no binding values were
    reported before, the PCC's local policy dictates how the binding
    allocations are made for a given LSP.
+
+   Note that some binding types have similar information but different
+   binding value formats.  For example, BT=(2 or 3) is used for the SRv6
+   SID and BT=(0 or 1) is used for the MPLS Label.  In case a PCEP
+   speaker receives multiple TE-PATH-BINDING TLVs with the same SRv6 SID
+   or MPLS Label but different BT values, it MUST send a PCErr message
+   with Error-Type = TBD2 ("Binding label/SID failure") and Error-Value
+   = TBD7 ("Inconsistent binding types").
+
+
+
+
+
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 11]
+
+Internet-Draft              Binding Label/SID              February 2022
+
 
 6.  Binding SID in SR-ERO
 
@@ -609,22 +658,26 @@ Internet-Draft              Binding Label/SID               January 2022
    this range via a possible PCEP extension as well (see
    [I-D.li-pce-controlled-id-space]).
 
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 11]
-
-Internet-Draft              Binding Label/SID               January 2022
-
-
    When PCECC operations are supported as per [RFC9050], the binding
    label/SID MAY also be allocated by the PCE itself.  Both peers need
    to exchange the PCECC capability as described in [RFC9050] before the
    PCE can allocate the binding label/SID on its own.
 
+
+
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 12]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    A new P flag in the LSP object [RFC8231] is introduced to indicate
-   that the allocation needs to be made by the PCE:
+   that the allocation needs to be made by the PCE.  Note that the P
+   flag could be used for other types of allocations (such as path
+   segments [I-D.ietf-pce-sr-path-segment]) in future.
 
    *  P (PCE-allocated binding label/SID): If the bit is set to 1, it
       indicates that the PCC requests PCE to make allocations for this
@@ -635,10 +688,9 @@ Internet-Draft              Binding Label/SID               January 2022
       in the PCEP message.  A PCE MUST also set this bit to 1 and
       include a TE-PATH-BINDING TLV to indicate that the binding label/
       SID is allocated by PCE and encoded in the PCEP message towards
-      the PCC.  Further, a PCE MUST set this bit to 0 and include a TE-
-      PATH-BINDING TLV in the LSP object if it wishes to indicate that
-      the binding label/SID should be allocated by the PCC as described
-      in Section 5.
+      the PCC.  Further, if the binding label/SID is allocated by the
+      PCC, the PCE MUST set this bit to 0 and follow the procedure
+      described in Section 5.
 
    Note that -
 
@@ -664,21 +716,19 @@ Internet-Draft              Binding Label/SID               January 2022
       and willingness to use the PCEP extensions for the PCECC as per
       [RFC9050] and a PCEP peer receives P=1 in the LSP object, it MUST:
 
-
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 12]
-
-Internet-Draft              Binding Label/SID               January 2022
-
-
       -  send a PCErr message with Error-Type=19 (Invalid Operation) and
          Error-value=16 (Attempted PCECC operations when PCECC
          capability was not advertised) and
 
       -  terminate the PCEP session.
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 13]
+
+Internet-Draft              Binding Label/SID              February 2022
+
 
    *  A legacy PCEP speaker that does not recognize the P flag in the
       LSP object would ignore it in accordance with [RFC8231].
@@ -723,17 +773,18 @@ Internet-Draft              Binding Label/SID               January 2022
 
    *  Implementation: Huawei's Router and Controller
 
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 13]
-
-Internet-Draft              Binding Label/SID               January 2022
-
-
    *  Description: An experimental code-point is used and will be
       modified to the value allocated in this document.
 
    *  Maturity Level: Production
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 14]
+
+Internet-Draft              Binding Label/SID              February 2022
+
 
    *  Coverage: Full
 
@@ -757,19 +808,39 @@ Internet-Draft              Binding Label/SID               January 2022
 10.  Security Considerations
 
    The security considerations described in [RFC5440], [RFC8231],
-   [RFC8281] and [RFC8664] are applicable to this specification.  No
-   additional security measure is required.
+   [RFC8281], [RFC8664], and [RFC9050] are applicable to this
+   specification.  No additional security measure is required.
 
-   As described in [RFC8664], SR allows a network controller to
-   instantiate and control paths in the network.  A rogue PCE can
-   manipulate binding SID allocations to move traffic around for some
-   other LSP that uses BSID in its SR-ERO.  Note that path {A, B, BSID}
-   can be misdirected just by assigning the BSID value to a different
-   LSP making it a lot easier to misdirect traffic (and harder to
-   detect).
+   As described in [RFC8402] and [RFC8664], SR intrinsically involves an
+   entity (whether head-end or a central network controller) controlling
+   and instantiating paths in the network without the involvement of
+   (other) nodes along those paths.  Binding SIDs are in effect
+   shorthand aliases for longer path representations, and the alias
+   expansion is in principle known only by the node that acts on it.  In
+   this document, the expansion of the alias is shared between PCC and
+   PCE, and rogue actions by either PCC or PCE could result in shifting
+   or misdirecting traffic in ways that are hard for other nodes to
+   detect.  In particular, when a PCE propagates paths of the form {A,
+   B, BSID} to other entities, the BSID values are opaque, and a rogue
+   PCE can substitute a BSID from a different LSP in such paths to move
+   traffic without the recipient of the path knowing the ultimate
+   destination.
 
-   Note that in case of BT as 3, the manipulation of SID structure could
-   be exploited by falsifying the various length values.
+   The case of BT=3 provides additional opportunities for malfeasance,
+   as it purports to convey information about internal SRv6 SID
+   structure.  There is no mechanism defined to validate this internal
+   structure information, and mischaracterizing the division of bits
+   into locator block, locator node, function, and argument can result
+   in different interpretation of the bits by PCC and PCE.  Most
+   notably, shifting bits into or out of the "argument" is a direct
+   vector for affecting processing, but other attacks are also possible.
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 15]
+
+Internet-Draft              Binding Label/SID              February 2022
+
 
    Thus, as per [RFC8231], it is RECOMMENDED that these PCEP extensions
    only be activated on authenticated and encrypted sessions across PCEs
@@ -777,14 +848,6 @@ Internet-Draft              Binding Label/SID               January 2022
    Transport Layer Security (TLS) [RFC8253], as per the recommendations
    and best current practices in BCP195 [RFC7525] (unless explicitly set
    aside in [RFC8253]).
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 14]
-
-Internet-Draft              Binding Label/SID               January 2022
-
 
 11.  Manageability Considerations
 
@@ -828,19 +891,18 @@ Internet-Draft              Binding Label/SID               January 2022
    The mechanisms defined in [RFC5440], [RFC8231], and [RFC8664] also
    apply to the PCEP extensions defined in this document.
 
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 16]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
 12.  IANA Considerations
 
    IANA maintains the "Path Computation Element Protocol (PCEP) Numbers"
    registry.  This document requests IANA actions to allocate code
    points for the protocol elements defined in this document.
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 15]
-
-Internet-Draft              Binding Label/SID               January 2022
-
 
 12.1.  PCEP TLV Type Indicators
 
@@ -881,6 +943,17 @@ Internet-Draft              Binding Label/SID               January 2022
 
                                  Table 2
 
+
+
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 17]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    IANA is requested to create a new subregistry "TE-PATH-BINDING TLV
    Flag field" to manage the Flag field in the TE-PATH-BINDING TLV.  New
    values are to be assigned by Standards Action [RFC8126].  Each bit
@@ -889,14 +962,6 @@ Internet-Draft              Binding Label/SID               January 2022
    *  Bit number (count from 0 as the most significant bit)
 
    *  Description
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 16]
-
-Internet-Draft              Binding Label/SID               January 2022
-
 
    *  Reference
 
@@ -940,18 +1005,9 @@ Internet-Draft              Binding Label/SID               January 2022
 
 
 
-
-
-
-
-
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 17]
+Sivabalan, et al.         Expires 6 August 2022                [Page 18]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
 
    +============+================+========================+===========+
@@ -975,6 +1031,9 @@ Internet-Draft              Binding Label/SID               January 2022
    |            |                | TBD6: Unable to remove | This      |
    |            |                | the binding value      | document  |
    +------------+----------------+------------------------+-----------+
+   |            |                | TBD7: Inconsistent     | This      |
+   |            |                | binding types          | document  |
+   +------------+----------------+------------------------+-----------+
 
                                  Table 5
 
@@ -989,26 +1048,28 @@ Internet-Draft              Binding Label/SID               January 2022
 
    Thanks to Theresa Enghardt for the GENART review.
 
-   Thanks to Martin Vigoureux and Eric Vyncke for the IESG reviews.
+   Thanks to Martin Vigoureux, Benjamin Kaduk, and Eric Vyncke for the
+   IESG reviews.
 
 14.  References
 
 14.1.  Normative References
 
+
+
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 19]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 18]
-
-Internet-Draft              Binding Label/SID               January 2022
-
 
    [RFC3032]  Rosen, E., Tappan, D., Fedorkow, G., Rekhter, Y.,
               Farinacci, D., Li, T., and A. Conta, "MPLS Label Stack
@@ -1052,19 +1113,20 @@ Internet-Draft              Binding Label/SID               January 2022
               RFC 8253, DOI 10.17487/RFC8253, October 2017,
               <https://www.rfc-editor.org/info/rfc8253>.
 
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 20]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    [RFC8281]  Crabbe, E., Minei, I., Sivabalan, S., and R. Varga, "Path
               Computation Element Communication Protocol (PCEP)
               Extensions for PCE-Initiated LSP Setup in a Stateful PCE
               Model", RFC 8281, DOI 10.17487/RFC8281, December 2017,
               <https://www.rfc-editor.org/info/rfc8281>.
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 19]
-
-Internet-Draft              Binding Label/SID               January 2022
-
 
    [RFC8402]  Filsfils, C., Ed., Previdi, S., Ed., Ginsberg, L.,
               Decraene, B., Litkowski, S., and R. Shakir, "Segment
@@ -1105,22 +1167,21 @@ Internet-Draft              Binding Label/SID               January 2022
 
 14.2.  Informative References
 
+
+
+
+
+
+
+Sivabalan, et al.         Expires 6 August 2022                [Page 21]
+
+Internet-Draft              Binding Label/SID              February 2022
+
+
    [RFC4655]  Farrel, A., Vasseur, J.-P., and J. Ash, "A Path
               Computation Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
               <https://www.rfc-editor.org/info/rfc4655>.
-
-
-
-
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 20]
-
-Internet-Draft              Binding Label/SID               January 2022
-
 
    [RFC8283]  Farrel, A., Ed., Zhao, Q., Ed., Li, Z., and C. Zhou, "An
               Architecture for Use of PCE and the PCE Communication
@@ -1138,17 +1199,17 @@ Internet-Draft              Binding Label/SID               January 2022
               Filsfils, C., Talaulikar, K., Voyer, D., Bogdanov, A., and
               P. Mattes, "Segment Routing Policy Architecture", Work in
               Progress, Internet-Draft, draft-ietf-spring-segment-
-              routing-policy-14, 25 October 2021,
+              routing-policy-16, 28 January 2022,
               <https://www.ietf.org/archive/id/draft-ietf-spring-
-              segment-routing-policy-14.txt>.
+              segment-routing-policy-16.txt>.
 
    [I-D.ietf-pce-pcep-yang]
               Dhody, D., Hardwick, J., Beeram, V. P., and J. Tantsura,
               "A YANG Data Model for Path Computation Element
               Communications Protocol (PCEP)", Work in Progress,
-              Internet-Draft, draft-ietf-pce-pcep-yang-17, 23 October
-              2021, <https://www.ietf.org/archive/id/draft-ietf-pce-
-              pcep-yang-17.txt>.
+              Internet-Draft, draft-ietf-pce-pcep-yang-18, 25 January
+              2022, <https://www.ietf.org/archive/id/draft-ietf-pce-
+              pcep-yang-18.txt>.
 
    [I-D.li-pce-controlled-id-space]
               Li, C., Chen, M., Wang, A., Cheng, W., and C. Zhou, "PCE
@@ -1157,26 +1218,23 @@ Internet-Draft              Binding Label/SID               January 2022
               <https://www.ietf.org/archive/id/draft-li-pce-controlled-
               id-space-09.txt>.
 
-Appendix A.  Contributor Addresses
+   [I-D.ietf-pce-sr-path-segment]
+              Li, C., Chen, M., Cheng, W., Gandhi, R., and Q. Xiong,
+              "Path Computation Element Communication Protocol (PCEP)
+              Extension for Path Segment in Segment Routing (SR)", Work
+              in Progress, Internet-Draft, draft-ietf-pce-sr-path-
+              segment-04, 12 August 2021,
+              <https://www.ietf.org/archive/id/draft-ietf-pce-sr-path-
+              segment-04.txt>.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 21]
+Sivabalan, et al.         Expires 6 August 2022                [Page 22]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
+
+Appendix A.  Contributor Addresses
 
    Jonathan Hardwick
    Metaswitch Networks
@@ -1227,11 +1285,9 @@ Authors' Addresses
 
 
 
-
-
-Sivabalan, et al.         Expires 28 July 2022                 [Page 22]
+Sivabalan, et al.         Expires 6 August 2022                [Page 23]
 
-Internet-Draft              Binding Label/SID               January 2022
+Internet-Draft              Binding Label/SID              February 2022
 
 
    Clarence Filsfils
@@ -1285,4 +1341,4 @@ Internet-Draft              Binding Label/SID               January 2022
 
 
 
-Sivabalan, et al.         Expires 28 July 2022                 [Page 23]
+Sivabalan, et al.         Expires 6 August 2022                [Page 24]
