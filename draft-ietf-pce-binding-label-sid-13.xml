@@ -213,7 +213,7 @@ and <xref target="RFC8402"/> can be used to enforce SR policy with SR-TE path. N
       stateful PCE can then update the state of LSPs delegated to it. <xref
       target="RFC8281"/> specifies a mechanism allowing a PCE to dynamically
       instantiate an LSP on a PCC by sending the path and characteristics. 
-      This document specifies an extension to PCEP to manage the binding of label/SID for both SR and non-SR paths.</t>
+      This document specifies an extension to PCEP to manage the binding of label/SID that can be applied to SR, RSVP-TE, and other path setup types.</t>
 
       <t><xref target="RFC8664"/> provides a mechanism for a PCE (acting as a
       network controller) to instantiate SR-TE paths (candidate paths) for an
@@ -752,8 +752,7 @@ Error-Type = 10 ("Reception of an invalid object") and Error-Value =
 
           <t>To request that the PCE allocate the binding label/SID, a PCC
           MUST set P=1, D=1, and include an empty TE-PATH-BINDING TLV in PCRpt
-          message. The PCE SHOULD allocate it and respond to the PCC with
-          PCUpd message including the allocated binding label/SID in the
+          message. The PCE will attempt to allocate it and respond to the PCC with PCUpd message including the allocated binding label/SID in the
           TE-PATH-BINDING TLV and P=1, D=1 in the LSP object. If the PCE is
           unable to allocate, it MUST send a PCErr message with Error-Type =
           TBD2 ("Binding label/SID failure") and Error-Value = TBD5 ("Unable
@@ -1206,7 +1205,7 @@ processing, but other attacks are also possible.</t>
 
       <t>Thanks to Theresa Enghardt for the GENART review.</t>
 
-      <t>Thanks to Martin Vigoureux, Benjamin Kaduk, Eric Vyncke, and Lars Eggert for the IESG reviews.</t>
+      <t>Thanks to Martin Vigoureux, Benjamin Kaduk, Eric Vyncke, Lars Eggert, and Murray Kucherawy for the IESG reviews.</t>
     </section>
   </middle>
 
