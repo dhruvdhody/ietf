@@ -532,6 +532,8 @@ as an error. Also, if the Endpoint Behavior is found to be unknown or
 inconsistent, it is considered an error.  A PCErr message with 
 Error-Type = 10 ("Reception of an invalid object") and Error-Value = 
 37 ("Invalid SRv6 SID Structure") MUST be sent.</t>
+
+<t>The SRv6 SID Structure could be used by the PCE for ease of operations and monitoring. For example, this information could be used for validation of SRv6 SIDs being instantiated in the network and checked for conformance to the SRv6 SID allocation scheme chosen by the operator as described in Section 3.2 of <xref target="RFC8986"/>. In the future, PCE could also be used for verification and the automation for securing the SRv6 domain by provisioning filtering rules at SR domain boundaries as described in Section 5 of <xref target="RFC8754"/>. The details of these potential applications are outside the scope of this document.</t>
       </section>
     </section>
 
@@ -725,7 +727,7 @@ Error-Type = 10 ("Reception of an invalid object") and Error-Value =
       <t>A new P flag in the LSP object <xref target="RFC8231"/> is introduced
       to indicate that the allocation needs to be made by the PCE. Note that the P flag could be used for other types of allocations (such as path segments <xref target="I-D.ietf-pce-sr-path-segment"/>) in future. <list
           style="symbols">
-          <t>P (PCE-allocated binding label/SID): If the bit is set to 1, it
+          <t>P (PCE-allocation): If the bit is set to 1, it
           indicates that the PCC requests PCE to make allocations for this
           LSP. The TE-PATH-BINDING TLV in the LSP object identifies that the
           allocation is for a binding label/SID. A PCC MUST set this bit to 1
@@ -804,6 +806,8 @@ Error-Type = 10 ("Reception of an invalid object") and Error-Value =
    PCC and MUST include the TE-PATH-BINDING TLV in the LSP object. The P flag in the LSP object would be set to 1 to indicate that the allocation is made by the PCE.</t>  -->
 
       <!--<t>Before a PCE can allocate a binding label the PCECC capability MUST be exchanged on the PCEP session. Note that the CCI object is not used for binding allocation; this is done to maintain consistency with the rest of the binding label/SID procedures as per <xref target="I-D.ietf-pce-binding-label-sid"/>.</t>-->
+
+      <t>Note that, the P-Flag in the LSP object SHOULD NOT be set to 1 without the presence of TE-PATH-BINDING TLV or any other future TLV defined for PCE allocation. On receipt of such an LSP object, the P-Flag is ignored. The presence of TE-PATH-BINDING TLV with P=1 indicates the allocation is for the binding label/SID. In the future, some other TLV (such as one defined in <xref target="I-D.ietf-pce-sr-path-segment"/>) could also be used alongside P=1 to indicate allocation of a different attribute. A future document should not attempt to assign semantics to P=1 without limiting its scope that both PCEP peers could agree on. </t>
     </section>
 
     <section anchor="Imp" title="Implementation Status">
@@ -1116,7 +1120,7 @@ processing, but other attacks are also possible.</t>
 
           <c>0</c>
 
-          <c>PCE-allocated binding label/SID</c>
+          <c>PCE-allocation</c>
 
           <c>This document</c>
         </texttable>
@@ -1249,6 +1253,8 @@ processing, but other attacks are also possible.</t>
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4655.xml"?>
 
       <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8283.xml"?>
+
+      <?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8754.xml"?>
 
       <!--<?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8669.xml"?>-->
 
