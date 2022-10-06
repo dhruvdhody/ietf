@@ -5,7 +5,7 @@
 <!ENTITY rfc2119 PUBLIC "" "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 ]>
 <rfc category="std" docName="draft-ietf-lsr-pce-discovery-security-support-12"
-     ipr="pre5378Trust200902" updates="5088,5089,8231,8306">
+     ipr="trust200902" updates="5088,5089,8231,8306">
   <front>
     <title abbrev="IGP Ext for PCEP Security Discovery">IGP extension for PCEP 
     security capability support in PCE discovery</title>
@@ -149,10 +149,15 @@
 
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>As described in <xref target="RFC5440"/>, PCEP communication privacy
-      is one important issue, as an attacker that intercepts a Path
-      Computation Element (PCE) message could obtain sensitive information
-      related to computed paths and resources.</t>
+      <t>As described in <xref target="RFC5440"/>, Path Computation Element Communication 
+      Protocol (PCEP) communication privacy and integrity
+      are important issues, as an attacker that intercepts a PCEP message 
+      could obtain sensitive information
+      related to computed paths and resources. Authentication and integrity checks 
+      allow the receiver of a PCEP
+   message to know that the message genuinely comes from the node that
+   purports to have sent it and to know whether the message has been
+   modified.</t>
 
       <t>Among the possible solutions mentioned in that document, Transport
       Layer Security (TLS) <xref target="RFC8446"/> provides support for peer
@@ -179,7 +184,10 @@
       <t>As per <xref target="RFC5088"/>, the IANA created a top-level OSPF registry, the
       "Path Computation Element (PCE) Capability Flags" registry. This
       document updates <xref target="RFC5088"/> and moves the registry to "Interior Gateway
-      Protocol (IGP) Parameters". Further, this document updates [RFC8231]
+      Protocol (IGP) Parameters". <xref target="RFC5089"/> states that the IS-IS uses the 
+      same registry as OSPF. This document updates <xref target="RFC5089"/> to refer to 
+      the new IGP registry. 
+      Further, this document updates <xref target="RFC8231"/>
       where it references the registry location as "Open Shortest Path First
       (OSPF) Parameters" registry to "Interior Gateway Protocol (IGP)
       Parameters" registry. This document updates [RFC8306] where it uses the
@@ -403,8 +411,40 @@
     </section>
 
     <section title="Management Considerations">
-      <t>A configuration option may be provided for advertising and
-      withdrawing PCEP security capability via OSPF and IS-IS.</t>
+    <t>Manageability considerations for PCE Discovery are addressed in
+   Section 4.10 of <xref target="RFC4674"/> and Section 9 of <xref target="RFC5088"/> <xref target="RFC5089"/>.</t>
+      <section title="Control of Policy and Functions">
+      <t>A PCE implementation SHOULD allow the following
+   parameters to be configured on the PCE:
+   <list style="symbols">
+   <t>support for TCP-AO</t>
+   <t>the KeyID used by TCP-AO</t>
+   <t>Key Chain Name</t>
+   <t>support for TLS</t>
+   </list>
+   </t>
+    </section>
+    <section title="Information and Data Model">
+    <t>The YANG model for PCEP <xref target="I-D.ietf-pce-pcep-yang"/> supports PCEP security parameters (key, key chain and TLS).</t> 
+    </section>
+    <section title="Liveness Detection and Monitoring">
+    <t>Normal operations of the IGP meet the requirements for liveness detection and monitoring.</t>
+    </section>
+    <section title="Verify Correct Operations">
+    <t>The correlation of PCEP security information advertised against information
+   received can be achieved by comparing the information in the PCED
+   sub-TLV received by the PCC with that stored at the PCE using the
+   PCEP YANG.</t>
+    </section>
+    <section title="Requirements on Other Protocols and Functional Components">
+    <t>There are no new requirements on other protocols.</t>
+    </section>
+    <section title="Impact on Network Operations">
+    <t>Frequent changes in PCEP security information advertised in the PCED sub-TLV
+   may have a significant impact on IGP and might destabilize the
+   operation of the network by causing the PCCs to reconnect sessions with PCE(s). 
+   Section 4.10.4 of <xref target="RFC4674"/> and Section 9.6 of <xref target="RFC5088"/> <xref target="RFC5089"/> list techniques that are applicable to this document as well.</t>
+    </section>
     </section>
 
     <section title="Security Considerations">
@@ -519,7 +559,7 @@
 
       <?rfc include="reference.RFC.5925.xml"?>
 
-      <?rfc include="reference.RFC.5926.xml"?>
+      
 
       <?rfc include="reference.RFC.8253.xml"?>
 
@@ -552,14 +592,20 @@
 
     <references title="Informative References">
       <?rfc include="reference.RFC.2385.xml"?>
+      
+      <?rfc include="reference.RFC.4674.xml"?>
 
       <?rfc include="reference.RFC.5440.xml"?>
+      
+      <?rfc include="reference.RFC.5926.xml"?>
       
       <?rfc include="reference.RFC.6823.xml"?>
 
       <?rfc include="reference.RFC.6952.xml"?>
 
       <?rfc include="reference.RFC.8446.xml"?>
+      
+      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
       
       <?rfc include="reference.I-D.ietf-lsr-ospf-transport-instance"?>
 

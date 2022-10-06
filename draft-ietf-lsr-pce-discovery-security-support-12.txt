@@ -6,11 +6,11 @@ PCE working group                                               D. Lopez
 Internet-Draft                                            Telefonica I+D
 Updates: 5088, 5089, 8231, 8306 (if approved)                      Q. Wu
 Intended status: Standards Track                                D. Dhody
-Expires: 8 April 2023                                              Q. Ma
+Expires: 9 April 2023                                              Q. Ma
                                                                   Huawei
                                                                  D. King
                                                       Old Dog Consulting
-                                                          5 October 2022
+                                                          6 October 2022
 
 
   IGP extension for PCEP security capability support in PCE discovery
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Lopez, et al.             Expires 8 April 2023                  [Page 1]
+Lopez, et al.             Expires 9 April 2023                  [Page 1]
 
 Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 
-   This Internet-Draft will expire on 8 April 2023.
+   This Internet-Draft will expire on 9 April 2023.
 
 Copyright Notice
 
@@ -73,18 +73,6 @@ Copyright Notice
    extracted from this document must include Revised BSD License text as
    described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Revised BSD License.
-
-   This document may contain material from IETF Documents or IETF
-   Contributions published or made publicly available before November
-   10, 2008.  The person(s) controlling the copyright in some of this
-   material may not have granted the IETF Trust the right to allow
-   modifications of such material outside the IETF Standards Process.
-   Without obtaining an adequate license from the person(s) controlling
-   the copyright in such materials, this document may not be modified
-   outside the IETF Standards Process, and derivative works of it may
-   not be created outside the IETF Standards Process, except to format
-   it for publication as an RFC or to translate it into languages other
-   than English.
 
 Table of Contents
 
@@ -102,30 +90,40 @@ Table of Contents
    4.  Update to RFCs  . . . . . . . . . . . . . . . . . . . . . . .   7
    5.  Backward Compatibility Considerations . . . . . . . . . . . .   8
    6.  Management Considerations . . . . . . . . . . . . . . . . . .   8
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-     8.1.  PCE Capability Flags  . . . . . . . . . . . . . . . . . .   9
-     8.2.  PCED sub-TLV Type Indicators  . . . . . . . . . . . . . .   9
+     6.1.  Control of Policy and Functions . . . . . . . . . . . . .   8
+     6.2.  Information and Data Model  . . . . . . . . . . . . . . .   8
+     6.3.  Liveness Detection and Monitoring . . . . . . . . . . . .   9
+     6.4.  Verify Correct Operations . . . . . . . . . . . . . . . .   9
+     6.5.  Requirements on Other Protocols and Functional
+           Components  . . . . . . . . . . . . . . . . . . . . . . .   9
+     6.6.  Impact on Network Operations  . . . . . . . . . . . . . .   9
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+     8.1.  PCE Capability Flags  . . . . . . . . . . . . . . . . . .  10
+     8.2.  PCED sub-TLV Type Indicators  . . . . . . . . . . . . . .  10
+   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  11
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  11
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 
 
-Lopez, et al.             Expires 8 April 2023                  [Page 2]
+Lopez, et al.             Expires 9 April 2023                  [Page 2]
 
 Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 
-   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  10
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  10
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  12
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
-
 1.  Introduction
 
-   As described in [RFC5440], PCEP communication privacy is one
-   important issue, as an attacker that intercepts a Path Computation
-   Element (PCE) message could obtain sensitive information related to
-   computed paths and resources.
+   As described in [RFC5440], Path Computation Element Communication
+   Protocol (PCEP) communication privacy and integrity are important
+   issues, as an attacker that intercepts a PCEP message could obtain
+   sensitive information related to computed paths and resources.
+   Authentication and integrity checks allow the receiver of a PCEP
+   message to know that the message genuinely comes from the node that
+   purports to have sent it and to know whether the message has been
+   modified.
 
    Among the possible solutions mentioned in that document, Transport
    Layer Security (TLS) [RFC8446] provides support for peer
@@ -152,7 +150,9 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
    As per [RFC5088], the IANA created a top-level OSPF registry, the
    "Path Computation Element (PCE) Capability Flags" registry.  This
    document updates [RFC5088] and moves the registry to "Interior
-   Gateway Protocol (IGP) Parameters".  Further, this document updates
+   Gateway Protocol (IGP) Parameters".  [RFC5089] states that the IS-IS
+   uses the same registry as OSPF.  This document updates [RFC5089] to
+   refer to the new IGP registry.  Further, this document updates
    [RFC8231] where it references the registry location as "Open Shortest
    Path First (OSPF) Parameters" registry to "Interior Gateway Protocol
    (IGP) Parameters" registry.  This document updates [RFC8306] where it
@@ -165,7 +165,7 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 
 
-Lopez, et al.             Expires 8 April 2023                  [Page 3]
+Lopez, et al.             Expires 9 April 2023                  [Page 3]
 
 Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
@@ -221,7 +221,7 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 
 
-Lopez, et al.             Expires 8 April 2023                  [Page 4]
+Lopez, et al.             Expires 9 April 2023                  [Page 4]
 
 Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
@@ -277,7 +277,7 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 
 
-Lopez, et al.             Expires 8 April 2023                  [Page 5]
+Lopez, et al.             Expires 9 April 2023                  [Page 5]
 
 Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
@@ -333,7 +333,7 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 
 
-Lopez, et al.             Expires 8 April 2023                  [Page 6]
+Lopez, et al.             Expires 9 April 2023                  [Page 6]
 
 Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
@@ -389,7 +389,7 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 
 
-Lopez, et al.             Expires 8 April 2023                  [Page 7]
+Lopez, et al.             Expires 9 April 2023                  [Page 7]
 
 Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
@@ -419,8 +419,61 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 6.  Management Considerations
 
-   A configuration option may be provided for advertising and
-   withdrawing PCEP security capability via OSPF and IS-IS.
+   Manageability considerations for PCE Discovery are addressed in
+   Section 4.10 of [RFC4674] and Section 9 of [RFC5088] [RFC5089].
+
+6.1.  Control of Policy and Functions
+
+   A PCE implementation SHOULD allow the following parameters to be
+   configured on the PCE:
+
+   *  support for TCP-AO
+
+   *  the KeyID used by TCP-AO
+
+   *  Key Chain Name
+
+   *  support for TLS
+
+6.2.  Information and Data Model
+
+   The YANG model for PCEP [I-D.ietf-pce-pcep-yang] supports PCEP
+   security parameters (key, key chain and TLS).
+
+
+
+
+
+
+Lopez, et al.             Expires 9 April 2023                  [Page 8]
+
+Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
+
+
+6.3.  Liveness Detection and Monitoring
+
+   Normal operations of the IGP meet the requirements for liveness
+   detection and monitoring.
+
+6.4.  Verify Correct Operations
+
+   The correlation of PCEP security information advertised against
+   information received can be achieved by comparing the information in
+   the PCED sub-TLV received by the PCC with that stored at the PCE
+   using the PCEP YANG.
+
+6.5.  Requirements on Other Protocols and Functional Components
+
+   There are no new requirements on other protocols.
+
+6.6.  Impact on Network Operations
+
+   Frequent changes in PCEP security information advertised in the PCED
+   sub-TLV may have a significant impact on IGP and might destabilize
+   the operation of the network by causing the PCCs to reconnect
+   sessions with PCE(s).  Section 4.10.4 of [RFC4674] and Section 9.6 of
+   [RFC5088] [RFC5089] list techniques that are applicable to this
+   document as well.
 
 7.  Security Considerations
 
@@ -442,17 +495,16 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
    them to zero.  The content of Key ID or Key Chain Name Sub-TLV can be
    altered to enable an on-path attack.  Thus, before advertising the
    PCEP security parameters, using the mechanism described in this
-
-
-
-Lopez, et al.             Expires 8 April 2023                  [Page 8]
-
-Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
-
-
    document, the IGP MUST be known to provide authentication and
    integrity for the PCED TLV using the mechanisms defined in [RFC5304],
    [RFC5310] or [RFC5709].
+
+
+
+Lopez, et al.             Expires 9 April 2023                  [Page 9]
+
+Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
+
 
    Moreover, as stated in the Security Considerations of [RFC5088] and
    [RFC5089], there are no mechanisms defined in OSPF or IS-IS to
@@ -491,21 +543,6 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
    This registry should be populated with:
 
-
-
-
-
-
-
-
-
-
-
-Lopez, et al.             Expires 8 April 2023                  [Page 9]
-
-Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
-
-
         Value         Description             Reference
         0             Reserved                [This.I.D][RFC5088]
         1             PCE-ADDRESS             [This.I.D][RFC5088]
@@ -515,6 +552,15 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
         5             PCE-CAP-FLAGS           [This.I.D][RFC5088]
         6             KEY-ID                  [This.I.D]
         7             KEY-CHAIN-NAME          [This.I.D]
+
+
+
+
+
+Lopez, et al.             Expires 9 April 2023                 [Page 10]
+
+Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
+
 
    This registry is used by both the OSPF PCED TLV and the IS-IS PCED
    sub-TLV.
@@ -555,13 +601,6 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
               Element (PCE) Discovery", RFC 5089, DOI 10.17487/RFC5089,
               January 2008, <https://www.rfc-editor.org/info/rfc5089>.
 
-
-
-Lopez, et al.             Expires 8 April 2023                 [Page 10]
-
-Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
-
-
    [RFC5557]  Lee, Y., Le Roux, JL., King, D., and E. Oki, "Path
               Computation Element Communication Protocol (PCEP)
               Requirements and Protocol Extensions in Support of Global
@@ -572,10 +611,12 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
               Authentication Option", RFC 5925, DOI 10.17487/RFC5925,
               June 2010, <https://www.rfc-editor.org/info/rfc5925>.
 
-   [RFC5926]  Lebovitz, G. and E. Rescorla, "Cryptographic Algorithms
-              for the TCP Authentication Option (TCP-AO)", RFC 5926,
-              DOI 10.17487/RFC5926, June 2010,
-              <https://www.rfc-editor.org/info/rfc5926>.
+
+
+Lopez, et al.             Expires 9 April 2023                 [Page 11]
+
+Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
+
 
    [RFC8253]  Lopez, D., Gonzalez de Dios, O., Wu, Q., and D. Dhody,
               "PCEPS: Usage of TLS to Provide a Secure Transport for the
@@ -611,13 +652,6 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
               Authentication", RFC 5709, DOI 10.17487/RFC5709, October
               2009, <https://www.rfc-editor.org/info/rfc5709>.
 
-
-
-Lopez, et al.             Expires 8 April 2023                 [Page 11]
-
-Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
-
-
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
@@ -632,6 +666,14 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
    [RFC8306]  Zhao, Q., Dhody, D., Ed., Palleti, R., and D. King,
               "Extensions to the Path Computation Element Communication
               Protocol (PCEP) for Point-to-Multipoint Traffic
+
+
+
+Lopez, et al.             Expires 9 April 2023                 [Page 12]
+
+Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
+
+
               Engineering Label Switched Paths", RFC 8306,
               DOI 10.17487/RFC8306, November 2017,
               <https://www.rfc-editor.org/info/rfc8306>.
@@ -653,26 +695,24 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
               Signature Option", RFC 2385, DOI 10.17487/RFC2385, August
               1998, <https://www.rfc-editor.org/info/rfc2385>.
 
+   [RFC4674]  Le Roux, J.L., Ed., "Requirements for Path Computation
+              Element (PCE) Discovery", RFC 4674, DOI 10.17487/RFC4674,
+              October 2006, <https://www.rfc-editor.org/info/rfc4674>.
+
    [RFC5440]  Vasseur, JP., Ed. and JL. Le Roux, Ed., "Path Computation
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
               DOI 10.17487/RFC5440, March 2009,
               <https://www.rfc-editor.org/info/rfc5440>.
 
+   [RFC5926]  Lebovitz, G. and E. Rescorla, "Cryptographic Algorithms
+              for the TCP Authentication Option (TCP-AO)", RFC 5926,
+              DOI 10.17487/RFC5926, June 2010,
+              <https://www.rfc-editor.org/info/rfc5926>.
+
    [RFC6823]  Ginsberg, L., Previdi, S., and M. Shand, "Advertising
               Generic Information in IS-IS", RFC 6823,
               DOI 10.17487/RFC6823, December 2012,
               <https://www.rfc-editor.org/info/rfc6823>.
-
-
-
-
-
-
-
-Lopez, et al.             Expires 8 April 2023                 [Page 12]
-
-Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
-
 
    [RFC6952]  Jethanandani, M., Patel, K., and L. Zheng, "Analysis of
               BGP, LDP, PCEP, and MSDP Issues According to the Keying
@@ -680,9 +720,27 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
               Guide", RFC 6952, DOI 10.17487/RFC6952, May 2013,
               <https://www.rfc-editor.org/info/rfc6952>.
 
+
+
+
+
+
+Lopez, et al.             Expires 9 April 2023                 [Page 13]
+
+Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
+
+
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
+
+   [I-D.ietf-pce-pcep-yang]
+              Dhody, D., Beeram, V. P., Hardwick, J., and J. Tantsura,
+              "A YANG Data Model for Path Computation Element
+              Communications Protocol (PCEP)", Work in Progress,
+              Internet-Draft, draft-ietf-pce-pcep-yang-19, 11 July 2022,
+              <https://www.ietf.org/archive/id/draft-ietf-pce-pcep-yang-
+              19.txt>.
 
    [I-D.ietf-lsr-ospf-transport-instance]
               Lindem, A., Qu, Y., Roy, A., and S. Mirtorabi, "OSPF-GT
@@ -723,9 +781,7 @@ Authors' Addresses
 
 
 
-
-
-Lopez, et al.             Expires 8 April 2023                 [Page 13]
+Lopez, et al.             Expires 9 April 2023                 [Page 14]
 
 Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
@@ -781,4 +837,4 @@ Internet-Draft     IGP Ext for PCEP Security Discovery      October 2022
 
 
 
-Lopez, et al.             Expires 8 April 2023                 [Page 14]
+Lopez, et al.             Expires 9 April 2023                 [Page 15]
