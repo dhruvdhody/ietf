@@ -17,7 +17,9 @@
 <rfc category="std" docName="draft-ietf-pce-pcep-extension-native-ip-26"
      ipr="trust200902">
   <front>
-    <title>Path Computation Element Communication Protocol (PCEP) Extensions for Native IP Networks</title>
+    <title abbrev="PCEP Extensions for Native IP Networks">Path Computation
+    Element Communication Protocol (PCEP) Extensions for Native IP
+    Networks</title>
 
     <author fullname="Aijun Wang" initials="A" surname="Wang">
       <organization>China Telecom</organization>
@@ -139,7 +141,7 @@
       </address>
     </author>
 
-    <date day="22" month="August" year="2023"/>
+    <date day="14" month="October" year="2023"/>
 
     <area>RTG</area>
 
@@ -150,31 +152,31 @@
     <abstract>
       <t>This document defines the Path Computation Element Communication
       Protocol (PCEP) extension for Central Control Dynamic Routing (CCDR)
-      based applications in Native IP networks. It describes the key information
-      that is transferred between Path Computation Element (PCE) and Path
-      Computation Clients (PCC) to accomplish the End to End (E2E) traffic
-      assurance in the Native IP network under PCE as a central controller.</t>
+      based applications in Native IP networks. It describes the key
+      information that is transferred between Path Computation Element (PCE)
+      and Path Computation Clients (PCC) to accomplish the End to End (E2E)
+      traffic assurance in the Native IP network under PCE as a central
+      controller.</t>
     </abstract>
   </front>
 
   <middle>
     <section anchor="intro" title="Introduction">
       <t>Generally, Multiprotocol Label Switching Traffic Engineering
-      (MPLS-TE) requires the corresponding network devices to support
-      Resource ReSerVation Protocol
-      (RSVP)/Label Distribution Protocol (LDP) protocols to assure the
-      End-to-End (E2E) traffic performance. But in native IP network scenarios
-      described in <xref target="RFC8735"/>, there will be no such signaling
-      protocol to synchronize the action among different network devices. It
-      is necessary to use the central control mode described in <xref
-      target="RFC8283"/> to correlate the forwarding behavior among different
-      network devices. <xref target="RFC8821"/> describes the architecture and
-      solution philosophy for the E2E traffic assurance in the Native IP network
-      via multi Border Gateway Protocol (BGP) session-based solution. This
-      document describes the corresponding Path Computation Element
-      Communication Protocol (PCEP) extensions to transfer the key information
-      about BGP peer, peer prefix advertisement, and the explicit peer
-      route on on-path routers.</t>
+      (MPLS-TE) requires the corresponding network devices to support Resource
+      ReSerVation Protocol (RSVP)/Label Distribution Protocol (LDP) protocols
+      to assure the End-to-End (E2E) traffic performance. But in native IP
+      network scenarios described in <xref target="RFC8735"/>, there will be
+      no such signaling protocol to synchronize the action among different
+      network devices. It is necessary to use the central control mode
+      described in <xref target="RFC8283"/> to correlate the forwarding
+      behavior among different network devices. <xref target="RFC8821"/>
+      describes the architecture and solution philosophy for the E2E traffic
+      assurance in the Native IP network via multi Border Gateway Protocol
+      (BGP) session-based solution. This document describes the corresponding
+      Path Computation Element Communication Protocol (PCEP) extensions to
+      transfer the key information about BGP peer, peer prefix advertisement,
+      and the explicit peer route on on-path routers.</t>
     </section>
 
     <section title="Conventions used in this document">
@@ -244,23 +246,24 @@
 
     <section title="PCEP messages" toc="default">
       <t>PCECC Native IP TE solution utilizing the existing PCE Label Switched
-      Path (LSP) Initiate
-      Request message (PCInitiate) <xref target="RFC8281"/>, and PCE Report
-      message (PCRpt) <xref target="RFC8281"/> to accomplish the multi BGP
-      sessions establishment, E2E TE path deployment, and route prefixes
-      advertisement among different BGP sessions. A new PST for Native-IP is
-      used to indicate the path setup based on TE in Native IP networks.</t>
+      Path (LSP) Initiate Request message (PCInitiate) <xref
+      target="RFC8281"/>, and PCE Report message (PCRpt) <xref
+      target="RFC8281"/> to accomplish the multi BGP sessions establishment,
+      E2E TE path deployment, and route prefixes advertisement among different
+      BGP sessions. A new PST for Native-IP is used to indicate the path setup
+      based on TE in Native IP networks.</t>
 
       <t>The extended PCInitiate message described in <xref target="RFC9050"/>
       is used to download or remove central controller's instructions (CCIs).
       <xref target="RFC9050"/> specifies an object called CCI for the encoding
-      of the central controller's instructions. This document specifies a new CCI
-      object-type for Native IP. The PCEP messages are extended in this
+      of the central controller's instructions. This document specifies a new
+      CCI object-type for Native IP. The PCEP messages are extended in this
       document to handle the PCECC operations for Native IP. Three new PCEP
       Objects (BGP Peer Info (BPI) Object, Explicit Peer Route (EPR) Object,
       and Peer Prefix Advertisement (PPA) Object) are defined in this
-      document. Refer to <xref target="Obj-Def-Sec"></xref> for detailed object
-      definitions. All PCEP procedures specified in <xref target="RFC9050"/> continue to apply unless specified otherwise. </t>
+      document. Refer to <xref target="Obj-Def-Sec"/> for detailed object
+      definitions. All PCEP procedures specified in <xref target="RFC9050"/>
+      continue to apply unless specified otherwise.</t>
 
       <section anchor="SEC_PCInitiate" title="The PCInitiate message"
                toc="default">
@@ -299,25 +302,23 @@
 ]]></artwork>
           </figure></t>
 
-        <t>When PCInitiate message is used for Native IP instructions,
-        the SRP, LSP and CCI objects MUST be present. The error handling for
+        <t>When PCInitiate message is used for Native IP instructions, the
+        SRP, LSP and CCI objects MUST be present. The error handling for
         missing SRP, LSP or CCI object is as per <xref target="RFC9050"/>.
         Further only one object among BPI, EPR, or PPA object MUST be present.
-        The PLSP-ID
-        within the LSP object should be set by PCC uniquely according to the
-        Symbolic Path Name TLV that is included in the CCI object. The Symbolic
-        Path Name is used by the PCE/PCC to uniquely identify the E2E native
-        IP TE path.</t>
+        The PLSP-ID within the LSP object should be set by PCC uniquely
+        according to the Symbolic Path Name TLV that is included in the CCI
+        object. The Symbolic Path Name is used by the PCE/PCC to uniquely
+        identify the E2E native IP TE path. It MUST be set the same value with
+        the related BPI, EPR and PPA object.</t>
 
         <t>If none of the BPI, EPR, or PPA object are present, the receiving
-        PCC MUST send a PCErr
-        message with Error-type=6 (Mandatory Object missing) and
-        Error-value=19 (Native IP object missing). If there are more than one
-        instance
-        of BPI, EPR or PPA object present, the receiving PCC MUST send a
-        PCErr message with Error-type=19 (Invalid Operation) and
-        Error-value=22 (Only one BPI, EPR or PPA object can be included in this
-        message).</t>
+        PCC MUST send a PCErr message with Error-type=6 (Mandatory Object
+        missing) and Error-value=19 (Native IP object missing). If there are
+        more than one instance of BPI, EPR or PPA object present, the
+        receiving PCC MUST send a PCErr message with Error-type=19 (Invalid
+        Operation) and Error-value=22 (Only one BPI, EPR or PPA object can be
+        included in this message).</t>
 
         <t>To cleanup the existing Native IP instructions, the SRP object must
         set the R (remove) bit.</t>
@@ -325,7 +326,7 @@
 
       <section anchor="SEC_PCRpt" title="The PCRpt message" toc="default">
         <t>The PCRpt message is used to acknowledge the Native-IP instructions
-        received from the central controller (PCE).</t>
+        received from the central controller (PCE) as well as during the State Synchronization phase.</t>
 
         <t>The format of the PCRpt message is as follows: <figure title="">
             <artwork><![CDATA[
@@ -352,16 +353,16 @@
           </figure></t>
 
         <t>The error handling for missing CCI object is as per <xref
-        target="RFC9050"/>. Further only one object among BPI, EPR, or PPA object MUST be present.</t>
+        target="RFC9050"/>. Further only one object among BPI, EPR, or PPA
+        object MUST be present.</t>
 
-        <t>If none of the BPI, EPR, or PPA object are present,
-        the receiving PCE MUST send a PCErr
-        message with Error-type=6 (Mandatory Object missing) and
-        Error-value=19 (Native IP object missing). If there are more than one
-        instance of BPI, EPR or PPA object present, the receiving PCE MUST send a
-        PCErr message with Error-type=19 (Invalid Operation) and
-        Error-value=22 (Only one BPI, EPR or PPA object can be included in this
-        message).</t>
+        <t>If none of the BPI, EPR, or PPA object are present, the receiving
+        PCE MUST send a PCErr message with Error-type=6 (Mandatory Object
+        missing) and Error-value=19 (Native IP object missing). If there are
+        more than one instance of BPI, EPR or PPA object present, the
+        receiving PCE MUST send a PCErr message with Error-type=19 (Invalid
+        Operation) and Error-value=22 (Only one BPI, EPR or PPA object can be
+        included in this message).</t>
       </section>
     </section>
 
@@ -372,11 +373,12 @@
       <section anchor="BGPSess" title="BGP Session Establishment Procedures">
         <t>The PCInitiate and PCRpt message pair is used to configure the
         parameters for a BGP peer session. This pair of PCEP messages is
-        exchanged between a PCE and each BGP peer (acting as PCC) which needs to be
-        configured. After the BGP peer session has been configured via this
-        pair of PCEP messages, the BGP session establishes and operates in a
-        normal fashion. The BGP peers can be configured for External BGP (EBGP) peers or Internal BGP (IBGP) peers. For IBGP connection topologies, the Route Reflector (RR) is
-        required.</t>
+        exchanged between a PCE and each BGP peer (acting as PCC) which needs
+        to be configured. After the BGP peer session has been configured via
+        this pair of PCEP messages, the BGP session establishes and operates
+        in a normal fashion. The BGP peers can be configured for External BGP
+        (EBGP) peers or Internal BGP (IBGP) peers. For IBGP connection
+        topologies, the Route Reflector (RR) is required.</t>
 
         <t>The PCInitiate message should be sent to PCC which is acting as BGP
         router and/or RR.</t>
@@ -395,6 +397,10 @@
         in SRP object) in PCInitiate message, the PCC should try to establish
         the BGP session with the indicated Peer as per AS and Local/Peer IP
         address.</t>
+
+        <t>During the establishment procedure, PCC should report periodically
+        to the PCE the status of the BGP session, with the status filed set to
+        the appropriate value.</t>
 
         <t>When PCC creates successfully the BGP session that is indicated by
         the associated information, it should report the result via the PCRpt
@@ -461,20 +467,24 @@
 ]]></artwork>
           </figure></t>
 
-        <t>If the PCC cannot establish the BGP session that is required by this
-        message, it should report the error values via PCErr message with the
-        newly defined error type:</t>
+        <t>If the PCC cannot establish the BGP session that is required by
+        this message, it should report the error values via PCErr message with
+        the newly defined error type:</t>
 
         <t>1) Error-type=33 and Error-value=1, Peer AS not match when the
-        received Peer AS is not the same the local AS, or</t>
+        received Peer AS is not the same AS extracted from the BGP open
+        message, or</t>
 
         <t>2) Error-type=33 and Error-Value=2, Peer IP can't be reached when
         there is no route to the Peer IP address, which is indicated in the
         BPI Object.</t>
 
-        <t>If the Local IP Address or Peer IP Address within BPI object is
-        used in other existing BGP sessions, the PCC should report such error
-        situation via a PCErr message with:</t>
+        <t>The Local/Peer IP address MUST be dedicated to the usage of native
+        IP TE solution, and MUST NOT be used by other BGP sessions that
+        established by manual or other ways. If the Local IP Address or Peer
+        IP Address within BPI object is used in other existing BGP sessions,
+        the PCC should report such error situation via a PCErr message
+        with:</t>
 
         <t>3) Error-type=33 and Error-value=3, Local IP is in use, or</t>
 
@@ -483,11 +493,11 @@
         <t>The detailed Error-Types and Error-Values are defined in <xref
         target="NewErrorTypeAndValue"/></t>
 
-        <t>If the established BGP session is broken after some time, the PCC
-        should report such error via PCErr message with:</t>
-
-        <t>5) Error-type=33 and Error-value=5, Existing BGP session is
-        broken.</t>
+        <t>If the established BGP session is broken, the PCC should report
+        such information via PCRpt message with the status filed set to "BGP
+        session disabled" in associated BPI Object. In future, when the BGP
+        session is up again, the PCC should report that as well via
+        the PCRpt message with status field set to "BGP Session Established".</t>
       </section>
 
       <section anchor="BGPEx" title="Explicit Route Establish Procedures">
@@ -631,12 +641,17 @@
         Path Name TLV, an PCErr message should be reported, with an error
         information:</t>
 
-        <t>2) Error-type=33, Error-value=7, EPR/BPI Peer Info Mismatch. Note that the same error is received in case no BPI is received at the PCC.</t>
+        <t>2) Error-type=33, Error-value=7, EPR/BPI Peer Info Mismatch. Note
+        that the same error is received in case no BPI is received at the
+        PCC.</t>
 
-        <t>When PCE receives the PCError message that indicates the BGP
-        session to the peer address is broken Error-type=33 and Error-value=5,
-        Existing BGP session is broken), the PCE should clear the explicit
-        peer route to the peer address.</t>
+        <!--><t>When PCE receives the PCRpt message that indicates the BGP session
+        to the peer address is broken, the PCE should clear the explicit peer
+        route to the peer address.</t>-->
+
+        <t>If the PCE needs to update the path, it should first instruct new
+        CCI with updated EPR corresponding to the new nexthop to use
+        and then instruct the removal of older CCI.</t>
       </section>
 
       <section anchor="BGPPrefix" title="BGP Prefix Advertisement Procedures">
@@ -644,12 +659,13 @@
         using PCInitiate and PCRpt message pair.</t>
 
         <t>The PCInitiate message should be sent to PCC that acts as BGP peer
-        edge router only. In the example, it should be sent to R1 (M1 message) and
-        R7 (M2 message) respectively.</t>
+        edge router only. In the example, it should be sent to R1 (M1 message)
+        and R7 (M2 message) respectively.</t>
 
         <t>When PCC receives the PPA and the CCI object (with the R bit set to
         0 in SRP object) in PCInitiate message, the PCC should send the
-        prefixes indicated in this object to the appointed BGP peer.</t>
+        prefixes indicated in this object to the appointed BGP peer via the
+        corresponding BGP session <xref target="RFC4271"/>.</t>
 
         <t>When PCC sends successfully the prefixes to the appointed BGP peer,
         it should report the result via the PCRpt messages, with PPA object
@@ -707,28 +723,41 @@
         <t>1) Error-type=33, Error-value=8, BPI/PPA address family mismatch
         should be reported via PCErr message.</t>
 
-        <t>When the peer info is not the same as the peer info that is indicated
-        in the BPI object in PCC for the same path that is identified by Symbolic
-        Path Name TLV, an error:</t>
+        <t>When the peer info is not the same as the peer info that is
+        indicated in the BPI object in PCC for the same path that is
+        identified by Symbolic Path Name TLV, an error:</t>
 
         <t>2) Error-type=33, Error-value=9, PPA/BPI peer info mismatch should
-        be reported via the PCErr message. Note that the same error is received in case no BPI is received at the PCC.</t>
+        be reported via the PCErr message. Note that the same error is
+        received in case no BPI is received at the PCC.</t>
 
-        <t>When PCE receives the PCErr message that indicates the BGP
-        session to the peer address is broken (Error-type=33 and Error-value=5,
-        Existing BGP session is broken), the PCE should clear the prefixes
-        advertisement to the peer.</t>
+        <!--><t>When PCE receives the PCRpt message that indicates the BGP session
+        to the peer address is broken, the PCE should clear the prefixes
+        advertisement to the peer.</t>-->
       </section>
+      <section title="Clenup">
+      <t>In order to delete the Native-IP state from the PCC, the PCE MUST
+      send explicit CCI cleanup instruction for PPA, EPR, and BPI object with
+      R flag set in the SRP object. If the PCC receives a PCInitiate message but does not recognize the Native-IP information in the CCI, the PCC MUST generate a PCErr message with Error-Type=19 (Invalid operation) and Error-value=TBD (Unknown Native-IP Info) and MUST include the SRP object to specify the error is for the corresponding cleanup (via a PCInitiate message).</t>
+      </section>
+
+      <section title="Other Procedures">
+      <t>The handling of the state synchronization, redundant PCEs, re-delegation and clean up is the same as other CCIs as specified in <xref target="RFC9050"/>.</t>
+      </section>
+
+
     </section>
 
     <section anchor="Obj-Def-Sec" title="New PCEP Objects">
-      <t>One new CCI Object type and three new PCEP objects are defined in this
-      document. All new PCEP objects are as per <xref target="RFC5440"/>.</t>
+      <t>One new CCI Object type and three new PCEP objects are defined in
+      this document. All new PCEP objects are as per <xref
+      target="RFC5440"/>.</t>
 
       <section anchor="CCI" title="CCI Object">
         <t>The Central Control Instructions (CCI) Object (defined in <xref
-        target="RFC9050"/>) is used by the PCE to
-        specify the forwarding instructions . This document defines another object-type for Native-IP.</t>
+        target="RFC9050"/>) is used by the PCE to specify the forwarding
+        instructions . This document defines another object-type for
+        Native-IP.</t>
 
         <t>CCI Object-Type is 2 for Native-IP as below: <figure>
             <artwork><![CDATA[ 0                   1                   2                   3
@@ -749,11 +778,12 @@
         <t>The field CC-ID is as described in <xref target="RFC9050"/>.
         Following fields are defined for CCI Object-Type 2 <list
             style="hanging">
-            <t hangText="Reserved:">is set to zero while sending and ignored on
-            receipt.</t>
+            <t hangText="Reserved:">is set to zero while sending and ignored
+            on receipt.</t>
 
             <t hangText="Flags:">is used to carry any additional information
-            pertaining to the CCI. Currently no flag bits are defined. Unassigned flags are set to zero while sending and ignored on
+            pertaining to the CCI. Currently no flag bits are defined.
+            Unassigned flags are set to zero while sending and ignored on
             receipt.</t>
           </list></t>
 
@@ -764,12 +794,12 @@
 
       <section anchor="BPI_Object" title="BGP Peer Info Object">
         <t>The BGP Peer Info object is used to specify the information about
-        the peer with which the PCC should establish the BGP session.
-        This object should only be included and sent to the source and destination
+        the peer with which the PCC should establish the BGP session. This
+        object should only be included and sent to the source and destination
         router of the E2E path in case there is no Route Reflection (RR)
-        involved. If the RR is used between the source and destination routers, then
-        such information should be sent to source router, RR and destination router
-        respectively.</t>
+        involved. If the RR is used between the source and destination
+        routers, then such information should be sent to source router, RR and
+        destination router respectively.</t>
 
         <t>By default, the Local/Peer IP address SHOULD be dedicated to the
         usage of native IP TE solution, and SHOULD NOT be used by other BGP
@@ -780,8 +810,8 @@
 
         <t>BGP Peer Info Object-Type is 1 for IPv4 and 2 for IPv6</t>
 
-        <t>The format of the BGP Peer Info object body for IPv4 (Object-Type=1)
-        is as follows:</t>
+        <t>The format of the BGP Peer Info object body for IPv4
+        (Object-Type=1) is as follows:</t>
 
         <figure>
           <artwork><![CDATA[ 0                   1                   2                   3
@@ -789,15 +819,11 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                      Peer AS Number                           |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   ETTL        |              Reserved                       |T|
+|   ETTL        |     Status    |             Flag            |T|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                    Local IP Address                           |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                   Peer IP Address                             |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|               Tunnel Source IP Address                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|               Tunnel Destination IP Address                   |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                    Optional TLVs                            //
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -806,8 +832,8 @@
 
         <t/>
 
-        <t>The format of the BGP Peer Info object body for IPv6 (Object-Type=2)
-        is as follows:</t>
+        <t>The format of the BGP Peer Info object body for IPv6
+        (Object-Type=2) is as follows:</t>
 
         <t><figure>
             <artwork><![CDATA[ 0                   1                   2                   3
@@ -815,7 +841,7 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                      Peer AS Number                           |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   ETTL        |              Reserved                       |T|
+|   ETTL        |      Status   |          Flag               |T|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 |               Local IP Address (16 bytes)                     |
@@ -827,55 +853,51 @@
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                               |
-|          Tunnel Source IP Address (16 bytes)                  |
-|                                                               |
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                               |
-|          Tunnel Destination IP Address (16 bytes)             |
-|                                                               |
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                    Optional TLVs                            //
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       Figure 7: BGP Peer Info Object Body Format for IPv6  ]]></artwork>
           </figure></t>
-<list>
-        <t>Peer AS Number: 4 Bytes, to indicate the AS number of Remote
-        Peer.</t>
 
-        <t>ETTL: 1 Byte, to indicate the multihop count for EBGP session. It
-        should be 0 and ignored when Local AS and Peer AS is same.</t>
+        <t><list style="empty">
+            <t>Peer AS Number: 4 Bytes, to indicate the AS number of Remote
+            Peer.</t>
 
-        <t>Reserved: is set to zero while sending, ignored on receipt.</t>
+            <t>ETTL: 1 Byte, EBGP Time To Live, to indicate the multihop count
+            for EBGP session. It should be 0 and ignored when Local AS and
+            Peer AS is same.</t>
 
-        <t>T bit: Indicates whether the traffic that is associated with the
-        prefixes advertised via this BGP session is transported via IP in IP
-        tunnel (when T bit is set) or not (when T bit is clear).</t>
+            <t>Status: 1 Byte, Indicate BGP session status between the peers.
+            It's values are defined below:</t>
 
-        <t>Local IP Address(4/16 Bytes): IP address of the local router, used
-        to peer with other end router. When Object-Type is 1, length is 4
-        bytes; when Object-Type is 2, length is 16 bytes.</t>
+            <t>0: Reserved</t>
 
-        <t>Peer IP Address(4/16 Bytes): IP address of the peer router, used to
-        peer with the local router. When Object-Type is 1, length is 4 bytes;
-        when Object-Type is 2, length is 16 bytes;</t>
+            <t>1: BGP Session Established</t>
 
-        <t>Tunnel Source IP Address(4/16 Bytes): IP address of the tunnel
-        source, should be owned by the local router. When Object-Type is 1,
-        length is 4 bytes; when Object-Type is 2, length is 16 bytes. It
-        should be different from the Local IP Address.</t>
+            <t>2: BGP Session Establishment In Progress</t>
 
-        <t>Tunnel Destination IP Address(4/16 Bytes): IP address of the tunnel
-        destination, should be owned by the peer router. When Object-Type is
-        1, length is 4 bytes; when Object-Type is 2, length is 16 bytes. It
-        should be different from the Peer IP Address.</t>
+            <t>3: BGP Session Disabled</t>
 
-        <t>Optional TLVs: TLVs that associated with this object, can be used
-        to convey other necessary information for dynamic BGP session
-        establishment. No TLVs are currently defined.</t>
-</list>
+            <t>4-255: Reserved</t>
+
+            <t>Flag: 2 Bytes. Currently only bit 0 (T bit) is defined. When T
+            bit is set, the traffic should be sent in IPinIP tunnel (Tunnel
+            source is Local IP Address, tunnel destination is Peer IP
+            Address). When T bit is cleared, the traffic is sent via its
+            original source and destination address.</t>
+
+            <t>Local IP Address(4/16 Bytes): IP address of the local router,
+            used to peer with other end router. When Object-Type is 1, length
+            is 4 bytes; when Object-Type is 2, length is 16 bytes.</t>
+
+            <t>Peer IP Address(4/16 Bytes): IP address of the peer router,
+            used to peer with the local router. When Object-Type is 1, length
+            is 4 bytes; when Object-Type is 2, length is 16 bytes;</t>
+
+            <t>Optional TLVs: TLVs that associated with this object, can be
+            used to convey other necessary information for dynamic BGP session
+            establishment. No TLVs are currently defined.</t>
+          </list></t>
+
         <t>When PCC receives BPI object, with Object-Type=1, it should try to
         establish BGP session with the peer in AFI/SAFI=1/1.</t>
 
@@ -889,17 +911,17 @@
         the E2E assurance path. This Object should be sent to all the devices
         on the E2E assurance path that is calculated by the PCE.</t>
 
-        <t>It is RECOMMENDED that the path established by this object should have higher priority
-        than the other paths calculated by dynamic IGP protocol, but should have
-        lower priority than the static route configured by manual or NETCONF
-        or any other means.</t>
+        <t>It is RECOMMENDED that the path established by this object should
+        have higher priority than the other paths calculated by dynamic IGP
+        protocol, but should have lower priority than the static route
+        configured by manual or NETCONF or any other means.</t>
 
         <t>Explicit Peer Route Object-Class is 47.</t>
 
         <t>Explicit Peer Route Object-Type is 1 for IPv4 and 2 for IPv6</t>
 
-        <t>The format of Explicit Peer Route object body for
-        IPv4 (Object-Type=1) is as follows:</t>
+        <t>The format of Explicit Peer Route object body for IPv4
+        (Object-Type=1) is as follows:</t>
 
         <figure>
           <artwork><![CDATA[ 0                   1                   2                   3
@@ -907,9 +929,9 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |       Route Priority        |          Reserved               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|          Peer/Tunnel IPv4 Destination Address                 |
+|                       Peer IPv4 Address                       |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|    Next Hop IPv4 Address to the Peer/Tunnel Destination       |
+|         Next Hop IPv4 Address to the Peer IPv4 Address        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                    Optional TLVs                            //
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -919,8 +941,8 @@
 
         <t/>
 
-        <t>The format of Explicit Peer Route object body for
-        IPv6 (Object-Type=2) is as follows:</t>
+        <t>The format of Explicit Peer Route object body for IPv6
+        (Object-Type=2) is as follows:</t>
 
         <figure>
           <artwork><![CDATA[ 0                   1                   2                   3
@@ -929,12 +951,12 @@
 |       Route Priority        |           Reserved              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
-|      Peer Address/Tunnel IPv6 Destination Address             |
+|                       Peer IPv6 Address                       |
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
-|     Next Hop IPv6 Address to the Peer/Tunnel Destination      |
+|        Next Hop IPv6 Address to the Peer IPv6 Address         |
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -945,33 +967,32 @@
         </figure>
 
         <t/>
-<list>
-        <t>Route Priority: 2 Bytes; the priority of this explicit route. The
-        higher priority should be preferred by the device. This field is used
-        to indicate the backup path at each hop.</t>
 
-        <t>Reserved: is set to zero while sending, ignored on receipt.</t>
+        <t><list style="empty">
+            <t>Route Priority: 2 Bytes; the priority of this explicit route.
+            The higher priority should be preferred by the device. This field
+            is used to indicate the backup path at each hop.</t>
 
-        <t>Peer/Tunnel (IPv4/IPv6) Destination Address: To indicate the peer address (4/16
-        Bytes). When T bit is set in the associated BPI object (that is identified by matching Symbolic Path Name TLV), use the tunnel
-        destination address in BPI object; when T bit is clear, use the peer
-        address in BPI object.</t>
+            <t>Reserved: is set to zero while sending, ignored on receipt.</t>
 
-        <t>Next Hop (IPv4/IPv6) Address to the Peer/Tunnel Destination: To
-        indicate the next hop address (4/16 Bytes) to the corresponding
-        peer/tunnel destination address.</t>
+            <t>Peer (IPv4/IPv6) Address: Peer Address for the BGP session(4/16
+            Bytes).</t>
 
-        <t>Optional TLVs: TLVs that associated with this object, can be used
-        to convey other necessary information for explicit peer path
-        establishment. No TLVs are currently defined.</t>
-        </list>
+            <t>Next Hop (IPv4/IPv6) Address to the Peer Address: To indicate
+            the next hop address (4/16 Bytes) to the corresponding peer
+            address.</t>
+
+            <t>Optional TLVs: TLVs that associated with this object, can be
+            used to convey other necessary information for explicit peer path
+            establishment. No TLVs are currently defined.</t>
+          </list></t>
       </section>
 
       <section title="Peer Prefix Advertisement Object">
         <t>The Peer Prefix Advertisement object is defined to specify the IP
         prefixes that should be advertised to the corresponding peer. This
-        object should only be included and sent to the source/destination router of the
-        E2E path.</t>
+        object should only be included and sent to the source/destination
+        router of the E2E path.</t>
 
         <t>The prefixes information included in this object MUST only be
         advertised to the indicated peer, MUST NOT be advertised to other BGP
@@ -991,9 +1012,18 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                  Peer IPv4 Address                            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                               |
-//               IPv4 Prefix subobjects                         //
-|                                                               |
+| No. of Prefix |                  Reserved                     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                  IPv4 Prefix #1                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Prefix #1 Len  |                  Reserved                     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                               :                               |
+|                               :                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                  IPv4 Prefix #n                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Prefix #n Len  |                  Reserved                     |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                    Optional TLVs                            //
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1009,31 +1039,59 @@
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| No. of Prefix |                  Reserved                     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                  IPv6 Prefix #1                               |
 |                                                               |
-//               IPv6 Prefix subobjects                         //
 |                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Prefix #1 Len  |                  Reserved                     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                               :                               |
+|                               :                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                  IPv6 Prefix #n                               |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Prefix #n Len  |                  Reserved                     |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //                    Optional TLVs                            //
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    Figure 11: Peer Prefix Advertisement Object Body Format for IPv6]]></artwork>
           </figure></t>
-<list>
-        <t>Peer IPv4 Address: 4 Bytes. Identifies the peer IPv4 address that
-        the associated prefixes will be sent to.</t>
 
-        <t>IPv4 Prefix subojects: List of IPv4 Prefix subobjects defined in Section 4.3.3.2 of <xref target="RFC3209"/>, identify the prefixes that will be sent to
-        the peer identified by Peer IPv4 Address. The L bit is ignored.</t>
+        <t><list style="empty">
+            <t>Peer IPv4 Address: 4 Bytes. Identifies the peer IPv4 address
+            that the associated prefixes will be sent to.</t>
 
-        <t>Peer IPv6 Address: 16 Bytes. Identifies the peer IPv6 address that
-        the associated prefixes will be sent to.</t>
+            <t>No. of Prefix: 1 Byte. Identifies the number of prefixes that
+            are advertised to the peer in the PPA object.</t>
 
-        <t>IPv6 Prefix subojects: List of IPv6 Prefix subobjects defined in Section 4.3.3.3 of <xref target="RFC3209"/>, identify the prefixes that will be sent to
-        the peer identified by Peer IPv6 Address. The L bit is ignored.</t>
+            <t>Reserved: 3 Bytes. MUST be set to zero while sending and MUST
+            be ignored on receipt.</t>
 
-        <t>Optional TLVs: TLVs that associated with this object, can be used
-        to convey other necessary information for prefixes advertisement.
-        No TLVs are currently defined.</t>
-        </list>
+            <t>IPv4 Prefix: 4 Bytes. Identifies the prefix that will be sent
+            to the peer identified by Peer IPv4 Address.</t>
+
+            <t>Prefix Len: 1 Byte. Identifies the length of the prefix.</t>
+
+            <t>Optional TLVs: TLVs that associated with this object, can be
+            used to convey other necessary information for prefixes
+            advertisement. No TLVs are currently defined.</t>
+
+            <t>For IPv6:<list style="empty">
+
+            <t>Peer IPv6 Address: 16 Bytes. Identifies the peer IPv6 address
+            that the associated prefixes will be sent to.</t>
+
+            <t>IPv6 Prefix: Identifies the prefix that will be sent to the
+            peer identified by Peer IPv6 Address.</t>
+
+          </list></t>
+          </list></t>
       </section>
     </section>
 
@@ -1053,9 +1111,9 @@
        | 33         | Native IP     |                                     |
        |            | TE failure    |                                     |
        +------------+---------------+-------------------------------------+
-       |            |               |0: Unassigned                        |
+       |            |               |0:Unassigned                         |
        +------------+---------------+-------------------------------------+
-       |            |               |1: Peer AS not match                 |
+       |            |               |1:Peer AS not match                  |
        +------------+---------------+-------------------------------------+
        |            |               |2:Peer IP can't be reached           |
        +------------+---------------+-------------------------------------+
@@ -1079,7 +1137,7 @@
         </figure></t>
     </section>
 
-    <section title="BGP Considerations">
+    <section anchor="BGP_Considerations" title="BGP Considerations">
       <t>This document defines the procedures and objects to create the BGP
       sessions and advertise the associated prefixes dynamically. Only the key
       information, for example peer IP addresses, peer AS number are exchanged
@@ -1088,20 +1146,18 @@
       in <xref target="BPI_Object"/>.</t>
 
       <t>When the PCE sends out the PCInitiate message with BPI object
-      embedded to establish the BGP session between the PCC peers, it should
-      wait enough time to get the BGP session successful establishment report
-      from the PCCs. If the PCE can't get such report after the
-      duration, then it should declare the failure of BGP session setup and
-      it could try the establishment procedure again, or report the failure to the
-      operator. The wait time SHOULD be configurable by the operator.</t>
+      embedded to establish the BGP session between the PCC peers, PCC should
+      report the BGP session status. For instance, the PCC could respond with
+      "BGP Session Establishment In Progress" initially and on session
+      establishment send another PCRpt message with state updated to "BGP Session Established".</t>
 
       <t>Upon receiving such key information, the BGP module on the PCC should
       try to accomplish the task appointed by the PCEP protocol and report the
       successful status to the PCEP modules after the session is setup.</t>
 
       <t>There is no influence on current implementation of BGP Finite State
-      Machine (FSM). The PCEP focuses only on the success and failure status of
-      BGP session, and acts upon such information accordingly.</t>
+      Machine (FSM). The PCEP focuses only on the success and failure status
+      of BGP session, and acts upon such information accordingly.</t>
 
       <t>The error handling procedures related to incorrect BGP parameters are
       specified in <xref target="BGPSess"/>, <xref target="BGPEx"/>, and <xref
@@ -1119,13 +1175,14 @@
       procedure between stateful PCE and PCC. The communication of PCE and PCC
       described in this document should also follow the same procedures, treat
       the three newly defined objects (BPI, EPR, PPA) associated with the same
-      symbolic path name as the attribute of the same path in the LSP-DB (LSP State Database).</t>
+      symbolic path name as the attribute of the same path in the LSP-DB (LSP
+      State Database).</t>
 
       <t>When PCE detects one or some of the PCCs are out of its control, it
       should recompute and redeploy the traffic engineering path for native IP
-      on the currently active PCCs. The PCE should assure the avoidance of possible
-      transient loop in such node failure when it deploys the explicit peer
-      route on the PCCs.</t>
+      on the currently active PCCs. The PCE should assure the avoidance of
+      possible transient loop in such node failure when it deploys the
+      explicit peer route on the PCCs.</t>
 
       <t>In case of a PCE failure, a new PCE can gain control over the central
       controller instructions as described in <xref target="RFC9050"/>.</t>
@@ -1140,9 +1197,46 @@
       network clean up without manual intervention. The PCC supports the
       removal of CCI as one of the behaviors applied on expiration of the
       State Timeout Interval timer.</t>
+    </section>
 
-      <t>Manageability considerations that are described in <xref
-      target="RFC9050"/> should be followed.</t>
+    <section title="Manageability Considerations">
+      <section title="Control of Function and Policy">
+        <t>A PCE or PCC implementation SHOULD allow the PCECC
+        NATIVE-IP-TE-CAPABILITY capability to be enabled/disabled as part of
+        the global configuration.</t>
+      </section>
+
+      <section title="Information and Data Models">
+        <t><xref target="RFC7420"/> describes the PCEP MIB; this MIB can be
+        extended to get the PCECC NATIVE-IP-TE-CAPABILITY capability status.
+        The PCEP YANG <xref target="I-D.ietf-pce-pcep-yang"/> module could be
+        extended to enable/disable the PCECC NATIVE-IP-TE-CAPABILITY
+        capability.</t>
+      </section>
+
+      <section title="Liveness Detection and Monitoring">
+        <t>Mechanisms defined in this document do not imply any new liveness
+        detection and monitoring requirements in addition to those already
+        listed in <xref target="RFC5440"/>. The operator relies on existing
+        IP liveness detection and monitoring.</t>
+      </section>
+
+      <section title="Verify Correct Operations">
+        <t>Verification of the mechanisms defined in this document can be
+        built on those already listed in <xref target="RFC5440"/>, <xref
+        target="RFC8231"/> and <xref target="RFC9050"/>. Further, the operator
+        needs to be able to verify the status of BGP sessions and prefix advertisements.</t>
+      </section>
+
+      <section title="Requirements on Other Protocols">
+        <t>Mechanisms defined in this document requires the interaction with
+        BGP. <xref target="BGP_Considerations"/> describes in detail
+        the considerations regarding to the BGP. During BGP session configuration , implementation MUST NOT allow the use local/remote IP address already sent tin the BPI object.</t>
+      </section>
+
+      <section title="Impact on Network Operations">
+       <t><xref target="RFC8821"/> describes the various deployment considerations in CCDR architecture and their impact on network operations.</t>
+      </section>
     </section>
 
     <section title="Implementation Status">
@@ -1182,15 +1276,16 @@
     </section>
 
     <section title="Security Considerations">
-      <t>In this setup, the BGP sessions, prefix advertisement, and explicit peer
-      route establishment are all controlled by the PCE. See <xref
+      <t>In this setup, the BGP sessions, prefix advertisement, and explicit
+      peer route establishment are all controlled by the PCE. See <xref
       target="RFC4271"/> and <xref target="RFC4272"/> for BGP security
-      considerations. Security considerations in <xref target="RFC5440"/>
-      and <xref target="RFC8231"/> should be considered. To prevent a bogus
-      PCE from sending harmful messages to the network nodes, the network devices
+      considerations. Security considerations in <xref target="RFC5440"/> and
+      <xref target="RFC8231"/> should be considered. To prevent a bogus PCE
+      from sending harmful messages to the network nodes, the network devices
       should authenticate the validity of the PCE and ensure a secure
-      communication channel between them. Thus, the mechanisms described in <xref
-      target="RFC8253"/> and <xref target="RFC9050"/> should be used.</t>
+      communication channel between them. Thus, the mechanisms described in
+      <xref target="RFC8253"/> and <xref target="RFC9050"/> should be
+      used.</t>
     </section>
 
     <section title="IANA Considerations">
@@ -1280,6 +1375,35 @@ Object-Class Value   Name                        Reference
 ]]></artwork>
           </figure></t>
       </section>
+
+      <section title="BPI Object Status Code">
+        <t>IANA is requested to allocate new code point within the "Path
+        Computation Element Protocol (PCEP) Numbers" for the following status
+        code:</t>
+
+        <t><figure>
+            <artwork><![CDATA[Status Code      Meaning                              Reference
+    0           Reserved                              This document
+    1           BGP Session Established               This document
+    2           BGP Session Establishment In Progress This document
+    3           BGP Session Disabled                  This document
+  4-255         Reserved                              This document
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="BPI Object Flag Field">
+        <t>IANA is requested to allocate new code point within the "Path
+        Computation Element Protocol (PCEP) Numbers" for the following Flag
+        field:</t>
+
+        <t><figure>
+            <artwork><![CDATA[Bit Position    Meaning                              Reference
+    0           T (IPnIP) bit                      This document
+    1-15        Reserved                           This document
+]]></artwork>
+          </figure></t>
+      </section>
     </section>
 
     <section title="Contributor">
@@ -1301,6 +1425,8 @@ Object-Class Value   Name                        Reference
       <?rfc include="reference.RFC.4271"?>
 
       <?rfc include="reference.RFC.5440"?>
+
+      <?rfc include="reference.RFC.7420"?>
 
       <?rfc include="reference.RFC.8174"?>
 
@@ -1327,6 +1453,8 @@ Object-Class Value   Name                        Reference
       <?rfc include="reference.RFC.8735"?>
 
       <?rfc include="reference.RFC.8821"?>
+
+      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
     </references>
   </back>
 </rfc>

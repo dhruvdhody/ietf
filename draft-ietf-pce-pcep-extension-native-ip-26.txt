@@ -5,13 +5,13 @@
 PCE Working Group                                                A. Wang
 Internet-Draft                                             China Telecom
 Intended status: Standards Track                             B. Khasanov
-Expires: 23 February 2024                                     Yandex LLC
+Expires: 16 April 2024                                        Yandex LLC
                                                                  S. Fang
                                                                   R. Tan
                                                      Huawei Technologies
                                                                   C. Zhu
                                                          ZTE Corporation
-                                                          22 August 2023
+                                                         14 October 2023
 
 
  Path Computation Element Communication Protocol (PCEP) Extensions for
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 February 2024.
+   This Internet-Draft will expire on 16 April 2024.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Wang, et al.            Expires 23 February 2024                [Page 1]
+Wang, et al.              Expires 16 April 2024                 [Page 1]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -72,7 +72,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Conventions used in this document . . . . . . . . . . . . . .   3
    3.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Capability Advertisement  . . . . . . . . . . . . . . . . . .   3
+   4.  Capability Advertisement  . . . . . . . . . . . . . . . . . .   4
      4.1.  Open message  . . . . . . . . . . . . . . . . . . . . . .   4
    5.  PCEP messages . . . . . . . . . . . . . . . . . . . . . . . .   4
      5.1.  The PCInitiate message  . . . . . . . . . . . . . . . . .   5
@@ -81,38 +81,48 @@ Table of Contents
      6.1.  BGP Session Establishment Procedures  . . . . . . . . . .   7
      6.2.  Explicit Route Establish Procedures . . . . . . . . . . .  10
      6.3.  BGP Prefix Advertisement Procedures . . . . . . . . . . .  13
+     6.4.  Clenup  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     6.5.  Other Procedures  . . . . . . . . . . . . . . . . . . . .  15
    7.  New PCEP Objects  . . . . . . . . . . . . . . . . . . . . . .  15
      7.1.  CCI Object  . . . . . . . . . . . . . . . . . . . . . . .  15
-     7.2.  BGP Peer Info Object  . . . . . . . . . . . . . . . . . .  15
+     7.2.  BGP Peer Info Object  . . . . . . . . . . . . . . . . . .  16
      7.3.  Explicit Peer Route Object  . . . . . . . . . . . . . . .  18
      7.4.  Peer Prefix Advertisement Object  . . . . . . . . . . . .  20
-   8.  New Error-Types and Error-Values Defined  . . . . . . . . . .  21
-   9.  BGP Considerations  . . . . . . . . . . . . . . . . . . . . .  22
+   8.  New Error-Types and Error-Values Defined  . . . . . . . . . .  22
+   9.  BGP Considerations  . . . . . . . . . . . . . . . . . . . . .  23
    10. Deployment Considerations . . . . . . . . . . . . . . . . . .  23
-   11. Implementation Status . . . . . . . . . . . . . . . . . . . .  24
-     11.1.  Proof of Concept based on ODL  . . . . . . . . . . . . .  24
-     11.2.  ZTE  . . . . . . . . . . . . . . . . . . . . . . . . . .  24
-   12. Security Considerations . . . . . . . . . . . . . . . . . . .  24
-   13. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  25
-     13.1.  Path Setup Type Registry . . . . . . . . . . . . . . . .  25
-     13.2.  PCECC-CAPABILITY sub-TLV's Flag field  . . . . . . . . .  25
-     13.3.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  25
-     13.4.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  26
-   14. Contributor . . . . . . . . . . . . . . . . . . . . . . . . .  26
-   15. Acknowledgement . . . . . . . . . . . . . . . . . . . . . . .  26
-   16. References  . . . . . . . . . . . . . . . . . . . . . . . . .  26
-     16.1.  Normative References . . . . . . . . . . . . . . . . . .  26
-     16.2.  Informative References . . . . . . . . . . . . . . . . .  28
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
+   11. Manageability Considerations  . . . . . . . . . . . . . . . .  24
+     11.1.  Control of Function and Policy . . . . . . . . . . . . .  24
+     11.2.  Information and Data Models  . . . . . . . . . . . . . .  24
+     11.3.  Liveness Detection and Monitoring  . . . . . . . . . . .  24
+     11.4.  Verify Correct Operations  . . . . . . . . . . . . . . .  24
+     11.5.  Requirements on Other Protocols  . . . . . . . . . . . .  25
+     11.6.  Impact on Network Operations . . . . . . . . . . . . . .  25
+   12. Implementation Status . . . . . . . . . . . . . . . . . . . .  25
+     12.1.  Proof of Concept based on ODL  . . . . . . . . . . . . .  25
+     12.2.  ZTE  . . . . . . . . . . . . . . . . . . . . . . . . . .  26
+   13. Security Considerations . . . . . . . . . . . . . . . . . . .  26
+   14. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  26
+     14.1.  Path Setup Type Registry . . . . . . . . . . . . . . . .  26
+     14.2.  PCECC-CAPABILITY sub-TLV's Flag field  . . . . . . . . .  26
+     14.3.  PCEP Object  . . . . . . . . . . . . . . . . . . . . . .  26
 
 
 
-
-
-Wang, et al.            Expires 23 February 2024                [Page 2]
+Wang, et al.              Expires 16 April 2024                 [Page 2]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
+
+     14.4.  PCEP-Error Object  . . . . . . . . . . . . . . . . . . .  27
+     14.5.  BPI Object Status Code . . . . . . . . . . . . . . . . .  28
+     14.6.  BPI Object Flag Field  . . . . . . . . . . . . . . . . .  28
+   15. Contributor . . . . . . . . . . . . . . . . . . . . . . . . .  28
+   16. Acknowledgement . . . . . . . . . . . . . . . . . . . . . . .  28
+   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  28
+     17.1.  Normative References . . . . . . . . . . . . . . . . . .  28
+     17.2.  Informative References . . . . . . . . . . . . . . . . .  30
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  30
 
 1.  Introduction
 
@@ -153,22 +163,18 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
    *  BPI: BGP Peer Info
 
+
+
+Wang, et al.              Expires 16 April 2024                 [Page 3]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
    *  EPR: Explicit Peer Route
 
    *  PPA: Peer Prefix Advertisement
 
 4.  Capability Advertisement
-
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024                [Page 3]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
 
 4.1.  Open message
 
@@ -212,20 +218,20 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    advertisement among different BGP sessions.  A new PST for Native-IP
    is used to indicate the path setup based on TE in Native IP networks.
 
+
+
+
+Wang, et al.              Expires 16 April 2024                 [Page 4]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
    The extended PCInitiate message described in [RFC9050] is used to
    download or remove central controller's instructions (CCIs).
    [RFC9050] specifies an object called CCI for the encoding of the
    central controller's instructions.  This document specifies a new CCI
    object-type for Native IP.  The PCEP messages are extended in this
    document to handle the PCECC operations for Native IP.  Three new
-
-
-
-Wang, et al.            Expires 23 February 2024                [Page 4]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
-
    PCEP Objects (BGP Peer Info (BPI) Object, Explicit Peer Route (EPR)
    Object, and Peer Prefix Advertisement (PPA) Object) are defined in
    this document.  Refer to Section 7 for detailed object definitions.
@@ -268,19 +274,20 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    When PCInitiate message is used for Native IP instructions, the SRP,
    LSP and CCI objects MUST be present.  The error handling for missing
    SRP, LSP or CCI object is as per [RFC9050].  Further only one object
+
+
+
+Wang, et al.              Expires 16 April 2024                 [Page 5]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
    among BPI, EPR, or PPA object MUST be present.  The PLSP-ID within
    the LSP object should be set by PCC uniquely according to the
    Symbolic Path Name TLV that is included in the CCI object.  The
    Symbolic Path Name is used by the PCE/PCC to uniquely identify the
-   E2E native IP TE path.
-
-
-
-
-Wang, et al.            Expires 23 February 2024                [Page 5]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
+   E2E native IP TE path.  It MUST be set the same value with the
+   related BPI, EPR and PPA object.
 
    If none of the BPI, EPR, or PPA object are present, the receiving PCC
    MUST send a PCErr message with Error-type=6 (Mandatory Object
@@ -296,7 +303,8 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 5.2.  The PCRpt message
 
    The PCRpt message is used to acknowledge the Native-IP instructions
-   received from the central controller (PCE).
+   received from the central controller (PCE) as well as during the
+   State Synchronization phase.
 
    The format of the PCRpt message is as follows:
 
@@ -320,23 +328,19 @@ Internet-Draft  Path Computation Element Communication P     August 2023
     Where:
       <path> is as per [RFC8231] and the LSP and SRP object are also defined in [RFC8231].
 
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                 [Page 6]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
    The error handling for missing CCI object is as per [RFC9050].
    Further only one object among BPI, EPR, or PPA object MUST be
    present.
-
-
-
-
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024                [Page 6]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
 
    If none of the BPI, EPR, or PPA object are present, the receiving PCE
    MUST send a PCErr message with Error-type=6 (Mandatory Object
@@ -380,19 +384,24 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    the BGP session with the indicated Peer as per AS and Local/Peer IP
    address.
 
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                 [Page 7]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
+   During the establishment procedure, PCC should report periodically to
+   the PCE the status of the BGP session, with the status filed set to
+   the appropriate value.
+
    When PCC creates successfully the BGP session that is indicated by
    the associated information, it should report the result via the PCRpt
    messages, with BPI object and the corresponding SRP and CCI object
    included.
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024                [Page 7]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
 
    When PCC receives this message with the R bit set to 1 in SRP object
    in PCInitiate message, the PCC should clear the BGP session that is
@@ -436,18 +445,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-
-
-
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024                [Page 8]
+Wang, et al.              Expires 16 April 2024                 [Page 8]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
    +-------------------------------------------------------------+
@@ -477,15 +477,18 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    newly defined error type:
 
    1) Error-type=33 and Error-value=1, Peer AS not match when the
-   received Peer AS is not the same the local AS, or
+   received Peer AS is not the same AS extracted from the BGP open
+   message, or
 
    2) Error-type=33 and Error-Value=2, Peer IP can't be reached when
    there is no route to the Peer IP address, which is indicated in the
    BPI Object.
 
-   If the Local IP Address or Peer IP Address within BPI object is used
-   in other existing BGP sessions, the PCC should report such error
-   situation via a PCErr message with:
+   The Local/Peer IP address MUST be dedicated to the usage of native IP
+   TE solution, and MUST NOT be used by other BGP sessions that
+   established by manual or other ways.  If the Local IP Address or Peer
+   IP Address within BPI object is used in other existing BGP sessions,
+   the PCC should report such error situation via a PCErr message with:
 
    3) Error-type=33 and Error-value=3, Local IP is in use, or
 
@@ -493,18 +496,21 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
    The detailed Error-Types and Error-Values are defined in Section 8
 
-   If the established BGP session is broken after some time, the PCC
-   should report such error via PCErr message with:
-
-   5) Error-type=33 and Error-value=5, Existing BGP session is broken.
 
 
 
 
-Wang, et al.            Expires 23 February 2024                [Page 9]
+
+Wang, et al.              Expires 16 April 2024                 [Page 9]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
+
+   If the established BGP session is broken, the PCC should report such
+   information via PCRpt message with the status filed set to "BGP
+   session disabled" in associated BPI Object.  In future, when the BGP
+   session is up again, the PCC should report that as well via the PCRpt
+   message with status field set to "BGP Session Established".
 
 6.2.  Explicit Route Establish Procedures
 
@@ -551,15 +557,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 10]
+Wang, et al.              Expires 16 April 2024                [Page 10]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
                              +------------------+
@@ -613,9 +613,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-Wang, et al.            Expires 23 February 2024               [Page 11]
+Wang, et al.              Expires 16 April 2024                [Page 11]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
                        +------------------+
@@ -669,9 +669,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-Wang, et al.            Expires 23 February 2024               [Page 12]
+Wang, et al.              Expires 16 April 2024                [Page 12]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
    The PCC should verify that the next hop address is reachable.  Upon
@@ -689,10 +689,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    that the same error is received in case no BPI is received at the
    PCC.
 
-   When PCE receives the PCError message that indicates the BGP session
-   to the peer address is broken Error-type=33 and Error-value=5,
-   Existing BGP session is broken), the PCE should clear the explicit
-   peer route to the peer address.
+   If the PCE needs to update the path, it should first instruct new CCI
+   with updated EPR corresponding to the new nexthop to use and then
+   instruct the removal of older CCI.
 
 6.3.  BGP Prefix Advertisement Procedures
 
@@ -705,7 +704,8 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
    When PCC receives the PPA and the CCI object (with the R bit set to 0
    in SRP object) in PCInitiate message, the PCC should send the
-   prefixes indicated in this object to the appointed BGP peer.
+   prefixes indicated in this object to the appointed BGP peer via the
+   corresponding BGP session [RFC4271].
 
    When PCC sends successfully the prefixes to the appointed BGP peer,
    it should report the result via the PCRpt messages, with PPA object
@@ -725,9 +725,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-Wang, et al.            Expires 23 February 2024               [Page 13]
+Wang, et al.              Expires 16 April 2024                [Page 13]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
                     +------------------+
@@ -774,17 +774,34 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    reported via the PCErr message.  Note that the same error is received
    in case no BPI is received at the PCC.
 
-   When PCE receives the PCErr message that indicates the BGP session to
-   the peer address is broken (Error-type=33 and Error-value=5, Existing
-   BGP session is broken), the PCE should clear the prefixes
-   advertisement to the peer.
 
 
 
-Wang, et al.            Expires 23 February 2024               [Page 14]
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 14]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
+
+6.4.  Clenup
+
+   In order to delete the Native-IP state from the PCC, the PCE MUST
+   send explicit CCI cleanup instruction for PPA, EPR, and BPI object
+   with R flag set in the SRP object.  If the PCC receives a PCInitiate
+   message but does not recognize the Native-IP information in the CCI,
+   the PCC MUST generate a PCErr message with Error-Type=19 (Invalid
+   operation) and Error-value=TBD (Unknown Native-IP Info) and MUST
+   include the SRP object to specify the error is for the corresponding
+   cleanup (via a PCInitiate message).
+
+6.5.  Other Procedures
+
+   The handling of the state synchronization, redundant PCEs, re-
+   delegation and clean up is the same as other CCIs as specified in
+   [RFC9050].
 
 7.  New PCEP Objects
 
@@ -818,9 +835,17 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
    Reserved:  is set to zero while sending and ignored on receipt.
 
-   Flags:  is used to carry any additional information pertaining to the
-      CCI.  Currently no flag bits are defined.  Unassigned flags are
-      set to zero while sending and ignored on receipt.
+
+
+Wang, et al.              Expires 16 April 2024                [Page 15]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
+   Flags:
+      is used to carry any additional information pertaining to the CCI.
+      Currently no flag bits are defined.  Unassigned flags are set to
+      zero while sending and ignored on receipt.
 
    The Symbolic Path Name TLV [RFC8231] MUST be included in the CCI
    Object-Type 2 to identify the E2E TE path in Native IP environment
@@ -834,14 +859,6 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    router of the E2E path in case there is no Route Reflection (RR)
    involved.  If the RR is used between the source and destination
    routers, then such information should be sent to source router, RR
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 15]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
-
    and destination router respectively.
 
    By default, the Local/Peer IP address SHOULD be dedicated to the
@@ -861,49 +878,35 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                      Peer AS Number                           |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   ETTL        |              Reserved                       |T|
+   |   ETTL        |     Status    |             Flag            |T|
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                    Local IP Address                           |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                   Peer IP Address                             |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |               Tunnel Source IP Address                        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |               Tunnel Destination IP Address                   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    //                    Optional TLVs                            //
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         Figure 6: BGP Peer Info Object Body Format for IPv4
 
 
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 16]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
    The format of the BGP Peer Info object body for IPv6 (Object-Type=2)
    is as follows:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 16]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                      Peer AS Number                           |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   ETTL        |              Reserved                       |T|
+   |   ETTL        |      Status   |          Flag               |T|
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                                                               |
    |               Local IP Address (16 bytes)                     |
@@ -915,58 +918,49 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    |                                                               |
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   |          Tunnel Source IP Address (16 bytes)                  |
-   |                                                               |
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   |          Tunnel Destination IP Address (16 bytes)             |
-   |                                                               |
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    //                    Optional TLVs                            //
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
          Figure 7: BGP Peer Info Object Body Format for IPv6
 
       Peer AS Number: 4 Bytes, to indicate the AS number of Remote Peer.
 
-      ETTL: 1 Byte, to indicate the multihop count for EBGP session.  It
-      should be 0 and ignored when Local AS and Peer AS is same.
+      ETTL: 1 Byte, EBGP Time To Live, to indicate the multihop count
+      for EBGP session.  It should be 0 and ignored when Local AS and
+      Peer AS is same.
 
-      Reserved: is set to zero while sending, ignored on receipt.
+      Status: 1 Byte, Indicate BGP session status between the peers.
+      It's values are defined below:
 
-      T bit: Indicates whether the traffic that is associated with the
-      prefixes advertised via this BGP session is transported via IP in
-      IP tunnel (when T bit is set) or not (when T bit is clear).
+      0: Reserved
+
+      1: BGP Session Established
+
+      2: BGP Session Establishment In Progress
+
+      3: BGP Session Disabled
+
+      4-255: Reserved
+
+      Flag: 2 Bytes.  Currently only bit 0 (T bit) is defined.  When T
+      bit is set, the traffic should be sent in IPinIP tunnel (Tunnel
+      source is Local IP Address, tunnel destination is Peer IP
+      Address).  When T bit is cleared, the traffic is sent via its
+      original source and destination address.
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 17]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
 
       Local IP Address(4/16 Bytes): IP address of the local router, used
       to peer with other end router.  When Object-Type is 1, length is 4
       bytes; when Object-Type is 2, length is 16 bytes.
 
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 17]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
-
       Peer IP Address(4/16 Bytes): IP address of the peer router, used
       to peer with the local router.  When Object-Type is 1, length is 4
       bytes; when Object-Type is 2, length is 16 bytes;
-
-      Tunnel Source IP Address(4/16 Bytes): IP address of the tunnel
-      source, should be owned by the local router.  When Object-Type is
-      1, length is 4 bytes; when Object-Type is 2, length is 16 bytes.
-      It should be different from the Local IP Address.
-
-      Tunnel Destination IP Address(4/16 Bytes): IP address of the
-      tunnel destination, should be owned by the peer router.  When
-      Object-Type is 1, length is 4 bytes; when Object-Type is 2, length
-      is 16 bytes.  It should be different from the Peer IP Address.
 
       Optional TLVs: TLVs that associated with this object, can be used
       to convey other necessary information for dynamic BGP session
@@ -1005,9 +999,15 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-Wang, et al.            Expires 23 February 2024               [Page 18]
+
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 18]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
     0                   1                   2                   3
@@ -1015,9 +1015,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |       Route Priority        |          Reserved               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |          Peer/Tunnel IPv4 Destination Address                 |
+   |                       Peer IPv4 Address                       |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |    Next Hop IPv4 Address to the Peer/Tunnel Destination       |
+   |         Next Hop IPv4 Address to the Peer IPv4 Address        |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    //                    Optional TLVs                            //
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1033,12 +1033,12 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    |       Route Priority        |           Reserved              |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                                                               |
-   |      Peer Address/Tunnel IPv6 Destination Address             |
+   |                       Peer IPv6 Address                       |
    |                                                               |
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                                                               |
-   |     Next Hop IPv6 Address to the Peer/Tunnel Destination      |
+   |        Next Hop IPv6 Address to the Peer IPv6 Address         |
    |                                                               |
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1053,22 +1053,18 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
       Reserved: is set to zero while sending, ignored on receipt.
 
-      Peer/Tunnel (IPv4/IPv6) Destination Address: To indicate the peer
-      address (4/16 Bytes).  When T bit is set in the associated BPI
-      object (that is identified by matching Symbolic Path Name TLV),
-      use the tunnel destination address in BPI object; when T bit is
-      clear, use the peer address in BPI object.
+      Peer (IPv4/IPv6) Address: Peer Address for the BGP session(4/16
+      Bytes).
+
+      Next Hop (IPv4/IPv6) Address to the Peer Address: To indicate the
+      next hop address (4/16 Bytes) to the corresponding peer address.
 
 
 
-Wang, et al.            Expires 23 February 2024               [Page 19]
+Wang, et al.              Expires 16 April 2024                [Page 19]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
-
-      Next Hop (IPv4/IPv6) Address to the Peer/Tunnel Destination: To
-      indicate the next hop address (4/16 Bytes) to the corresponding
-      peer/tunnel destination address.
 
       Optional TLVs: TLVs that associated with this object, can be used
       to convey other necessary information for explicit peer path
@@ -1097,9 +1093,18 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                  Peer IPv4 Address                            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   //               IPv4 Prefix subobjects                         //
-   |                                                               |
+   | No. of Prefix |                  Reserved                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                  IPv4 Prefix #1                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Prefix #1 Len  |                  Reserved                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                               :                               |
+   |                               :                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                  IPv4 Prefix #n                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Prefix #n Len  |                  Reserved                     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    //                    Optional TLVs                            //
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1112,14 +1117,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 20]
+Wang, et al.              Expires 16 April 2024                [Page 20]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
     0                   1                   2                   3
@@ -1130,9 +1130,24 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    |                                                               |
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | No. of Prefix |                  Reserved                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                  IPv6 Prefix #1                               |
    |                                                               |
-   //               IPv6 Prefix subobjects                         //
    |                                                               |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Prefix #1 Len  |                  Reserved                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                               :                               |
+   |                               :                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                  IPv6 Prefix #n                               |
+   |                                                               |
+   |                                                               |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Prefix #n Len  |                  Reserved                     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    //                    Optional TLVs                            //
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1141,22 +1156,35 @@ Internet-Draft  Path Computation Element Communication P     August 2023
       Peer IPv4 Address: 4 Bytes.  Identifies the peer IPv4 address that
       the associated prefixes will be sent to.
 
-      IPv4 Prefix subojects: List of IPv4 Prefix subobjects defined in
-      Section 4.3.3.2 of [RFC3209], identify the prefixes that will be
-      sent to the peer identified by Peer IPv4 Address.  The L bit is
-      ignored.
+      No. of Prefix: 1 Byte.  Identifies the number of prefixes that are
+      advertised to the peer in the PPA object.
 
-      Peer IPv6 Address: 16 Bytes.  Identifies the peer IPv6 address
-      that the associated prefixes will be sent to.
+      Reserved: 3 Bytes.  MUST be set to zero while sending and MUST be
+      ignored on receipt.
 
-      IPv6 Prefix subojects: List of IPv6 Prefix subobjects defined in
-      Section 4.3.3.3 of [RFC3209], identify the prefixes that will be
-      sent to the peer identified by Peer IPv6 Address.  The L bit is
-      ignored.
+      IPv4 Prefix: 4 Bytes.  Identifies the prefix that will be sent to
+      the peer identified by Peer IPv4 Address.
+
+      Prefix Len: 1 Byte.  Identifies the length of the prefix.
 
       Optional TLVs: TLVs that associated with this object, can be used
       to convey other necessary information for prefixes advertisement.
       No TLVs are currently defined.
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 21]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
+      For IPv6:
+
+         Peer IPv6 Address: 16 Bytes.  Identifies the peer IPv6 address
+         that the associated prefixes will be sent to.
+
+         IPv6 Prefix: Identifies the prefix that will be sent to the
+         peer identified by Peer IPv6 Address.
 
 8.  New Error-Types and Error-Values Defined
 
@@ -1167,26 +1195,15 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    represent the errors related to the newly defined objects that are
    related to Native IP TE procedures.
 
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 21]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
-
        +============+===============+=====================================+
        | Error-Type | Meaning       | Error-value                         |
        +============+===============+=====================================+
        | 33         | Native IP     |                                     |
        |            | TE failure    |                                     |
        +------------+---------------+-------------------------------------+
-       |            |               |0: Unassigned                        |
+       |            |               |0:Unassigned                         |
        +------------+---------------+-------------------------------------+
-       |            |               |1: Peer AS not match                 |
+       |            |               |1:Peer AS not match                  |
        +------------+---------------+-------------------------------------+
        |            |               |2:Peer IP can't be reached           |
        +------------+---------------+-------------------------------------+
@@ -1207,6 +1224,16 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
             Figure 12: Newly defined Error-Type and Error-Value
 
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 22]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
 9.  BGP Considerations
 
    This document defines the procedures and objects to create the BGP
@@ -1217,22 +1244,11 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    values, as described in Section 7.2.
 
    When the PCE sends out the PCInitiate message with BPI object
-   embedded to establish the BGP session between the PCC peers, it
-   should wait enough time to get the BGP session successful
-   establishment report from the PCCs.  If the PCE can't get such report
-   after the duration, then it should declare the failure of BGP session
-   setup and it could try the establishment procedure again, or report
-   the failure to the operator.  The wait time SHOULD be configurable by
-   the operator.
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 22]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
+   embedded to establish the BGP session between the PCC peers, PCC
+   should report the BGP session status.  For instance, the PCC could
+   respond with "BGP Session Establishment In Progress" initially and on
+   session establishment send another PCRpt message with state updated
+   to "BGP Session Established".
 
    Upon receiving such key information, the BGP module on the PCC should
    try to accomplish the task appointed by the PCEP protocol and report
@@ -1266,6 +1282,14 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    of possible transient loop in such node failure when it deploys the
    explicit peer route on the PCCs.
 
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 23]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
    In case of a PCE failure, a new PCE can gain control over the central
    controller instructions as described in [RFC9050].
 
@@ -1280,17 +1304,62 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    one of the behaviors applied on expiration of the State Timeout
    Interval timer.
 
-   Manageability considerations that are described in [RFC9050] should
-   be followed.
+11.  Manageability Considerations
+
+11.1.  Control of Function and Policy
+
+   A PCE or PCC implementation SHOULD allow the PCECC NATIVE-IP-TE-
+   CAPABILITY capability to be enabled/disabled as part of the global
+   configuration.
+
+11.2.  Information and Data Models
+
+   [RFC7420] describes the PCEP MIB; this MIB can be extended to get the
+   PCECC NATIVE-IP-TE-CAPABILITY capability status.  The PCEP YANG
+   [I-D.ietf-pce-pcep-yang] module could be extended to enable/disable
+   the PCECC NATIVE-IP-TE-CAPABILITY capability.
+
+11.3.  Liveness Detection and Monitoring
+
+   Mechanisms defined in this document do not imply any new liveness
+   detection and monitoring requirements in addition to those already
+   listed in [RFC5440].  The operator relies on existing IP liveness
+   detection and monitoring.
+
+11.4.  Verify Correct Operations
+
+   Verification of the mechanisms defined in this document can be built
+   on those already listed in [RFC5440], [RFC8231] and [RFC9050].
+   Further, the operator needs to be able to verify the status of BGP
+   sessions and prefix advertisements.
 
 
 
-Wang, et al.            Expires 23 February 2024               [Page 23]
+
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 24]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
-11.  Implementation Status
+11.5.  Requirements on Other Protocols
+
+   Mechanisms defined in this document requires the interaction with
+   BGP.  Section 9 describes in detail the considerations regarding to
+   the BGP.  During BGP session configuration , implementation MUST NOT
+   allow the use local/remote IP address already sent tin the BPI
+   object.
+
+11.6.  Impact on Network Operations
+
+   [RFC8821] describes the various deployment considerations in CCDR
+   architecture and their impact on network operations.
+
+12.  Implementation Status
 
    [Note to the RFC Editor - remove this section before publication, as
    well as remove the reference to RFC 7942.]
@@ -1315,19 +1384,30 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    It is up to the individual working groups to use this information as
    they see fit".
 
-11.1.  Proof of Concept based on ODL
+12.1.  Proof of Concept based on ODL
 
    At the time of posting the -26 version of this document, there are no
    known implementations of this mechanism.  A proof of concept for the
    overall design has been verified using another SBI protocol on the
    Open DayLight (ODL) controller.
 
-11.2.  ZTE
+
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 25]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
+12.2.  ZTE
 
    ZTE is preparing an implementation of this document as the time of
    posting the -26 version of this document.
 
-12.  Security Considerations
+13.  Security Considerations
 
    In this setup, the BGP sessions, prefix advertisement, and explicit
    peer route establishment are all controlled by the PCE.  See
@@ -1338,17 +1418,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    PCE and ensure a secure communication channel between them.  Thus,
    the mechanisms described in [RFC8253] and [RFC9050] should be used.
 
+14.  IANA Considerations
 
-
-
-Wang, et al.            Expires 23 February 2024               [Page 24]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
-
-13.  IANA Considerations
-
-13.1.  Path Setup Type Registry
+14.1.  Path Setup Type Registry
 
    [RFC8408] created a sub-registry within the "Path Computation Element
    Protocol (PCEP) Numbers" registry called "PCEP Path Setup Types".
@@ -1358,7 +1430,7 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    Value             Description                       Reference
    4              Native IP TE Path                  This document
 
-13.2.  PCECC-CAPABILITY sub-TLV's Flag field
+14.2.  PCECC-CAPABILITY sub-TLV's Flag field
 
    [RFC9050] created a sub-registry within the "Path Computation Element
    Protocol (PCEP) Numbers" registry to manage the value of the PCECC-
@@ -1368,10 +1440,23 @@ Internet-Draft  Path Computation Element Communication P     August 2023
    Bit         Name                   Reference
    30        NATIVE IP              This document
 
-13.3.  PCEP Object
+14.3.  PCEP Object
 
    IANA is requested to allocate new codepoints in the "PCEP Objects"
    sub-registry as follows:
+
+
+
+
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 26]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
 
    Object-Class Value   Name                        Reference
    44                   CCI Object                  This document
@@ -1393,16 +1478,7 @@ Internet-Draft  Path Computation Element Communication P     August 2023
                           1: IPv4 address
                           2: IPv6 address
 
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 25]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
-
-13.4.  PCEP-Error Object
+14.4.  PCEP-Error Object
 
    IANA is requested to allocate new error types and error values within
    the "PCEP-ERROR Object Error Types and Values" sub-registry of the
@@ -1429,39 +1505,70 @@ Error-Type       Meaning                      Error-value                       
                                       8:BPI/PPA Address Family mismatch
                                       9:PPA/BPI Peer Info mismatch
 
-14.  Contributor
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 27]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
+14.5.  BPI Object Status Code
+
+   IANA is requested to allocate new code point within the "Path
+   Computation Element Protocol (PCEP) Numbers" for the following status
+   code:
+
+   Status Code      Meaning                              Reference
+       0           Reserved                              This document
+       1           BGP Session Established               This document
+       2           BGP Session Establishment In Progress This document
+       3           BGP Session Disabled                  This document
+     4-255         Reserved                              This document
+
+14.6.  BPI Object Flag Field
+
+   IANA is requested to allocate new code point within the "Path
+   Computation Element Protocol (PCEP) Numbers" for the following Flag
+   field:
+
+   Bit Position    Meaning                              Reference
+       0           T (IPnIP) bit                      This document
+       1-15        Reserved                           This document
+
+15.  Contributor
 
    Dhruv Dhody has contributed to this document.
 
-15.  Acknowledgement
+16.  Acknowledgement
 
    Thanks Mike Koldychev, Susan Hares, Siva Sivabalan, Adam Simpson for
    his valuable suggestions and comments.
 
-16.  References
+17.  References
 
-16.1.  Normative References
+17.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 26]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
-
-
    [RFC3209]  Awduche, D., Berger, L., Gan, D., Li, T., Srinivasan, V.,
               and G. Swallow, "RSVP-TE: Extensions to RSVP for LSP
               Tunnels", RFC 3209, DOI 10.17487/RFC3209, December 2001,
               <https://www.rfc-editor.org/info/rfc3209>.
+
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 28]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
 
    [RFC4271]  Rekhter, Y., Ed., Li, T., Ed., and S. Hares, Ed., "A
               Border Gateway Protocol 4 (BGP-4)", RFC 4271,
@@ -1472,6 +1579,12 @@ Internet-Draft  Path Computation Element Communication P     August 2023
               Element (PCE) Communication Protocol (PCEP)", RFC 5440,
               DOI 10.17487/RFC5440, March 2009,
               <https://www.rfc-editor.org/info/rfc5440>.
+
+   [RFC7420]  Koushik, A., Stephan, E., Zhao, Q., King, D., and J.
+              Hardwick, "Path Computation Element Communication Protocol
+              (PCEP) Management Information Base (MIB) Module",
+              RFC 7420, DOI 10.17487/RFC7420, December 2014,
+              <https://www.rfc-editor.org/info/rfc7420>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1508,10 +1621,9 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-
-Wang, et al.            Expires 23 February 2024               [Page 27]
+Wang, et al.              Expires 16 April 2024                [Page 29]
 
-Internet-Draft  Path Computation Element Communication P     August 2023
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
 
 
    [RFC9050]  Li, Z., Peng, S., Negi, M., Zhao, Q., and C. Zhou, "Path
@@ -1521,7 +1633,15 @@ Internet-Draft  Path Computation Element Communication P     August 2023
               DOI 10.17487/RFC9050, July 2021,
               <https://www.rfc-editor.org/info/rfc9050>.
 
-16.2.  Informative References
+17.2.  Informative References
+
+   [I-D.ietf-pce-pcep-yang]
+              Dhody, D., Beeram, V. P., Hardwick, J., and J. Tantsura,
+              "A YANG Data Model for Path Computation Element
+              Communications Protocol (PCEP)", Work in Progress,
+              Internet-Draft, draft-ietf-pce-pcep-yang-22, 11 September
+              2023, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              pce-pcep-yang-22>.
 
    [RFC4272]  Murphy, S., "BGP Security Vulnerabilities Analysis",
               RFC 4272, DOI 10.17487/RFC4272, January 2006,
@@ -1550,6 +1670,18 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 Authors' Addresses
 
+
+
+
+
+
+
+
+Wang, et al.              Expires 16 April 2024                [Page 30]
+
+Internet-Draft   PCEP Extensions for Native IP Networks     October 2023
+
+
    Aijun Wang
    China Telecom
    Beiqijia Town, Changping District
@@ -1557,17 +1689,6 @@ Authors' Addresses
    Beijing, 102209
    China
    Email: wangaijun@tsinghua.org.cn
-
-
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 28]
-
-Internet-Draft  Path Computation Element Communication P     August 2023
 
 
    Boris Khasanov
@@ -1612,13 +1733,4 @@ Internet-Draft  Path Computation Element Communication P     August 2023
 
 
 
-
-
-
-
-
-
-
-
-
-Wang, et al.            Expires 23 February 2024               [Page 29]
+Wang, et al.              Expires 16 April 2024                [Page 31]
