@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc category="std" docName="draft-ietf-pce-sid-algo-10" ipr="trust200902">
+  <front>
+    <title abbrev="SR-Algorithm in PCEP">
+    Carrying SR-Algorithm information in PCE-based Networks.
+    </title>
+
+    <author fullname="Samuel Sidor" initials="S." surname="Sidor">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>Eurovea Central 3.</street>
+          <street>Pribinova 10</street>
+          <city>Bratislava</city>
+          <code>811 09</code>
+          <country>Slovakia</country>
+        </postal>
+        <email>ssidor@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Alex Tokar" initials="A." surname="Tokar">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>2300 East President George</street>
+          <city>Richardson</city>
+          <code>TX 75082</code>
+          <country>United States of America</country>
+        </postal>
+		<email>atokar@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Shaofu Peng" initials="S." surname="Peng">
+      <organization>ZTE Corporation</organization>
+      <address>
+        <postal>
+          <street>No.50 Software Avenue</street>
+          <city>Nanjing</city>
+          <region>Jiangsu</region>
+          <code>210012</code>
+          <country>China</country>
+        </postal>
+        <email>peng.shaofu@zte.com.cn</email>
+      </address>
+    </author>
+
+    <author fullname="Shuping Peng" initials="S." surname="Peng">
+      <organization>Huawei Technologies</organization>
+       <address>
+        <postal>
+          <street>Huawei Campus, No. 156 Beiqing Rd.</street>
+           <city>Beijing</city>
+           <region/>
+           <code>100095</code>
+           <country>China</country>
+        </postal>
+         <phone/>
+         <facsimile/>
+         <email>pengshuping@huawei.com</email>
+         <uri/>
+      </address>
+    </author>
+    <author fullname="Andrew Stone" initials="A." surname="Stone">
+      <organization>Nokia</organization>
+      <address>
+        <email>andrew.stone@nokia.com</email>
+      </address>
+    </author>
+
+
+    <date day="7" month="June" year="2024" />
+
+    <workgroup>PCE Working Group</workgroup>
+
+    <abstract>
+
+      <t>The SR-Algorithm associated with a Prefix Segment-ID (SID) defines the path computation algorithm used by Interior Gateway Protocols (IGPs).  This information is available to controllers such as the Path Computation Element (PCE) via topology learning.  This document proposes an approach for informing headend routers regarding the SR-Algorithm associated with each Prefix SID used in PCE-computed paths, as well as signalling a specific SR-Algorithm as a constraint to the PCE.</t>
+
+    </abstract>
+
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP
+      14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when,
+      and only when, they appear in all capitals, as shown here.</t>
+    </note>
+  </front>
+  <middle>
+    <section anchor="Introduction" title="Introduction">
+
+      <t>A PCE can compute SR-TE paths using SIDs with different SR-Algorithms depending on the use-case, constraints, etc.  While this information is available on the PCE, there is no method of conveying this information to the headend router.</t>
+
+      <t>Similarly, the headend can also compute SR-TE paths using different SR-Algorithms, and this information also needs to be conveyed to the PCE for collection or troubleshooting purposes.  In addition, in the case of multiple (redundant) PCEs, when the headend receives a path from the primary PCE, it needs to be able to report the complete path information - including SR-Algorithm - to the backup PCE so that in HA scenarios, the backup PCE can verify the Prefix SIDs appropriately.</t>
+
+      <t>An operator may also want to constrain the path computed by the PCE to a specific SR-Algorithm, for example, in order to only use SR-Algorithms for a low-latency path. A new TLV is introduced for this purpose.</t>
+
+      <t>Valid SR-Algorithm values are defined in subregistry "IGP Algorithm Types" of "Interior Gateway Protocol (IGP) Parameters" IANA registry. Refer to Section 3.1.1 of <xref target="RFC8402"/> and <xref target="RFC9256"/> for definition of SR-Algorithm in Segment Routing. <xref target="RFC8665"/> and <xref target="RFC8667"/> are describing use of SR-Algorithm in IGP. Note that some RFCs are referring to SR-Algorithm with different names, for example "Prefix-SID Algorithm" and "SR Algorithm".</t>
+
+      <t>This document is extending:
+        <list style="symbols">
+            <t>the SR PCE Capability Sub-TLV and the SR-ERO subobject - defined in <xref target="RFC8664"/></t>
+            <t>the SRv6 PCE Capability sub-TLV and the SRv6-ERO subobject - defined in <xref target="I-D.ietf-pce-segment-routing-ipv6"/></t>
+        </list>
+       A new TLV for signalling SR-Algorithm constraint to the PCE is also introduced, to be carried inside the LSPA object, which is defined in <xref target="RFC5440"/>.</t>
+
+      <t>The mechanisms described in this document are equally applicable to both SR-MPLS and SRv6.</t>
+
+    </section>
+
+    <section title="Terminology">
+      <t>The following terminologies are used in this document:
+        <list style="hanging">
+          <t hangText="ASLA:"> Application-Specific Link Attribute.</t>
+          <t hangText="BSID:"> Binding Segment Identifier.</t>
+          <t hangText="ERO:"> Explicit Route Object.</t>
+          <t hangText="FAD:"> Flexible Algorithm Definition.</t>
+          <t hangText="IGP:"> Interior Gateway Protocol.</t>
+          <t hangText="NAI:"> Node or Adjacency Identifier.</t>
+          <t hangText="P2P:"> Point-to-Point.</t>
+          <t hangText="P2MP:"> Point-to-Multipoint.</t>
+          <t hangText="PCE:"> Path Computation Element.</t>
+          <t hangText="PCEP:"> Path Computation Element Protocol.</t>
+          <t hangText="SID:"> Segment Identifier.</t>
+          <t hangText="SR:"> Segment Routing.</t>
+          <t hangText="SR-TE:"> Segment Routing Traffic Engineering.</t>
+          <t hangText="LSP:"> Label Switched Path.</t>
+          <t hangText="LSPA:"> Label Switched Path Attributes.</t>
+          <t hangText="Winning FAD:"> The FAD selected according to rules described in Section 5.3 of <xref target="RFC9350"/>.</t>
+        </list>
+      </t>
+    </section>
+
+    <section anchor="OBJECT-FORMATS" title="Object Formats">
+      <section anchor="THE-OPEN-SUBOBJECT" title="OPEN Object">
+        <section anchor="SR-CAP-FLAG" title="SR PCE Capability Sub-TLV">
+<t>A new flag S is proposed in the SR PCE Capability Sub-TLV introduced in Section 4.1.2 of <xref target="RFC8664"/> to indicate support for SR-Algorithm. If S flag is set, PCEP peer indicates support for Algorithm field in SR-ERO Subject and SR-Algorithm constraint only for Traffic-engineering paths with Segment Routing Path Setup Type. It is not indicating support for these extensions for other Path Setup Types.</t>
+<figure><artwork align="center" name="" type="" alt="">
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Type=26               |            Length=4           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Reserved              |   Flags |S|N|X|      MSD      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</artwork></figure>
+        </section>
+        <section anchor="SRv6-CAP-FLAG" title="SRv6 PCE Capability sub-TLV">
+<t>A new flag S is proposed in the SRv6 PCE Capability sub-TLV introduced in 4.1.1 of <xref target="I-D.ietf-pce-segment-routing-ipv6"/> to indicate support for SR-Algorithm. If S flag is set, PCEP peer indicates support for Algorithm field in SRv6-ERO Subobject and SR-Algorithm constraint only for Traffic-engineering paths with SRv6 Path Setup Type. It is not indicating support for these extensions for other Path Setup Types.</t>
+<figure><artwork>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Type=27            |            Length             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Reserved           |             Flags       |S|N|X|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   MSD-Type    | MSD-Value     |   MSD-Type    |   MSD-Value   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//                             ...                             //
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   MSD-Type    | MSD-Value     |            Padding            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</artwork></figure>
+        </section>
+      </section>
+
+      <section anchor="SR-ERO-SUBOBJECT" title="SR-ERO Subobject">
+        <t>The SR-ERO subobject encoding is extended with new flag "A" to indicate if the Algorithm field is included after other optional fields.</t>
+<figure><artwork name="" type="" align="left" alt="">
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |L|   Type=36   |     Length    |  NT   |     Flags   |A|F|S|C|M|
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                         SID (optional)                        |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  //                   NAI (variable, optional)                  //
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                  Reserved                     |  Algorithm    |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</artwork></figure>
+      </section>
+      <section anchor="SRv6-ERO-SUBOBJECT" title="SRv6-ERO Subobject">
+        <t>The SRv6-ERO subobject encoding is extended with new flag "A" to indicate if the Algorithm field is included after other optional fields.</t>
+<figure><artwork name="" type="" align="left" alt="">
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |L|  Type=40    |     Length    |   NT  |    Flags    |A|V|T|F|S|
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |            Reserved           |        Endpoint Behavior      |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                                                               |
+  |                      SRv6 SID (optional)                      |
+  |                           (128-bit)                           |
+  |                                                               |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  //                    NAI (variable, optional)                 //
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                     SID Structure (optional)                  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                  Reserved                     |  Algorithm    |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</artwork></figure>
+      </section>
+
+      <section anchor="LSPA-OBJECT" title="LSPA Object">
+        <t>A new TLV for the LSPA Object with TLV type=66 is introduced to carry the SR-Algorithm constraint.  This TLV SHOULD only be used when PST (Path Setup type) = SR or SRv6. Only the first instance of this TLV SHOULD be processed, subsequent instances SHOULD be ignored</t>
+
+        <t>The format of the SR-Algorithm TLV is as follows:</t>
+        <figure anchor="SR-ALGORITHM-TLV-FMT" title="SR-Algorithm TLV Format">
+          <artwork><![CDATA[
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |         Type=66               |            Length=4           |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |         Reserved              |   Flags   |F|S|   Algorithm   |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+          ]]></artwork>
+        </figure>
+
+        <t>The code point for the TLV type is 66. The TLV length is 4 octets.</t>
+
+        <t>The 32-bit value is formatted as follows.
+          <list style="hanging">
+            <t hangText="Reserved:"> MUST be set to zero by the sender and MUST be ignored by the receiver.</t>
+            <t hangText="Flags:"> This document defines the following flag bits.  The other bits
+              MUST be set to zero by the sender and MUST be ignored by the receiver.
+              <list style="symbols">
+                <t>S (Strict): If set, the PCE MUST fail the path computation if specified SR-Algorithm constraint cannot be satisfied. If unset, the PCE MAY ignore specified algorithm constraint.</t>
+                <t>F (Flexible Algorithm Path Computation): If set, the PCE follows procedures defined in Section 4.2.1. If unset, the PCE follows procedures defined in Section 4.2.2. The flag SHOULD be ignored if Algorithm field is set to value in range 0 to 127.</t>
+              </list>
+            </t>
+            <t hangText="Algorithm:"> SR-Algorithm the PCE MUST take into acount while computing a path for the LSP.</t>
+          </list>
+        </t>
+
+      </section>
+      <section anchor="METRIC-TYPES" title="Extensions to METRIC Object">
+         <t>The METRIC object is defined in Section 7.8 of <xref target="RFC5440"/> This document defines the following types for the METRIC object.</t>
+           <list style="symbols">
+             <t> T:22: Path Min Delay metric (Section 3.5.2) </t>
+             <t> T:23: P2MP Path Min Delay metric (Section 3.5.3) </t>
+             <t> T:24(TBA): Bandwidth metric (Section 3.5.5) </t>
+             <t> T:25(TBA): P2MP Bandwidth metric (Section 3.5.6) </t>
+             <t> T:128-255(TBA): User-defined metric (Section 3.5.7) </t>
+           </list>
+		   <t>Metric type values for "Bandwidth metric", "P2MP Bandwidth metric" and "User Defined metric" are suggested values only for IANA to allocate.</t>
+         <section anchor="MIN-DELAY-VALUE" title="Path Min Delay Metric value">
+           <t><xref target="RFC7471"/> and <xref target="RFC8570"/> define "Min/Max Unidirectional Link Delay Sub-TLV" to advertise the link minimum and maximum delay in microseconds in a 24-bit field. </t>
+           <t><xref target="RFC5440"/> defines the METRIC object with a 32-bit metric value encoded in IEEE floating point format.</t>
+           <t>The encoding for the Path Min Delay metric value is quantified in units of microseconds and encoded in IEEE floating point format.</t>
+           <t>The conversion from 24-bit integer to 32-bit IEEE floating point could introduce some loss of precision.</t>
+         </section>
+         <section anchor="P2P-MIN-DELAY" title="Path Min Delay Metric">
+          <t>The minimum Link Delay metric is defined in <xref target="RFC7471"/> and <xref target="RFC8570"/> as "Min Unidirectional Link Delay". The Path Min Link Delay metric represents measured minimum link delay value over a configurable interval.</t>
+          <t>The Path Min Delay metric type of the METRIC object in PCEP represents the sum of the Min Link Delay metric of all links along a P2P path. </t>
+
+          <list style="symbols">
+           <t>A Min Link Delay metric of link L is denoted D(L).</t>
+           <t>A path P of a P2P LSP is a list of K links {Lpi,(i=1...K)}.</t>
+           <t>A Path Min Delay metric for the P2P path P = Sum {D(Lpi), (i=1...K)}.</t>
+          </list>
+         </section>
+         <section anchor="P2MP-MIN-DELAY" title="P2MP Path Min Delay Metric">
+          <t>The P2MP Path Min Delay metric type of the METRIC object in PCEP encodes the Path Min Delay metric for the destination that observes the worst delay metric among all destinations of the P2MP tree.</t>
+          <list style="symbols">
+           <t>A P2MP tree T comprises a set of M destinations {Dest_j, (j=1...M)}.</t>
+           <t>The P2P Path Min Delay metric of the path to destination Dest_j is denoted by PMDM(Dest_j).</t>
+           <t>The P2MP Path Min Delay metric for the P2MP tree T = Maximum{PMDM(Dest_j), (j=1...M)}.</t>
+          </list>
+         </section>
+         <section anchor="BANDWIDTH-VALUE" title="Bandwidth Metric value">
+          <t>The section 4 of <xref target="I-D.ietf-lsr-flex-algo-bw-con"/> defines new metric type "Bandwidth Metric", which MAY be advertised in their link metric advertisements.</t>
+		  <t>When performing Flexible Algorithm path computation as described in section 4.2.1, procedures described in section 4.1 and 5 from <xref target="I-D.ietf-lsr-flex-algo-bw-con"/> MUST be followed with automatic metric calculation attempted.</t>
+		  <t>When performing path computation for other algorithms and Generic Metric sub-TLV with Bandwidth metric type is not advertised for the link then PCE implementation MAY have local policy to specify attributes similar to section 4.1.3 and 4.1.4 in <xref target="I-D.ietf-lsr-flex-algo-bw-con"/> and compute metric value automatically or the link MAY be treated as if the metric value is not available for other metric types (e.g. use default value instead). If Bandwidth metric value is advertised for the link, then PCE MUST use value advertised and compute path metric as described in Section 3.5.5 and 3.5.6.</t>
+		  <t>The Bandwidth metric value is encoded in IEEE floating point format.</t>
+          <t>The conversion from 24-bit integer to 32-bit IEEE floating point could introduce some loss of precision.</t>
+         </section>
+		 <section anchor="P2P-BANDWIDTH" title="Bandwidth Metric">
+          <t>The Bandwidth metric type of the METRIC object in PCEP represents the sum of the Bandwidth Metric of all links along a P2P path. Note: the link Bandwidth Metric utilized in the formula may be the original metric advertised on the link, which may have a value inversely proportional to the link capacity.</t>
+
+          <list style="symbols">
+           <t>A Bandwidth Metric of link L is denoted B(L).</t>
+           <t>A path P of a P2P LSP is a list of K links {Lpi,(i=1...K)}.</t>
+           <t>A Bandwidth metric for the P2P path P = Sum {B(Lpi), (i=1...K)}.</t>
+          </list>
+         </section>
+		 <section anchor="P2MP-BANDWIDTH" title="P2MP Bandwidth Metric">
+          <t>The Bandwidth metric type of the METRIC object in PCEP encodes the Bandwidth metric for the destination that observes the worst bandwidth metric among all destinations of the P2MP tree.</t>
+          <list style="symbols">
+           <t>A P2MP tree T comprises a set of M destinations {Dest_j, (j=1...M)}.</t>
+           <t>The P2P Bandwidth metric of the path to destination Dest_j is denoted by BM(Dest_j).</t>
+           <t>The Bandwidth metric for the P2MP tree T = Maximum{BM(Dest_j), (j=1...M)}.</t>
+          </list>
+         </section>
+		 <section anchor="USER-DEFINED-METRIC" title="User Defined Metric">
+          <t>The section 2 of <xref target="I-D.ietf-lsr-flex-algo-bw-con"/> defined new metric type range for "User defined metric", which MAY be advertised in their link metric advertisements. These are user defined and can be assigned by an operator for local use.</t>
+		  <t>The encoding for the User Defined metric values is encoded in IEEE floating point format.</t>
+          <t>The conversion from 24-bit integer to 32-bit IEEE floating point could introduce some loss of precision.</t>
+		  <t>Proposed metric type range was chosen to allow mapping with values assigned in "IGP Metric-Type Registry". For example, the User Defined metric type 130 of the METRIC object in PCEP can represent the sum of the User Defined Metric 130 of all links along a P2P or P2MP path.</t>
+		  <t>User Defined Metric are equally applicable to P2P and P2MP paths.</t>
+         </section>
+      </section>
+    </section>
+
+    <section anchor="Operation" title="Operation">
+
+        <t>The PCEP protocol extensions defined in Sections 3.2, 3.3 and 3.4 of this draft MUST NOT be used if one or both PCEP speakers have not indicated the support using S flag in Path Setup Type specific Sub-TLVs in their respective OPEN messages.</t>
+
+        <t>SR-Algorithm used in this document refers to complete range of SR-Algorithm values (0-255) if specific section does not specify otherwise.</t>
+
+      <section anchor="ERO-ENCODING" title="SR-ERO and SRv6-ERO Encoding">
+
+        <t>PCEP speaker MAY set the A flag and include the Algorithm field in SR-ERO or SRv6-ERO subobject if the S flag was advertised by both PCEP speakers.</t>
+
+        <t>If PCEP peer receives SR-ERO subobject with the A flag set or with the SR-Algorithm included, but the S flag was not advertised, then it MUST consider entire ERO as invalid as described in Section 5.2.1 of <xref target="RFC8664"/></t>
+
+        <t>The Algorithm field MUST be included after optional SID, NAI or SID structure and length of SR-ERO or SRv6-ERO subobject MUST be increased with additional 4 bytes for Reserved and Algorithm field.</t>
+
+        <t>If the length and the A flag are not consistent, it MUST consider the entire ERO invalid and MUST send a PCErr message with Error-Type = 10 ("Reception of an invalid object") and Error-value = 11 ("Malformed object").</t>
+      </section>
+
+      <section anchor="SR-ALGORITHM-CONSTRAINT" title="SR-Algorithm Constraint">
+
+        <t>In order to signal a specific SR-Algorithm constraint to the PCE, the headend MUST encode the SR-Algorithm TLV inside the LSPA object.</t>
+
+        <t>If PCEP peer receives LSPA object with SR-Algorithm TLV in it, but the S flag was not advertised, then PCEP peer MUST ignore it as per Section 7.1 of <xref target="RFC5440"/>.</t>
+
+        <t>Path computation MUST occur on the topology associated with specified SR-Algorithm. The PCE MUST NOT use Prefix SIDs of SR-Algorithm other than specified in SR-Algorithm constraint. It is allowed to use other SID types (e.g., Adjacency or Binding SID), but only from nodes participating in specified SR-Algorithm.</t>
+
+        <t>Specified SR-Algorithm constraint is applied to end-to-end SR policy path. Using different SR-Algorithm constraint in each domain or part of the topology in single path computation is out of scope of this document. One possible solution is to determine FAD mapping using PCE local policy.</t>
+
+        <t>If the PCE is unable to find a path with the given SR-Algorithm constraint or it does not support combination of specified constraints, it MAY respond with PCInitiate or PCUpdate message with empty ERO or PCRep with NO-PATH object to indicate that it was not able to find valid path.</t>
+
+        <t>If headend is part of multiple IGP domains and winning FAD for specified SR-Algorithm in each of them has different constraints, the PCE implementation MAY have local policy with defined behavior for selecting FAD for such path-computation or even completely not supporting it. It is RECOMMENDED to respond with PCInitiate or PCUpdate message with empty ERO or PCRep with NO-PATH object if such path-computation is not supported.</t>
+
+        <t>If NO-PATH object is included in PCRep, then PCE MAY include SR-Algorithm TLV to indicate constraint, which cannot be satisfied as described in section 7.5 of <xref target="RFC5440"/>.</t>
+
+
+        <t>SR-Algorithm does not replace the Objective Function defined in <xref target="RFC5541"/></t>
+
+        <section anchor="FLEX-ALGO-COMPUTATION" title="Flexible Algorithm Path computation">
+        <t>This section is applicable only to Flexible Algorithms range of SR-Algorithm values.</t>
+
+        <t>The PCE MUST follow IGP Flexible Algorithm path computation logic as described in <xref target="RFC9350"/>. That includes using same ordered rules to select FAD if multiple FADs are available, considering node participation of specified SR-Algorithm in the path computation, using ASLA specific link attributes and other rules for Flexible Algorithm path computation described in that document.</t>
+
+        <t>The PCE MUST optimize computed path based on metric type specified in the FAD, metric type included in PCEP messages from PCC MUST be ignored. The PCE SHOULD use metric type from FAD in messages sent to the PCC. If corresponding metric type is not defined in PCEP, PCE SHOULD skip encoding of metric object for optimization metric.</t>
+
+        <t>There are corresponding metric types in PCEP for IGP and TE metric from FAD introduced in <xref target="RFC9350"/>, but there was no corresponding metric type defined for "Min Unidirectional Link Delay". Section 3.5 of this document is introducing it.</t>
+
+        <t>The PCE MUST use constraints specified in the FAD and also constraints directly included in PCEP messages from PCC. The PCE implementation MAY decide to ignore specific constraints received from PCC based on existing processing rules for PCEP Objects and TLVs, e.g. P flag described in Section 7.2 of <xref target="RFC5440"/> and processing rules described in <xref target="I-D.ietf-pce-stateful-pce-optional"/>. If the PCE does not support specified combination of constraints, it MAY respond with PCEP message with PCInitiate or PCUpdate message with empty ERO or PCRep with NO-PATH object. PCC MUST NOT include constraints from FAD in PCEP message sent to PCE as it can result in undesired behavior in various cases. PCE SHOULD NOT include constraints from FAD in PCEP messages sent to PCC.</t>
+
+        </section>
+        <section anchor="SID-FILTERING-COMPUTATION" title="Path computation with SID filtering">
+        <t>The SR-Algorithm constraint acts as a filter, restricting which SIDs may be used as a result of the path computation function. Path computation is done based on optimization metric type and constraints specified in PCEP message received from PCC.</t>
+
+        <t>If specified SR-Algorithm is Flexible Algorithm, the PCE MUST ensure that IGP path of Flexible Algorithm SIDs is congruant with computed path.</t>
+        </section>
+        <section anchor="NEW-METRIC-TYPES" title="New Metric types">
+        <t>All the rules of processing the METRIC object as explained in <xref target="RFC5440"/> and <xref target="RFC8233"/> are applicable to new metric types defined in this document.</t>
+        </section>
+      </section>
+
+    </section>
+    <section title="Manageability Considerations" numbered="true" toc="default">
+      <t>All manageability requirements and considerations listed in <xref target="RFC5440"/>, <xref target="RFC8231"/> and <xref target="RFC8281"/> apply to PCEP protocol extensions defined in this document. In addition, requirements and considerations listed in this section apply.</t>
+      <section title="Control of Function and Policy" numbered="true" toc="default">
+        <t>A PCE or PCC implementation MAY allow the capability of supporting PCEP extensions introduced in this document to be enabled/disabled as part of the global configuration.</t>
+      </section>
+      <section title="Information and Data Models" numbered="true" toc="default">
+        <t>An implementation SHOULD allow the operator to view the capability defined in this document. Section 4.1 and 4.1.1 of <xref target="I-D.ietf-pce-pcep-yang"/> should be extended to include that capabilities introduced in Section 3.1.1 and 3.1.2 for PCEP peer.</t>
+        </section>
+      <section title="Verify Correct Operations" numbered="true" toc="default">
+        <t>Operation verification requirements already listed in <xref target="RFC5440"/>, <xref target="RFC8231"/>, <xref target="RFC8281"/> and <xref target="RFC8664"/> are applicable to mechanisms defined in this document.</t>
+        <t>An implementation SHOULD also allow the operator to view FADs, which MAY be used in Flexible Algorithm path computation defined in Section 4.2.1.</t>
+        <t>An implementation SHOULD allow the operator to view nodes participating in specified SR-Algorithm.</t>
+      </section>
+      <section title="Impact On Network Operations" numbered="true" toc="default">
+        <t>The mechanisms defined in <xref target="RFC5440"/>, <xref target="RFC8231"/>, and <xref target="RFC8281"/> also apply to the PCEP extensions defined in this document.</t>
+        <t>This document inherits considerations from documents describing IGP Flexible Algorithm - for example <xref target="RFC9350"/> and <xref target="I-D.ietf-lsr-flex-algo-bw-con"/>.</t>
+      </section>
+    </section>
+    <section  title="Implementation Status">
+      <t>[Note to the RFC Editor - remove this section before publication, as
+      well as remove the reference to RFC 7942.]</t>
+
+      <t>This section records the status of known implementations of the
+      protocol defined by this specification at the time of posting of this
+      Internet-Draft, and is based on a proposal described in <xref
+      target="RFC7942"/>. The description of implementations in this section
+      is intended to assist the IETF in its decision processes in progressing
+      drafts to RFCs. Please note that the listing of any individual
+      implementation here does not imply endorsement by the IETF. Furthermore,
+      no effort has been spent to verify the information presented here that
+      was supplied by IETF contributors. This is not intended as, and must not
+      be construed to be, a catalog of available implementations or their
+      features. Readers are advised to note that other implementations may
+      exist.</t>
+
+
+      <t>According to <xref target="RFC7942"/>, "this will allow reviewers and
+      working groups to assign due consideration to documents that have the
+      benefit of running code, which may serve as evidence of valuable
+      experimentation and feedback that have made the implemented protocols
+      more mature. It is up to the individual working groups to use this
+      information as they see fit".</t>
+      <section anchor="Cisco" title="Cisco">
+        <t><list style="symbols">
+            <t>Organization: Cisco Systems</t>
+            <t>Implementation: IOS-XR PCC and PCE.</t>
+            <t>Description: SR-MPLS part with experimental codepoints.</t>
+            <t>Maturity Level: Production.</t>
+            <t>Coverage: Partial.</t>
+            <t>Contact: ssidor@cisco.com</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section  title="Security Considerations" numbered="true" toc="default">
+            <t>The security considerations described in <xref target="RFC5440"/>,
+      <xref target='RFC8231'/>, <xref target='RFC8253'/>,<xref target='RFC8281'/>,<xref target="RFC8664"/> and <xref target='RFC9350'/> in itself.</t>
+            <t>Note that this specification introduces possibility to compute paths by PCE based on Flexible Algorithm related topology attributes and based on metric type and constraints from FAD. This creates additional vulnerabilities, which are already described for path computation done by IGP like those described in Security Considerations section of <xref target='RFC9350'/>, but which are also applicable to path computation done by PCE.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+
+      <section anchor="SR-CAPABILITY-FLAG" title="SR Capability Flag">
+
+        <t>IANA maintains a sub-registry, named "SR Capability Flag Field", within the "Path Computation Element Protocol
+   (PCEP) Numbers" registry to manage the Flags field of the SR-PCE-CAPABILITY TLV.  IANA is requested to confirm the following early allocation:</t>
+
+        <texttable anchor="SR-CAPABILITY-FLAG-value" style="none" suppress-title="true">
+          <ttcol align="center" width='15%'>Bit</ttcol>
+          <ttcol align="left" width='30%'>Description </ttcol>
+          <ttcol align="left" width='55%'>Reference </ttcol>
+          <c></c><c>&nbsp;</c><c></c>
+          <c>5</c><c>SR-Algorithm Capability</c><c>This document</c>
+        </texttable>
+      </section>
+
+      <section anchor="SRv6-CAPABILITY-FLAG" title="SRv6 PCE Capability Flag">
+
+        <t>IANA was requested in <xref target="I-D.ietf-pce-segment-routing-ipv6"/> to create a sub-registry, named "SRv6 PCE Capability Flags", within the "Path Computation Element Protocol
+   (PCEP) Numbers" registry to manage the Flags field of SRv6-PCE-CAPABILITY sub-TLV.  IANA is requested to
+   make the following assignment:</t>
+
+        <texttable anchor="SRv6-CAPABILITY-FLAG-value" style="none" suppress-title="true">
+          <ttcol align="center" width='15%'>Bit</ttcol>
+          <ttcol align="left" width='30%'>Description </ttcol>
+          <ttcol align="left" width='55%'>Reference </ttcol>
+          <c></c><c>&nbsp;</c><c></c>
+          <c>TBD1</c><c>SR-Algorithm Capability</c><c>This document</c>
+        </texttable>
+      </section>
+
+      <section anchor="SR-ERO-FLAG" title="SR-ERO Flag">
+
+        <t>IANA maintains a sub-registry, named "SR-ERO Flag Field", within the "Path Computation Element Protocol
+   (PCEP) Numbers" registry to manage the Flags field of the SR-ERO Subobject.  IANA is requested to confirm the following early allocation:</t>
+
+        <texttable anchor="SR-ERO-FLAG-value" style="none" suppress-title="true">
+          <ttcol align="center" width='15%'>Bit</ttcol>
+          <ttcol align="left" width='30%'>Description </ttcol>
+          <ttcol align="left" width='55%'>Reference </ttcol>
+          <c></c><c>&nbsp;</c><c></c>
+          <c>7</c><c>SR-Algorithm Flag</c><c>This document</c>
+        </texttable>
+      </section>
+
+      <section anchor="SRv6-ERO-FLAG" title="SRv6-ERO Flag">
+
+        <t>IANA was requested in <xref target="I-D.ietf-pce-segment-routing-ipv6"/>, named "SRv6-ERO Flag Field", within the "Path Computation Element Protocol
+   (PCEP) Numbers" registry to manage the Flags field of the SRv6-ERO subobject.  IANA is requested to
+   make the following assignment:</t>
+
+        <texttable anchor="SRv6-ERO-FLAG-value" style="none" suppress-title="true">
+          <ttcol align="center" width='15%'>Bit</ttcol>
+          <ttcol align="left" width='30%'>Description </ttcol>
+          <ttcol align="left" width='55%'>Reference </ttcol>
+          <c></c><c>&nbsp;</c><c></c>
+          <c>TBD2</c><c>SR-Algorithm Flag</c><c>This document</c>
+        </texttable>
+      </section>
+
+      <section anchor="TLV-Type" title="PCEP TLV Types">
+
+        <t>IANA maintains a subregistry, named "PCEP TLV Type Indicators", within the "Path Computation Element Protocol (PCEP) Numbers" registry. IANA is requested to confirm the early allocation of a new TLV type for the new LSPA TLV specified in this document.</t>
+
+        <texttable anchor="LSPA-TLV-type" style="none" suppress-title="true">
+          <ttcol align="center" width='15%'>Type</ttcol>
+          <ttcol align="left" width='30%'>Description </ttcol>
+          <ttcol align="left" width='55%'>Reference </ttcol>
+          <c></c><c>&nbsp;</c><c></c>
+          <c>66</c><c>SR-Algorithm</c><c>This document</c>
+        </texttable>
+
+      </section>
+
+      <section anchor="Metric-Types" title="Metric Types">
+
+        <t>IANA maintains a subregistry for "METRIC Object T Field" within the "Path Computation Element Protocol (PCEP) Numbers" registry. IANA is requested to confirm
+the early allocated codepoints as follows:</t>
+
+        <texttable anchor="Metric-types" style="none" suppress-title="true">
+          <ttcol align="center" width='15%'>Type</ttcol>
+          <ttcol align="left" width='30%'>Description </ttcol>
+          <ttcol align="left" width='55%'>Reference </ttcol>
+          <c></c><c>&nbsp;</c><c></c>
+          <c>22</c><c>Path Min Delay Metric</c><c>This document</c>
+          <c>23</c><c>P2MP Path Min Delay Metric</c><c>This document</c>
+        </texttable>
+
+        <t>IANA is requested to allocate new values for the following metric types defined in this document. Please note the suggested values for the IANA to consider.</t>
+
+          <texttable anchor="Metric-types2" style="none" suppress-title="true">
+          <ttcol align="center" width='15%'>Type</ttcol>
+          <ttcol align="left" width='30%'>Description </ttcol>
+          <ttcol align="left" width='55%'>Reference </ttcol>
+          <c></c><c>&nbsp;</c><c></c>
+          <c>24(TBA)</c><c>Bandwidth Metric</c><c>This document</c>
+          <c>25(TBA)</c><c>P2MP Bandwidth Metric</c><c>This document</c>
+          <c>128-255 (TBA)</c><c>User Defined Metric </c><c>This document</c>
+        </texttable>
+      </section>
+
+    </section>
+
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119"?>
+      <?rfc include="reference.RFC.5440"?>
+      <?rfc include="reference.RFC.5541"?>
+      <?rfc include="reference.RFC.7471"?>
+      <?rfc include="reference.RFC.8174"?>
+      <?rfc include="reference.RFC.8231"?>
+      <?rfc include="reference.RFC.8233"?>
+      <?rfc include="reference.RFC.8253"?>
+      <?rfc include="reference.RFC.8281"?>
+      <?rfc include="reference.RFC.8402"?>
+      <?rfc include="reference.RFC.8570"?>
+      <?rfc include="reference.RFC.8664"?>
+      <?rfc include="reference.RFC.8665"?>
+      <?rfc include="reference.RFC.8667"?>
+      <?rfc include="reference.RFC.9256"?>
+      <?rfc include="reference.RFC.9350"?>
+      <?rfc include="reference.I-D.ietf-lsr-flex-algo-bw-con"?>
+      <?rfc include="reference.I-D.ietf-pce-pcep-yang"?>
+      <?rfc include="reference.I-D.ietf-pce-segment-routing-ipv6"?>
+      <?rfc include="reference.I-D.ietf-pce-stateful-pce-optional"?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include="reference.RFC.7942"?>
+    </references>
+
+<section title="Contributors">
+
+<t><figure><artwork>
+Mike Koldychev
+Cisco Systems, Inc.
+Email: mkoldych@cisco.com
+
+Zafar Ali
+Cisco Systems, Inc.
+Email: zali@cisco.com
+
+Stephane Litkowski
+Cisco Systems, Inc.
+Email: slitkows.ietf@gmail.com
+
+Siva Sivabalan
+Ciena
+Email: msiva282@gmail.com
+
+Tarek Saad
+Cisco Systems, Inc.
+Email: tsaad.net@gmail.com
+
+Mahendra Singh Negi
+RtBrick Inc
+Email: mahend.ietf@gmail.com
+
+Tom Petch
+Email: ietfc@btconnect.com
+</artwork></figure></t>
+
+</section> <!-- Contributors -->
+
+  </back>
+
+</rfc>
